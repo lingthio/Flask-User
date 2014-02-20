@@ -1,5 +1,6 @@
 from flask import current_app, flash, redirect, render_template, request, url_for
 import flask_login
+from flask_login import current_user
 
 
 def register():
@@ -22,7 +23,7 @@ def register():
         return redirect(um.login_url)
 
     # Process GET or invalid POST
-    return render_template(um.register_template, user_manager=um, form=form)
+    return render_template(um.register_template, form=form)
 
 def login():
     um = current_app.user_manager
@@ -54,7 +55,7 @@ def login():
             return redirect(next)
 
     # Process GET or invalid POST
-    return render_template(um.login_template, user_manager=um, form=form)
+    return render_template(um.login_template, form=form)
 
 def logout():
     um = current_app.user_manager
@@ -70,3 +71,50 @@ def logout():
         return redirect(url_for(um.logout_next))
     else:
         return redirect('/')
+
+def change_password():
+    um = current_app.user_manager
+
+    # Initialize form
+    form = um.change_password_form(request.form)
+
+    # Process valid POST
+    if request.method=='POST' and form.validate():
+        # Change password
+        um.db_adapter.set_password(current_user, um.crypt_context.encrypt(form.new_password.data))
+
+        # Prepare Flash message
+        flash(um.flash_password_changed, 'success')
+
+        # Redirect to 'next' URL or '/'
+        next = form.next.data
+        if not next:
+            return redirect('/')
+        return redirect(next)
+
+    # Process GET or invalid POST
+    return render_template(um.change_password_template, form=form)
+
+def change_username():
+    um = current_app.user_manager
+
+    # Initialize form
+    form = um.change_username_form(request.form)
+
+    # Process valid POST
+    if request.method=='POST' and form.validate():
+        # Change username
+        um.db_adapter.set_username(current_user, form.new_username.data)
+
+        # Prepare Flash message
+        flash(um.flash_username_changed, 'success')
+
+        # Redirect to 'next' URL or '/'
+        next = form.next.data
+        if not next:
+            return redirect('/')
+        return redirect(next)
+
+    # Process GET or invalid POST
+    return render_template(um.change_username_template, form=form)
+

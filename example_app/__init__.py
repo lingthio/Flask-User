@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 from flask import Flask
 from flask_login import UserMixin
 from flask_user import UserManager, SQLAlchemyAdapter
@@ -14,6 +16,11 @@ def create_app(config=None):
     # Setup Flask
     app = Flask(__name__)
     app.config.from_object('example_app.settings')
+
+    # Load env_settings.py if file exists
+    filename = os.path.join(app.root_path, 'env_settings.py')
+    if os.path.exists(filename):
+        app.config.from_object('example_app.env_settings')
 
     # Over-write app config with specified config settings
     if config:

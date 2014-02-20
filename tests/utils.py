@@ -10,7 +10,7 @@ def login(client, username='', email='', password='Password1'):
         password=password
     ), follow_redirects=True)
     assert response.status_code == 200
-    assert form_has_valid_fields(response)
+    assert response_has_no_errors(response)
 
     return User.query.filter(User.username==username).first()
 
@@ -21,11 +21,11 @@ def logout(client):
     assert response.status_code == 200
 
 # Checks to see if response.data contains no 'has-error' strings
-def form_has_valid_fields(response):
-    return not form_has_field_errors(response)
+def response_has_no_errors(response):
+    return not response_has_errors(response)
 
 # Checks to see if response.data contains the string 'has-error'.
-def form_has_field_errors(response):
+def response_has_errors(response):
     return response_has_string(response, 'has-error')
 
 # Checks to see if response.data contains the specified string.

@@ -16,9 +16,9 @@
     {{ render_submit_field(form.submit) }}
 </form>
 
-{% if user_manager.login_with_username %}
+{% if user_manager.feature_register %}
     <br/>
-    <p>New to the system? <a href="{{ url_for('user.register') }}">Register an account</a></p>
+    <p>New to the system? <a href="{{ url_for('user.register') }}">Register with us</a></p>
 {% endif %}
 
 {% endblock %}

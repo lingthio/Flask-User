@@ -4,9 +4,17 @@
 <h1>Home</h1>
 {% if not current_user.is_authenticated() %}
     <p><a href="{{ url_for('user.login') }}">Sign in</a></p>
-    <p><a href="{{ url_for('user.register') }}">Register</a></p>
+    {% if user_manager.feature_register %}
+        <p><a href="{{ url_for('user.register') }}">Register</a></p>
+    {% endif %}
 {% else %}
-    Hello {{ current_user.username or current_user.email }}
+    <p></p>Hello {{ current_user.username or current_user.email }}</p>
+    {% if user_manager.feature_change_username %}
+        <p><a href="{{ url_for('user.change_username') }}">Change username</a></p>
+    {% endif %}
+    {% if user_manager.feature_change_password %}
+        <p><a href="{{ url_for('user.change_password') }}">Change password</a></p>
+    {% endif %}
     <p><a href="{{ url_for('user.logout') }}">Sign out</a></p>
 {% endif %}
 {% endblock %}
