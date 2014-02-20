@@ -100,8 +100,6 @@ fab runserver
 Configure
 ---------
 
-Configure by changing settings in example_app/settings.py.
-
 The available settings with their defaults are listed below:
 
 ```
@@ -127,6 +125,11 @@ USER_FLASH_SIGNED_IN = 'You have signed in successfully.'
 USER_FLASH_SIGNED_OUT = 'You have signed out successfully.'
 ```
 
+These settings must be set before calling `user_manager.init_app(app)`.
+
+In the Flask-User Example App, you can place them in example_app/settings.py.
+
+
 Customize
 ---------
 
@@ -149,19 +152,19 @@ The available customizations with their defaults are listed below:
     user_manager.crypt_context = CryptContext(schemes=['bcrypt', 'sha512_crypt', 'pbkdf2_sha512'], default='bcrypt')
 ```
 
-They can be set in between `user_manager=UserManager()` and `user_manager.init_app()` like so:
+They can be set in between `user_manager=UserManager()` and `user_manager.init_app(app)` like so:
 
 ```
     ...
-
-    # Configure Flask-User
-    app.config['USER_LOGIN_TEMPLATE'] = 'my_app/my_login_form.html'
 
     # Choose Database adapter
     db_adapter = flask_user.SQLAlchemyAdapter(db, User)
     
     # Initialize Flask-User
     user_manager = flask_user.UserManager(db_adapter)
+
+    # Configure Flask-User
+    app.config['USER_LOGIN_TEMPLATE'] = 'my_app/my_login_form.html'
 
     # Customize Flask-User
     user_manager.login_form = forms.MyLoginForm
