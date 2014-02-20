@@ -101,7 +101,8 @@ Configure
 ---------
 
 Configure by changing settings in example_app/settings.py.
-Below are the available settings with their defaults
+
+The available settings with their defaults are listed below:
 
 ```
 # Features
@@ -129,20 +130,37 @@ USER_FLASH_SIGNED_OUT = 'You have signed out successfully.'
 Customize
 ---------
 
-```
-from flask import Flask
-import flask_user
-from app import forms
+The available customizations with their defaults are listed below:
 
-def create_app():
-    # Setup Flask
-    app = Flask(__name__)
+```
+    # View functions
+    user_manager.login_view_function = flask_user.views.login
+    user_manager.logout_view_function = flask_user.views.logout
+    user_manager.register_view_function = flask_user.views.register
+
+    # Forms
+    user_manager.login_form = = flask_user.forms.LoginForm
+    user_manager.register_form = flask_user.forms.RegisterForm
     
-    # Config Flask-User
+    # Validators
+    user_manager.password_validator.flask_user.forms.forms.password_validator
+
+    # Encryptions
+    user_manager.crypt_context = CryptContext(schemes=['bcrypt', 'sha512_crypt', 'pbkdf2_sha512'], default='bcrypt')
+```
+
+They can be set in between `user_manager=UserManager()` and `user_manager.init_app()` like so:
+
+```
+    ...
+
+    # Configure Flask-User
     app.config['USER_LOGIN_TEMPLATE'] = 'my_app/my_login_form.html'
 
-    # Initialize Flask-User    
+    # Choose Database adapter
     db_adapter = flask_user.SQLAlchemyAdapter(db, User)
+    
+    # Initialize Flask-User
     user_manager = flask_user.UserManager(db_adapter)
 
     # Customize Flask-User
@@ -151,7 +169,7 @@ def create_app():
     # Bind Flask-User to app
     user_manager.init_app(app)
     
-    return app
+    ...
 ```
 
 Documentation
