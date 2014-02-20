@@ -8,8 +8,7 @@
     {{ form.hidden_tag() }}
     {% if user_manager.login_with_username %}
         {{ render_field(form.username) }}
-    {% endif %}
-    {% if user_manager.login_with_email %}
+    {% else %}
         {{ render_field(form.email) }}
     {% endif %}
     {{ render_field(form.password) }}

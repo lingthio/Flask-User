@@ -1,12 +1,10 @@
 from flask import current_app
+from flask.ext.babel import lazy_gettext as _
+from flask.ext.login import current_user
 from flask.ext.wtf import Form
+
 from wtforms import BooleanField, HiddenField, PasswordField, SelectField, SubmitField, TextAreaField, TextField
 from wtforms import validators, ValidationError
-from flask_login import current_user
-
-#from flask.ext.babel import lazy_gettext as _
-def _(text):
-    return text
 
 # **************************
 # ** Validation Functions **
@@ -75,7 +73,7 @@ class RegisterForm(Form):
     email = TextField(_('Email'), validators=[
         validators.Required(_('Email is required')),
         validators.Email(_('Invalid Email')),
-        unique_email_validator
+        unique_email_validator,
         ])
     password = PasswordField(_('Password'), validators=[
         validators.Required(_('Password is required')),
@@ -86,10 +84,10 @@ class RegisterForm(Form):
     def validate(self):
         # Use user_manager config to remove unused form fields
         um = current_app.user_manager
-        if not um.login_with_username:
-            delattr(self, 'username')
-        if not um.login_with_email:
+        if um.login_with_username:
             delattr(self, 'email')
+        else:
+            delattr(self, 'username')
         if not um.register_with_retype_password:
             delattr(self, 'retype_password')
 
@@ -104,16 +102,6 @@ class RegisterForm(Form):
         # Validate field-validators
         if not super(RegisterForm, self).validate():
             return False
-
-        # Make sure that email and username are available
-        if um.login_with_username:
-            if not um.db_adapter.username_is_available(self.username.data):
-                self.username.errors.append(_('This Username is no longer available. Please try another one.'))
-                return False
-        else:
-            if not um.db_adapter.email_is_available(self.email.data):
-                self.email.errors.append(_('This Email is no longer available. Please try another one.'))
-                return False
 
         # Make sure retype password matches
         if um.register_with_retype_password and self.retype_password.data!=self.password.data:
@@ -142,10 +130,10 @@ class LoginForm(Form):
     def validate(self):
         # Use feature config to remove unused form fields
         um = current_app.user_manager
-        if not um.login_with_username:
-            delattr(self, 'username')
-        if not um.login_with_email:
+        if um.login_with_username:
             delattr(self, 'email')
+        else:
+            delattr(self, 'username')
 
         # Validate field-validators
         if not super(LoginForm, self).validate():
@@ -154,16 +142,14 @@ class LoginForm(Form):
         # Retrieve User by username or email
         if um.login_with_username:
             user = um.db_adapter.find_user_by_username(self.username.data)
-        elif um.login_with_email:
-            user = um.db_adapter.find_user_by_email(self.email.data)
         else:
-            user = None
+            user = um.db_adapter.find_user_by_email(self.email.data)
 
         # Verify user and password
         if not user or not um.crypt_context.verify(self.password.data, user.password):
             if um.login_with_username:
                 self.username.errors.append(_('Incorrect Username and Password'))
-            elif um.login_with_email:
+            else:
                 self.email.errors.append(_('Incorrect Email and Password'))
             self.password.errors.append('')
             return False

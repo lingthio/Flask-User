@@ -1,6 +1,5 @@
 from flask import current_app, flash, redirect, render_template, request, url_for
-import flask_login
-from flask_login import current_user
+from flask.ext.login import current_user, login_required, login_user, logout_user
 
 
 def register():
@@ -36,14 +35,12 @@ def login():
         # Retrieve User
         if um.login_with_username:
             user = um.db_adapter.find_user_by_username(form.username.data)
-        elif um.login_with_email:
-            user = um.db_adapter.find_user_by_email(form.email.data)
         else:
-            user = None
+            user = um.db_adapter.find_user_by_email(form.email.data)
 
         if user:
             # Use Flask-Login to sign in user
-            flask_login.login_user(user)
+            login_user(user)
 
             # Prepare Flash message
             flash(um.flash_signed_in, 'success')
@@ -57,11 +54,12 @@ def login():
     # Process GET or invalid POST
     return render_template(um.login_template, form=form)
 
+@login_required
 def logout():
     um = current_app.user_manager
 
     # Use Flask-Login to sign out user
-    flask_login.logout_user()
+    logout_user()
 
     # Prepare Flash message
     flash(um.flash_signed_out, 'success')
@@ -72,6 +70,7 @@ def logout():
     else:
         return redirect('/')
 
+@login_required
 def change_password():
     um = current_app.user_manager
 
@@ -95,6 +94,7 @@ def change_password():
     # Process GET or invalid POST
     return render_template(um.change_password_template, form=form)
 
+@login_required
 def change_username():
     um = current_app.user_manager
 

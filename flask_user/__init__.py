@@ -9,7 +9,8 @@
 """
 
 from flask import Blueprint, current_app
-from flask_login import LoginManager, current_user
+from flask.ext.babel import gettext as _
+from flask.ext.login import LoginManager, current_user
 from passlib.context import CryptContext
 
 from werkzeug.datastructures import ImmutableList
@@ -20,7 +21,7 @@ class UserManager():
     """
     This is the Flask-User object that manages the User process.
     """
-    def __init__(self, db_adapter):
+    def __init__(self, db_adapter, app=None):
         """
         Initialize the UserManager with default customizable settings
         """
@@ -53,6 +54,8 @@ class UserManager():
         self.crypt_context = CryptContext(schemes=['bcrypt', 'sha512_crypt', 'pbkdf2_sha512'], default='bcrypt')
                 # See https://pythonhosted.org/passlib/new_app_quickstart.html#choosing-a-hash
 
+        if (app):
+            self.init_app(app)
 
     def init_app(self, app):
         """
@@ -70,7 +73,6 @@ class UserManager():
         # Set default settings
         self.register_with_retype_password = app.config.setdefault('USER_REGISTER_WITH_RETYPE_PASSWORD', True)
         self.login_with_username           = app.config.setdefault('USER_LOGIN_WITH_USERNAME',        False)
-        self.login_with_email              = app.config.setdefault('USER_LOGIN_WITH_EMAIL',           True)
         self.change_password_with_retype_password = app.config.setdefault('USER_CHANGE_PASSWORD_WITH_RETYPE_PASSWORD', True)
 
         # Set default URLs
@@ -97,6 +99,8 @@ class UserManager():
         #self.lm.anonymous_user = AnonymousUser
         self.lm.login_view = 'user.login'
         self.lm.user_loader(_user_loader)
+        self.lm.login_message = _('Please Sign in to access this page.')
+        self.lm.login_message_category = 'error'
         #login_manager.token_loader(_token_loader)
 
         #if cv('FLASH_MESSAGES', app=app):
@@ -174,16 +178,11 @@ class SQLAlchemyAdapter(DBInterface):
 
     def email_is_available(self, new_email):
         """
-        Return True if new_email does not exist or if new_email equals old_email.
+        Return True if new_email does not exist.
         Return False otherwise. 
         """
-        # To avoid user confusion, we allow the old email if the user is currently logged in
-        if current_user.is_authenticated():
-            old_email = current_user.email
-        else:
-            old_email = ''
         # See if new_email is available
-        return self.EmailClass.query.filter(self.EmailClass.email==new_email).count()==0 or new_email==old_email
+        return self.EmailClass.query.filter(self.EmailClass.email==new_email).count()==0
 
     def username_is_available(self, new_username, old_username=''):
         """

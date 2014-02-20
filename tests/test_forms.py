@@ -97,15 +97,27 @@ def test_register_form_with_username(client):
     um = current_app.user_manager
     um.feature_register = True
     um.login_with_username = True
-    um.login_with_email = False
-    um.register_with_retype_password = True
 
     # ****************
     # ** Valid Form **
     # ****************
 
-    # Submit valid form
+    # Submit valid form with retype password
+    um.register_with_retype_password = True
     username = USERNAME1
+    response = post_register_form(client, username, '')
+    assert response.status_code == 200
+    assert test_utils.response_has_no_errors(response)
+
+    # Verify that the user account has been created
+    user = User.query.filter(User.username==username).first()
+    assert user
+    assert user.username == username
+    assert not user.active
+
+    # Submit valid form without retype password
+    um.register_with_retype_password = True
+    username = 'user2'
     response = post_register_form(client, username, '')
     assert response.status_code == 200
     assert test_utils.response_has_no_errors(response)
@@ -119,10 +131,9 @@ def test_register_form_with_username(client):
     # *******************
     # ** Invalid Forms **
     # *******************
+    # Assumes that 'user1' and 'user2' exist
 
-    # Register 'user2' to test against existing username
-    post_register_form(client, 'user2')
-
+    um.register_with_retype_password = True
     username = 'user3'
     email = None
 
@@ -162,15 +173,27 @@ def test_register_form_with_email(client):
     um = current_app.user_manager
     um.feature_register = True
     um.login_with_username = False
-    um.login_with_email = True
-    um.register_with_retype_password = True
 
     # ****************
     # ** Valid Form **
     # ****************
 
-    # Submit valid form
+    # Submit valid form with retype password
+    um.register_with_retype_password = True
     email = EMAIL1
+    response = post_register_form(client, '', email)
+    assert response.status_code == 200
+    assert test_utils.response_has_no_errors(response)
+
+    # Verify that the user account has been created
+    user = User.query.filter(User.email==email).first()
+    assert user
+    assert user.email == email
+    assert not user.active
+
+    # Submit valid form without retype password
+    um.register_with_retype_password = False
+    email = 'user2@example.com'
     response = post_register_form(client, '', email)
     assert response.status_code == 200
     assert test_utils.response_has_no_errors(response)
@@ -184,9 +207,11 @@ def test_register_form_with_email(client):
     # *******************
     # ** Invalid Forms **
     # *******************
+    # Assumes 'user1@xample.com' and 'user2@example.com' exists
 
+    um.register_with_retype_password = True
     username = None
-    email = 'user2@example.com'
+    email = 'user3@example.com'
 
     # Test empty email
     response = post_register_form(client, username, '')
@@ -197,7 +222,7 @@ def test_register_form_with_email(client):
     assert test_utils.response_has_string(response, 'Invalid Email')
 
     # Test existing email
-    response = post_register_form(client, username, EMAIL1)
+    response = post_register_form(client, username, 'user2@example.com')
     assert test_utils.response_has_string(response, 'This Email is no longer available. Please try another one.')
 
     # Test empty password
@@ -219,7 +244,6 @@ def test_login_form_with_username(client):
     um = current_app.user_manager
     um.feature_register = True
     um.login_with_username = True
-    um.login_with_email = False
 
     # ****************
     # ** Valid Form **
@@ -253,7 +277,6 @@ def test_login_form_with_email(client):
     um = current_app.user_manager
     um.feature_register = True
     um.login_with_username = False
-    um.login_with_email = True
 
     # ****************
     # ** Valid Form **
@@ -284,7 +307,6 @@ def test_change_username_form(client):
     um = current_app.user_manager
     um.feature_register = True
     um.login_with_username = True
-    um.login_with_email = False
 
     # Log in as 'user1'
     test_utils.login(client, 'user1')
@@ -338,7 +360,6 @@ def test_change_password_form(client):
     um = current_app.user_manager
     um.feature_register = True
     um.login_with_username = True
-    um.login_with_email = False
 
     # ****************
     # ** Valid Form **
@@ -347,7 +368,8 @@ def test_change_password_form(client):
     # Log in as 'user1'
     test_utils.login(client, 'user1', '', PASSWORD1)
 
-    # Change password to 'Password9'
+    # Change password to 'Password9' with retype_password
+    um.change_password_with_retype_password = True
     response = post_change_password_form(client, PASSWORD1, 'Password9')
     assert test_utils.response_has_no_errors(response)
     
@@ -355,7 +377,8 @@ def test_change_password_form(client):
     test_utils.logout(client)
     test_utils.login(client, 'user1', '', 'Password9')
 
-    # Change password back to 'Password1'
+    # Change password back to 'Password1' without retype_password
+    um.change_password_with_retype_password = False
     response = post_change_password_form(client, 'Password9', PASSWORD1)
     assert test_utils.response_has_no_errors(response)
 
@@ -367,6 +390,7 @@ def test_change_password_form(client):
 
     # Log in as 'user1'
     test_utils.login(client, 'user1')
+    um.change_password_with_retype_password = True
 
     # Test empty old password
     response = post_change_password_form(client, '', 'Password2')

@@ -3,8 +3,8 @@
 import os
 
 from flask import Flask
-from flask_login import UserMixin
-from flask_user import UserManager, SQLAlchemyAdapter
+from flask.ext.babel import Babel
+from flask.ext.user import UserManager, SQLAlchemyAdapter
 
 from example_app.database import db
 
@@ -27,16 +27,19 @@ def create_app(config=None):
         for key, value in config.iteritems():
             app.config[key] = value
 
+    # Setup Flask-Babel
+    babel = Babel(app)
+
     # Setup Flask-SQLAlchemy
     db.init_app(app)
-    db.app = app
+    db.app = app                                # This trick only works if there's only one app
+
     from models import User
     db.create_all()
 
     # Setup Flask-Account
     db_adapter = SQLAlchemyAdapter(db,  User)
-    user_manager = UserManager(db_adapter)
-    user_manager.init_app(app)
+    user_manager = UserManager(db_adapter, app)
 
     # Import views to run all the @app.route() decorators
     from example_app import views

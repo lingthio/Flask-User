@@ -26,6 +26,8 @@ ctx.push()
 print("Creating db")
 _db.create_all()
 
+print("Performing tests ...")
+
 @pytest.fixture(scope='module')
 def app():
     return _app
