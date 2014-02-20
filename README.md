@@ -55,11 +55,15 @@ Example code
 ------------
 
 ```
+from flask import Flask
+import flask_user
+
 def create_app():
     app = Flask(__name__)                                   # Initialize Flask App
     db_adapter = flask_user.SQLAlchemyAdapter(db, User)     # Choose a database Adapter
     user_manager = flask_user.UserManager(db_adapter)       # Initialize Flask-User
     user_manager.init_app(app)                              # Bind Flask-User to App
+    return app
 ```
 
 Requirements
@@ -125,12 +129,15 @@ Customize
 ---------
 
 ```
+from flask import Flask
+import flask_user
+from app import forms
+
 def create_app():
     # Setup Flask
     app = Flask(__name__)
     
     # Config Flask-User
-    app.config['USER_REGISTER_WITH_RETYPE_PASSWORD'] = True
     app.config['USER_LOGIN_TEMPLATE'] = 'my_app/my_login_form.html'
 
     # Initialize Flask-User    
@@ -139,8 +146,7 @@ def create_app():
 
     # Customize Flask-User
     user_manager.login_form = forms.MyLoginForm
-    user_manager.login_view_function = views.my_login
-    
+
     # Bind Flask-User to app
     user_manager.init_app(app)
     
