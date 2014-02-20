@@ -9,16 +9,7 @@ This package is in active development (Feb 2014) but not yet ready for productio
 We believe in early feedback, so we are publishing a few features early
 while developing the remaining feature set.
 
-Goals
------
-- Reliable (Automated tests currently cover 99% of the code)
-- Configurable (by changing files)
-- Customizable (by adding code)
-- Model agnostic (specify your own User model)
-- Database abstraction (SQLAlchemyAdapter provided)
-
-Current Features
-----------------
+__Completed Features__
 
 - Register (sign up)
 - Login (Sign in) with email or username
@@ -29,15 +20,23 @@ Current Features
 - Password encryption through passlib and py-bcript
 - Internationalization through Flask-Babel
 
-Planned Features
-----------------
+__Planned Features__
 
 - Confirm email
 - Forgot password (Reset password)
 - Multiple emails per user
 - Registration by invitation only
-- Extensible: Flask-User-Roles for role based authorization
-- Packaging so it can be installed using `pip install flask-user'
+
+__Philosophy__
+
+- Reliable (Automated tests currently cover 99% of the code)
+- Simple to use
+- Easy to configure (by changing files)
+- Easy to customize (by adding code)
+- Model agnostic (specify your own User model)
+- Database abstraction (SQLAlchemyAdapter provided)
+- Extensible (See Flask-User-Roles for role based authorization)
+
 
 Reliable
 --------
@@ -52,25 +51,8 @@ flask_user/views                                     57      4    93%   53, 69, 
 TOTAL                                               277      4    99%   
 ```
 
-Configurable (by changing files)
------------------------------------
-
-- URLs
-- Templates
-- Flash messages
-- Validation errors
-- Email messages (subject, HTML message and Text message)
-
-Customizable (by adding code)
------------------------------
-
-- Forms
-- View functions
-- Validators
-- Password encryption
-
-Example code
-------------
+Simple to use
+-------------
 
 ```
 def create_app():
@@ -81,6 +63,24 @@ def create_app():
     user_manager.init_app(app)                              # Bind Flask-User to App
     return app
 ```
+
+
+Easy to Configure (by changing files)
+-------------------------------------
+
+- URLs
+- Templates
+- Flash messages
+- Validation errors
+- Email messages (subject, HTML message and Text message)
+
+Easy to Customize (by adding code)
+----------------------------------
+
+- Forms
+- View functions
+- Validators
+- Password encryption
 
 Requirements
 ------------
@@ -97,7 +97,9 @@ Requirements
 Install Flask-User
 ------------------
 
-TBD. The goal is to create a python package that can be installed 'pip install flask-user'. Not there yet.
+The goal is to create a python package that can be installed 'pip install flask-user'.  
+
+This is still work in progress.
 
 Install Flask-User Example App
 ------------------------------
