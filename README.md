@@ -92,10 +92,8 @@ Requirements
 - Flask 0.10 (May work on other versions - please let us know)
 - Flask-Login
 - Flask-Babel
-- Flask-WTF
-- Jinja2
-- passlib
-- py-bcript (only if 'bcyrpt' encryption is used)
+- Flask-WTF and Jinja2
+- passlib and py-bcript
 
 Install Flask-User
 ------------------
