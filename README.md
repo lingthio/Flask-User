@@ -54,8 +54,15 @@ Customizable (by adding code)
 Requirements
 ------------
 
-- Python 2.7 (May work on earlier versions, but not tested)
-- 
+- Python 2.7 (May work on other versions - please let us know)
+- Flask 0.10 (May work on other versions - please let us know)
+- Flask-Login
+- Flask-Babel
+- Flask-WTF
+- Jinja2
+- WTForms
+- passlib
+- py-bcript (if bcyrpt encryption is used)
 
 Install
 -------
