@@ -17,8 +17,8 @@ Current Features
 - Login (Sign in) with email or username
 - Logout (Sign out)
 - Forgot password (Reset password)
-- Customizable (by adding code)
 - Configurable (by changing settings)
+- Customizable (by adding code)
 - Session management through Flask-Login
 - Password encryption through passlib and py-bcript
 - Internationalization through Flask-Babel
@@ -35,6 +35,14 @@ Planned Features
 - Registration by invitation only
 - Extensible: Flask-User-Roles for role based authorization
 
+Configurable (by changing settings)
+-----------------------------------
+
+- Templates
+- Validation errors
+- Flash messages
+- URLs
+
 Customizable (by adding code)
 -----------------------------
 
@@ -43,13 +51,11 @@ Customizable (by adding code)
 - Validators
 - Password encryption
 
-Configurable (by changing settings)
------------------------------------
+Requirements
+------------
 
-- Templates
-- Validation errors
-- Flash messages
-- URLs
+- Python 2.7 (May work on earlier versions, but not tested)
+- 
 
 Install
 -------
@@ -61,6 +67,8 @@ Install
     git clone git@github.com:solidbuilds/flask-user.git flask_user
     cd flask_user
     pip install -r requirements.txt
+    touch example\_app/env\_settings.py
+    fab test
     fab runserver
     # point your browser to http://localhost:5001
 
@@ -75,3 +83,6 @@ Documentation
 
 TBD
     
+Contact
+-------
+Ling Thio - ling.thio@gmail.com
