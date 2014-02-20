@@ -77,19 +77,22 @@ Requirements
 - passlib
 - py-bcript (only if 'bcyrpt' encryption is used)
 
-Install
--------
+Install Flask-User
+------------------
+
+TBD. Hopefully 'pip install flask-user'
+
+Install Flask-User Example App
+------------------------------
 
 ```
 mkvirtualenv flask_user
 workon flask_user
 mkdir -p ~/dev
-cd ~/dev
-git clone git@github.com:solidbuilds/flask-user.git flask_user
-cd flask_user
+git clone git@github.com:solidbuilds/flask-user.git ~/dev/flask_user
+cd ~/dev/flask_user
 pip install -r requirements.txt
 touch example_app/env_settings.py
-fab test
 fab runserver
 # point your browser to http://localhost:5001
 ```
