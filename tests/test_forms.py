@@ -97,7 +97,7 @@ def test_register_form_with_username(client):
 
     # Test existing username
     response = post_register_form(client, USERNAME1)
-    assert test_utils.response_has_string(response, 'This Username no longer available. Please try another one.')
+    assert test_utils.response_has_string(response, 'This Username is no longer available. Please try another one.')
 
     # Test empty password
     response = post_register_form(client, username, email, '')
@@ -154,7 +154,7 @@ def test_register_form_with_email(client):
 
     # Test existing email
     response = post_register_form(client, username, EMAIL1)
-    assert test_utils.response_has_string(response, 'This Email no longer available. Please try another one.')
+    assert test_utils.response_has_string(response, 'This Email is no longer available. Please try another one.')
 
     # Test empty password
     response = post_register_form(client, username, email, '')

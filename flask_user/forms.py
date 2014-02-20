@@ -50,7 +50,7 @@ class RegisterForm(Form):
         validators.Required(_('Password is required')),
     ])
     retype_password = PasswordField(_('Retype Password'))
-    submit = SubmitField(_('Sign in'))
+    submit = SubmitField(_('Register'))
 
     def validate(self):
         # Use user_manager config to remove unused form fields
@@ -77,11 +77,11 @@ class RegisterForm(Form):
         # Make sure that email and username are available
         if um.login_with_username:
             if not um.db_adapter.username_is_available(self.username.data):
-                self.username.errors.append(_('This Username no longer available. Please try another one.'))
+                self.username.errors.append(_('This Username is no longer available. Please try another one.'))
                 return False
         else:
             if not um.db_adapter.email_is_available(self.email.data):
-                self.email.errors.append(_('This Email no longer available. Please try another one.'))
+                self.email.errors.append(_('This Email is no longer available. Please try another one.'))
                 return False
 
         # Make sure retype password matches

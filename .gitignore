@@ -34,5 +34,8 @@ coverage.xml
 .pydevproject
 .idea
 
+# Temp files
+example_app/example_app.db
+
 # Private files
 example_app/env_settings.py

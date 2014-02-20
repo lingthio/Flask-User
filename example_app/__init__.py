@@ -14,7 +14,6 @@ def create_app(config=None):
     # Setup Flask
     app = Flask(__name__)
     app.config.from_object('example_app.settings')
-    app.config.from_object('example_app.env_settings')
 
     # Over-write app config with specified config settings
     if config:
