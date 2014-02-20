@@ -34,6 +34,7 @@ Planned Features
 - Multiple emails per user
 - Registration by invitation only
 - Extensible: Flask-User-Roles for role based authorization
+- Packaging so it can be installed using `pip install flask-user'
 
 Configurable (by changing settings)
 -----------------------------------
