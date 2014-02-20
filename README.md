@@ -27,7 +27,8 @@ __Planned Features__
 - Multiple emails per user
 - Registration by invitation only
 
-__Philosophy__
+Philosophy
+----------
 
 - Reliable (Automated tests currently cover 99% of the code)
 - Simple to use
