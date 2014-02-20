@@ -56,11 +56,9 @@ Example code
 ------------
 
 ```
-from flask import Flask
-import flask_user
-
 def create_app():
     app = Flask(__name__)                                   # Initialize Flask App
+    db = SQLAlchemy(app)                                    # Initialize Flask-SQLAlchemy
     db_adapter = flask_user.SQLAlchemyAdapter(db, User)     # Choose a database Adapter
     user_manager = flask_user.UserManager(db_adapter)       # Initialize Flask-User
     user_manager.init_app(app)                              # Bind Flask-User to App
