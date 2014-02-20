@@ -76,9 +76,8 @@ Requirements
 - Flask-Babel
 - Flask-WTF
 - Jinja2
-- WTForms
 - passlib
-- py-bcript (if bcyrpt encryption is used)
+- py-bcript (only if 'bcyrpt' encryption is used)
 
 Install
 -------
