@@ -16,7 +16,7 @@ Current Features
 - Register (sign up)
 - Login (Sign in) with email or username
 - Logout (Sign out)
-- Configurable (by changing settings)
+- Configurable (by changing files)
 - Customizable (by adding code)
 - Session management through Flask-Login
 - Password encryption through passlib and py-bcript
@@ -36,13 +36,14 @@ Planned Features
 - Extensible: Flask-User-Roles for role based authorization
 - Packaging so it can be installed using `pip install flask-user'
 
-Configurable (by changing settings)
+Configurable (by changing files)
 -----------------------------------
 
 - URLs
 - Templates
 - Flash messages
 - Validation errors
+- Email messages (subject, HTML message and Text message)
 
 Customizable (by adding code)
 -----------------------------
