@@ -14,7 +14,7 @@ Current Features
 
 - Well tested (97% test coverage)
 - Register (sign up)
-- Login (Sign in)
+- Login (Sign in) with email or username
 - Logout (Sign out)
 - Forgot password (Reset password)
 - Customizable (by adding code)
@@ -29,12 +29,11 @@ Planned Features
 ----------------
 
 - Confirm email
-- Notification emails (Registered, Password changed, Password reset)
 - Change password
 - Change username
 - Multiple emails per user
-- Registration by invitation
-- Extension Flask-User-Roles for role based authorization
+- Registration by invitation only
+- Extensible: Flask-User-Roles for role based authorization
 
 Customizable (by adding code)
 -----------------------------
