@@ -59,7 +59,7 @@ def create_app():
     app = Flask(__name__)                                   # Initialize Flask App
     
     db  = SQLAlchemy(app)                                   # Initialize and bind Flask-SQLAlchemy
-    from models import User                                 # Import your User model
+    from my_app.models import User                          # Import your User model
     
     db_adapter   = flask_user.SQLAlchemyAdapter(db, User)   # Choose a database Adapter
     user_manager = flask_user.UserManager(db_adapter, app)  # Initialize and bind Flask-User
