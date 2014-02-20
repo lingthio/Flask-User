@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Home</h1>
+{% if not current_user.is_authenticated() %}
+    <p><a href="{{ url_for('user.login') }}">Sign in</a></p>
+    <p><a href="{{ url_for('user.register') }}">Register</a></p>
+{% else %}
+    Hello {{ current_user.username or current_user.email }}
+    <p><a href="{{ url_for('user.logout') }}">Sign out</a></p>
+{% endif %}
+{% endblock %}

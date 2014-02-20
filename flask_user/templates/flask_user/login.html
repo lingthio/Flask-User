@@ -1,0 +1,24 @@
+{% extends "flask_user/flask_user_base.html" %}
+
+{% block content %}
+{% from "flask_user/_macros.html" import render_field, render_submit_field %}
+<h1>Sign in</h1>
+
+<form action="" method="POST" class="form" role="form">
+    {{ form.hidden_tag() }}
+    {% if user_manager.login_with_username %}
+        {{ render_field(form.username) }}
+    {% endif %}
+    {% if user_manager.login_with_email %}
+        {{ render_field(form.email) }}
+    {% endif %}
+    {{ render_field(form.password) }}
+    {{ render_submit_field(form.submit) }}
+</form>
+
+{% if user_manager.login_with_username %}
+    <br/>
+    <p>New to the system? <a href="{{ url_for('user.register') }}">Register an account</a></p>
+{% endif %}
+
+{% endblock %}
