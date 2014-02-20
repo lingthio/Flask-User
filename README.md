@@ -1,7 +1,7 @@
 Flask-User
 ==========
 
-Customizable user registration for Flask
+Customizable user management for Flask (Register, Confirm, Forgot password, Login, etc.)
 
 Status
 ------
@@ -9,28 +9,31 @@ This package is in active development (Feb 2014) but not yet ready for productio
 We believe in early feedback, so we are publishing a few features early
 while developing the remaining feature set.
 
+Goals
+-----
+- Reliable (Automated tests currently cover 97% of the code)
+- Configurable (by changing files)
+- Customizable (by adding code)
+- Model agnostic (specify your own User model)
+- Database abstraction (SQLAlchemyAdapter provided)
+
 Current Features
 ----------------
 
-- Well tested (97% test coverage)
 - Register (sign up)
 - Login (Sign in) with email or username
 - Logout (Sign out)
-- Configurable (by changing files)
-- Customizable (by adding code)
+- Change password
+- Change username
 - Session management through Flask-Login
 - Password encryption through passlib and py-bcript
 - Internationalization through Flask-Babel
-- Model agnostic (specify your own User model)
-- Database abstraction (SQLAlchemyAdapter provided)
 
 Planned Features
 ----------------
 
 - Confirm email
 - Forgot password (Reset password)
-- Change password
-- Change username
 - Multiple emails per user
 - Registration by invitation only
 - Extensible: Flask-User-Roles for role based authorization
@@ -93,7 +96,6 @@ mkdir -p ~/dev
 git clone git@github.com:solidbuilds/flask-user.git ~/dev/flask_user
 cd ~/dev/flask_user
 pip install -r requirements.txt
-touch example_app/env_settings.py
 fab runserver
 # point your browser to http://localhost:5001
 ```
