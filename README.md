@@ -51,6 +51,17 @@ Customizable (by adding code)
 - Validators
 - Password encryption
 
+Example code
+------------
+
+```
+def create_app():
+    app = Flask(__name__)                                   # Initialize Flask App
+    db_adapter = flask_user.SQLAlchemyAdapter(db, User)     # Choose a database Adapter
+    user_manager = flask_user.UserManager(db_adapter)       # Initialize Flask-User
+    user_manager.init_app(app)                              # Bind Flask-User to App
+```
+
 Requirements
 ------------
 
@@ -68,17 +79,17 @@ Install
 -------
 
 ```
-    mkvirtualenv flask_user
-    workon flask_user
-    mkdir -p ~/dev
-    cd ~/dev
-    git clone git@github.com:solidbuilds/flask-user.git flask_user
-    cd flask_user
-    pip install -r requirements.txt
-    touch example_app/env_settings.py
-    fab test
-    fab runserver
-    # point your browser to http://localhost:5001
+mkvirtualenv flask_user
+workon flask_user
+mkdir -p ~/dev
+cd ~/dev
+git clone git@github.com:solidbuilds/flask-user.git flask_user
+cd flask_user
+pip install -r requirements.txt
+touch example_app/env_settings.py
+fab test
+fab runserver
+# point your browser to http://localhost:5001
 ```
 
 Configure
@@ -88,26 +99,52 @@ Configure by changing settings in example_app/settings.py.
 Below are the available settings with their defaults
 
 ```
-    # Features
-    USER_FEATURE_REGISTER = True
+# Features
+USER_FEATURE_REGISTER = True
    
-    # Config
-    USER_REGISTER_WITH_RETYPE_PASSWORD = False
-    USER_LOGIN_WITH_USERNAME = False
-    USER_LOGIN_WITH_EMAIL = True
+# Config
+USER_REGISTER_WITH_RETYPE_PASSWORD = False
+USER_LOGIN_WITH_USERNAME = False
+USER_LOGIN_WITH_EMAIL = True
 
-    # URLs
-    USER_REGISTER_URL = '/user/register'
-    USER_LOGIN_URL = '/user/login'
-    USER_LOGOUT_URL = '/user/logout'
+# URLs
+USER_REGISTER_URL = '/user/register'
+USER_LOGIN_URL = '/user/login'
+USER_LOGOUT_URL = '/user/logout'
     
-    # Templates
-    USER_REGISTER_TEMPLATE = 'flask_user/register.html'
-    USER_LOGIN_TEMPLATE = 'flask_user/login.html
+# Templates
+USER_REGISTER_TEMPLATE = 'flask_user/register.html'
+USER_LOGIN_TEMPLATE = 'flask_user/login.html
     
-    # Flash messages
-    USER_FLASH_SIGNED_IN = 'You have signed in successfully.'
-    USER_FLASH_SIGNED_OUT = 'You have signed out successfully.'
+# Flash messages
+USER_FLASH_SIGNED_IN = 'You have signed in successfully.'
+USER_FLASH_SIGNED_OUT = 'You have signed out successfully.'
+```
+
+Customize
+---------
+
+```
+def create_app():
+    # Setup Flask
+    app = Flask(__name__)
+    
+    # Config Flask-User
+    app.config['USER_REGISTER_WITH_RETYPE_PASSWORD'] = True
+    app.config['USER_LOGIN_TEMPLATE'] = 'my_app/my_login_form.html'
+
+    # Initialize Flask-User    
+    db_adapter = flask_user.SQLAlchemyAdapter(db, User)
+    user_manager = flask_user.UserManager(db_adapter)
+
+    # Customize Flask-User
+    user_manager.login_form = forms.MyLoginForm
+    user_manager.login_view_function = views.my_login
+    
+    # Bind Flask-User to app
+    user_manager.init_app(app)
+    
+    return app
 ```
 
 Documentation
