@@ -16,7 +16,6 @@ Current Features
 - Register (sign up)
 - Login (Sign in) with email or username
 - Logout (Sign out)
-- Forgot password (Reset password)
 - Configurable (by changing settings)
 - Customizable (by adding code)
 - Session management through Flask-Login
@@ -29,6 +28,7 @@ Planned Features
 ----------------
 
 - Confirm email
+- Forgot password (Reset password)
 - Change password
 - Change username
 - Multiple emails per user
@@ -38,10 +38,10 @@ Planned Features
 Configurable (by changing settings)
 -----------------------------------
 
-- Templates
-- Validation errors
-- Flash messages
 - URLs
+- Templates
+- Flash messages
+- Validation errors
 
 Customizable (by adding code)
 -----------------------------
@@ -67,6 +67,7 @@ Requirements
 Install
 -------
 
+```
     mkvirtualenv flask_user
     workon flask_user
     mkdir -p ~/dev
@@ -74,16 +75,40 @@ Install
     git clone git@github.com:solidbuilds/flask-user.git flask_user
     cd flask_user
     pip install -r requirements.txt
-    touch example\_app/env\_settings.py
+    touch example_app/env_settings.py
     fab test
     fab runserver
     # point your browser to http://localhost:5001
+```
 
 Configure
 ---------
 
-Change the USER\_\* settings in example_app/settings.py  
-Available settings can be seen in flask\_user/\_\_init\_\_.py for now.
+Configure by changing settings in example_app/settings.py.
+Below are the available settings with their defaults
+
+```
+    # Features
+    USER_FEATURE_REGISTER = True
+   
+    # Config
+    USER_REGISTER_WITH_RETYPE_PASSWORD = False
+    USER_LOGIN_WITH_USERNAME = False
+    USER_LOGIN_WITH_EMAIL = True
+
+    # URLs
+    USER_REGISTER_URL = '/user/register'
+    USER_LOGIN_URL = '/user/login'
+    USER_LOGOUT_URL = '/user/logout'
+    
+    # Templates
+    USER_REGISTER_TEMPLATE = 'flask_user/register.html'
+    USER_LOGIN_TEMPLATE = 'flask_user/login.html
+    
+    # Flash messages
+    USER_FLASH_SIGNED_IN = 'You have signed in successfully.'
+    USER_FLASH_SIGNED_OUT = 'You have signed out successfully.'
+```
 
 Documentation
 -------------
