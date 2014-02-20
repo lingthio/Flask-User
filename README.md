@@ -126,22 +126,28 @@ The available settings with their defaults are listed below:
 USER_FEATURE_REGISTER = True
    
 # Config
-USER_REGISTER_WITH_RETYPE_PASSWORD = False
+USER_REGISTER_WITH_RETYPE_PASSWORD = True
+USER_CHANGE_PASSWORD_WITH_RETYPE_PASSWORD = True
 USER_LOGIN_WITH_USERNAME = False
-USER_LOGIN_WITH_EMAIL = True
 
 # URLs
 USER_REGISTER_URL = '/user/register'
 USER_LOGIN_URL = '/user/login'
 USER_LOGOUT_URL = '/user/logout'
+USER_CHANGE_USERNAME_URL = '/user/change-username'
+USER_CHANGE_PASSWORD_URL = '/user/change-password'
     
 # Templates
 USER_REGISTER_TEMPLATE = 'flask_user/register.html'
 USER_LOGIN_TEMPLATE = 'flask_user/login.html
+USER_CHANGE_USERNAME_TEMPLATE = 'flask_user/change-username.html
+USER_CHANGE_PASSWORD_TEMPLATE = 'flask_user/change-password.html
     
 # Flash messages
 USER_FLASH_SIGNED_IN = 'You have signed in successfully.'
 USER_FLASH_SIGNED_OUT = 'You have signed out successfully.'
+USER_FLASH_USERNAME_CHANGED = 'Username has been changed successfully.'
+USER_FLASH_PASSWORD_CHANGED = 'Password has been changed successfully.'
 ```
 
 These settings must be set before calling `user_manager.init_app(app)`.
