@@ -80,7 +80,7 @@ Requirements
 Install Flask-User
 ------------------
 
-TBD. Hopefully 'pip install flask-user'
+TBD. The goal is to create a python package that can be installed 'pip install flask-user'. Not there yet.
 
 Install Flask-User Example App
 ------------------------------
