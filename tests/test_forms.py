@@ -150,8 +150,8 @@ def test_register_form_with_username(client):
         response = post_register_form(client, invalid_username, email)
         assert test_utils.response_has_string(response, 'Username may only contain letters and numbers')
 
-    # Test existing username
-    response = post_register_form(client, 'user2')
+    # Test existing username (case INsensitive!)
+    response = post_register_form(client, 'UsEr2')
     assert test_utils.response_has_string(response, 'This Username is no longer available. Please try another one.')
 
     # Test empty password
@@ -221,8 +221,8 @@ def test_register_form_with_email(client):
     response = post_register_form(client, username, INVALID_EMAIL)
     assert test_utils.response_has_string(response, 'Invalid Email')
 
-    # Test existing email
-    response = post_register_form(client, username, 'user2@example.com')
+    # Test existing email (case INsensitive!)
+    response = post_register_form(client, username, 'UsEr2@ExAmPlE.cOm')
     assert test_utils.response_has_string(response, 'This Email is no longer available. Please try another one.')
 
     # Test empty password

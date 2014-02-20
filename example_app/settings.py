@@ -30,8 +30,3 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///example_app.db'
 # USER_CHANGE_USERNAME_TEMPLATE = 'flask_user/change_username.html'
 # USER_CHANGE_PASSWORD_TEMPLATE = 'flask_user/change_password.html'
 
-# # Flash messages
-# USER_FLASH_SIGNED_IN = 'You have signed in successfully.'
-# USER_FLASH_SIGNED_OUT = 'You have signed out successfully.'
-# USER_USERNAME_CHANGED = 'Your username has been changed successfully.'
-# USER_PASSWORD_CHANGED = 'Your password has been changed successfully.'

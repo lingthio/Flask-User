@@ -1,4 +1,5 @@
 from flask import current_app, flash, redirect, render_template, request, url_for
+from flask.ext.babel import gettext as _
 from flask.ext.login import current_user, login_required, login_user, logout_user
 
 
@@ -42,8 +43,8 @@ def login():
             # Use Flask-Login to sign in user
             login_user(user)
 
-            # Prepare Flash message
-            flash(um.flash_signed_in, 'success')
+            # Prepare one-time system message
+            flash(_('You have signed in successfully.'), 'success')
 
             # Redirect to 'next' URL or '/'
             next = form.next.data
@@ -60,8 +61,8 @@ def logout():
     # Use Flask-Login to sign out user
     logout_user()
 
-    # Prepare Flash message
-    flash(um.flash_signed_out, 'success')
+    # Prepare one-time system message
+    flash(_('You have signed out successfully.'), 'success')
 
     # Redirect to logout_next endpoint or '/'
     if um.logout_next:
@@ -81,8 +82,8 @@ def change_password():
         # Change password
         um.db_adapter.set_password(current_user, um.crypt_context.encrypt(form.new_password.data))
 
-        # Prepare Flash message
-        flash(um.flash_password_changed, 'success')
+        # Prepare one-time system message
+        flash(_('Your password has been changed successfully.'), 'success')
 
         # Redirect to 'next' URL or '/'
         next = form.next.data
@@ -102,11 +103,13 @@ def change_username():
 
     # Process valid POST
     if request.method=='POST' and form.validate():
-        # Change username
-        um.db_adapter.set_username(current_user, form.new_username.data)
+        new_username = form.new_username.data
 
-        # Prepare Flash message
-        flash(um.flash_username_changed, 'success')
+        # Change username
+        um.db_adapter.set_username(current_user, new_username)
+
+        # Prepare one-time system message
+        flash(_("Your username has been changed to '%(username)s'.", username=new_username), 'success')
 
         # Redirect to 'next' URL or '/'
         next = form.next.data

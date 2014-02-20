@@ -88,12 +88,6 @@ class UserManager():
         self.change_password_template = app.config.setdefault('USER_CHANGE_PASSWORD_TEMPLATE',  'flask_user/change_password.html')
         self.change_username_template = app.config.setdefault('USER_CHANGE_USERNAME_TEMPLATE',  'flask_user/change_username.html')
 
-        # Set default flash messages
-        self.flash_signed_in        = app.config.setdefault('USER_FLASH_SIGNED_IN',  'You have signed in successfully.')
-        self.flash_signed_out       = app.config.setdefault('USER_FLASH_SIGNED_OUT', 'You have signed out successfully.')
-        self.flash_username_changed = app.config.setdefault('USER_FLASH_USERNAME_CHANGED', 'Your Username has been changed successfully.')
-        self.flash_password_changed = app.config.setdefault('USER_FLASH_PASSWORD_CHANGED', 'Your Password has been changed successfully.')
-
         # Setup Flask-Login
         self.lm = LoginManager()
         #self.lm.anonymous_user = AnonymousUser
@@ -171,10 +165,10 @@ class SQLAlchemyAdapter(DBInterface):
         return self.EmailClass.query.filter(self.EmailClass.id==id).first()
 
     def find_user_by_email(self, email):
-        return self.EmailClass.query.filter(self.EmailClass.email==email).first()
+        return self.EmailClass.query.filter(self.EmailClass.email.ilike(email)).first()
 
     def find_user_by_username(self, username):
-        return self.UserClass.query.filter(self.UserClass.username==username).first()
+        return self.UserClass.query.filter(self.UserClass.username.ilike(username)).first()
 
     def email_is_available(self, new_email):
         """
@@ -182,7 +176,7 @@ class SQLAlchemyAdapter(DBInterface):
         Return False otherwise. 
         """
         # See if new_email is available
-        return self.EmailClass.query.filter(self.EmailClass.email==new_email).count()==0
+        return self.EmailClass.query.filter(self.EmailClass.email.ilike(new_email)).count()==0
 
     def username_is_available(self, new_username, old_username=''):
         """
@@ -195,7 +189,7 @@ class SQLAlchemyAdapter(DBInterface):
         else:
             old_username = ''
         # See if new_username is available
-        return self.UserClass.query.filter(self.UserClass.username==new_username).count()==0 or new_username==old_username
+        return self.UserClass.query.filter(self.UserClass.username.ilike(new_username)).count()==0 or new_username==old_username
 
 def _account_context_processor():
     return dict(

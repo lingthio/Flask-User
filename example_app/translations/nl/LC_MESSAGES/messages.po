@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-02-20 14:48-0800\n"
+"POT-Creation-Date: 2014-02-20 15:08-0800\n"
 "PO-Revision-Date: 2014-02-19 15:35-0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: nl <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
 
-#: flask_user/__init__.py:102
+#: flask_user/__init__.py:96
 msgid "Please Sign in to access this page."
 msgstr ""
 
@@ -145,6 +145,23 @@ msgstr "Wachtwoord wijzigen"
 msgid "New Password and Retype Password did not match"
 msgstr "Nieuw Wachwoord end Herhaal Wachtwoord komen niet overeen"
 
+#: flask_user/views.py:47
+msgid "You have signed in successfully."
+msgstr ""
+
+#: flask_user/views.py:65
+msgid "You have signed out successfully."
+msgstr ""
+
+#: flask_user/views.py:86
+msgid "Your Password has been changed successfully."
+msgstr ""
+
+#: flask_user/views.py:112
+#, python-format
+msgid "Your Username has been changed to %(new_username)s."
+msgstr ""
+
 #: flask_user/templates/flask_user/login.html:20
 msgid "New to the system?"
 msgstr "Nieuw bij did systeem?"
@@ -152,4 +169,7 @@ msgstr "Nieuw bij did systeem?"
 #: flask_user/templates/flask_user/register.html:22
 msgid "Already have an account?"
 msgstr "Heeft u zich al ingeschreven?"
+
+#~ msgid "Your Username has been changed successfully."
+#~ msgstr ""
 
