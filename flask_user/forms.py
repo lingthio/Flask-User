@@ -74,6 +74,16 @@ class RegisterForm(Form):
         if not super(RegisterForm, self).validate():
             return False
 
+        # Make sure that email and username are available
+        if um.login_with_username:
+            if not um.db_adapter.username_is_available(self.username.data):
+                self.username.errors.append(_('This Username no longer available. Please try another one.'))
+                return False
+        else:
+            if not um.db_adapter.email_is_available(self.email.data):
+                self.email.errors.append(_('This Email no longer available. Please try another one.'))
+                return False
+
         # Make sure retype password matches
         if um.register_with_retype_password and self.retype_password.data!=self.password.data:
             self.password.errors.append(_('Password and Retype Password do not match'))

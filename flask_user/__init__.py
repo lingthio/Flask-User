@@ -9,22 +9,21 @@
 """
 
 from flask import Blueprint, current_app
-from flask_login import AnonymousUserMixin, LoginManager, current_user
+from flask_login import LoginManager, current_user
 from passlib.context import CryptContext
-#from flask.ext.principal import Identity, Principal
 
 from werkzeug.datastructures import ImmutableList
-
 
 __version__ = '0.0.1'
 
 class UserManager():
     """
-    This object is used to initialize the AccountManager in one of two ways:
-    user_manager = AccountManager(app), or
-    user_manager = AccountManager(); user_manager.init_app(app)
+    This is the Flask-User object that manages the User process.
     """
     def __init__(self, db_adapter):
+        """
+        Initialize the UserManager with default customizable settings
+        """
         import views
         import forms
 
@@ -49,12 +48,10 @@ class UserManager():
         self.crypt_context = CryptContext(schemes=['bcrypt', 'sha512_crypt', 'pbkdf2_sha512'], default='bcrypt')
                 # See https://pythonhosted.org/passlib/new_app_quickstart.html#choosing-a-hash
 
+
     def init_app(self, app):
         """
-        Initialize AccountManager with a specific application.
-
-        :param app: The :class:`flask.Flask` object to configure.
-        :type app: :class:`flask.Flask`
+        Binds the UserManager to the specified app.
         """
 
         # Set default features
@@ -98,11 +95,6 @@ class UserManager():
 
         self.lm.init_app(app)
 
-        # # Initialize Flask-Principal
-        # principal = Principal(app, use_sessions=False)
-        # principal.identity_loader(_identity_loader)
-        # self.principal = principal
-
         # Add URL Routes
         app.add_url_rule(self.register_url, 'user.register', self.register_view_function, methods=['GET', 'POST'])
         app.add_url_rule(self.login_url,  'user.login',  self.login_view_function,  methods=['GET', 'POST'])
@@ -117,17 +109,12 @@ class UserManager():
 
         app.user_manager = self
 
-# class AnonymousUser(AnonymousUserMixin):
-#     """AnonymousUser definition"""
-#
-#     def __init__(self):
-#         self.roles = ImmutableList()
-#
-#     def has_role(self, *args):
-#         """Returns `False`"""
-#         return False
 
 class DBInterface(object):
+    """
+    This object is used to shield Flask-User from ORM specific dependencies.
+    It's used as the base class for ORM specific adapters like SQLAlchemyAdapter.
+    """
     def __init__(self, db, UserClass, EmailClass=None):
         self.db = db
         self.UserClass = UserClass
@@ -141,7 +128,11 @@ class DBInterface(object):
     def find_user_by_username(self, username): # pragma: no cover
         raise NotImplementedError('DBInterface.find_user_by_username() not implemented')
 
+
 class SQLAlchemyAdapter(DBInterface):
+    """
+    This object is used to shield Flask-User from SQLAlchemy specific dependencies.
+    """
     def __init__(self, db, UserClass, EmailClass=None):
         super(SQLAlchemyAdapter, self).__init__(db, UserClass, EmailClass)
 
@@ -150,18 +141,33 @@ class SQLAlchemyAdapter(DBInterface):
         self.db.session.commit()
 
     def find_user_by_id(self, id):
-        return self.EmailClass.query.get(id)
+        return self.EmailClass.query.filter(self.EmailClass.id==id).first()
 
     def find_user_by_email(self, email):
         return self.EmailClass.query.filter(self.EmailClass.email==email).first()
 
     def find_user_by_username(self, username):
         return self.UserClass.query.filter(self.UserClass.username==username).first()
+    
+    def email_is_available(self, new_email, old_email=''):
+        """
+        Return True if new_email does not exist or if new_email equals old_email.
+        Return False otherwise. 
+        """
+        return self.EmailClass.query.filter(self.EmailClass.email==new_email).count()==0 or new_email==old_email
+
+    def username_is_available(self, new_username, old_username=''):
+        """
+        Return True if new_username does not exist or if new_username equals old_username.
+        Return False otherwise. 
+        """
+        return self.UserClass.query.filter(self.UserClass.username==new_username).count()==0 or new_username==old_username
 
 def _account_context_processor():
     return dict(
         user_manager=current_app.user_manager
     )
+
 
 def _user_loader(user_id):
     um = current_app.user_manager

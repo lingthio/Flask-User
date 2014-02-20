@@ -95,9 +95,9 @@ def test_register_form_with_username(client):
     response = post_register_form(client, SHORT_USERNAME)
     assert test_utils.response_has_string(response, 'Username must be at least 3 characters long')
 
-    # # Test existing username
-    # response = post_register_form(client, valid_token, "user1")
-    # assert test_utils.response_has_string(response, 'Username must be at least 3 characters long')
+    # Test existing username
+    response = post_register_form(client, USERNAME1)
+    assert test_utils.response_has_string(response, 'This Username no longer available. Please try another one.')
 
     # Test empty password
     response = post_register_form(client, username, email, '')
@@ -144,17 +144,17 @@ def test_register_form_with_email(client):
     username = None
     email = 'user2@example.com'
 
-    # Test empty username
+    # Test empty email
     response = post_register_form(client, username, '')
     assert test_utils.response_has_string(response, 'Email is required')
 
-    # Test short username
+    # Test short email
     response = post_register_form(client, username, INVALID_EMAIL)
     assert test_utils.response_has_string(response, 'Invalid Email')
 
-    # # Test existing username
-    # response = post_register_form(client, valid_token, "user1")
-    # assert test_utils.response_has_string(response, 'Username must be at least 3 characters long')
+    # Test existing email
+    response = post_register_form(client, username, EMAIL1)
+    assert test_utils.response_has_string(response, 'This Email no longer available. Please try another one.')
 
     # Test empty password
     response = post_register_form(client, username, email, '')
