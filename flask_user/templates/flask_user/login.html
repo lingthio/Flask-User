@@ -2,7 +2,7 @@
 
 {% block content %}
 {% from "flask_user/_macros.html" import render_field, render_submit_field %}
-<h1>Sign in</h1>
+<h1>{%trans%}Sign in{%endtrans%}</h1>
 
 <form action="" method="POST" class="form" role="form">
     {{ form.hidden_tag() }}
@@ -17,7 +17,7 @@
 
 {% if user_manager.feature_register %}
     <br/>
-    <p>New to the system? <a href="{{ url_for('user.register') }}">Register with us</a></p>
+    <p>{%trans%}New to the system?{%endtrans%} <a href="{{ url_for('user.register') }}">{%trans%}Register{%endtrans%}</a></p>
 {% endif %}
 
 {% endblock %}

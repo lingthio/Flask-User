@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-02-19 15:37-0800\n"
+"POT-Creation-Date: 2014-02-20 14:48-0800\n"
 "PO-Revision-Date: 2014-02-19 15:35-0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: nl <LL@li.org>\n"
@@ -18,65 +18,138 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
 
-#: flask_user/forms.py:33
+#: flask_user/__init__.py:102
+msgid "Please Sign in to access this page."
+msgstr ""
+
+#: flask_user/forms.py:31
 msgid ""
 "Password must have at least 6 characters with one lowercase letter, one "
 "uppercase letter and one number"
 msgstr ""
 
-#: flask_user/forms.py:41 flask_user/forms.py:85
-msgid "Username"
-msgstr "Gebruikersnaam"
-
-#: flask_user/forms.py:42 flask_user/forms.py:86
-msgid "Gebruikersnaam is verplicht"
-msgstr ""
-
-#: flask_user/forms.py:43
+#: flask_user/forms.py:40
 msgid "Username must be at least 3 characters long"
 msgstr "Gebruikersnaam moet minimaal 3 tekens lang zijn"
 
-#: flask_user/forms.py:45 flask_user/forms.py:88
+#: flask_user/forms.py:42
+msgid "Username may only contain letters and numbers"
+msgstr ""
+
+#: flask_user/forms.py:50
+msgid "This Username is no longer available. Please try another one."
+msgstr ""
+
+#: flask_user/forms.py:59
+msgid "This Email is no longer available. Please try another one."
+msgstr ""
+
+#: flask_user/forms.py:68 flask_user/forms.py:116
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+#: flask_user/forms.py:69 flask_user/forms.py:117 flask_user/forms.py:163
+#, fuzzy
+msgid "Username is required"
+msgstr "E-mail is verplicht"
+
+#: flask_user/forms.py:73 flask_user/forms.py:119
 msgid "Email"
 msgstr "E-mail"
 
-#: flask_user/forms.py:46 flask_user/forms.py:89
+#: flask_user/forms.py:74 flask_user/forms.py:120
 msgid "Email is required"
 msgstr "E-mail is verplicht"
 
-#: flask_user/forms.py:47
+#: flask_user/forms.py:75 flask_user/forms.py:121
 msgid "Invalid Email"
 msgstr "Ongeldig E-mail"
 
-#: flask_user/forms.py:49 flask_user/forms.py:92
+#: flask_user/forms.py:78 flask_user/forms.py:123
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: flask_user/forms.py:50 flask_user/forms.py:93
+#: flask_user/forms.py:79 flask_user/forms.py:124
 msgid "Password is required"
 msgstr "Wachtwoord is verplicht"
 
-#: flask_user/forms.py:52
+#: flask_user/forms.py:81
 msgid "Retype Password"
-msgstr "Wachtwoord herhalen"
+msgstr "Herhaal Wachtwoord"
 
-#: flask_user/forms.py:53 flask_user/forms.py:97
-msgid "Sign in"
-msgstr "Aanmelden"
+#: flask_user/forms.py:82 flask_user/templates/flask_user/login.html:20
+#: flask_user/templates/flask_user/register.html:5
+msgid "Register"
+msgstr "Inschrijven"
 
-#: flask_user/forms.py:79
-msgid "Password and Retype Password do not match"
-msgstr "Wachwoord end Wachtwoord herhalen komen niet overeen"
+#: flask_user/forms.py:108
+msgid "Password and Retype Password did not match"
+msgstr "Wachwoord end Herhaal Wachtwoord komen niet overeen"
 
-#: flask_user/forms.py:95
+#: flask_user/forms.py:126
 msgid "Remember me"
 msgstr ""
 
-#: flask_user/forms.py:122
+#: flask_user/forms.py:128 flask_user/templates/flask_user/login.html:5
+#: flask_user/templates/flask_user/register.html:22
+msgid "Sign in"
+msgstr "Aanmelden"
+
+#: flask_user/forms.py:151
 msgid "Incorrect Username and Password"
 msgstr "Ongeldig Gebruikersnaam en Wachtwoord"
 
-#: flask_user/forms.py:124
+#: flask_user/forms.py:153
 msgid "Incorrect Email and Password"
 msgstr "Ongeldig E-mail en Wachtwoord"
+
+#: flask_user/forms.py:162
+msgid "New Username"
+msgstr "Nieuwe Gebruikersnaam"
+
+#: flask_user/forms.py:167 flask_user/forms.py:190
+msgid "Old Password"
+msgstr "Oud Wachtwoord"
+
+#: flask_user/forms.py:168 flask_user/forms.py:191
+msgid "Old Password is required"
+msgstr "Oud Wachtwoord is verplicht"
+
+#: flask_user/forms.py:171
+#: flask_user/templates/flask_user/change_username.html:5
+msgid "Change Username"
+msgstr "Gebruikersnaam wijzigen"
+
+#: flask_user/forms.py:182 flask_user/forms.py:220
+msgid "Old Password is incorrect"
+msgstr "Oud Wachtwoord is fout"
+
+#: flask_user/forms.py:193
+msgid "New Password"
+msgstr "Nieuw Wachtwoord"
+
+#: flask_user/forms.py:194
+msgid "New Password is required"
+msgstr "Nieuw Wachtwoord is verplicht"
+
+#: flask_user/forms.py:196
+msgid "Retype New Password"
+msgstr "Herhaal Wachtwoord"
+
+#: flask_user/forms.py:198
+#: flask_user/templates/flask_user/change_password.html:5
+msgid "Change Password"
+msgstr "Wachtwoord wijzigen"
+
+#: flask_user/forms.py:225
+msgid "New Password and Retype Password did not match"
+msgstr "Nieuw Wachwoord end Herhaal Wachtwoord komen niet overeen"
+
+#: flask_user/templates/flask_user/login.html:20
+msgid "New to the system?"
+msgstr "Nieuw bij did systeem?"
+
+#: flask_user/templates/flask_user/register.html:22
+msgid "Already have an account?"
+msgstr "Heeft u zich al ingeschreven?"
 

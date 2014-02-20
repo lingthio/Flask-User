@@ -54,7 +54,6 @@ def login():
     # Process GET or invalid POST
     return render_template(um.login_template, form=form)
 
-@login_required
 def logout():
     um = current_app.user_manager
 

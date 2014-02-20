@@ -2,7 +2,7 @@
 
 {% block content %}
 {% from "flask_user/_macros.html" import render_field, render_submit_field %}
-<h1>Register</h1>
+<h1>{%trans%}Register{%endtrans%}</h1>
 
 <form action="" method="POST" novalidate formnovalidate class="form" role="form">
     {{ form.hidden_tag() }}
@@ -19,5 +19,5 @@
 </form>
 
 <br/>
-<p>Already have an account? <a href="{{ url_for('user.login') }}">Login</a></p>
+<p>{%trans%}Already have an account?{%endtrans%} <a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
 {% endblock %}

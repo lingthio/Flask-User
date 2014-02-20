@@ -2,7 +2,7 @@
 
 import os
 
-from flask import Flask
+from flask import Flask, current_app, request
 from flask.ext.babel import Babel
 from flask.ext.user import UserManager, SQLAlchemyAdapter
 
@@ -28,7 +28,20 @@ def create_app(config=None):
             app.config[key] = value
 
     # Setup Flask-Babel
-    babel = Babel(app)
+    app.babel = Babel(app)
+
+    @app.babel.localeselector
+    def get_locale():
+        # Get list of translated Locale objects
+        locales = current_app.babel.list_translations()
+        # Convert list of Locale objects to list of language codes
+        languages = []
+        for locale in locales:
+            languages.append(str(locale))
+        # Return best match language code
+        language = request.accept_languages.best_match(languages)
+        return language
+
 
     # Setup Flask-SQLAlchemy
     db.init_app(app)
@@ -46,15 +59,4 @@ def create_app(config=None):
 
     return app
 
-# # Setup Flask-Babel
-# from flask.ext.babel import Babel
-# babel = Babel(app)
-# LANGUAGES = {
-#     'en': 'English',
-#     'nl': 'Nederlands'
-# }
-# @babel.localeselector
-# def get_locale():
-#     locale = request.accept_languages.best_match(LANGUAGES.keys())
-#     return locale
 
