@@ -11,7 +11,7 @@ while developing the remaining feature set.
 
 Goals
 -----
-- Reliable (Automated tests currently cover 97% of the code)
+- Reliable (Automated tests currently cover 99% of the code)
 - Configurable (by changing files)
 - Customizable (by adding code)
 - Model agnostic (specify your own User model)
@@ -38,6 +38,19 @@ Planned Features
 - Registration by invitation only
 - Extensible: Flask-User-Roles for role based authorization
 - Packaging so it can be installed using `pip install flask-user'
+
+Reliable
+--------
+```
+> coverage report -m
+Name                                              Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------------
+flask_user/__init__                                  97      0   100%   
+flask_user/forms                                    123      0   100%   
+flask_user/views                                     57      4    93%   53, 69, 91, 114
+-------------------------------------------------------------------------------
+TOTAL                                               277      4    99%   
+```
 
 Configurable (by changing files)
 -----------------------------------
