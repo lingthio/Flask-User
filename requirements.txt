@@ -8,6 +8,7 @@ coverage==3.7.1
 Fabric==1.8.1
 passlib==1.6.2
 py-bcrypt==0.4
+pycrypto==2.6.1
 pytest==2.5.2
 
 # Flask

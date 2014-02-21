@@ -4,6 +4,7 @@ import os
 
 from flask import Flask, current_app, request
 from flask.ext.babel import Babel
+from flask.ext.mail import Mail
 from flask.ext.user import UserManager, SQLAlchemyAdapter
 
 from example_app.database import db
@@ -26,6 +27,9 @@ def create_app(config=None):
     if config:
         for key, value in config.iteritems():
             app.config[key] = value
+
+    # Setup Flask-Mail
+    app.mail = Mail(app)
 
     # Setup Flask-Babel
     app.babel = Babel(app)

@@ -1,0 +1,13 @@
+{% extends "flask_user/emails/_message_base.html" %}
+
+{% block message %}
+
+<p>Thank you for registering with Flask-User.</p>
+
+<p>Click on the link below to complete your registration:</p>
+
+<p><a href="{{ confirmation_link }}">Confirm your email address</a>.</p>
+
+<p>If you did not initiate this registration, you may safely ignore this email.</p>
+
+{% endblock %}

@@ -12,9 +12,11 @@ config = dict(
     SQLALCHEMY_DATABASE_URI='sqlite:///:memory:',   # In-memory sqlite DB
     WTF_CSRF_ENABLED=False,  # Disable CSRF token in Flask-Wtf
     LOGIN_DISABLED=False,    # Enable @register_required while app.testing=True
+    MAIL_SUPPRESS_SEND=True, # Suppress the sending of emails
     SERVER_NAME='localhost'  # Enable url_for() without request context
 )
 _app = create_app(config)
+_app.testing = True                       # Propagate exceptions (don't show 500 error page)
 ctx = _app.app_context()
 ctx.push()
 

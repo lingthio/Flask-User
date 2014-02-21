@@ -1,4 +1,4 @@
-{% extends "flask_user/flask_user_base.html" %}
+{% extends "flask_user/_flask_user_base.html" %}
 
 {% block content %}
 {% from "flask_user/_macros.html" import render_field, render_submit_field %}
@@ -15,7 +15,7 @@
     {{ render_submit_field(form.submit) }}
 </form>
 
-{% if user_manager.feature_register %}
+{% if user_manager.enable_registration %}
     <br/>
     <p>{%trans%}New to the system?{%endtrans%} <a href="{{ url_for('user.register') }}">{%trans%}Register{%endtrans%}</a></p>
 {% endif %}

@@ -1,0 +1,7 @@
+Dear User,
+
+{% block message %}
+{% endblock %}
+
+Sincerely,
+The Flask-User Team

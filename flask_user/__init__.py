@@ -9,13 +9,15 @@
 """
 
 from flask import Blueprint, current_app
-from flask.ext.babel import gettext as _
-from flask.ext.login import LoginManager, current_user
-from passlib.context import CryptContext
+from flask_babel import gettext as _
+from flask_login import LoginManager
+from flask_user.db_interfaces import DBInterface
 
-from werkzeug.datastructures import ImmutableList
+from password_manager import init_password_crypt_context
+from token_manager import TokenManager
 
-__version__ = '0.0.1'
+__version__ = '0.2.0'
+from db_interfaces import SQLAlchemyAdapter
 
 class UserManager():
     """
@@ -31,17 +33,23 @@ class UserManager():
         self.db_adapter = db_adapter
 
         # Customizable view functions
-        self.register_view_function = views.register
-        self.login_view_function  = views.login
-        self.logout_view_function = views.logout
         self.change_password_view_function = views.change_password
         self.change_username_view_function = views.change_username
+        self.confirm_email_view_function   = views.confirm_email
+        self.forgot_password_view_function = views.forgot_password
+        self.login_view_function           = views.login
+        self.logout_view_function          = views.logout
+        self.register_view_function        = views.register
+        self.resend_confirmation_email_view_function = views.resend_confirmation_email
+        self.reset_password_view_function   = views.reset_password
 
         # Customizable forms
-        self.register_form = forms.RegisterForm
-        self.login_form = forms.LoginForm
         self.change_password_form = forms.ChangePasswordForm
         self.change_username_form = forms.ChangeUsernameForm
+        self.forgot_password_form  = forms.ForgotPasswordForm
+        self.login_form           = forms.LoginForm
+        self.register_form        = forms.RegisterForm
+        self.reset_password_form  = forms.ResetPasswordForm
 
         # Customizable validators
         self.password_validator = forms.password_validator
@@ -51,8 +59,7 @@ class UserManager():
         self.logout_next = None
 
         # Customizable passlib crypt context
-        self.crypt_context = CryptContext(schemes=['bcrypt', 'sha512_crypt', 'pbkdf2_sha512'], default='bcrypt')
-                # See https://pythonhosted.org/passlib/new_app_quickstart.html#choosing-a-hash
+        self.password_crypt_context = init_password_crypt_context()
 
         if (app):
             self.init_app(app)
@@ -61,141 +68,88 @@ class UserManager():
         """
         Binds the UserManager to the specified app.
         """
+        app.user_manager = self
 
         # Set default features
-        self.feature_register        = app.config.setdefault('USER_FEATURE_REGISTER',        True)
-        self.feature_invite          = app.config.setdefault('USER_FEATURE_INVITE',          True)
-        self.feature_change_password = app.config.setdefault('USER_FEATURE_CHANGE_PASSWORD', True)
-        self.feature_change_username = app.config.setdefault('USER_FEATURE_CHANGE_USERNAME', True)
-        self.feature_forget_password = app.config.setdefault('USER_FEATURE_FORGOT_PASSWORD', True)
-        self.feature_confirm_email   = app.config.setdefault('USER_FEATURE_CONFIRM_EMAIL',   True)
+        self.enable_change_password     = app.config.setdefault('USER_ENABLE_CHANGE_PASSWORD',      True)
+        self.enable_change_username     = app.config.setdefault('USER_ENABLE_CHANGE_USERNAME',      True)
+        self.enable_forgot_password     = app.config.setdefault('USER_ENABLE_FORGOT_PASSWORD',      True)
+        self.enable_registration        = app.config.setdefault('USER_ENABLE_REGISTRATION',         True)
+        self.require_email_confirmation = app.config.setdefault('USER_REQUIRE_EMAIL_CONFIRMATION',  True)
+        self.require_invitation         = app.config.setdefault('USER_REQUIRE_INVITATION',          False)
 
         # Set default settings
-        self.register_with_retype_password = app.config.setdefault('USER_REGISTER_WITH_RETYPE_PASSWORD', True)
-        self.login_with_username           = app.config.setdefault('USER_LOGIN_WITH_USERNAME',        False)
         self.change_password_with_retype_password = app.config.setdefault('USER_CHANGE_PASSWORD_WITH_RETYPE_PASSWORD', True)
+        self.login_with_username           = app.config.setdefault('USER_LOGIN_WITH_USERNAME',           False)
+        self.register_with_email           = app.config.setdefault('USER_REGISTER_WITH_EMAIL',           True)
+        self.register_with_retype_password = app.config.setdefault('USER_REGISTER_WITH_RETYPE_PASSWORD', True)
 
         # Set default URLs
-        self.register_url        = app.config.setdefault('USER_REGISTER_URL',        '/user/register')
-        self.login_url           = app.config.setdefault('USER_LOGIN_URL',           '/user/sign-in')
-        self.logout_url          = app.config.setdefault('USER_LOGOUT_URL',          '/user/sign-out')
         self.change_password_url = app.config.setdefault('USER_CHANGE_PASSWORD_URL', '/user/change-password')
         self.change_username_url = app.config.setdefault('USER_CHANGE_USERNAME_URL', '/user/change-username')
+        self.confirm_email_url   = app.config.setdefault('USER_CONFIRM_EMAIL_URL',   '/user/confirm-email/<token>')
+        self.forgot_password_url = app.config.setdefault('USER_FORGOT_PASSWORD_URL', '/user/forgot-password')
+        self.login_url           = app.config.setdefault('USER_LOGIN_URL',           '/user/sign-in')
+        self.logout_url          = app.config.setdefault('USER_LOGOUT_URL',          '/user/sign-out')
+        self.register_url        = app.config.setdefault('USER_REGISTER_URL',        '/user/register')
+        self.resend_confirmation_email_url = app.config.setdefault('USER_RESEND_CONFIRMATION_EMAIL_URL', '/user/resend-confirmation-email')
+        self.reset_password_url   = app.config.setdefault('USER_RESET_PASSWORD_URL',  '/user/reset-password/<token>')
 
         # Set default template files
-        self.register_template        = app.config.setdefault('USER_REGISTER_TEMPLATE',         'flask_user/register.html')
-        self.login_template           = app.config.setdefault('USER_LOGIN_TEMPLATE',            'flask_user/login.html')
         self.change_password_template = app.config.setdefault('USER_CHANGE_PASSWORD_TEMPLATE',  'flask_user/change_password.html')
         self.change_username_template = app.config.setdefault('USER_CHANGE_USERNAME_TEMPLATE',  'flask_user/change_username.html')
+        self.forgot_password_template = app.config.setdefault('USER_FORGOT_PASSWORD_TEMPLATE',  'flask_user/forgot_password.html')
+        self.login_template           = app.config.setdefault('USER_LOGIN_TEMPLATE',            'flask_user/login.html')
+        self.register_template        = app.config.setdefault('USER_REGISTER_TEMPLATE',         'flask_user/register.html')
+        self.resend_confirmation_email_template = app.config.setdefault('USER_RESEND_CONFIRMATION_EMAIL_TEMPLATE', 'flask_user/resend_confirmation_email.html')
+        self.reset_password_template = app.config.setdefault('USER_RESET_PASSWORD_TEMPLATE', 'flask_user/reset_password.html')
 
         # Setup Flask-Login
         self.lm = LoginManager()
-        #self.lm.anonymous_user = AnonymousUser
-        self.lm.login_view = 'user.login'
-        self.lm.user_loader(_user_loader)
         self.lm.login_message = _('Please Sign in to access this page.')
         self.lm.login_message_category = 'error'
+        self.lm.login_view = 'user.login'
+        self.lm.user_loader(_user_loader)
         #login_manager.token_loader(_token_loader)
-
-        #if cv('FLASH_MESSAGES', app=app):
-        #    lm.login_message, lm.login_message_category = cv('MSG_LOGIN', app=app)
-        #    lm.needs_refresh_message, lm.needs_refresh_message_category = cv('MSG_REFRESH', app=app)
-        #else:
-        #    lm.login_message = None
-        #    lm.needs_refresh_message = None
-
         self.lm.init_app(app)
 
+        # Initialize TokenManager
+        self.token_manager = TokenManager(app.config.get('SECRET_KEY'))
+
         # Add URL Routes
-        app.add_url_rule(self.register_url, 'user.register', self.register_view_function, methods=['GET', 'POST'])
+        if self.require_email_confirmation:
+            app.add_url_rule(self.confirm_email_url, 'user.confirm_email', self.confirm_email_view_function)
+            app.add_url_rule(self.resend_confirmation_email_url, 'user.resend_confirmation_email', self.resend_confirmation_email_view_function)
+        if self.enable_change_password:
+            app.add_url_rule(self.change_password_url, 'user.change_password', self.change_password_view_function, methods=['GET', 'POST'])
+        if self.enable_change_username:
+            app.add_url_rule(self.change_username_url, 'user.change_username', self.change_username_view_function, methods=['GET', 'POST'])
         app.add_url_rule(self.login_url,  'user.login',  self.login_view_function,  methods=['GET', 'POST'])
         app.add_url_rule(self.logout_url, 'user.logout', self.logout_view_function, methods=['GET', 'POST'])
-        app.add_url_rule(self.change_password_url, 'user.change_password', self.change_password_view_function, methods=['GET', 'POST'])
-        app.add_url_rule(self.change_username_url, 'user.change_username', self.change_username_view_function, methods=['GET', 'POST'])
+        if self.enable_registration:
+            app.add_url_rule(self.register_url, 'user.register', self.register_view_function, methods=['GET', 'POST'])
+        if self.enable_forgot_password:
+            app.add_url_rule(self.forgot_password_url, 'user.forgot_password', self.forgot_password_view_function, methods=['GET', 'POST'])
+            app.add_url_rule(self.reset_password_url, 'user.reset_password', self.reset_password_view_function, methods=['GET', 'POST'])
 
         # Add flask_user/templates directory using a Blueprint
         blueprint = Blueprint('flask_user', 'flask_user', template_folder='templates')
         app.register_blueprint(blueprint)
 
         # Add context processor
-        app.context_processor(_account_context_processor)
-
-        app.user_manager = self
+        app.context_processor(_flask_user_context_processor)
 
 
-class DBInterface(object):
+def _flask_user_context_processor():
     """
-    This object is used to shield Flask-User from ORM specific dependencies.
-    It's used as the base class for ORM specific adapters like SQLAlchemyAdapter.
+    Make 'user_manager' available to Jinja2 templates
     """
-    def __init__(self, db, UserClass, EmailClass=None):
-        self.db = db
-        self.UserClass = UserClass
-        if not EmailClass:
-            EmailClass = UserClass
-        self.EmailClass = EmailClass
+    return dict(user_manager=current_app.user_manager)
 
-    def find_user_by_email(self, email): # pragma: no cover
-        raise NotImplementedError('DBInterface.find_user_by_email() not implemented')
-
-    def find_user_by_username(self, username): # pragma: no cover
-        raise NotImplementedError('DBInterface.find_user_by_username() not implemented')
-
-
-class SQLAlchemyAdapter(DBInterface):
-    """
-    This object is used to shield Flask-User from SQLAlchemy specific dependencies.
-    """
-    def __init__(self, db, UserClass, EmailClass=None):
-        super(SQLAlchemyAdapter, self).__init__(db, UserClass, EmailClass)
-
-    def add_user(self, **kwargs):
-        self.db.session.add(self.UserClass(**kwargs))
-        self.db.session.commit()
-
-    def set_username(self, user, username):
-        user.username = username
-        self.db.session.commit()
-
-    def set_password(self, user, hashed_password):
-        user.password = hashed_password
-        self.db.session.commit()
-
-    def find_user_by_id(self, id):
-        return self.EmailClass.query.filter(self.EmailClass.id==id).first()
-
-    def find_user_by_email(self, email):
-        return self.EmailClass.query.filter(self.EmailClass.email.ilike(email)).first()
-
-    def find_user_by_username(self, username):
-        return self.UserClass.query.filter(self.UserClass.username.ilike(username)).first()
-
-    def email_is_available(self, new_email):
-        """
-        Return True if new_email does not exist.
-        Return False otherwise. 
-        """
-        # See if new_email is available
-        return self.EmailClass.query.filter(self.EmailClass.email.ilike(new_email)).count()==0
-
-    def username_is_available(self, new_username, old_username=''):
-        """
-        Return True if new_username does not exist or if new_username equals old_username.
-        Return False otherwise. 
-        """
-        # To avoid user confusion, we allow the old email if the user is currently logged in
-        if current_user.is_authenticated():
-            old_username = current_user.username
-        else:
-            old_username = ''
-        # See if new_username is available
-        return self.UserClass.query.filter(self.UserClass.username.ilike(new_username)).count()==0 or new_username==old_username
-
-def _account_context_processor():
-    return dict(
-        user_manager=current_app.user_manager
-            )
 
 def _user_loader(user_id):
-    um = current_app.user_manager
-    return um.db_adapter.find_user_by_id(id=user_id)
+    """
+    Flask-Login helper function to load user by user_id
+    """
+    user_manager = current_app.user_manager
+    return user_manager.db_adapter.find_user_by_id(user_id=user_id)
