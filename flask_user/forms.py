@@ -123,7 +123,7 @@ class ChangePasswordForm(Form):
     def validate(self):
         # Use feature config to remove unused form fields
         user_manager =  current_app.user_manager
-        if not user_manager.change_password_with_retype_password:
+        if not user_manager.retype_password:
             delattr(self, 'retype_password')
 
         # Add custom password validator if needed
@@ -147,9 +147,12 @@ class ChangePasswordForm(Form):
         return True
 
 
-# TODO:
 class ForgotPasswordForm(Form):
-    pass
+    email = StringField(_('Email'), validators=[
+        validators.Required(_('Email is required')),
+        validators.Email(_('Invalid Email')),
+        ])
+    submit = SubmitField(_('Send reset password email'))
 
 
 class LoginForm(Form):
@@ -225,7 +228,7 @@ class RegisterForm(Form):
             delattr(self, 'username')
         if not user_manager.register_with_email:
             delattr(self, 'email')
-        if not user_manager.register_with_retype_password:
+        if not user_manager.retype_password:
             delattr(self, 'retype_password')
 
         # Add custom username validator if needed
@@ -254,4 +257,32 @@ class RegisterForm(Form):
 
 # TODO:
 class ResetPasswordForm(Form):
-    pass
+    new_password = PasswordField(_('New Password'), validators=[
+        validators.Required(_('New Password is required')),
+        ])
+    retype_password = PasswordField(_('Retype New Password'), validators=[
+        validators.EqualTo('new_password', message=_('New Password and Retype Password did not match'))
+        ])
+    next = HiddenField()
+    submit = SubmitField(_('Change Password'))
+
+    def validate(self):
+        # Use feature config to remove unused form fields
+        user_manager =  current_app.user_manager
+        if not user_manager.retype_password:
+            delattr(self, 'retype_password')
+
+        # Add custom password validator if needed
+        has_been_added = False
+        for v in self.new_password.validators:
+            if v==user_manager.password_validator:
+                has_been_added = True
+        if not has_been_added:
+            self.new_password.validators.append(user_manager.password_validator)
+
+        # Validate field-validators
+        if not super(ResetPasswordForm, self).validate():
+            return False
+
+        # All is well
+        return True

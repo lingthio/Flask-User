@@ -79,10 +79,9 @@ class UserManager():
         self.require_invitation         = app.config.setdefault('USER_REQUIRE_INVITATION',          False)
 
         # Set default settings
-        self.change_password_with_retype_password = app.config.setdefault('USER_CHANGE_PASSWORD_WITH_RETYPE_PASSWORD', True)
-        self.login_with_username           = app.config.setdefault('USER_LOGIN_WITH_USERNAME',           False)
-        self.register_with_email           = app.config.setdefault('USER_REGISTER_WITH_EMAIL',           True)
-        self.register_with_retype_password = app.config.setdefault('USER_REGISTER_WITH_RETYPE_PASSWORD', True)
+        self.retype_password            = app.config.setdefault('USER_RETYPE_PASSWORD',             True)
+        self.login_with_username        = app.config.setdefault('USER_LOGIN_WITH_USERNAME',         False)
+        self.register_with_email        = app.config.setdefault('USER_REGISTER_WITH_EMAIL',         True)
 
         # Set default URLs
         self.change_password_url = app.config.setdefault('USER_CHANGE_PASSWORD_URL', '/user/change-password')

@@ -105,7 +105,7 @@ def test_register_form_with_username(client):
     # ****************
 
     # Submit valid form with retype password
-    user_manager.register_with_retype_password = True
+    user_manager.retype_password = True
     username = USERNAME1
     email = EMAIL1
     response = post_register_form(client, username, email)
@@ -119,7 +119,7 @@ def test_register_form_with_username(client):
     assert user.active
 
     # Submit valid form without retype password
-    user_manager.register_with_retype_password = True
+    user_manager.retype_password = True
     username = 'user2'
     response = post_register_form(client, username, email)
     assert response.status_code == 200
@@ -136,7 +136,7 @@ def test_register_form_with_username(client):
     # *******************
     # Assumes that 'user1' and 'user2' exist
 
-    user_manager.register_with_retype_password = True
+    user_manager.retype_password = True
     username = 'user3'
     email = None
 
@@ -184,7 +184,7 @@ def test_register_form_with_email(client):
     # ****************
 
     # Submit valid form with retype password
-    user_manager.register_with_retype_password = True
+    user_manager.retype_password = True
     email = EMAIL1
     response = post_register_form(client, '', email)
     assert response.status_code == 200
@@ -197,7 +197,7 @@ def test_register_form_with_email(client):
     assert user.active
 
     # Submit valid form without retype password
-    user_manager.register_with_retype_password = False
+    user_manager.retype_password = False
     email = 'user2@example.com'
     response = post_register_form(client, '', email)
     assert response.status_code == 200
@@ -214,7 +214,7 @@ def test_register_form_with_email(client):
     # *******************
     # Assumes 'user1@xample.com' and 'user2@example.com' exists
 
-    user_manager.register_with_retype_password = True
+    user_manager.retype_password = True
     username = None
     email = 'user3@example.com'
 
@@ -374,7 +374,7 @@ def test_change_password_form(client):
     test_utils.login(client, 'user1', '', PASSWORD1)
 
     # Change password to 'Password9' with retype_password
-    user_manager.change_password_with_retype_password = True
+    user_manager.retype_password = True
     response = post_change_password_form(client, PASSWORD1, 'Password9')
     assert test_utils.response_has_no_errors(response)
     
@@ -383,7 +383,7 @@ def test_change_password_form(client):
     test_utils.login(client, 'user1', '', 'Password9')
 
     # Change password back to 'Password1' without retype_password
-    user_manager.change_password_with_retype_password = False
+    user_manager.retype_password = False
     response = post_change_password_form(client, 'Password9', PASSWORD1)
     assert test_utils.response_has_no_errors(response)
 
@@ -395,7 +395,7 @@ def test_change_password_form(client):
 
     # Log in as 'user1'
     test_utils.login(client, 'user1')
-    user_manager.change_password_with_retype_password = True
+    user_manager.retype_password = True
 
     # Test empty old password
     response = post_change_password_form(client, '', 'Password2')

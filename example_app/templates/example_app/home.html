@@ -7,6 +7,9 @@
     {% if user_manager.enable_registration %}
         <p><a href="{{ url_for('user.register') }}">{%trans%}Register{%endtrans%}</a></p>
     {% endif %}
+    {% if user_manager.enable_forgot_password %}
+        <p><a href="{{ url_for('user.forgot_password') }}">{%trans%}Forgot Password?{%endtrans%}</a></p>
+    {% endif %}
 {% else %}
     <p></p>{%trans%}Hello{%endtrans%} {{ current_user.username or current_user.email }}</p>
     {% if user_manager.enable_change_username %}

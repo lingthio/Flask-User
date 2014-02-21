@@ -17,6 +17,7 @@
 
 {% if user_manager.enable_registration %}
     <br/>
+    <p>{%trans%}Forgot your Password?{%endtrans%} <a href="{{ url_for('user.forgot_password') }}">{%trans%}Reset Password{%endtrans%}</a></p>
     <p>{%trans%}New to the system?{%endtrans%} <a href="{{ url_for('user.register') }}">{%trans%}Register{%endtrans%}</a></p>
 {% endif %}
 

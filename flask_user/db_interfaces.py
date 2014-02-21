@@ -41,6 +41,12 @@ class DBInterface(object):
         # See if new_username is available
         return new_username==old_username or self.find_user_by_username(new_username)==None
 
+    def verify_password_reset_token(self, user, token):
+        return user.password_reset_token == token
+
+    def get_email(self, user):
+        return user.email
+
 
 class SQLAlchemyAdapter(DBInterface):
     """
@@ -62,7 +68,6 @@ class SQLAlchemyAdapter(DBInterface):
         """
         Mark the user record as active and sets email_confirmed_at to utcnow().
         """
-        print "confirm_user", user_id
         user = self.find_user_by_id(user_id)
         if user:
             if not user.active:
@@ -79,6 +84,10 @@ class SQLAlchemyAdapter(DBInterface):
 
     def set_password(self, user, hashed_password):
         user.password = hashed_password
+        self.db.session.commit()
+
+    def set_password_reset_token(self, user, token):
+        user.password_reset_token = token
         self.db.session.commit()
 
     def find_user_by_id(self, user_id):

@@ -13,7 +13,7 @@
         {{ render_field(form.email) }}
     {% endif %}
     {{ render_field(form.password) }}
-    {% if user_manager.register_with_retype_password %}
+    {% if user_manager.retype_password %}
         {{ render_field(form.retype_password) }}
     {% endif %}
     {{ render_submit_field(form.submit) }}
