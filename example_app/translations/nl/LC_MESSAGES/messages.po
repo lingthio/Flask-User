@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-02-20 15:08-0800\n"
+"POT-Creation-Date: 2014-02-20 16:03-0800\n"
 "PO-Revision-Date: 2014-02-19 15:35-0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: nl <LL@li.org>\n"
@@ -20,13 +19,15 @@ msgstr ""
 
 #: flask_user/__init__.py:96
 msgid "Please Sign in to access this page."
-msgstr ""
+msgstr "Gaarne inloggen om toegang tot deze pagina te verkrijgen."
 
 #: flask_user/forms.py:31
 msgid ""
 "Password must have at least 6 characters with one lowercase letter, one "
 "uppercase letter and one number"
 msgstr ""
+"Wachtwoord moet minimaal 6 tekens te hebben met een kleine letter, een "
+"hoofdletter en een cijfer"
 
 #: flask_user/forms.py:40
 msgid "Username must be at least 3 characters long"
@@ -49,7 +50,6 @@ msgid "Username"
 msgstr "Gebruikersnaam"
 
 #: flask_user/forms.py:69 flask_user/forms.py:117 flask_user/forms.py:163
-#, fuzzy
 msgid "Username is required"
 msgstr "E-mail is verplicht"
 
@@ -79,6 +79,7 @@ msgstr "Herhaal Wachtwoord"
 
 #: flask_user/forms.py:82 flask_user/templates/flask_user/login.html:20
 #: flask_user/templates/flask_user/register.html:5
+#: example_app/templates/example_app/home.html:8
 msgid "Register"
 msgstr "Inschrijven"
 
@@ -92,6 +93,7 @@ msgstr ""
 
 #: flask_user/forms.py:128 flask_user/templates/flask_user/login.html:5
 #: flask_user/templates/flask_user/register.html:22
+#: example_app/templates/example_app/home.html:6
 msgid "Sign in"
 msgstr "Aanmelden"
 
@@ -147,20 +149,20 @@ msgstr "Nieuw Wachwoord end Herhaal Wachtwoord komen niet overeen"
 
 #: flask_user/views.py:47
 msgid "You have signed in successfully."
-msgstr ""
+msgstr "U heeft zich met success aangemeld"
 
 #: flask_user/views.py:65
 msgid "You have signed out successfully."
-msgstr ""
+msgstr "U heeft zich met success afgemeld."
 
 #: flask_user/views.py:86
-msgid "Your Password has been changed successfully."
-msgstr ""
+msgid "Your password has been changed successfully."
+msgstr "Uw wachtwoord is met success gewijzigd."
 
 #: flask_user/views.py:112
 #, python-format
-msgid "Your Username has been changed to %(new_username)s."
-msgstr ""
+msgid "Your username has been changed to '%(username)s'."
+msgstr "Uw gebruikersnaam is gewijzigd in '%(username)s'."
 
 #: flask_user/templates/flask_user/login.html:20
 msgid "New to the system?"
@@ -170,6 +172,21 @@ msgstr "Nieuw bij did systeem?"
 msgid "Already have an account?"
 msgstr "Heeft u zich al ingeschreven?"
 
-#~ msgid "Your Username has been changed successfully."
-#~ msgstr ""
+#: example_app/templates/example_app/home.html:11
+msgid "Hello"
+msgstr "Hallo"
+
+#: example_app/templates/example_app/home.html:13
+#, fuzzy
+msgid "Change username"
+msgstr "Gebruikersnaam wijzigen"
+
+#: example_app/templates/example_app/home.html:16
+#, fuzzy
+msgid "Change password"
+msgstr "Wachtwoord wijzigen"
+
+#: example_app/templates/example_app/home.html:18
+msgid "Sign out"
+msgstr "Afmelden"
 

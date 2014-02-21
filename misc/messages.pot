@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-02-20 15:08-0800\n"
+"POT-Creation-Date: 2014-02-20 16:03-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,6 +77,7 @@ msgstr ""
 
 #: flask_user/forms.py:82 flask_user/templates/flask_user/login.html:20
 #: flask_user/templates/flask_user/register.html:5
+#: example_app/templates/example_app/home.html:8
 msgid "Register"
 msgstr ""
 
@@ -90,6 +91,7 @@ msgstr ""
 
 #: flask_user/forms.py:128 flask_user/templates/flask_user/login.html:5
 #: flask_user/templates/flask_user/register.html:22
+#: example_app/templates/example_app/home.html:6
 msgid "Sign in"
 msgstr ""
 
@@ -152,12 +154,12 @@ msgid "You have signed out successfully."
 msgstr ""
 
 #: flask_user/views.py:86
-msgid "Your Password has been changed successfully."
+msgid "Your password has been changed successfully."
 msgstr ""
 
 #: flask_user/views.py:112
 #, python-format
-msgid "Your Username has been changed to %(new_username)s."
+msgid "Your username has been changed to '%(username)s'."
 msgstr ""
 
 #: flask_user/templates/flask_user/login.html:20
@@ -166,5 +168,21 @@ msgstr ""
 
 #: flask_user/templates/flask_user/register.html:22
 msgid "Already have an account?"
+msgstr ""
+
+#: example_app/templates/example_app/home.html:11
+msgid "Hello"
+msgstr ""
+
+#: example_app/templates/example_app/home.html:13
+msgid "Change username"
+msgstr ""
+
+#: example_app/templates/example_app/home.html:16
+msgid "Change password"
+msgstr ""
+
+#: example_app/templates/example_app/home.html:18
+msgid "Sign out"
 msgstr ""
 

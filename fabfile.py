@@ -17,7 +17,7 @@ def coverage():
 
 @task
 def babel():
-    local('pybabel extract -F misc/babel.cfg -c NOTE -o misc/messages.pot flask_user')
+    local('pybabel extract -F misc/babel.cfg -c NOTE -o misc/messages.pot flask_user example_app')
     local('pybabel update -i misc/messages.pot -d example_app/translations -l en')
     local('pybabel update -i misc/messages.pot -d example_app/translations -l nl')
     local('pybabel compile -f -d example_app/translations')
