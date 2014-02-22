@@ -9,6 +9,8 @@ This package is in active development (Feb 2014) but not yet ready for productio
 We believe in early feedback, so we are publishing a few features early
 while developing the remaining feature set.
 
+[![Build Status](https://travis-ci.org/solidbuilds/flask-user.png?branch=master)](https://travis-ci.org/solidbuilds/flask-user)
+
 __Completed Features__
 
 - Register (sign up)
