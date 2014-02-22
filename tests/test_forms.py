@@ -7,9 +7,6 @@ from tests import utils as test_utils
 # *************
 # ** Defines **
 # *************
-USERNAME1 = 'user1'
-EMAIL1 = 'user1@example.com'
-PASSWORD1 = 'Password1'
 SHORT_USERNAME = 'Aa'
 INVALID_EMAIL = 'user1.example.com'
 invalid_usernames = (
@@ -29,7 +26,7 @@ invalid_passwords = (
 # ** Utility functions **
 # ***********************
 
-def post_register_form(client, username=None, email=None, password=PASSWORD1, retype_password=None):
+def post_register_form(client, username=None, email=None, password='Password1', retype_password=None):
     """
     POST a Register form
     """
@@ -43,7 +40,8 @@ def post_register_form(client, username=None, email=None, password=PASSWORD1, re
         retype_password=retype_password,
     ))
 
-def post_login_form(client, username=None, email=None, password=PASSWORD1):
+
+def post_login_form(client, username=None, email=None, password='Password1'):
     """
     POST a Login form
     """
@@ -54,7 +52,8 @@ def post_login_form(client, username=None, email=None, password=PASSWORD1):
         password=password
     ), follow_redirects=True)
 
-def post_change_username_form(client, new_username=None, old_password=PASSWORD1):
+
+def post_change_username_form(client, new_username=None, old_password='Password1'):
     """
     POST a Change User form
     """
@@ -64,7 +63,8 @@ def post_change_username_form(client, new_username=None, old_password=PASSWORD1)
         old_password=old_password
     ), follow_redirects=True)
 
-def post_change_password_form(client, old_password=PASSWORD1, new_password=PASSWORD1, retype_password=None):
+
+def post_change_password_form(client, old_password='Password1', new_password='Password1', retype_password=None):
     """
     POST a Change Password form
     """
@@ -87,27 +87,31 @@ def post_change_password_form(client, old_password=PASSWORD1, new_password=PASSW
 def run_all_tests(client):
     test_register_form_with_username(client)
     test_register_form_with_email(client)
+    test_confirm_email(client)
     test_login_form_with_username(client)
     test_login_form_with_email(client)
     test_change_username_form(client)
     test_change_password_form(client)
+    test_forgot_password_form(client)
+    test_reset_password(client)
 
 def test_register_form_with_username(client):
     # Set user manager config
     user_manager =  current_app.user_manager
     user_manager.enable_registration = True
-    user_manager.require_email_confirmation=False
+    user_manager.register_with_email = True
     user_manager.login_with_username = True
-    user_manager.register_with_email = False
 
     # ****************
     # ** Valid Form **
     # ****************
 
-    # Submit valid form with retype password
+    # Submit valid form with retype password and email confirmation
     user_manager.retype_password = True
-    username = USERNAME1
-    email = EMAIL1
+    user_manager.require_email_confirmation=True
+
+    username = 'user1'
+    email = 'user1@example.com'
     response = post_register_form(client, username, email)
     assert response.status_code == 200
     assert test_utils.response_has_no_errors(response)
@@ -116,11 +120,14 @@ def test_register_form_with_username(client):
     user = User.query.filter(User.username==username).first()
     assert user
     assert user.username == username
-    assert user.active
+    assert user.active == False
 
-    # Submit valid form without retype password
-    user_manager.retype_password = True
+    # Submit valid form without retype password and without email confirmation
+    user_manager.retype_password = False
+    user_manager.require_email_confirmation=False
+
     username = 'user2'
+    email = 'user2@example.com'
     response = post_register_form(client, username, email)
     assert response.status_code == 200
     assert test_utils.response_has_no_errors(response)
@@ -129,7 +136,7 @@ def test_register_form_with_username(client):
     user = User.query.filter(User.username==username).first()
     assert user
     assert user.username == username
-    assert user.active
+    assert user.active == True
 
     # *******************
     # ** Invalid Forms **
@@ -137,7 +144,7 @@ def test_register_form_with_username(client):
     # Assumes that 'user1' and 'user2' exist
 
     user_manager.retype_password = True
-    username = 'user3'
+    username = 'user8'
     email = None
 
     # Test empty username
@@ -175,7 +182,6 @@ def test_register_form_with_email(client):
     # Set user manager config
     user_manager =  current_app.user_manager
     user_manager.enable_registration = True
-    user_manager.require_email_confirmation=False
     user_manager.login_with_username = False
     user_manager.register_with_email = True
 
@@ -183,9 +189,11 @@ def test_register_form_with_email(client):
     # ** Valid Form **
     # ****************
 
-    # Submit valid form with retype password
+    # Submit valid form with retype password and email confirmation
     user_manager.retype_password = True
-    email = EMAIL1
+    user_manager.require_email_confirmation = True
+
+    email = 'user3@example.com'
     response = post_register_form(client, '', email)
     assert response.status_code == 200
     assert test_utils.response_has_no_errors(response)
@@ -194,11 +202,13 @@ def test_register_form_with_email(client):
     user = User.query.filter(User.email==email).first()
     assert user
     assert user.email == email
-    assert user.active
+    assert user.active == False
 
-    # Submit valid form without retype password
+    # Submit valid form without retype password and without email confirmation
     user_manager.retype_password = False
-    email = 'user2@example.com'
+    user_manager.require_email_confirmation = False
+
+    email = 'user4@example.com'
     response = post_register_form(client, '', email)
     assert response.status_code == 200
     assert test_utils.response_has_no_errors(response)
@@ -207,7 +217,7 @@ def test_register_form_with_email(client):
     user = User.query.filter(User.email==email).first()
     assert user
     assert user.email == email
-    assert user.active
+    assert user.active == True
 
     # *******************
     # ** Invalid Forms **
@@ -216,7 +226,7 @@ def test_register_form_with_email(client):
 
     user_manager.retype_password = True
     username = None
-    email = 'user3@example.com'
+    email = 'user8@example.com'
 
     # Test empty email
     response = post_register_form(client, username, '')
@@ -244,6 +254,60 @@ def test_register_form_with_email(client):
     assert test_utils.response_has_string(response, 'Password and Retype Password did not match')
 
 
+def test_confirm_email(client):
+    user_manager = current_app.user_manager
+
+    # *****************
+    # ** Valid Token **
+    # *****************
+
+    # Generate confirmation token for user 1
+    user1 = User.query.filter(User.username=='user1').first()
+    confirmation_token = user_manager.token_manager.generate_token(user1.id)
+
+    # Visit confirmation page
+    url = url_for('user.confirm_email', token=confirmation_token)
+    response = client.get(url, follow_redirects=True)
+
+    assert test_utils.response_has_no_errors(response)
+    assert user1.active
+    assert user1.email_confirmed_at
+
+    # *******************
+    # ** Invalid Token **
+    # *******************
+
+    url = url_for('user.confirm_email', token='InvalidToken')
+    response = client.get(url, follow_redirects=True)
+    assert test_utils.response_has_string(response, 'Invalid confirmation token.')
+
+    # *******************
+    # ** Expired Token **
+    # *******************
+
+    # Generate confirmation token for user 3
+    user3 = User.query.filter(User.email=='user3@example.com').first()
+    user_manager =  current_app.user_manager
+    confirmation_token = user_manager.token_manager.generate_token(user3.id)
+
+    user_manager.confirm_email_expiration = 1   # set 1 second expiration
+    time.sleep(2)                               # wait for 2 seconds
+    url = url_for('user.confirm_email', token=confirmation_token)
+    response = client.get(url, follow_redirects=True)
+    assert test_utils.response_has_string(response, 'Your confirmation token has expired.')
+
+    # *****************
+    # ** Valid Token **
+    # *****************
+
+    user_manager.confirm_email_expiration = 2*24*3600  # 2 days
+    url = url_for('user.confirm_email', token=confirmation_token)
+    response = client.get(url, follow_redirects=True)
+
+    assert test_utils.response_has_no_errors(response)
+    assert user3.active
+    assert user3.email_confirmed_at
+
 def test_login_form_with_username(client):
     # Set user manager config
     user_manager =  current_app.user_manager
@@ -254,7 +318,7 @@ def test_login_form_with_username(client):
     # ** Valid Form **
     # ****************
 
-    test_utils.login(client, USERNAME1, '')
+    test_utils.login(client, 'user1', '')
     test_utils.logout(client)
 
     # ******************
@@ -270,11 +334,11 @@ def test_login_form_with_username(client):
     assert test_utils.response_has_string(response, 'Incorrect Username and Password')
 
     # Test empty password
-    response = post_login_form(client, USERNAME1, None, '')
+    response = post_login_form(client, 'user1', None, '')
     assert test_utils.response_has_string(response, 'Password is required')
 
     # Test incorrect password
-    response = post_login_form(client, USERNAME1, None, 'Password9')
+    response = post_login_form(client, 'user1', None, 'Password9')
     assert test_utils.response_has_string(response, 'Incorrect Username and Password')
 
 def test_login_form_with_email(client):
@@ -287,8 +351,12 @@ def test_login_form_with_email(client):
     # ** Valid Form **
     # ****************
 
-    test_utils.login(client, '', EMAIL1)
+    test_utils.login(client, '', 'user1@example.com')
     test_utils.logout(client)
+
+    # ******************
+    # ** Invalid Form **
+    # ******************
 
     # Test empty email
     response = post_login_form(client, '', None)
@@ -299,11 +367,11 @@ def test_login_form_with_email(client):
     assert test_utils.response_has_string(response, 'Incorrect Email and Password')
 
     # Test empty password
-    response = post_login_form(client, None, EMAIL1, '')
+    response = post_login_form(client, None, 'user1@example.com', '')
     assert test_utils.response_has_string(response, 'Password is required')
 
     # Test incorrect password
-    response = post_login_form(client, None, EMAIL1, 'Password9')
+    response = post_login_form(client, None, 'user1@example.com', 'Password9')
     assert test_utils.response_has_string(response, 'Incorrect Email and Password')
 
 
@@ -371,11 +439,11 @@ def test_change_password_form(client):
     # ****************
 
     # Log in as 'user1'
-    test_utils.login(client, 'user1', '', PASSWORD1)
+    test_utils.login(client, 'user1', '', 'Password1')
 
     # Change password to 'Password9' with retype_password
     user_manager.retype_password = True
-    response = post_change_password_form(client, PASSWORD1, 'Password9')
+    response = post_change_password_form(client, 'Password1', 'Password9')
     assert test_utils.response_has_no_errors(response)
     
     # Log out and login with new password
@@ -384,7 +452,7 @@ def test_change_password_form(client):
 
     # Change password back to 'Password1' without retype_password
     user_manager.retype_password = False
-    response = post_change_password_form(client, 'Password9', PASSWORD1)
+    response = post_change_password_form(client, 'Password9', 'Password1')
     assert test_utils.response_has_no_errors(response)
 
     test_utils.logout(client)
@@ -406,19 +474,95 @@ def test_change_password_form(client):
     assert test_utils.response_has_string(response, 'Old Password is incorrect')
 
     # Test empty password
-    response = post_change_password_form(client, PASSWORD1, '')
+    response = post_change_password_form(client, 'Password1', '')
     assert test_utils.response_has_string(response, 'New Password is required')
 
     # Test invalid passwords
     for invalid_password in invalid_passwords:
-        response = post_change_password_form(client, PASSWORD1, invalid_password)
+        response = post_change_password_form(client, 'Password1', invalid_password)
         assert test_utils.response_has_string(response, 'Password must have at least 6 characters with one lowercase letter, one uppercase letter and one number')
 
     # Test non-matching passwords
-    response = post_change_password_form(client, PASSWORD1, 'Password2', 'Password9')
+    response = post_change_password_form(client, 'Password1', 'Password2', 'Password9')
     assert test_utils.response_has_string(response, 'New Password and Retype Password did not match')
 
     test_utils.logout(client)
 
-# TODO: register with require_email_confirmation=True/False
-# TODO: add tests for post_confirm_email()
+
+def test_forgot_password_form(client):
+    # Submit forgot password form for user1
+    url = url_for('user.forgot_password')
+    response = client.post(url, follow_redirects=True, data=dict(email='user1@example.com'))
+    assert test_utils.response_has_no_errors(response)
+
+    # Submit forgot password form for user3
+    url = url_for('user.forgot_password')
+    response = client.post(url, follow_redirects=True, data=dict(email='user3@example.com'))
+    assert test_utils.response_has_no_errors(response)
+
+def test_reset_password(client):
+    user_manager =  current_app.user_manager
+
+    # **************************************
+    # ** Valid token with retype password **
+    # **************************************
+
+    user_manager.retype_password = True
+
+    # Retrieve reset password token from user record
+    user1 = User.query.filter(User.username=='user1').first()
+    reset_password_token = user1.reset_password_token
+
+    # Submit reset password form
+    url = url_for('user.reset_password', token=reset_password_token)
+    response = client.post(url, follow_redirects=True, data=dict(
+            new_password='Organic2',
+            retype_password='Organic2',
+            ))
+    assert test_utils.response_has_no_errors(response)
+
+    # *******************
+    # ** Invalid token **
+    # *******************
+
+    # Submit reset password form
+    url = url_for('user.reset_password', token='InvalidToken')
+    response = client.post(url, follow_redirects=True, data=dict(
+            new_password='Organic2',
+            retype_password='Organic2',
+            ))
+    assert test_utils.response_has_string(response, 'Invalid reset password token.')
+
+    # *******************
+    # ** Expired Token **
+    # *******************
+
+    # Retrieve reset password token from user record
+    user3 = User.query.filter(User.email=='user3@example.com').first()
+    reset_password_token = user3.reset_password_token
+
+    # Allow token to expire
+    user_manager.reset_password_expiration = 1  # set 1 second expiration
+    time.sleep(2)                               # wait for 2 seconds
+
+    # Submit reset password form
+    url = url_for('user.reset_password', token=reset_password_token)
+    response = client.post(url, follow_redirects=True, data=dict(
+            new_password='Organic2',
+            retype_password='Organic2',
+            ))
+    assert test_utils.response_has_string(response, 'Your reset password token has expired.')
+
+    # *****************************************
+    # ** Valid token without retype password **
+    # *****************************************
+
+    user_manager.reset_password_expiration = 2*24*3600  # 2 days
+
+    # Submit reset password form
+    url = url_for('user.reset_password', token=reset_password_token)
+    response = client.post(url, follow_redirects=True, data=dict(
+            new_password='Organic2',
+            retype_password='Organic2',
+            ))
+    assert test_utils.response_has_no_errors(response)

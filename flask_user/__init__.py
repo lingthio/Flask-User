@@ -13,8 +13,8 @@ from flask_babel import gettext as _
 from flask_login import LoginManager
 from flask_user.db_interfaces import DBInterface
 
-from password_manager import init_password_crypt_context
-from token_manager import TokenManager
+from passwords import init_password_crypt_context
+from tokens import TokenManager
 
 __version__ = '0.2.0'
 from db_interfaces import SQLAlchemyAdapter
@@ -46,7 +46,7 @@ class UserManager():
         # Customizable forms
         self.change_password_form = forms.ChangePasswordForm
         self.change_username_form = forms.ChangeUsernameForm
-        self.forgot_password_form  = forms.ForgotPasswordForm
+        self.forgot_password_form = forms.ForgotPasswordForm
         self.login_form           = forms.LoginForm
         self.register_form        = forms.RegisterForm
         self.reset_password_form  = forms.ResetPasswordForm
@@ -79,9 +79,11 @@ class UserManager():
         self.require_invitation         = app.config.setdefault('USER_REQUIRE_INVITATION',          False)
 
         # Set default settings
-        self.retype_password            = app.config.setdefault('USER_RETYPE_PASSWORD',             True)
+        self.confirm_email_expiration   = app.config.setdefault('USER_CONFIRM_EMAIL_EXPIRATION',    2*24*3600) # 2 days
         self.login_with_username        = app.config.setdefault('USER_LOGIN_WITH_USERNAME',         False)
         self.register_with_email        = app.config.setdefault('USER_REGISTER_WITH_EMAIL',         True)
+        self.reset_password_expiration  = app.config.setdefault('USER_RESET_PASSWORD_EXPIRATION',   2*24*3600) # 2 days
+        self.retype_password            = app.config.setdefault('USER_RETYPE_PASSWORD',             True)
 
         # Set default URLs
         self.change_password_url = app.config.setdefault('USER_CHANGE_PASSWORD_URL', '/user/change-password')

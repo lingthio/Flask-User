@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255), nullable=True, unique=True)
     email_confirmed_at = db.Column(db.DateTime())
     password = db.Column(db.String(255), nullable=False, default='')
-    password_reset_token = db.Column(db.String(100), nullable=False, default='')
+    reset_password_token = db.Column(db.String(100), nullable=False, default='')
 
     created_at = db.Column(db.DateTime, nullable=False, default=func.now())
     modified_at = db.Column(db.DateTime, nullable=False, default=func.now(), onupdate=func.now())

@@ -33,7 +33,7 @@ class TokenManager():
             str2 = base64.urlsafe_b64decode(str3)       # --> encrypted data
             str1 = self.cipher.decrypt(str2)            # --> 16 byte integer string
             return int(str1)                            # --> integer id
-        except:
+        except:                     # pragma: no cover
             return 0
 
     def generate_token(self, user_id):
@@ -42,7 +42,7 @@ class TokenManager():
         """
         return self.signer.sign(self.encrypt_id(user_id))
 
-    def verify_token(self, token, max_age):
+    def verify_token(self, token, expiration_in_seconds):
         """
         Verify token and return (is_valid, has_expired, user_id).
 
@@ -51,7 +51,7 @@ class TokenManager():
         Returns (False, False, None) on invalid tokens.
         """
         try:
-            data = self.signer.unsign(token, max_age=1000)
+            data = self.signer.unsign(token, max_age=expiration_in_seconds)
             is_valid = True
             has_expired = False
             user_id = self.decrypt_id(data)

@@ -4,7 +4,7 @@ from flask import current_app, flash, redirect, render_template, request, url_fo
 from flask.ext.babel import gettext as _
 from flask.ext.login import current_user, login_required, login_user, logout_user
 
-from flask_user.email_manager import send_confirmation_email, send_reset_password_email
+from flask_user.emails import send_confirmation_email, send_reset_password_email
 
 def confirm_email(token):
     """
@@ -12,7 +12,9 @@ def confirm_email(token):
     """
     # Verify token
     user_manager = current_app.user_manager
-    is_valid, has_expired, user_id = user_manager.token_manager.verify_token(token, max_age=1000)
+    is_valid, has_expired, user_id = user_manager.token_manager.verify_token(
+            token,
+            user_manager.confirm_email_expiration)
 
     if has_expired:
         flash(_('Your confirmation token has expired.'), 'error')
@@ -110,7 +112,7 @@ def forgot_password():
             token = user_manager.token_manager.generate_token(user.id)
 
             # Store token
-            user_manager.db_adapter.set_password_reset_token(user, token)
+            user_manager.db_adapter.set_reset_password_token(user, token)
 
             # Send confirmation email
             send_reset_password_email(email, user, token)
@@ -240,36 +242,37 @@ def register():
 
 # TODO:
 def resend_confirmation_email():
-    """
-    Prompt for email and re-send the confirmation email.
-    """
-    user_manager =  current_app.user_manager
-
-    # Initialize form
-    form = user_manager.resend_confirmation_email_form(request.form)
-
-    # Process valid POST
-    if request.method=='POST' and form.validate():
-        email = form.email.data
-
-        # Find user by email
-        user = user_manage.db_adapter.find_user_by_email(email)
-        if user:
-
-            # Send confirmation email
-            send_confirmation_email(email, user)
-
-        # Prepare one-time system message
-        flash(_("A confirmation email has been sent to %(email)s. Open that email and follow the instructions to complete your registration.", email=email), 'success')
-
-        # Redirect to 'next' URL or '/'
-        next = form.next.data
-        if not next:
-            return redirect('/')
-        return redirect(next)
-
-    # Process GET or invalid POST
-    return render_template(user_manager.resend_confirmation_email_template, form=form)
+    pass
+    # """
+    # Prompt for email and re-send the confirmation email.
+    # """
+    # user_manager =  current_app.user_manager
+    #
+    # # Initialize form
+    # form = user_manager.resend_confirmation_email_form(request.form)
+    #
+    # # Process valid POST
+    # if request.method=='POST' and form.validate():
+    #     email = form.email.data
+    #
+    #     # Find user by email
+    #     user = user_manage.db_adapter.find_user_by_email(email)
+    #     if user:
+    #
+    #         # Send confirmation email
+    #         send_confirmation_email(email, user)
+    #
+    #     # Prepare one-time system message
+    #     flash(_("A confirmation email has been sent to %(email)s. Open that email and follow the instructions to complete your registration.", email=email), 'success')
+    #
+    #     # Redirect to 'next' URL or '/'
+    #     next = form.next.data
+    #     if not next:
+    #         return redirect('/')
+    #     return redirect(next)
+    #
+    # # Process GET or invalid POST
+    # return render_template(user_manager.resend_confirmation_email_template, form=form)
 
 
 # TODO:
@@ -279,7 +282,9 @@ def reset_password(token):
     """
     # Verify token
     user_manager = current_app.user_manager
-    is_valid, has_expired, user_id = user_manager.token_manager.verify_token(token, max_age=1000)
+    is_valid, has_expired, user_id = user_manager.token_manager.verify_token(
+            token,
+            user_manager.reset_password_expiration)
 
     if has_expired:
         flash(_('Your reset password token has expired.'), 'error')
@@ -290,7 +295,7 @@ def reset_password(token):
         return redirect(user_manager.login_url)
 
     user = user_manager.db_adapter.find_user_by_id(user_id)
-    if not user or not user_manager.db_adapter.verify_password_reset_token(user, token):
+    if not user or not user_manager.db_adapter.verify_reset_password_token(user, token):
         flash(_('Invalid reset password token.'), 'error')
         return redirect(user_manager.login_url)
 
@@ -300,7 +305,7 @@ def reset_password(token):
     # Process valid POST
     if request.method=='POST' and form.validate():
         # Invalidate the token by clearing the stored token
-        user_manager.db_adapter.set_password_reset_token(user, '')
+        user_manager.db_adapter.set_reset_password_token(user, '')
 
         # Change password
         hashed_password = user_manager.password_crypt_context.encrypt(form.new_password.data)

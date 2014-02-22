@@ -41,8 +41,8 @@ class DBInterface(object):
         # See if new_username is available
         return new_username==old_username or self.find_user_by_username(new_username)==None
 
-    def verify_password_reset_token(self, user, token):
-        return user.password_reset_token == token
+    def verify_reset_password_token(self, user, token):
+        return user.reset_password_token == token
 
     def get_email(self, user):
         return user.email
@@ -75,7 +75,7 @@ class SQLAlchemyAdapter(DBInterface):
                 if hasattr(user, 'email_confirmed_at'):
                     user.email_confirmed_at = datetime.utcnow()
                 self.db.session.commit()
-        else:
+        else:                                               # pragma: no cover
             assert False, "Invalid user id "+str(user_id)
 
     def set_username(self, user, username):
@@ -86,8 +86,8 @@ class SQLAlchemyAdapter(DBInterface):
         user.password = hashed_password
         self.db.session.commit()
 
-    def set_password_reset_token(self, user, token):
-        user.password_reset_token = token
+    def set_reset_password_token(self, user, token):
+        user.reset_password_token = token
         self.db.session.commit()
 
     def find_user_by_id(self, user_id):
