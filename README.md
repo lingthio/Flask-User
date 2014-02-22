@@ -51,10 +51,10 @@ Name                                                            Stmts   Miss  Co
 -----------------------------------------------------------------------------------
 flask_user/__init__                                                93      0   100%
 flask_user/db_interfaces                                           51      0   100%
-flask_user/email_manager                                           28      0   100%
+flask_user/emails                                                  28      0   100%
 flask_user/forms                                                  149      3    98%
-flask_user/password_manager                                         4      0   100%
-flask_user/token_manager                                           37      0   100%
+flask_user/passwords                                                4      0   100%
+flask_user/tokens                                                  37      0   100%
 flask_user/views                                                  128     13    90%
 -----------------------------------------------------------------------------------
 TOTAL                                                             490     16    97%
