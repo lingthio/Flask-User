@@ -12,25 +12,25 @@ while developing the remaining feature set.
 __Completed Features__
 
 - Register (sign up)
+- Confirm email
 - Login (Sign in) with email or username
 - Logout (Sign out)
-- Change password
 - Change username
+- Change password
+- Forgot password (Reset password)
 - Session management through Flask-Login
 - Password encryption through passlib and py-bcript
 - Internationalization through Flask-Babel
 
 __Planned Features__
 
-- Confirm email
-- Forgot password (Reset password)
 - Multiple emails per user
 - Registration by invitation only
 
 Philosophy
 ----------
 
-- Reliable (Automated tests currently cover 99% of the code)
+- Reliable (Automated test coverage over 95%)
 - Simple to use
 - Easy to configure (by changing files)
 - Easy to customize (by adding code)
@@ -42,14 +42,18 @@ Philosophy
 Reliable
 --------
 ```
-> coverage report -m
-Name                                              Stmts   Miss  Cover   Missing
--------------------------------------------------------------------------------
-flask_user/__init__                                  97      0   100%   
-flask_user/forms                                    123      0   100%   
-flask_user/views                                     57      4    93%   53, 69, 91, 114
--------------------------------------------------------------------------------
-TOTAL                                               277      4    99%   
+> coverage report
+Name                                                            Stmts   Miss  Cover
+-----------------------------------------------------------------------------------
+flask_user/__init__                                                93      0   100%
+flask_user/db_interfaces                                           51      0   100%
+flask_user/email_manager                                           28      0   100%
+flask_user/forms                                                  149      3    98%
+flask_user/password_manager                                         4      0   100%
+flask_user/token_manager                                           37      0   100%
+flask_user/views                                                  128     13    90%
+-----------------------------------------------------------------------------------
+TOTAL                                                             490     16    97%
 ```
 
 Simple to use
