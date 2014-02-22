@@ -176,54 +176,44 @@ Customize
 The available customizations are listed below:
 
 ```
-    # View functions
-    user_manager.change_password_view_function
-    user_manager.change_username_view_function
-    user_manager.confirm_email_view_function
-    user_manager.forgot_password_view_function
-    user_manager.login_view_function
-    user_manager.logout_view_function
-    user_manager.register_view_function
-    user_manager.resend_confirmation_email_view_function
-    user_manager.reset_password_view_function
+# View functions
+user_manager.change_password_view_function
+user_manager.change_username_view_function
+user_manager.confirm_email_view_function
+user_manager.forgot_password_view_function
+user_manager.login_view_function
+user_manager.logout_view_function
+user_manager.register_view_function
+user_manager.resend_confirmation_email_view_function
+user_manager.reset_password_view_function
 
-    # Forms
-    user_manager.change_password_form
-    user_manager.change_username_form
-    user_manager.forgot_password_form
-    user_manager.login_form
-    user_manager.register_form
-    user_manager.reset_password_form
-    
-    # Validators
-    user_manager.password_validator  # at least 6 chars, 1 upper case letter, 1 lower case letter, 1 digit
-    user_manager.username_validator  # at least 3 alphanumeric characters
+# Forms
+user_manager.change_password_form
+user_manager.change_username_form
+user_manager.forgot_password_form
+user_manager.login_form
+user_manager.register_form
+user_manager.reset_password_form
 
-    # Encryptions
-    user_manager.crypt_context = CryptContext(schemes=['bcrypt', 'sha512_crypt', 'pbkdf2_sha512'], default='bcrypt')
+# Validators
+user_manager.password_validator  # at least 6 chars, 1 upper case letter, 1 lower case letter, 1 digit
+user_manager.username_validator  # at least 3 alphanumeric characters
+
+# Encryptions
+user_manager.crypt_context = CryptContext(schemes=['bcrypt', 'sha512_crypt', 'pbkdf2_sha512'], default='bcrypt')
 ```
 
 They can be set in between `user_manager=UserManager()` and `user_manager.init_app(app)` like so:
 
 ```
-    ...
+...
 
-    # Choose Database adapter
-    db_adapter = flask_user.SQLAlchemyAdapter(db, User)
-    
-    # Initialize Flask-User
-    user_manager = flask_user.UserManager(db_adapter)
+db_adapter = flask_user.SQLAlchemyAdapter(db, User)  # Choose Database adapter
+user_manager = flask_user.UserManager(db_adapter)    # Initialize Flask-User
+user_manager.login_form = forms.MyLoginForm          # Customize Flask-User
+user_manager.init_app(app)                           # Bind Flask-User to app
 
-    # Configure Flask-User
-    app.config['USER_LOGIN_TEMPLATE'] = 'my_app/my_login_form.html'
-
-    # Customize Flask-User
-    user_manager.login_form = forms.MyLoginForm
-
-    # Bind Flask-User to app
-    user_manager.init_app(app)
-    
-    ...
+...
 ```
 
 Documentation
