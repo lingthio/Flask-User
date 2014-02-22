@@ -30,7 +30,7 @@ __Planned Features__
 Philosophy
 ----------
 
-- Reliable (Automated test coverage over 95%)
+- Reliable (Automated test coverage of over 95%)
 - Simple to use
 - Easy to configure (by changing files)
 - Easy to customize (by adding code)
@@ -41,6 +41,10 @@ Philosophy
 
 Reliable
 --------
+
+Our goal is to have our automated tests cover over 95% of our code base.  
+We're currently at 97%.
+
 ```
 > coverage report
 Name                                                            Stmts   Miss  Cover
