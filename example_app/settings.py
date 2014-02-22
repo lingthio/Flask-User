@@ -1,11 +1,30 @@
-# Flask settings
+# ********************
+# ** Flask settings **
+# ********************
+
 DEBUG = True
 SECRET_KEY = 'super-secret'
 
-# Flask-SQLAlchemy settings
+# *******************************
+# ** Flask-SQLAlchemy settings **
+# *******************************
+
 SQLALCHEMY_DATABASE_URI = 'sqlite:///example_app.db'
 
+# *************************
+# ** Flask-Mail settings **
+# *************************
+
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = 465
+MAIL_USE_SSL = True
+MAIL_USERNAME = 'user@example.com'
+MAIL_PASSWORD = 'password'
+MAIL_DEFAULT_SENDER = 'user@example.com'
+
+# *************************
 # ** Flask-User settings **
+# *************************
 
 # # Features
 # USER_ENABLE_CHANGE_PASSWORD     = True
