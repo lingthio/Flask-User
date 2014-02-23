@@ -1,0 +1,6 @@
+Flask-User Authors
+==================
+
+Flask-User is written and maintained by Ling Thio <ling.thio@gmail.com>
+
+

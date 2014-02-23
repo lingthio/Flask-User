@@ -36,6 +36,7 @@ coverage.xml
 
 # Temp files
 example_app/example_app.db
+docs/build/
 
 # Private files
 example_app/env_settings.py

@@ -22,3 +22,8 @@ def babel():
     local('pybabel update -i misc/messages.pot -d example_app/translations -l nl')
     local('pybabel compile -f -d example_app/translations')
 
+@task
+def docs():
+    local('touch docs/source/*.rst')
+    local('sphinx-build -b html docs/source docs/build')
+    local('cd docs/source && zip -u docs *')

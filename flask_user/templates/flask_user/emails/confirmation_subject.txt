@@ -1,3 +1,3 @@
-{% extends "flask_user/emails/_subject_base.txt" %}
+{% extends "flask_user/emails/base_subject.txt" %}
 
 {% block subject %}Registration Confirmation{% endblock %}

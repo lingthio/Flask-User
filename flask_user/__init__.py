@@ -5,7 +5,7 @@
 
     :copyright: (c) 2013 SolidBuilds.com and Ling Thio
     :author: Ling Thio (ling.thio@gmail.com)
-    :license: Apache 2.0, see LICENSE for more details.
+    :license: Simplified BSD License, see LICENSE.txt for more details.
 """
 
 from flask import Blueprint, current_app

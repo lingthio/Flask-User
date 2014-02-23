@@ -1,0 +1,2 @@
+include AUTHORS.txt CHANGES.txt LICENSE.txt README.md
+recursive-include flask_user *
