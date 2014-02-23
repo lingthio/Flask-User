@@ -12,7 +12,7 @@ Flask-User
 * Change username
 * Change password  
 
-Many Flask websites require the registration, authentication, and management of users.
+Many Flask websites require the registration, authentication, and management of users.  
 Each website, however, may want to customize this experience for their users.
 
 Flask-User aims to provide a robust package that offers:
