@@ -1,32 +1,31 @@
 Flask-User
 ==========
 
-**Customizable User management for Flask**
-
-* Register with username 
-* Register with email    
-* Login                  
-* Logout                 
-* Confirm email
-* Forgot password
-* Change username
-* Change password  
+Customizable User management for Flask
+--------------------------------------
 
 Many Flask websites require the registration, authentication, and management of users.  
-Each website, however, may want to customize this experience for their users.
+Each website often requires different customization of this process.
 
 Flask-User aims to provide a robust package that offers:
+
 * **Reliable** and **Feature Rich** user management functionality,
 * **Ready to use** after an easy install and setup, and
-* **Fully customizable** through well documented config settings and attributes.
+* **Fully customizable** through well documented config settings and attributes, and
+* **Secure** password hashing and token encryption and signing.
+
+Functionality
+-------------
+
+    * Register with username         * Confirm email
+    * Register with email            * Forgot password
+    * Login                          * Change username
+    * Logout                         * Change password
 
 Documentation
 -------------
-* [Overview](https://pythonhosted.org/Flask-User/)
-* [Features](https://pythonhosted.org/Flask-User/features.html)
-* [Install and Setup](https://pythonhosted.org/Flask-User/install.html)
-* [Customize](https://pythonhosted.org/Flask-User/customize.html)
+* [View documentation here](https://pythonhosted.org/Flask-User/)
 
 Contact
 -------
-Ling Thio - ling.thio@gmail.com
+Ling Thio - ling.thio [at] gmail.com
