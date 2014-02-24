@@ -6,7 +6,9 @@ Flask-User
     !! Newsflash: In v0.3.1 and v0.3.2 confirmation emails were not working !!
        Please upgrade to v0.3.3. Thank you.
 
-.. image:: https://travis-ci.org/lingthio/flask-user.png?branch=master
+|travis| for Python 2.6, Python 2.7, and Python 3.3
+
+.. |travis| image:: https://travis-ci.org/lingthio/flask-user.png?branch=master
     :target: https://travis-ci.org/lingthio/flask-user
 
 User Login for Flask
