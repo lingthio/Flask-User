@@ -36,23 +36,21 @@ user_manager = UserManager(db_adapter, app)     # Init Flask-User and bind to ap
 @app.route('/')
 def home():
     return render_template_string(
-"""
-{% extends "base.html" %}
+        """
+        {% extends "base.html" %}
 
-{% block title %}Flask-User - Minimal App{% endblock %}
-
-{% block content %}
-    {% if not current_user.is_authenticated() %}
-        <p>{%trans%}Hello Visitor,{%endtrans%}</p>
-        <p><a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
-        <p><a href="{{ url_for('user.register') }}">{%trans%}Register{%endtrans%}</a></p>
-    {% else %}
-        <p>{%trans%}Hello{%endtrans%} {{ current_user.username or current_user.email }},</p>
-        <p><a href="{{ url_for('user.change_password') }}">{%trans%}Change password{%endtrans%}</a></p>
-        <p><a href="{{ url_for('user.logout') }}">{%trans%}Sign out{%endtrans%}</a></p>
-    {% endif %}
-{% endblock %}
-""")
+        {% block content %}
+            {% if not current_user.is_authenticated() %}
+                <p>{%trans%}Hello Visitor,{%endtrans%}</p>
+                <p><a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
+                <p><a href="{{ url_for('user.register') }}">{%trans%}Register{%endtrans%}</a></p>
+            {% else %}
+                <p>{%trans%}Hello{%endtrans%} {{ current_user.username or current_user.email }},</p>
+                <p><a href="{{ url_for('user.change_password') }}">{%trans%}Change password{%endtrans%}</a></p>
+                <p><a href="{{ url_for('user.logout') }}">{%trans%}Sign out{%endtrans%}</a></p>
+            {% endif %}
+        {% endblock %}
+        """)
 
 # Start development web server
 app.run(host='0.0.0.0', port=5000, debug=True)

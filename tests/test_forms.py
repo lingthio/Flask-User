@@ -1,7 +1,6 @@
 import time
 
 from flask import current_app, url_for
-from example_app.models import User
 from tests import utils as test_utils
 
 # *************
@@ -95,7 +94,9 @@ def run_all_tests(client):
     test_forgot_password_form(client)
     test_reset_password(client)
 
-def test_register_form_with_username(client):
+def test_register_form_with_username(client, app):
+    User = app.User
+
     # Set user manager config
     user_manager =  current_app.user_manager
     user_manager.enable_registration = True
@@ -178,7 +179,9 @@ def test_register_form_with_username(client):
     assert test_utils.response_has_string(response, 'Password and Retype Password did not match')
 
 
-def test_register_form_with_email(client):
+def test_register_form_with_email(client, app):
+    User = app.User
+
     # Set user manager config
     user_manager =  current_app.user_manager
     user_manager.enable_registration = True
@@ -254,7 +257,8 @@ def test_register_form_with_email(client):
     assert test_utils.response_has_string(response, 'Password and Retype Password did not match')
 
 
-def test_confirm_email(client):
+def test_confirm_email(client, app):
+    User = app.User
     user_manager = current_app.user_manager
 
     # *****************
@@ -268,8 +272,8 @@ def test_confirm_email(client):
     # Visit confirmation page
     url = url_for('user.confirm_email', token=confirmation_token)
     response = client.get(url, follow_redirects=True)
-
     assert test_utils.response_has_no_errors(response)
+
     assert user1.active
     assert user1.email_confirmed_at
 
@@ -500,7 +504,8 @@ def test_forgot_password_form(client):
     response = client.post(url, follow_redirects=True, data=dict(email='user3@example.com'))
     assert test_utils.response_has_no_errors(response)
 
-def test_reset_password(client):
+def test_reset_password(client, app):
+    User = app.User
     user_manager =  current_app.user_manager
 
     # **************************************

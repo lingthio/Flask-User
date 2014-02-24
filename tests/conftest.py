@@ -1,24 +1,25 @@
 import pytest
 
-from example_app import create_app
-from example_app.database import db as _db
+from example_apps.username_app import create_app
 
 print("========== tests/conftest.py ==========")
 
 # create app once
 print("Creating app")
 
-config = dict(
+test_config = dict(
     SQLALCHEMY_DATABASE_URI='sqlite:///:memory:',   # In-memory sqlite DB
     WTF_CSRF_ENABLED=False,  # Disable CSRF token in Flask-Wtf
     LOGIN_DISABLED=False,    # Enable @register_required while app.testing=True
     MAIL_SUPPRESS_SEND=True, # Suppress the sending of emails
     SERVER_NAME='localhost'  # Enable url_for() without request context
 )
-_app = create_app(config)
+_app = create_app(test_config)
 _app.testing = True                       # Propagate exceptions (don't show 500 error page)
 ctx = _app.app_context()
 ctx.push()
+
+_db = _app.db
 
 # print 'urlmap:'
 # for rule in _app.url_map.iter_rules():
@@ -42,6 +43,7 @@ def db():
 def client(app):
     client = app.test_client()
     return client
+
 
 # There is a problem with pytest-cov in that the recommended command:
 #    py.test --cov app tests/

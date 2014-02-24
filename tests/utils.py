@@ -1,5 +1,4 @@
 from flask import url_for
-from example_app.models import User
 
 # Logs a user in using POST /account/login
 def login(client, username='', email='', password='Password1'):
@@ -11,8 +10,6 @@ def login(client, username='', email='', password='Password1'):
     ), follow_redirects=True)
     assert response.status_code == 200
     assert response_has_no_errors(response)
-
-    return User.query.filter(User.username==username).first()
 
 # Logs a user out using GET /account/logout
 def logout(client):
