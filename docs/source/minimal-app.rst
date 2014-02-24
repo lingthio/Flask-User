@@ -1,7 +1,7 @@
-===================
-Minimal Application
-===================
-The ``Minimal Application`` is a Flask-User app with minimal feature configuration.
+===========
+Minimal App
+===========
+The **Minimal App** is a Flask-User app with default feature configuration.
 
 **Features**
 
@@ -9,6 +9,10 @@ The ``Minimal Application`` is a Flask-User app with minimal feature configurati
 * Login with email
 * Logout
 * Change password
+
+**Custom Configuration**
+
+* None
 
 Set up environment
 ------------------

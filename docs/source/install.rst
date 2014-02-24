@@ -4,7 +4,7 @@ Install
 
 Requirements
 ------------
-- Python 2.6 or 2.7
+- Python 3.3, 2.7 or 2.6
 - Flask (includes itsdangerous)
 - Flask-Babel
 - Flask-Login

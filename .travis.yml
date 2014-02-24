@@ -9,14 +9,9 @@ python:
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
   - pip install -r requirements.txt
-  - pip install coverage
-  - pip install coveralls
+  - pip install pytest
 
 # command to run tests, e.g. python setup.py test
 script:
-  - export PYTHONPATH=. && coverage run --source=flask_user tests/conftest.py
-  - coverage report -m
+  py.test --tb short -v -s tests
 
-# coveralls setup
-after_success:
-  coveralls --verbose

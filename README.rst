@@ -1,15 +1,18 @@
 Flask-User
 ==========
 
-::
-
-    !! Newsflash: In v0.3.1 and v0.3.2 confirmation emails were not working !!
-       Please upgrade to v0.3.3. Thank you.
-
-|travis| for Python 2.6, Python 2.7, and Python 3.3
+|travis| for Python 3.3, Python 2.7, and Python 2.6. |coverall|
 
 .. |travis| image:: https://travis-ci.org/lingthio/flask-user.png?branch=master
     :target: https://travis-ci.org/lingthio/flask-user
+
+.. |coverall| image:: https://coveralls.io/repos/lingthio/flask-user/badge.png?branch=master
+    :target: https://coveralls.io/r/lingthio/flask-user?branch=master
+
+::
+
+    !! Newsflash: In v0.3.1 and v0.3.2 confirmation emails were not working !!
+       Please upgrade to v0.3.4. Thank you.
 
 User Login for Flask
 --------------------

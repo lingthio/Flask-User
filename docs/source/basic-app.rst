@@ -1,14 +1,7 @@
-=====================
- Username Application
-=====================
-The ``Username Application`` extends the :doc:`minimal-app` by:
-
-* Configuring an SMTP server and account,
-* enabling ``USER_ENABLE_CONFIRM_EMAIL``,
-* enabling ``USER_ENABLE_CHANGE_USERNAME``,
-* enabling ``USER_ENABLE_CHANGE_PASSWORD``,
-* enabling ``USER_ENABLE_FORGOT_PASSWORD``, and
-* enabling ``USER_LOGIN_WITH_USERNAME``.
+=========
+Basic App
+=========
+The **Basic App** is a Flask-User application with basic configuration:
 
 **Features:**
 
@@ -19,6 +12,17 @@ The ``Username Application`` extends the :doc:`minimal-app` by:
 * Change username
 * Change password
 * Reset forgotten password
+
+**Custom Configuration**
+
+* Define an SMTP server and an SMTP account with the ``MAIL_*`` settings.
+* ``USER_ENABLE_CONFIRM_EMAIL   = True``
+* ``USER_ENABLE_CHANGE_USERNAME = True``
+* ``USER_ENABLE_CHANGE_PASSWORD = True``
+* ``USER_ENABLE_FORGOT_PASSWORD = True``
+* ``USER_LOGIN_WITH_USERNAME    = True``
+
+
 
 Set up environment
 ------------------
