@@ -1,7 +1,9 @@
-language: python
+language:
+  python
 
 python:
   - "2.7"
+  - "2.6"
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
@@ -16,4 +18,4 @@ script:
 
 # coveralls setup
 after_success:
-  - coveralls --verbose
+  coveralls --verbose
