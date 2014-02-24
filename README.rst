@@ -18,7 +18,7 @@ User Login for Flask
 
 Flask-User aims to provide a ready to use **and** fully customizable package that is:
 
-* **Reliable** (Automated test cover 97% of the code base)
+* **Reliable** (Automated tests cover 97% of the code base)
 * **Secure** (``bcrypt`` password hashing, ``AES`` ID encryption, ``itsdangerous`` token signing)
 * **Ready to use**
 * **Fully customizable** (Email, Field labels, Flash messages, Form templates, URLs, and more)
