@@ -1,6 +1,8 @@
 Flask-User
 ==========
 
+[![Build Status](https://travis-ci.org/lingthio/flask-user.png?branch=master)](https://travis-ci.org/lingthio/flask-user)
+
 Customizable User management for Flask
 --------------------------------------
 
