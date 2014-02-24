@@ -1,3 +1,13 @@
+"""
+    flask_user.db_interfaces
+    ------------------------
+    This module abstracts database/ORM specific code for Flask-User.
+
+    :copyright: (c) 2013 by Ling Thio
+    :author: Ling Thio (ling.thio@gmail.com)
+    :license: Simplified BSD License, see LICENSE.txt for more details.
+"""
+
 from datetime import datetime
 
 from flask_login import current_user

@@ -1,64 +1,168 @@
 =========
 Customize
 =========
-Flask-User can be customized:
-- by setting application config settings, or
-- by setting an attribute on Flask-User's UserManager object.
+Flask-User has been designed with customization in mind, and here is a list of
+behaviors that can be customized when needed.
 
-Application config settings must be set *before* calling ``user_manager.init_app(app)``.
+* `Overview`_
+* `Customizing Features`_
+* `Customizing Settings`_
+* `Customizing Emails`_
+* `Customizing Field Labels`_
+* `Customizing Flash messages`_
+* `Customizing Form Classes`_
+* `Customizing Form Templates`_
+* `Customizing Form Templates`_
+* `Customizing Validators`_
+* `Customizing View Functions`_
+* `Customizing Password Hashing Methods`_
+* `Customizing URLs`_
 
-UserManager attributes must be set *after* calling ``user_manager = UserManager(db_adapter)`` and
-*before* calling ``user_manager.init_app(app)``.
+Overview
+--------
+Built-in Flask-User behavior scan be customized in one of two ways:
+
+* by setting an application config setting, or
+* by setting a user_manager attribute.
+
+Application config settings must be set *before* calling ``user_manager.init_app(app)``::
+
+    app.config['USER_ENABLE_CONFIRM_EMAIL'] = True                      # Set custom config settings
+    app.config['USER_CONFIRM_EMAIL_EXPIRATION'] = 5*24*3600  # 5 days
+    user_manager = UserManager(db_adapter)
+    user_manager.init_app(app)                                          # Ready to use config settings
+
+user_manager attributes must be set *in between* calling ``user_manager = UserManager(db_adapter)`` and
+calling ``user_manager.init_app(app)``::
+
+    user_manager = UserManager(db_adapter)                              # Set built-in attributes
+    user_manager.password_validator = my_password_validator             # Overwrite custom attributes
+    user_manager.username_validator = my_username_validator
+    user_manager.init_app(app)                                          # Ready to use attributes
 
 Customizing Features
 --------------------
 Features can be customized through the application's config::
 
-    # Features
-    USER_ENABLE_CHANGE_PASSWORD     = True
-    USER_ENABLE_CHANGE_USERNAME     = True
-    USER_ENABLE_FORGOT_PASSWORD     = True
-    USER_ENABLE_REGISTRATION        = True
-    USER_REQUIRE_EMAIL_CONFIRMATION = True
-    USER_REQUIRE_INVITATION         = False
+    # Features                      # Default   # Comments
+    USER_ENABLE_CHANGE_PASSWORD     = True      # Allow users to change their password
+    USER_ENABLE_CHANGE_USERNAME     = True      # Allow users to change their username
+                                                # Only valid if USER_LOGIN_WITH_USERNAME == True
+    USER_ENABLE_CONFIRM_EMAIL       = False     # Require users to confirm their email
+                                                # Only valid if USER_ENABLE_REGISTRATION == True
+    USER_ENABLE_FORGOT_PASSWORD     = False     # Allow users to reset their passwords
+    USER_ENABLE_REGISTRATION        = True      # Allow new users to registers
+    USER_ENABLE_REQUIRE_INVITATION  = False     # Require an invitation to register new users
+                                                # Not yet implemented
 
 Customizing Settings
 --------------------
 Settings can be customized through the application's config::
 
-    # Settings
-    USER_CONFIRM_EMAIL_EXPIRATION   = 2*24*3600  # 2 days
-    USER_LOGIN_WITH_USERNAME        = False
-    USER_REGISTER_WITH_EMAIL        = True
-    USER_RESET_PASSWORD_EXPIRATION  = 2*24*3600  # 2 days
+    # Settings                      # Default    # Comments
+    USER_CONFIRM_EMAIL_EXPIRATION   = 2*24*3600  # Confirmation expiration in seconds (2 days)
+    USER_LOGIN_WITH_USERNAME        = False      # Login with username instead of email
+    USER_REGISTER_WITH_EMAIL        = True       # Prompt for email during registration
+                                                 # Only useful in when USER_LOGIN_WITH_USERNAME == True
+                                                 # Must be True if USER_ENABLE_CONFIRM_EMAIL == True
+    USER_RESET_PASSWORD_EXPIRATION  = 2*24*3600  # Reset password expiration in seconds (2 days)
     USER_RETYPE_PASSWORD            = True
-
-Customizing URLs
-----------------
-URLs can be customized through the application's config::
-
-    # URLs
-    USER_CHANGE_PASSWORD_URL            = '/user/change-password'
-    USER_CHANGE_USERNAME_URL            = '/user/change-username'
-    USER_CONFIRM_EMAIL_URL              = '/user/confirm-email/<token>'
-    USER_FORGOT_PASSWORD_URL            = '/user/forgot-password'
-    USER_LOGIN_URL                      = '/user/login'
-    USER_LOGOUT_URL                     = '/user/logout'
-    USER_REGISTER_URL                   = '/user/register'
-    USER_RESEND_CONFIRMATION_EMAIL_URL  = '/user/resend-confirmation-email'
-    USER_RESET_PASSWORD_URL             = '/user/reset-password/<token>'
 
 Customizing Emails
 ------------------
-Emails (subject, HTML message and Text message) can be customized by copying the default email templates to the application's ``templates/flask_user/emails`` dir.
+All user management Emails can be customized by copying the default Jinja2 email templates
+from flask_user's ``/templates/flask_user/emails`` dir to your application's ``/templates/flask_user/emails`` dir.
 
-* templates/flask_user/emails/base_[message.html|message.txt|subject.txt]
-* templates/flask_user/emails/confirmation_[message.html|message.txt|subject.txt]
-* templates/flask_user/emails/reset_password_[message.html|message.txt|subject.txt]
+Emails are sent as multipart messages with a subject, HTML message body and a Text message body. HTML capable
+email clients will display the HTML message body while Text-only email clients will display the Text message body.
 
-Email templates can make full use of Jinja2.
+Each part has a corresponding base template::
 
-Common elements can be managed from a single place using the base templates.
+    templates/flask_user/emails/base_subject.txt
+    templates/flask_user/emails/base_message.html
+    templates/flask_user/emails/base_message.txt
+
+The base templates are used to define email elements that are similar in all types of email messages.
+
+| If, for example, for every email you want to:
+| - Set the background color and padding,
+| - Start with a logo and salutation, and
+| - End with a signature,
+| you can define ``templates/flask_user/emails/base_message.html`` like so
+
+::
+
+    <div style="background-color: #f4f2dd; padding: 10px;">
+        <p><img src="http://example.com/static/images/email-logo.png"></p>
+        <p>Dear Customer,</p>
+        {% block message %}{% endblock %}
+        <p>Sincerely,<br/>
+        The Flask-User Team</p>
+    </div>
+
+and define the confirmation specific messages in ``templates/flask_user/emails/confirmation_message.html`` like so::
+
+    {% extends "flask_user/emails/base_message.html" %}
+
+    {% block message %}
+    <p>Thank you for registering with Flask-User.</p>
+    <p>Visit the link below to complete your registration:</p>
+    <p><a href="{{ confirmation_link }}">Confirm your email address</a>.</p>
+    <p>If you did not initiate this registration, you may safely ignore this email.</p>
+    {% endblock %}
+
+The email template files, along with available template variables listed below:
+
+* templates/flask_user/confirmation_[subject.txt|message.html|message.txt]
+    * ``user`` - For example: ``{{ user.email }}``
+    * ``confirmation_link`` - For example: ``{{ confirmation_link }}``
+* templates/flask_user/reset_password_[subject.txt|message.html|message.txt]
+    * ``user`` - For example: ``{{ user.email }}``
+    * ``reset_password_link`` - For example: ``{{ reset_password_link }}``
+
+Customizing Field Labels
+------------------------
+The built-in Form field labelscan be customized by editing the 'en' Babel translation file. [To be documented]
+
+Customizing Flash messages
+--------------------------
+Flash messages are those one-time system messages that appear on the next page.
+
+| The built-in Flash messages can be customized by editing the 'en' Babel translation file.
+| The Flash category (``success``, ``info``, ``warning`` or ``danger``) can not be customized.
+
+[To be documented]
+
+Customizing Form Classes
+------------------------
+The built-in Form Classes contain considerable form validation logic, so we recommend first
+trying the approach of `Customizing Form Templates`_
+before making use of customized Form Classes.
+
+Custom Form classes are specified by setting an attribute on the Flask-User's UserManager object::
+
+    # Forms
+    user_manager.change_password_form = my_form1
+    user_manager.change_username_form = my_form2
+    user_manager.forgot_password_form = my_form3
+    user_manager.login_form           = my_form4
+    user_manager.register_form        = my_form5
+    user_manager.reset_password_form  = my_form6
+
+If you do require customized Form Classes, we recommend deriving from the base classes
+defined in flask.ext.user.forms and to always call the base validate() function::
+
+    from flask.ext.user.forms import RegisterForm
+
+    MyRegisterForm(RegisterForm):
+        # Add custom field
+        phone = StringField(Phone')
+
+    def validate():
+        if not super(MyRegisterForm, self).validate()
+            return False
+        # Do some custom form validation
+        return True
 
 Customizing Form Templates
 --------------------------
@@ -76,19 +180,6 @@ In addition, the location of each form template file can be set in the applicati
     USER_RESET_PASSWORD_TEMPLATE            = 'flask_user/reset_password.html'
 
 Form templates can make full use of Jinja2.
-
-Customizing Form Classes
-------------------------
-If customizing form templates is not enough, Flask-User allows custom Form classes to be specified by setting
-an attribute on the Flask-User's UserManager object::
-
-    # Forms
-    user_manager.change_password_form = my_form1
-    user_manager.change_username_form = my_form2
-    user_manager.forgot_password_form = my_form3
-    user_manager.login_form           = my_form4
-    user_manager.register_form        = my_form5
-    user_manager.reset_password_form  = my_form6
 
 Customizing Validators
 ----------------------
@@ -117,7 +208,11 @@ Custom validators can be specified by setting an attribute on the Flask-User's U
 
 Customizing View Functions
 --------------------------
-Custom view functions can be specified by setting an attribute on the Flask-User's UserManager object::
+The built-in View Functions contain considerable business logic, so we recommend first
+trying the approach of `Customizing Form Templates`_
+before making use of customized View Functions.
+
+Custom view functions are specified by setting an attribute on the Flask-User's UserManager object::
 
     # View functions
     user_manager.change_password_view_function
@@ -134,10 +229,25 @@ Customizing Password Hashing Methods
 ------------------------------------
 Flask-User makes use of passlib's CryptContext to provide password hashing.
 
-By default, the following CryptContext is used::
+By default, the following built-in CryptContext is used::
     CryptContext(schemes=['bcrypt', 'sha512_crypt', 'pbkdf2_sha512'], default='bcrypt')
 
-You can supply your own CrytpContext by setting an attribute on the Flask-User's UserManager object::
+You can supply your own CryptContext by setting an attribute on the Flask-User's UserManager object::
 
     user_manager.crypt_context = my_crypt_context
+
+Customizing URLs
+----------------
+URLs can be customized through the application's config::
+
+    # URLs                              # Defaults
+    USER_CHANGE_PASSWORD_URL            = '/user/change-password'
+    USER_CHANGE_USERNAME_URL            = '/user/change-username'
+    USER_CONFIRM_EMAIL_URL              = '/user/confirm-email/<token>'
+    USER_FORGOT_PASSWORD_URL            = '/user/forgot-password'
+    USER_LOGIN_URL                      = '/user/login'
+    USER_LOGOUT_URL                     = '/user/logout'
+    USER_REGISTER_URL                   = '/user/register'
+    USER_RESEND_CONFIRMATION_EMAIL_URL  = '/user/resend-confirmation-email'
+    USER_RESET_PASSWORD_URL             = '/user/reset-password/<token>'
 

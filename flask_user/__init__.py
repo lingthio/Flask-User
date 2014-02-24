@@ -1,16 +1,16 @@
-# -*- coding: utf-8 -*-
 """
-    Flask-Account is a Flask extension
-    that provides customizable user flask_user management functionality.
+    flask_user
+    ----------
+    Flask-User is a customizable user management extension for Flask.
 
-    :copyright: (c) 2013 SolidBuilds.com and Ling Thio
+    :copyright: (c) 2013 by Ling Thio
     :author: Ling Thio (ling.thio@gmail.com)
     :license: Simplified BSD License, see LICENSE.txt for more details.
 """
 
 from flask import Blueprint, current_app
 from flask_babel import gettext as _
-from flask_login import LoginManager
+from flask_login import LoginManager, UserMixin as LoginUserMixin
 from flask_user.db_interfaces import DBInterface
 
 from passwords import init_password_crypt_context
@@ -18,6 +18,9 @@ from tokens import TokenManager
 
 __version__ = '0.2.0'
 from db_interfaces import SQLAlchemyAdapter
+
+class UserMixin(LoginUserMixin):
+    pass
 
 class UserManager():
     """
@@ -71,12 +74,12 @@ class UserManager():
         app.user_manager = self
 
         # Set default features
-        self.enable_change_password     = app.config.setdefault('USER_ENABLE_CHANGE_PASSWORD',      True)
-        self.enable_change_username     = app.config.setdefault('USER_ENABLE_CHANGE_USERNAME',      True)
-        self.enable_forgot_password     = app.config.setdefault('USER_ENABLE_FORGOT_PASSWORD',      True)
         self.enable_registration        = app.config.setdefault('USER_ENABLE_REGISTRATION',         True)
-        self.require_email_confirmation = app.config.setdefault('USER_REQUIRE_EMAIL_CONFIRMATION',  True)
-        self.require_invitation         = app.config.setdefault('USER_REQUIRE_INVITATION',          False)
+        self.enable_forgot_password     = app.config.setdefault('USER_ENABLE_FORGOT_PASSWORD',      False)
+        self.enable_change_password     = app.config.setdefault('USER_ENABLE_CHANGE_PASSWORD',      True)
+        self.enable_change_username     = app.config.setdefault('USER_ENABLE_CHANGE_USERNAME',      False)
+        self.enable_confirm_email       = app.config.setdefault('USER_ENABLE_CONFIRM_EMAIL',        False)
+        self.enable_require_invitation  = app.config.setdefault('USER_ENABLE_REQUIRE_INVITATION',   False)
 
         # Set default settings
         self.confirm_email_expiration   = app.config.setdefault('USER_CONFIRM_EMAIL_EXPIRATION',    2*24*3600) # 2 days
@@ -118,7 +121,7 @@ class UserManager():
         self.token_manager = TokenManager(app.config.get('SECRET_KEY'))
 
         # Add URL Routes
-        if self.require_email_confirmation:
+        if self.enable_confirm_email:
             app.add_url_rule(self.confirm_email_url, 'user.confirm_email', self.confirm_email_view_function)
             app.add_url_rule(self.resend_confirmation_email_url, 'user.resend_confirmation_email', self.resend_confirmation_email_view_function)
         if self.enable_change_password:

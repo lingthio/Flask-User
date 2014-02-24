@@ -1,0 +1,27 @@
+Metadata-Version: 1.1
+Name: Flask-User-Roles
+Version: 0.0.1
+Author: Ling Thio
+Author-email: ling thio at gmail com
+Home-page: http://github.com/lingthio/flask-user
+Download-url: UNKNOWN
+Summary: Role based user authentication for Flask. Extends Flask-User.
+Description: ================
+        Flask-User-Roles
+        ================
+        Coming soon.
+Platform: any
+Classifier: Development Status :: 1 - Planning
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Flask
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Natural Language :: Dutch
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Topic :: Security
+Classifier: Topic :: Software Development :: Libraries :: Python Modules

@@ -21,5 +21,7 @@
 
 <br/>
 <p>{%trans%}Already have an account?{%endtrans%} <a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
-<p>{%trans%}Forgot your Password?{%endtrans%} <a href="{{ url_for('user.forgot_password') }}">{%trans%}Reset Password{%endtrans%}</a></p>
+{% if user_manager.enable_forgot_password %}
+    <p>{%trans%}Forgot your Password?{%endtrans%} <a href="{{ url_for('user.forgot_password') }}">{%trans%}Reset Password{%endtrans%}</a></p>
+{% endif %}
 {% endblock %}

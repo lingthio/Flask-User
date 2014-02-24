@@ -108,7 +108,7 @@ def test_register_form_with_username(client):
 
     # Submit valid form with retype password and email confirmation
     user_manager.retype_password = True
-    user_manager.require_email_confirmation=True
+    user_manager.enable_confirm_email=True
 
     username = 'user1'
     email = 'user1@example.com'
@@ -124,7 +124,7 @@ def test_register_form_with_username(client):
 
     # Submit valid form without retype password and without email confirmation
     user_manager.retype_password = False
-    user_manager.require_email_confirmation=False
+    user_manager.enable_confirm_email=False
 
     username = 'user2'
     email = 'user2@example.com'
@@ -191,7 +191,7 @@ def test_register_form_with_email(client):
 
     # Submit valid form with retype password and email confirmation
     user_manager.retype_password = True
-    user_manager.require_email_confirmation = True
+    user_manager.enable_confirm_email = True
 
     email = 'user3@example.com'
     response = post_register_form(client, '', email)
@@ -206,7 +206,7 @@ def test_register_form_with_email(client):
 
     # Submit valid form without retype password and without email confirmation
     user_manager.retype_password = False
-    user_manager.require_email_confirmation = False
+    user_manager.enable_confirm_email = False
 
     email = 'user4@example.com'
     response = post_register_form(client, '', email)
@@ -531,7 +531,7 @@ def test_reset_password(client):
             new_password='Organic2',
             retype_password='Organic2',
             ))
-    assert test_utils.response_has_string(response, 'Invalid reset password token.')
+    assert test_utils.response_has_string(response, 'Your reset password token is invalid.')
 
     # *******************
     # ** Expired Token **
@@ -558,6 +558,7 @@ def test_reset_password(client):
     # *****************************************
 
     user_manager.reset_password_expiration = 2*24*3600  # 2 days
+    user_manager.retype_password = False
 
     # Submit reset password form
     url = url_for('user.reset_password', token=reset_password_token)

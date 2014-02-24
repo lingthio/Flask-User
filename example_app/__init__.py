@@ -54,7 +54,7 @@ def create_app(config=None):
     from models import User
     db.create_all()
 
-    # Setup Flask-Account
+    # Setup Flask-User
     db_adapter = SQLAlchemyAdapter(db,  User)
     user_manager = UserManager(db_adapter, app)
 

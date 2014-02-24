@@ -13,10 +13,10 @@
 {% else %}
     <p></p>{%trans%}Hello{%endtrans%} {{ current_user.username or current_user.email }}</p>
     {% if user_manager.enable_change_username %}
-        <p><a href="{{ url_for('user.change_username') }}">{%trans%}Change username{%endtrans%}</a></p>
+        <p><a href="{{ url_for('user.change_username', next='/') }}">{%trans%}Change username{%endtrans%}</a></p>
     {% endif %}
     {% if user_manager.enable_change_password %}
-        <p><a href="{{ url_for('user.change_password') }}">{%trans%}Change password{%endtrans%}</a></p>
+        <p><a href="{{ url_for('user.change_password', next='/') }}">{%trans%}Change password{%endtrans%}</a></p>
     {% endif %}
     <p><a href="{{ url_for('user.logout') }}">{%trans%}Sign out{%endtrans%}</a></p>
 {% endif %}

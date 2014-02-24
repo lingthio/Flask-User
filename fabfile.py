@@ -26,4 +26,8 @@ def babel():
 def docs():
     local('touch docs/source/*.rst')
     local('sphinx-build -b html docs/source docs/build')
-    local('cd docs/source && zip -u docs *')
+    local('cd docs/build && zip -u -r docs *')
+
+@task
+def release_to_pypi():
+    local('python setup.py sdist upload')

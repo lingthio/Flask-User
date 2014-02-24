@@ -15,9 +15,11 @@
     {{ render_submit_field(form.submit) }}
 </form>
 
-{% if user_manager.enable_registration %}
     <br/>
+{% if user_manager.enable_forgot_password %}
     <p>{%trans%}Forgot your Password?{%endtrans%} <a href="{{ url_for('user.forgot_password') }}">{%trans%}Reset Password{%endtrans%}</a></p>
+{% endif %}
+{% if user_manager.enable_registration %}
     <p>{%trans%}New to the system?{%endtrans%} <a href="{{ url_for('user.register') }}">{%trans%}Register{%endtrans%}</a></p>
 {% endif %}
 

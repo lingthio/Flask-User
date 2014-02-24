@@ -1,3 +1,15 @@
+"""
+    flask_user.forms
+    ----------------
+    This module defines default Flask-User forms.
+
+    Forms are based on the WTForms module.
+
+    :copyright: (c) 2013 by Ling Thio
+    :author: Ling Thio (ling.thio@gmail.com)
+    :license: Simplified BSD License, see LICENSE.txt for more details.
+"""
+
 from flask import current_app
 from flask.ext.babel import lazy_gettext as _
 from flask.ext.login import current_user

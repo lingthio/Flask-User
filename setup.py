@@ -1,97 +1,81 @@
 """
-===========
-Flask-Utils
-===========
+==========
+Flask-User
+==========
 
-Customizable User management for Flask
+!!News Flash: In v0.3.1 and v0.3.2 confirmation emails were not working.
+Please upgrade to v0.3.3. Thank you!!
 
-Features
+Overview
 --------
-* Register (sign up)
-* Confirm email
-* Login (Sign in) with email or username
-* Logout (Sign out)
-* Change username
-* Change password
-* Forgot password (Reset password)
-* Session management through Flask-Login
-* Password encryption through passlib and py-bcript
-* Internationalization through Flask-Babel
 
-Philosophy
-----------
-* Reliable (Automated test coverage of over 95%)
-* Simple to use
-* Easy to configure (by changing files)
-* Easy to customize (by adding code)
-* Model agnostic (specify your own User model)
-* Database abstraction (SQLAlchemyAdapter provided)
-* Extensible (See Flask-User-Roles for role based authorization)
+| Many Flask websites require that their users can Register, Confirm email,
+| Login, Logout, Change password and Reset forgotten passwords.
+| Each website often requires different and precise customization of this process.
+
+Flask-User aims to provide a ready to use **and** fully customizable package that is:
+
+* **Reliable** user management functionality,
+* **Secure** password hashing and token encryption and signing,
+* **Ready to use** after an easy install and setup,
+* **Fully customizable** through well documented config settings and attributes, and
+* **Good documentation**.
+
+Status
+------
+
+This package is relatively new. We are looking for alpha testers to give us feedback
+on how it behaves in different usage scenarios. If something doesn't work the way
+you expect it to work, please take the time to email ling [at] gmail.com and help us
+reach outstanding quality quickly. Thanks!
+
+We're also welcoming feature requests. In particular, we would like to know if there's
+a need out there for database adapters other than the SQLAlchemyAdapter.
+
+Documentation
+-------------
+* `View documentation here <https://pythonhosted.org/Flask-User/>`_
+
+Revision History
+----------------
+* v0.3.3 Added minimal-app and username-app examples to docs
+* v0.3.2 Bug fix for Confirm email
+* v0.3.1 Alpha release
+* v0.3 Confirm email, Forgot password, Reset password
+* v0.2 Change username, Change password
+* v0.1 Register, Login, Logout
+
+Contact
+-------
+Ling Thio - ling.thio [at] gmail.com
 """
 
 from __future__ import print_function
 from setuptools import setup
 
-# class run_audit(Command):
-#     """Audits source code using PyFlakes for following issues:
-#         - Names which are used but not defined or used before they are defined.
-#         - Names which are redefined without having been used.
-#     """
-#     description = "Audit source code with PyFlakes"
-#     user_options = []
-#
-#     def initialize_options(self):
-#         pass
-#
-#     def finalize_options(self):
-#         pass
-#
-#     def run(self):
-#         import os, sys
-#         try:
-#             import pyflakes.scripts.pyflakes as flakes
-#         except ImportError:
-#             print("Audit requires PyFlakes installed in your system.")
-#             sys.exit(-1)
-#
-#         warns = 0
-#         # Define top-level directories
-#         dirs = ('flask', 'examples', 'scripts')
-#         for dir in dirs:
-#             for root, _, files in os.walk(dir):
-#                 for file in files:
-#                     if file != '__init__.py' and file.endswith('.py') :
-#                         warns += flakes.checkPath(os.path.join(root, file))
-#         if warns > 0:
-#             print("Audit finished with total %d warnings." % warns)
-#         else:
-#             print("No problems found in sourcecode.")
-#
 setup(
     name='Flask-User',
-    version='0.3',
+    version='0.3.3',
     author='Ling Thio',
     author_email='ling.thio@gmail.com',
-    url='http://github.com/lingthio/flask-user#flask-user',
-    license='Simplified BSD License',
-    description='A user management extension for Flask (Register, Confirm, Forgot password, Login, etc.)',
+    url='http://github.com/lingthio/flask-user',
+    description='Customizable User Login for Flask: Register, Confirm, Forgot password and more',
+    keywords='Flask User Registration Email Confirmation Reset',
     long_description=__doc__,
     packages=['flask_user'],
     include_package_data=True,
     zip_safe=False,
     platforms='any',
     install_requires=[
-        'SQLAlchemy',
-        'WTForms',
         'passlib',
         'py-bcrypt',
         'pycrypto',
-        'Flask',
+        'Flask',                # Includes itsdangerous
         'Flask-Babel',
         'Flask-Login',
-        'Flask-Mail',
-        'Flask-SQLAlchemy',
-        'Flask-WTF',
+        'Flask-Mail',           # Includes blinker
+        'Flask-SQLAlchemy',     # Includes SQLAlchemy
+        'Flask-WTF',            # Includes WTForms
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',

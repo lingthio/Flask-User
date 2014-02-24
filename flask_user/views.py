@@ -1,3 +1,13 @@
+"""
+    flask_user.views
+    ----------------
+    This module contains default Flask-User view functions.
+
+    :copyright: (c) 2013 by Ling Thio
+    :author: Ling Thio (ling.thio@gmail.com)
+    :license: Simplified BSD License, see LICENSE.txt for more details.
+"""
+
 from itsdangerous import SignatureExpired
 
 from flask import current_app, flash, redirect, render_template, request, url_for
@@ -39,6 +49,7 @@ def change_password():
 
     # Initialize form
     form = user_manager.change_password_form(request.form)
+    form.next.data = request.args.get('next', '/')  # Place ?next query param in next form field
 
     # Process valid POST
     if request.method=='POST' and form.validate():
@@ -51,11 +62,8 @@ def change_password():
         # Prepare one-time system message
         flash(_('Your password has been changed successfully.'), 'success')
 
-        # Redirect to 'next' URL or '/'
-        next = form.next.data
-        if not next:
-            return redirect('/')
-        return redirect(next)
+        # Redirect to 'next' URL
+        return redirect(form.next.data)
 
     # Process GET or invalid POST
     return render_template(user_manager.change_password_template, form=form)
@@ -70,6 +78,7 @@ def change_username():
 
     # Initialize form
     form = user_manager.change_username_form(request.form)
+    form.next.data = request.args.get('next', '/')  # Place ?next query param in next form field
 
     # Process valid POST
     if request.method=='POST' and form.validate():
@@ -81,17 +90,13 @@ def change_username():
         # Prepare one-time system message
         flash(_("Your username has been changed to '%(username)s'.", username=new_username), 'success')
 
-        # Redirect to 'next' URL or '/'
-        next = form.next.data
-        if not next:
-            return redirect('/')
-        return redirect(next)
+        # Redirect to 'next' URL
+        return redirect(form.next.data)
 
     # Process GET or invalid POST
     return render_template(user_manager.change_username_template, form=form)
 
 
-# TODO:
 def forgot_password():
     """
     Prompt for email and send reset password email.
@@ -135,6 +140,7 @@ def login():
 
     # Initialize form
     form = user_manager.login_form(request.form)
+    form.next.data = request.args.get('next', '/')  # Place ?next query param in next form field
 
     # Process valid POST
     if request.method=='POST' and form.validate():
@@ -152,15 +158,11 @@ def login():
                 # Prepare one-time system message
                 flash(_('You have signed in successfully.'), 'success')
 
-                # Redirect to 'next' URL or '/'
-                next = form.next.data
-                if not next:
-                    return redirect('/')
-                return redirect(next)
+                # Redirect to 'next' URL
+                return redirect(form.next.data)
             else:
-                if not user.email_confirmed_at:
-                    url = url_for('user.resend-confirmation-email')
-                    flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email and follow the instructions to activate your account. <a href="%(url)s">Resend your confirmation email</a>.', url=url), 'error')
+                if user_manager.enable_confirm_email and not user.email_confirmed_at:
+                    flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email and follow the instructions to activate your account.'), 'error')
                 else:
                     flash(_('Your account has been disabled.'), 'error')
 
@@ -210,12 +212,12 @@ def register():
         # Set username if USER_LOGIN_WITH_USERNAME is True
         if user_manager.login_with_username:
             kwargs['username'] = form.username.data
-        # Set username if USER_REGISTER_WITH_USER_NAME is True or USER_LOGIN_WITH_USERNAME is False
+        # Set email if USER_REGISTER_WITH_EMAIL is True or USER_LOGIN_WITH_USERNAME is False
         if user_manager.register_with_email or not user_manager.login_with_username:
             email = form.email.data
             kwargs['email'] = email
-        # Set active=False if USER_REQUIRE_EMAIL_CONFIRMATION is True
-        if user_manager.require_email_confirmation:
+        # Set active=False if USER_ENABLE_CONFIRM_EMAIL is True
+        if user_manager.enable_confirm_email:
             kwargs['active'] = False
         else:
             kwargs['active'] = True
@@ -223,7 +225,7 @@ def register():
         # Add User record with named arguments (**kwargs)
         user = user_manager.db_adapter.add_user(**kwargs)
 
-        if email and user_manager.require_email_confirmation:
+        if email and user_manager.enable_confirm_email:
             # Generate password reset token
             token = user_manager.token_manager.generate_token(user.id)
 
@@ -275,7 +277,6 @@ def resend_confirmation_email():
     # return render_template(user_manager.resend_confirmation_email_template, form=form)
 
 
-# TODO:
 def reset_password(token):
     """
     Verify the password reset token, Prompt for new password, and set the user's password.
@@ -291,12 +292,12 @@ def reset_password(token):
         return redirect(user_manager.login_url)
 
     if not is_valid:
-        flash(_('Invalid reset password token.'), 'error')
+        flash(_('Your reset password token is invalid.'), 'error')
         return redirect(user_manager.login_url)
 
     user = user_manager.db_adapter.find_user_by_id(user_id)
     if not user or not user_manager.db_adapter.verify_reset_password_token(user, token):
-        flash(_('Invalid reset password token.'), 'error')
+        flash(_('Your reset password token is invalid.'), 'error')
         return redirect(user_manager.login_url)
 
     # Initialize form
@@ -313,7 +314,7 @@ def reset_password(token):
 
         # Prepare one-time system message
         email = user_manager.db_adapter.get_email(user)
-        flash(_("You have reset your password successfully. Please sign in with your new password"), 'success')
+        flash(_("Your password has been reset successfully. Please sign in with your new password"), 'success')
 
         # Redirect to the login page
         return redirect(url_for('user.login'))
