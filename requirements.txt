@@ -1,15 +1,7 @@
 # non-flask packages
-Jinja2==2.7.2
-#MySQL-python==1.2.5
-SQLAlchemy==0.9.1
-WTForms==1.0.5
-
-coverage==3.7.1
-Fabric==1.8.1
 passlib==1.6.2
 py-bcrypt==0.4
 pycrypto==2.6.1
-pytest==2.5.2
 
 # Flask
 Flask==0.10.1
