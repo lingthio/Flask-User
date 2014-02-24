@@ -1,8 +1,14 @@
 =====================
  Username Application
 =====================
-The ``Username Application`` extends the :doc:`minimal-app` by enabling ``USER_LOGIN_WITH_USERNAME``,
-adding email config, and enabling ``USER_ENABLE_CHANGE_USERNAME`` and ``USER_ENABLE_FORGOT_PASSWORD``.
+The ``Username Application`` extends the :doc:`minimal-app` by:
+
+* Configuring an SMTP server and account,
+* enabling ``USER_ENABLE_CONFIRM_EMAIL``,
+* enabling ``USER_ENABLE_CHANGE_USERNAME``,
+* enabling ``USER_ENABLE_CHANGE_PASSWORD``,
+* enabling ``USER_ENABLE_FORGOT_PASSWORD``, and
+* enabling ``USER_LOGIN_WITH_USERNAME``.
 
 **Features:**
 
@@ -39,12 +45,12 @@ Please collect the following information::
     - MAIL_DEFAULT_SENDER:          # e.g. '"Website" <noreply@example.com>'
 
 
-Create username_app.py
-----------------------
+Create basic_app.py
+-------------------
 
-Create ~/dev/example/username_app.py with the content below.
+Create ~/dev/example/basic_app.py with the content below.
 
-Make sure to adjust the SMTP settings below to the correct SMTP server settings and credentials.
+Make sure to adjust the ``MAIL_*`` settings below to the correct SMTP server and SMTP account settings.
 
 ::
 
@@ -60,14 +66,7 @@ Make sure to adjust the SMTP settings below to the correct SMTP server settings 
         # Setup Flask
         app = Flask(__name__)
         app.config['SECRET_KEY'] = 'my-super-secret-key'
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///username_app.db'
-
-        # Configure Flask-User
-        app.config['USER_ENABLE_CHANGE_USERNAME'] = True
-        app.config['USER_ENABLE_CHANGE_PASSWORD'] = True
-        app.config['USER_ENABLE_CONFIRM_EMAIL']   = True
-        app.config['USER_ENABLE_FORGOT_PASSWORD'] = True
-        app.config['USER_LOGIN_WITH_USERNAME']    = True
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///basic_app.db'
 
         # Configure Flask-Mail
         app.config['MAIL_SERVER']   = 'smtp.gmail.com'
@@ -76,6 +75,13 @@ Make sure to adjust the SMTP settings below to the correct SMTP server settings 
         app.config['MAIL_USERNAME'] = 'noreply@example.com'
         app.config['MAIL_PASSWORD'] = 'password'
         app.config['MAIL_DEFAULT_SENDER'] = '"Website" <noreply@example.com>'
+
+        # Configure Flask-User
+        app.config['USER_ENABLE_CHANGE_USERNAME'] = True
+        app.config['USER_ENABLE_CHANGE_PASSWORD'] = True
+        app.config['USER_ENABLE_CONFIRM_EMAIL']   = True
+        app.config['USER_ENABLE_FORGOT_PASSWORD'] = True
+        app.config['USER_LOGIN_WITH_USERNAME']    = True
 
         # Load local_settings.py if file exists
         try:
@@ -150,11 +156,11 @@ Make sure to adjust the SMTP settings below to the correct SMTP server settings 
         app = create_app()
         app.run(host='0.0.0.0', port=5000, debug=True)
 
-Run the username app
---------------------
-Run the username app with the following command::
+Run the Basic App
+-----------------
+Run the Basic App with the following command::
 
-    python username_app.py
+    python basic_app.py
 
 And point your browser to ``http://localhost:5000``.
 
@@ -162,3 +168,6 @@ If you receive an EmailException error message,
 of if the Registration form does not respond quickly
 then you may have specified incorrect SMTP settings.
 
+See also
+--------
+See also: :doc:`basic-app` and :doc:`customize`

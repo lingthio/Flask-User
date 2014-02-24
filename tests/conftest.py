@@ -1,6 +1,6 @@
 import pytest
 
-from example_apps.username_app import create_app
+from example_apps.basic_app import create_app
 
 print("========== tests/conftest.py ==========")
 

@@ -10,14 +10,7 @@ def create_app(test_config=None):
     # Setup Flask
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'my-super-secret-key'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///username_app.db'
-
-    # Configure Flask-User
-    app.config['USER_ENABLE_CHANGE_USERNAME'] = True
-    app.config['USER_ENABLE_CHANGE_PASSWORD'] = True
-    app.config['USER_ENABLE_CONFIRM_EMAIL']   = True
-    app.config['USER_ENABLE_FORGOT_PASSWORD'] = True
-    app.config['USER_LOGIN_WITH_USERNAME']    = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///basic_app.db'
 
     # Configure Flask-Mail
     app.config['MAIL_SERVER']   = 'smtp.gmail.com'
@@ -27,6 +20,13 @@ def create_app(test_config=None):
     app.config['MAIL_PASSWORD'] = 'password'
     app.config['MAIL_DEFAULT_SENDER'] = '"Website" <noreply@example.com>'
 
+    # Configure Flask-User
+    app.config['USER_ENABLE_CHANGE_USERNAME'] = True
+    app.config['USER_ENABLE_CHANGE_PASSWORD'] = True
+    app.config['USER_ENABLE_CONFIRM_EMAIL']   = True
+    app.config['USER_ENABLE_FORGOT_PASSWORD'] = True
+    app.config['USER_LOGIN_WITH_USERNAME']    = True
+
     # Load local_settings.py if file exists
     try:
         app.config.from_object('local_settings')
@@ -35,8 +35,9 @@ def create_app(test_config=None):
 
     # Over-write app config with test_config settings when specified
     if test_config:
-        for key, value in test_config.iteritems():
-            app.config[key] = value
+        key_value_pairs = test_config.items()
+        for key_value_pair in key_value_pairs:
+            app.config[key_value_pair[0]] = key_value_pair[1]
 
     # Setup Flask-Mail, Flask-Babel and Flask-SQLAlchemy
     app.mail = Mail(app)

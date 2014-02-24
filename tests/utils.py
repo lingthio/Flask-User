@@ -28,4 +28,6 @@ def response_has_errors(response):
 # Checks to see if response.data contains the specified string.
 def response_has_string(response, string):
     assert response.status_code == 200
-    return response.data.find(string) >= 0
+    # In Python3, response.data is <class 'bytes' and string is <class 'str'>
+    # hence the use of 'str.encode(string)'
+    return response.data.find(str.encode(string)) >= 0

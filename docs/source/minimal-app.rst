@@ -97,4 +97,4 @@ And point your browser to ``http://localhost:5000``.
 
 See also
 --------
-See also: :doc:`username-app`
+See also: :doc:`basic-app` and :doc:`customize`

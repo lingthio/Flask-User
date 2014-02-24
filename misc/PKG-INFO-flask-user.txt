@@ -52,7 +52,7 @@ Description: ==========
         
         Revision History
         ----------------
-        * v0.3.3 Added mininal-app and username-app examples to docs
+        * v0.3.3 Added mininal-app and basic-app examples to docs
         * v0.3.2 Bugfix: All confirmation emails were sent to ling.thio@gmail.com
         * v0.3.1 Added documentation for pythonhosted
         * v0.3 Alpha release

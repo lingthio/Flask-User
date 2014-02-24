@@ -38,7 +38,7 @@ Documentation
 
 Revision History
 ----------------
-* v0.3.3 Added minimal-app and username-app examples to docs
+* v0.3.3 Added minimal-app and basic-app examples
 * v0.3.2 Bug fix for Confirm email
 * v0.3.1 Alpha release
 * v0.3 Confirm email, Forgot password, Reset password

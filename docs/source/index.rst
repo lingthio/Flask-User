@@ -28,7 +28,7 @@ Documentation
     features
     install
     minimal-app
-    username-app
+    basic-app
     customize
 
 Extension Packages

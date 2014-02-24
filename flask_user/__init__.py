@@ -13,11 +13,11 @@ from flask_babel import gettext as _
 from flask_login import LoginManager, UserMixin as LoginUserMixin
 from flask_user.db_interfaces import DBInterface
 
-from passwords import init_password_crypt_context
-from tokens import TokenManager
+from .db_interfaces import SQLAlchemyAdapter
+from .passwords import init_password_crypt_context
+from .tokens import TokenManager
 
 __version__ = '0.2.0'
-from db_interfaces import SQLAlchemyAdapter
 
 class UserMixin(LoginUserMixin):
     pass
@@ -30,8 +30,8 @@ class UserManager():
         """
         Initialize the UserManager with default customizable settings
         """
-        import views
-        import forms
+        from . import views
+        from . import forms
 
         self.db_adapter = db_adapter
 
