@@ -6,16 +6,16 @@ python:
 
 # Install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
-  - pip install -r requirements.txt
-  - pip install coverage
-  - pip install coveralls
+  - pip install -r requirements.txt --quiet
+  - pip install coverage --quiet
+  - pip install coveralls --quiet
 
 # Run automated tests with coverage
 script:
   export PYTHONPATH=. && coverage run --source=flask_user tests/conftest.py
   coverage report -m
 
-# Upload coverage data to coveralls 
+# Upload coverage data to coveralls
 after_success:
-  coveralls --verbose
+  coveralls
 
