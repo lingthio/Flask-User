@@ -3,8 +3,6 @@ language:
 
 python:
   - "2.7"
-  - "3.3"
-  - "2.6"
 
 # Install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
@@ -15,8 +13,9 @@ install:
 # Run automated tests with coverage
 script:
   export PYTHONPATH=. && coverage run --source=flask_user tests/conftest.py
+  coverage report -m
 
 # Upload coverage data to coveralls
 after_success:
-  coveralls
+  coveralls --verbose
 

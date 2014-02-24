@@ -23,6 +23,7 @@ var/
 .tox/
 .coverage
 .cache
+.coveralls.yml
 nosetests.xml
 coverage.xml
 

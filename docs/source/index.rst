@@ -14,8 +14,8 @@ Flask-User
     !! Newsflash: In v0.3.1 and v0.3.2 confirmation emails were not working !!
        Please upgrade to v0.3.3 or later. Thank you.
 
-User Login for Flask: Register, Confirm email, Forgot password and more
------------------------------------------------------------------------
+User Login for Flask: Register, Confirm email, Login, Forgot password and more
+------------------------------------------------------------------------------
 
 | Many Flask websites require that their users can Register, Confirm email, Login, Logout, Change password and Reset forgotten passwords.
 | Each website often requires different and precise customization of this process.

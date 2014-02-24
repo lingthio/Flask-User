@@ -27,7 +27,7 @@ Flask-User aims to provide a ready to use **and** fully customizable package tha
 * **Secure** (``bcrypt`` password hashing, ``AES`` ID encryption, ``itsdangerous`` token signing)
 * **Ready to use**
 * **Fully customizable** (Email, Field labels, Flash messages, Form templates, URLs, and more)
-* **Well documentated**
+* **Well documented**
 
 Documentation
 -------------
