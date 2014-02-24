@@ -1,7 +1,7 @@
 Flask-User
 ==========
 
-|travis| for Python 3.3, Python 2.7, and Python 2.6. |coverall|
+|travis|  |coverall|
 
 .. |travis| image:: https://travis-ci.org/lingthio/flask-user.png?branch=master
     :target: https://travis-ci.org/lingthio/flask-user

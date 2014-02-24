@@ -1,10 +1,18 @@
 Flask-User
 ==========
 
+|travis|  |coverall|
+
+.. |travis| image:: https://travis-ci.org/lingthio/flask-user.png?branch=master
+    :target: https://travis-ci.org/lingthio/flask-user
+
+.. |coverall| image:: https://coveralls.io/repos/lingthio/flask-user/badge.png?branch=master
+    :target: https://coveralls.io/r/lingthio/flask-user?branch=master
+
 ::
 
     !! Newsflash: In v0.3.1 and v0.3.2 confirmation emails were not working !!
-       Please upgrade to v0.3.3. Thank you.
+       Please upgrade to v0.3.3 or later. Thank you.
 
 User Login for Flask: Register, Confirm email, Forgot password and more
 -----------------------------------------------------------------------
@@ -30,6 +38,7 @@ Documentation
     minimal-app
     basic-app
     customize
+    revision-history
 
 Extension Packages
 ------------------
