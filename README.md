@@ -3,6 +3,8 @@ Flask-User
 
 [![Build Status](https://travis-ci.org/lingthio/flask-user.png?branch=master)](https://travis-ci.org/lingthio/flask-user)
 
+[![Coverage Status](https://coveralls.io/repos/lingthio/flask-user/badge.png)](https://coveralls.io/r/lingthio/flask-user)
+
 Customizable User management for Flask
 --------------------------------------
 
