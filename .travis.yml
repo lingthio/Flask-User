@@ -12,7 +12,7 @@ install:
 # command to run tests, e.g. python setup.py test
 script:
   - py.test --tb short -v -s tests
-  - coverage run --source=flask_user tests/conftest.py
+  - export PYTHONPATH=. && coverage run --source=flask_user tests/conftest.py
 
 # coveralls setup
 after_success:

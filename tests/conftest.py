@@ -58,6 +58,6 @@ if __name__ == '__main__':
     client = _app.test_client()
 
     from tests import test_forms
-    test_forms.run_all_tests(client)
+    test_forms.run_all_tests(client, _app)
 
 

@@ -83,16 +83,16 @@ def post_change_password_form(client, old_password='Password1', new_password='Pa
 # The 'client' parameter is set up in conftest.py
 
 # Workaround for py.test coverage issue
-def run_all_tests(client):
-    test_register_form_with_username(client)
-    test_register_form_with_email(client)
-    test_confirm_email(client)
-    test_login_form_with_username(client)
-    test_login_form_with_email(client)
-    test_change_username_form(client)
-    test_change_password_form(client)
-    test_forgot_password_form(client)
-    test_reset_password(client)
+def run_all_tests(client, app):
+    test_register_form_with_username(client, app)
+    test_register_form_with_email(client, app)
+    test_confirm_email(client, app)
+    test_login_form_with_username(client, app)
+    test_login_form_with_email(client, app)
+    test_change_username_form(client, app)
+    test_change_password_form(client, app)
+    test_forgot_password_form(client, app)
+    test_reset_password(client, app)
 
 def test_register_form_with_username(client, app):
     User = app.User
@@ -312,7 +312,7 @@ def test_confirm_email(client, app):
     assert user3.active
     assert user3.email_confirmed_at
 
-def test_login_form_with_username(client):
+def test_login_form_with_username(client, app):
     # Set user manager config
     user_manager =  current_app.user_manager
     user_manager.enable_registration = True
@@ -345,7 +345,7 @@ def test_login_form_with_username(client):
     response = post_login_form(client, 'user1', None, 'Password9')
     assert test_utils.response_has_string(response, 'Incorrect Username and Password')
 
-def test_login_form_with_email(client):
+def test_login_form_with_email(client, app):
     # Set user manager config
     user_manager =  current_app.user_manager
     user_manager.enable_registration = True
@@ -379,7 +379,7 @@ def test_login_form_with_email(client):
     assert test_utils.response_has_string(response, 'Incorrect Email and Password')
 
 
-def test_change_username_form(client):
+def test_change_username_form(client, app):
     # Set user manager config
     user_manager =  current_app.user_manager
     user_manager.enable_registration = True
@@ -432,7 +432,7 @@ def test_change_username_form(client):
 
     test_utils.logout(client)
 
-def test_change_password_form(client):
+def test_change_password_form(client, app):
     # Set user manager config
     user_manager =  current_app.user_manager
     user_manager.enable_registration = True
@@ -493,7 +493,7 @@ def test_change_password_form(client):
     test_utils.logout(client)
 
 
-def test_forgot_password_form(client):
+def test_forgot_password_form(client, app):
     # Submit forgot password form for user1
     url = url_for('user.forgot_password')
     response = client.post(url, follow_redirects=True, data=dict(email='user1@example.com'))
