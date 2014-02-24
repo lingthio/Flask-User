@@ -2,7 +2,6 @@ language: python
 
 python:
   - "2.7"
-  - "2.6"
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
@@ -11,9 +10,8 @@ install:
 
 # command to run tests, e.g. python setup.py test
 script:
-  - py.test --tb short -v -s tests
   - export PYTHONPATH=. && coverage run --source=flask_user tests/conftest.py
 
 # coveralls setup
 after_success:
-  coveralls
+  - coveralls debug
