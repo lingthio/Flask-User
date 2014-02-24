@@ -29,6 +29,9 @@ coverage.xml
 # Translations
 *.mo
 
+# Mac OS
+.DS_Store
+
 # IDEs
 .project
 .pydevproject

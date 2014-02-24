@@ -14,11 +14,11 @@ User Login for Flask: Register, Confirm email, Forgot password and more
 
 Flask-User aims to provide a ready to use **and** fully customizable package that offers:
 
-* **Reliable** user management functionality,
-* **Secure** password hashing and token encryption and signing,
-* **Ready to use** after an easy install and setup,
-* **Fully customizable** through well documented config settings and attributes, and
-* **Good documentation**
+* **Reliable** (Automated test cover 97% of the code base)
+* **Secure** (``bcrypt`` password hashing, ``AES`` ID encryption, ``itsdangerous`` token signing)
+* **Ready to use**
+* **Fully customizable** (Email, Field labels, Flash messages, Form templates, URLs, and more)
+* **Well documentated**
 
 Documentation
 -------------
