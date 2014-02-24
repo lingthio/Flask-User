@@ -16,7 +16,7 @@ install:
 script:
   export PYTHONPATH=. && coverage run --source=flask_user tests/conftest.py
 
-# Upload coverage data to coveralls   
+# Upload coverage data to coveralls
 after_success:
   coveralls
 
