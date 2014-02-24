@@ -51,7 +51,7 @@ class TokenManager():
             str1 = self.cipher.decrypt(str2)        # --> 16 byte integer string
             return int(str1)                        # --> integer id
         except Exception as e:                      # pragma: no cover
-            raise e
+            print('!!!Exception in decrypt_id!!!')
             return 0
 
     def generate_token(self, user_id):
