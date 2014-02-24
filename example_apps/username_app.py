@@ -1,5 +1,3 @@
-import os
-
 from flask import Flask, render_template_string
 from flask.ext.babel import Babel
 from flask.ext.mail import Mail
@@ -25,24 +23,17 @@ def create_app(test_config=None):
     app.config['MAIL_SERVER']   = 'smtp.gmail.com'
     app.config['MAIL_PORT']     = 465
     app.config['MAIL_USE_SSL']  = True
-    app.config['MAIL_USERNAME'] = 'user@example.com'
+    app.config['MAIL_USERNAME'] = 'noreply@example.com'
     app.config['MAIL_PASSWORD'] = 'password'
-    app.config['MAIL_DEFAULT_SENDER'] = 'user@example.com'
+    app.config['MAIL_DEFAULT_SENDER'] = '"Website" <noreply@example.com>'
 
     # Load local_settings.py if file exists
     try:
         app.config.from_object('local_settings')
     except:
-        try:
-            app.config.from_object('local_settings')
-        except:
-            pass
-    # filename = os.path.join(app.root_path, 'local_settings.py')
-    # print filename
-    # if os.path.exists(filename):
-    #     app.config.from_object('local_settings')
+        pass
 
-    # Over-write app config with test_config settings
+    # Over-write app config with test_config settings when specified
     if test_config:
         for key, value in test_config.iteritems():
             app.config[key] = value
