@@ -6,30 +6,25 @@ Flask-User
     !! Newsflash: In v0.3.1 and v0.3.2 confirmation emails were not working !!
        Please upgrade to v0.3.3. Thank you.
 
-User Login for Flask: Register, Confirm email, Forgot password and more
------------------------------------------------------------------------
+User Login for Flask
+--------------------
+**Register, Confirm email, Forgot password and more**
 
 | Many Flask websites require that their users can Register, Confirm email, Login, Logout, Change password and Reset forgotten passwords.
 | Each website often requires different and precise customization of this process.
 
-Flask-User aims to provide a ready to use **and** fully customizable package that offers:
+Flask-User aims to provide a ready to use **and** fully customizable package that is:
 
-* **Reliable** user management functionality,
-* **Secure** password hashing and token encryption and signing,
-* **Ready to use** after an easy install and setup,
-* **Fully customizable** through well documented config settings and attributes, and
+* **Reliable** (Automated test cover 97% of the code base)
+* **Secure** (``bcrypt`` password hashing, ``AES`` ID encryption, ``itsdangerous`` token signing)
+* **Ready to use**
+* **Fully customizable**
 * **Good documentation**
 
 Documentation
 -------------
-.. toctree::
-    :maxdepth: 1
 
-    features
-    install
-    minimal-app
-    username-app
-    customize
+`Flask-User Documentation <https://pythonhosted.org/Flask-User/>`_
 
 Extension Packages
 ------------------
