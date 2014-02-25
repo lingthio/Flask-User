@@ -1,19 +1,20 @@
 Flask-User
 ==========
 
-|version|  |travis|  |coverall|  |downloads|
+.. image:: https://pypip.in/v/Flask-User/badge.png
+    :target: https://pypi.python.org/pypi/Flask-User
 
-.. |version| image:: https://pypip.in/v/Flask-User/badge.png
-        :target: https://pypi.python.org/pypi/Flask-User
-
-.. |travis| image:: https://travis-ci.org/lingthio/flask-user.png?branch=master
+.. image:: https://travis-ci.org/lingthio/flask-user.png?branch=master
     :target: https://travis-ci.org/lingthio/flask-user
 
-.. |coverall| image:: https://coveralls.io/repos/lingthio/flask-user/badge.png?branch=master
+.. image:: https://coveralls.io/repos/lingthio/flask-user/badge.png?branch=master
     :target: https://coveralls.io/r/lingthio/flask-user?branch=master
 
-.. |downloads| image:: https://pypip.in/d/Flask-User/badge.png
-        :target: https://pypi.python.org/pypi/Flask-User
+.. image:: https://pypip.in/license/Flask-User/badge.png
+    :target: https://pypi.python.org/pypi/Flask-User
+
+.. image:: https://pypip.in/d/Flask-User/badge.png
+    :target: https://pypi.python.org/pypi/Flask-User
 
 ::
 
