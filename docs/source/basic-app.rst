@@ -16,12 +16,18 @@ The **Basic App** is a Flask-User application with basic configuration:
 **Custom Configuration**
 
 * Define an SMTP server and an SMTP account with the ``MAIL_*`` settings.
+    * MAIL_SERVER   = 'smtp.gmail.com'
+    * MAIL_PORT     = 465
+    * MAIL_USE_SSL  = True
+    * MAIL_USERNAME = 'email@company.com'
+    * MAIL_PASSWORD = 'password'
+    * MAIL_DEFAULT_SENDER = '"Website" <noreply@example.com>'
+    * See `Flask-Mail documentation <http://pythonhosted.org/flask-mail/>`_
 * ``USER_ENABLE_CONFIRM_EMAIL   = True``
 * ``USER_ENABLE_CHANGE_USERNAME = True``
 * ``USER_ENABLE_CHANGE_PASSWORD = True``
 * ``USER_ENABLE_FORGOT_PASSWORD = True``
 * ``USER_LOGIN_WITH_USERNAME    = True``
-
 
 
 Set up environment
@@ -34,19 +40,6 @@ We recommend working with virtualenv and virtualenvwrapper::
 
     mkdir -p ~dev/example       # or C:\dev\example on Windows
     cd ~/dev/example
-
-Collect SMTP Information
-------------------------
-The ``Confirm Email`` and ``Reset forgotten password`` features
-require an SMTP server to be configured.
-Please collect the following information::
-
-    - MAIL_SERVER:                  # e.g. 'smtp.gmail.com'
-    - MAIL_PORT:                    # e.g. 465
-    - Whether to use SSL or TLS     # e.g. MAIL_SSL = True
-    - MAIL_USERNAME:                # e.g. 'noreply@example.com'
-    - MAIL_PASSWORD:                # e.g. 'password'
-    - MAIL_DEFAULT_SENDER:          # e.g. '"Website" <noreply@example.com>'
 
 
 Create basic_app.py
@@ -174,4 +167,4 @@ then you may have specified incorrect SMTP settings.
 
 See also
 --------
-See also: :doc:`basic-app` and :doc:`customize`
+See also: :doc:`minimal-app` and :doc:`customize`

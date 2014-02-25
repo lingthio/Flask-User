@@ -14,7 +14,8 @@ from flask import current_app, flash, redirect, render_template, request, url_fo
 from flask.ext.babel import gettext as _
 from flask.ext.login import current_user, login_required, login_user, logout_user
 
-from flask_user.emails import send_confirmation_email, send_reset_password_email
+from .emails import send_confirmation_email, send_reset_password_email
+from . import signals
 
 def confirm_email(token):
     """
@@ -22,7 +23,7 @@ def confirm_email(token):
     """
     # Verify token
     user_manager = current_app.user_manager
-    is_valid, has_expired, user_id = user_manager.token_manager.verify_token(
+    is_valid, has_expired, object_id = user_manager.token_manager.verify_token(
             token,
             user_manager.confirm_email_expiration)
 
@@ -34,7 +35,13 @@ def confirm_email(token):
         flash(_('Invalid confirmation token.'), 'error')
         return redirect(user_manager.login_url)
 
-    user_manager.db_adapter.confirm_user(user_id)
+    # Confirm email
+    user, email = user_manager.db_adapter.confirm_email(object_id)
+
+    # Send email_confirmed signal
+    signals.email_confirmed.send(current_app._get_current_object(), user=user, email=email)
+
+    # Prepare one-time system message
     flash(_('Your email has been confirmed. Please sign in.'), 'success')
 
     return redirect(user_manager.login_url)
@@ -58,6 +65,9 @@ def change_password():
 
         # Change password
         user_manager.db_adapter.set_password(current_user, hashed_password)
+
+        # Send password_changed signal
+        signals.password_changed.send(current_app._get_current_object(), user=current_user)
 
         # Prepare one-time system message
         flash(_('Your password has been changed successfully.'), 'success')
@@ -86,6 +96,9 @@ def change_username():
 
         # Change username
         user_manager.db_adapter.set_username(current_user, new_username)
+
+        # Send username_changed signal
+        signals.username_changed.send(current_app._get_current_object(), user=current_user)
 
         # Prepare one-time system message
         flash(_("Your username has been changed to '%(username)s'.", username=new_username), 'success')
@@ -122,6 +135,9 @@ def forgot_password():
             # Send confirmation email
             send_reset_password_email(email, user, token)
 
+            # Send reset_password_email_sent signal
+            signals.reset_password_email_sent.send(current_app._get_current_object(), user=user)
+
         # Prepare one-time system message
         flash(_("A reset password email has been sent to '%(email)s'. Open that email and follow the instructions to reset your password.", email=email), 'success')
 
@@ -155,6 +171,9 @@ def login():
                 # Use Flask-Login to sign in user
                 login_user(user)
 
+                # Send user_logged_in signal
+                signals.user_logged_in.send(current_app._get_current_object(), user=user)
+
                 # Prepare one-time system message
                 flash(_('You have signed in successfully.'), 'success')
 
@@ -176,6 +195,9 @@ def logout():
     Sign the user out.
     """
     user_manager =  current_app.user_manager
+
+    # Send user_logged_out signal
+    signals.user_logged_out.send(current_app._get_current_object(), user=current_user)
 
     # Use Flask-Login to sign out user
     logout_user()
@@ -201,39 +223,72 @@ def register():
 
     # Process valid POST
     if request.method=='POST' and form.validate():
-        # Encrypt password
-        email = None
 
-        # Construct named arguments (**kwargs)
-        kwargs = {}
-        # Always set password
-        hashed_password = user_manager.password_crypt_context.encrypt(form.password.data)
-        kwargs['password']=hashed_password
-        # Set username if USER_LOGIN_WITH_USERNAME is True
-        if user_manager.login_with_username:
-            kwargs['username'] = form.username.data
-        # Set email if USER_REGISTER_WITH_EMAIL is True or USER_LOGIN_WITH_USERNAME is False
-        if user_manager.register_with_email or not user_manager.login_with_username:
-            email = form.email.data
-            kwargs['email'] = email
-        # Set active=False if USER_ENABLE_CONFIRM_EMAIL is True
-        if user_manager.enable_confirm_email:
-            kwargs['active'] = False
+        # We are about to store user and __optional__ username and email information.
+        # To further complicate matter, the email address may be stored in a different
+        # table when multiple email addresses are allowed per user.
+
+        # We address this variety by constructing two variable argument dictionaries:
+        # user_kwargs for the User object
+        # email_kwargs for the Email object, which may point to user_kwargs for single email per user
+        user_kwargs = {}
+        if user_manager.db_adapter.EmailClass:
+            email_kwargs = {}
         else:
-            kwargs['active'] = True
+            email_kwargs = user_kwargs
 
-        # Add User record with named arguments (**kwargs)
-        user = user_manager.db_adapter.add_user(**kwargs)
+        # Now we fill the kwargs dictionary with form fields, depending on the configuration
 
-        if email and user_manager.enable_confirm_email:
+        # Always store hashed password
+        user_kwargs['password'] = user_manager.password_crypt_context.encrypt(form.password.data)
+
+        # Store email address depending on config
+        if user_manager.register_with_email:
+            email_address = form.email.data
+            email_kwargs['email'] = email_address
+        else:
+            email_address = None
+
+        # Store username depending on config
+        if user_manager.login_with_username:
+            user_kwargs['username'] = form.username.data
+
+        # Store active=True or active=False depending on config
+        if user_manager.enable_confirm_email:
+            user_kwargs['active'] = False
+        else:
+            user_kwargs['active'] = True
+
+        # Add User record with named arguments
+        user = user_manager.db_adapter.add_user(**user_kwargs)
+
+        # For multiple emails per user, add Email object
+        if user_manager.db_adapter.EmailClass:
+            raise NotImplementedError()
+            # TODO: multiple_emails_per_user
+            # email_kwargs['user_id'] = user.id
+            # email = user_manager.db_adapter.add_email(**email_kwargs)
+            # object_id = email.id
+        else:
+            object_id = user.id
+
+
+        # Send user_registered signal
+        signals.user_registered.send(current_app._get_current_object(), user=user)
+
+        if user_manager.enable_confirm_email:
+
             # Generate password reset token
-            token = user_manager.token_manager.generate_token(user.id)
+            token = user_manager.token_manager.generate_token(object_id)
 
             # Send confirmation email
-            send_confirmation_email(email, user, token)
+            send_confirmation_email(email_address, user, token)
+
+            # Send confirmation_email_sent signal
+            signals.confirmation_email_sent.send(current_app._get_current_object(), user=user)
 
             # Prepare one-time system message
-            flash(_("A confirmation email has been sent to %(email)s. Open that email and follow the instructions to complete your registration.", email=email), 'success')
+            flash(_("A confirmation email has been sent to %(email)s. Open that email and follow the instructions to complete your registration.", email=email_address), 'success')
 
         # Redirect to the login page
         return redirect(url_for('user.login'))

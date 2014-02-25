@@ -41,8 +41,8 @@ class TokenManager():
         """
         Decrypts url-safe base64 string to integer ID
         """
-        # In Python2, encrypted_id is <type 'str'> and needs to be converted to bytes
-        if type(encrypted_id)=='str':
+        # In Python3, encrypted_id is <type 'str'> and needs to be converted to bytes
+        if type(encrypted_id)=='str':   # pragma: no covers
             encrypted_id = encrypted_id.encode('ascii')
 
         try:
@@ -54,17 +54,17 @@ class TokenManager():
             print('!!!Exception in decrypt_id!!!')
             return 0
 
-    def generate_token(self, user_id):
+    def generate_token(self, id):
         """
-        Return token with user_id, timestamp and signature
+        Return token with id, timestamp and signature
         """
-        return self.signer.sign(self.encrypt_id(user_id))
+        return self.signer.sign(self.encrypt_id(id))
 
     def verify_token(self, token, expiration_in_seconds):
         """
-        Verify token and return (is_valid, has_expired, user_id).
+        Verify token and return (is_valid, has_expired, id).
 
-        Returns (True, False, user_id) on success.
+        Returns (True, False, id) on success.
         Returns (False, True, None) on expired tokens.
         Returns (False, False, None) on invalid tokens.
         """
@@ -72,13 +72,13 @@ class TokenManager():
             data = self.signer.unsign(token, max_age=expiration_in_seconds)
             is_valid = True
             has_expired = False
-            user_id = self.decrypt_id(data)
+            id = self.decrypt_id(data)
         except SignatureExpired:
             is_valid = False
             has_expired = True
-            user_id = None
+            id = None
         except BadSignature:
             is_valid = False
             has_expired = False
-            user_id = None
-        return (is_valid, has_expired, user_id)
+            id = None
+        return (is_valid, has_expired, id)

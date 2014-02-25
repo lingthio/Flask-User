@@ -20,8 +20,6 @@ class DBInterface(object):
     def __init__(self, db, UserClass, EmailClass=None):
         self.db = db
         self.UserClass = UserClass
-        if not EmailClass:
-            EmailClass = UserClass
         self.EmailClass = EmailClass
 
     def find_user_by_email(self, email): # pragma: no cover
@@ -74,19 +72,34 @@ class SQLAlchemyAdapter(DBInterface):
         self.db.session.commit()
         return user
 
-    def confirm_user(self, user_id):
+    # TODO: multiple_emails_per_user
+    # def add_email(self, **kwargs):
+    #     """
+    #     Adds an email record for the multiple emails per user feature
+    #     """
+    #     email = self.EmailClass(**kwargs)
+    #     self.db.session.add(email)
+    #     self.db.session.commit()
+    #     return email
+
+    def confirm_email(self, object_id):
         """
         Mark the user record as active and sets email_confirmed_at to utcnow().
+        object_id can either be a user_id or an email_id for the multiple_emails_per_user feature
         """
-        user = self.find_user_by_id(user_id)
-        if user:
-            if not user.active:
-                user.active = True
-                if hasattr(user, 'email_confirmed_at'):
-                    user.email_confirmed_at = datetime.utcnow()
-                self.db.session.commit()
-        else:                                               # pragma: no cover
-            assert False, "Invalid user id "+str(user_id)
+        if not self.EmailClass:
+            user = self.find_user_by_id(object_id)
+            if user:
+                if not user.active:
+                    user.active = True
+                    if hasattr(user, 'email_confirmed_at'):
+                        user.email_confirmed_at = datetime.utcnow()
+                    self.db.session.commit()
+            else:                                               # pragma: no cover
+                assert False, "Invalid user id "+str(object_id)
+            return (user.id, None)
+        else:
+            raise NotImplementedError   # TODO:
 
     def set_username(self, user, username):
         user.username = username
@@ -101,10 +114,14 @@ class SQLAlchemyAdapter(DBInterface):
         self.db.session.commit()
 
     def find_user_by_id(self, user_id):
-        return self.EmailClass.query.filter(self.EmailClass.id==user_id).first()
+        return self.UserClass.query.filter(self.UserClass.id==user_id).first()
 
     def find_user_by_email(self, email):
-        return self.EmailClass.query.filter(self.EmailClass.email.ilike(email)).first()
+        if self.EmailClass:
+            raise NotImplementedError   # TODO:
+            # return self.EmailClass.query.filter(self.EmailClass.email.ilike(email)).first()
+        else:
+            return self.UserClass.query.filter(self.UserClass.email.ilike(email)).first()
 
     def find_user_by_username(self, username):
         return self.UserClass.query.filter(self.UserClass.username.ilike(username)).first()

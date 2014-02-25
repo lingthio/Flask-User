@@ -35,7 +35,7 @@ def _render_email(email_name, **kwargs):
     return (subject, html_message, text_message)
 
 def _send_email(recipient, subject, html_message, text_message):
-    class EmailException(Exception):
+    class SendEmailError(Exception):
         pass
 
     # Construct Flash-Mail message
@@ -49,10 +49,10 @@ def _send_email(recipient, subject, html_message, text_message):
         current_app.mail.send(message)
 
     # Print helpful error messages on exceptions
-    except (socket.gaierror, socket.error) as e:    # pragma: no coverage
-        raise EmailException('Connection error: Check your MAIL_HOSTNAME or MAIL_PORT settings.')
-    except smtplib.SMTPAuthenticationError:         # pragma: no coverage
-        raise EmailException('SMTP Authentication error: Check your MAIL_USERNAME and MAIL_PASSWORD settings.')
+    except (socket.gaierror, socket.error) as e:
+        raise SendEmailError('SMTP Connection error: Check your MAIL_HOSTNAME or MAIL_PORT settings.')
+    except smtplib.SMTPAuthenticationError:
+        raise SendEmailError('SMTP Authentication error: Check your MAIL_USERNAME and MAIL_PASSWORD settings.')
 
 
 

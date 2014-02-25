@@ -31,7 +31,10 @@ def create_app(test_config=None):
     try:
         app.config.from_object('local_settings')
     except:
-        pass
+        try:
+            app.config.from_object('example_apps.local_settings')
+        except:
+            pass
 
     # Over-write app config with test_config settings when specified
     if test_config:
