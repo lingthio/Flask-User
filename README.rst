@@ -1,13 +1,19 @@
 Flask-User
 ==========
 
-|travis|  |coverall|
+|version|  |travis|  |coverall|  |downloads|
+
+.. |version| image:: https://pypip.in/v/Nikola/badge.png
+        :target: https://pypi.python.org/pypi/Flask-User
 
 .. |travis| image:: https://travis-ci.org/lingthio/flask-user.png?branch=master
     :target: https://travis-ci.org/lingthio/flask-user
 
 .. |coverall| image:: https://coveralls.io/repos/lingthio/flask-user/badge.png?branch=master
     :target: https://coveralls.io/r/lingthio/flask-user?branch=master
+
+.. |downloads| image:: https://pypip.in/d/Nikola/badge.png
+        :target: https://pypi.python.org/pypi/Flask-User
 
 ::
 
