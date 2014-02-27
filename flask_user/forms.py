@@ -267,7 +267,6 @@ class RegisterForm(Form):
         # All is well
         return True
 
-# TODO:
 class ResetPasswordForm(Form):
     new_password = PasswordField(_('New Password'), validators=[
         validators.Required(_('New Password is required')),

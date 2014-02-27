@@ -1,6 +1,17 @@
+"""
+    tests.conftest
+    --------------
+    py.test config file for automated tests
+
+    :copyright: (c) 2013 by Ling Thio
+    :author: Ling Thio (ling.thio@gmail.com)
+    :license: Simplified BSD License, see LICENSE.txt for more details.
+"""
+
 import pytest
 
 from example_apps.basic_app import create_app
+from tests.tstutils import TstClient
 
 print("========== tests/conftest.py ==========")
 
@@ -41,7 +52,7 @@ def db():
 
 @pytest.fixture(scope='module')
 def client(app):
-    client = app.test_client()
+    client = TstClient(app.test_client())
     return client
 
 
@@ -55,9 +66,10 @@ def client(app):
 # - Make sure to import all the test files below.
 # - Make sure each file's run_all_tests() function calls all test functions in that file.
 if __name__ == '__main__':
-    client = _app.test_client()
+    from tests import test_valid_forms
+    from tests import test_invalid_forms
 
-    from tests import test_forms
-    test_forms.run_all_tests(client, _app)
+    test_valid_forms.run_all_tests(client(app()), db())
+    test_invalid_forms.run_all_tests(client(app()), db())
 
 

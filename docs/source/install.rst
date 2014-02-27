@@ -8,14 +8,18 @@ Requirements
 - Flask (includes itsdangerous)
 - Flask-Babel
 - Flask-Login
-- Flask-Mail (includes blinker)
+- Flask-Mail
 - Flask-WTF
 - crypto, passlib and py-bcript
 
-Additional requirements when selecting the SQLAlchemyAdapter():
+Optional requirements needed for SQLAlchemyAdapter:
 
 - SQL-Python
 - Flask-SQLAlchemy
+
+Optional requirements needed to register for signals
+
+- blinker
 
 Install
 -------

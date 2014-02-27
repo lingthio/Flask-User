@@ -52,8 +52,8 @@ class DBInterface(object):
     def verify_reset_password_token(self, user, token):
         return user.reset_password_token == token
 
-    def get_email(self, user):
-        return user.email
+    # def get_email(self, user):
+    #     return user.email
 
 
 class SQLAlchemyAdapter(DBInterface):

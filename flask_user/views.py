@@ -368,7 +368,6 @@ def reset_password(token):
         user_manager.db_adapter.set_password(user, hashed_password)
 
         # Prepare one-time system message
-        email = user_manager.db_adapter.get_email(user)
         flash(_("Your password has been reset successfully. Please sign in with your new password"), 'success')
 
         # Redirect to the login page

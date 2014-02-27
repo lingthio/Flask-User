@@ -38,6 +38,7 @@ Documentation
     minimal-app
     basic-app
     customize
+    signals
     revision-history
 
 Extension Packages

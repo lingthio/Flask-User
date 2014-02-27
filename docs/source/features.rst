@@ -9,7 +9,7 @@ Features
 | * Fully Customizable              | * Change username                  |
 | * Data model agnostic             | * Change password                  |
 |   (provide your own User model)   | * Reset forgotten password         |
-| * Database ORM abstraction        |                                    |
+| * Database ORM abstraction        | * Notification signals             |
 |   (SQLAlchemyAdapter provided)    |                                    |
 | * Internationalization Ready      |                                    |
 +-----------------------------------+------------------------------------+
@@ -20,29 +20,28 @@ We understand that you are looking for an easy yet reliable way to manage your u
 We've run our code through automated tests from the very beginning and we're proud
 to consistently achieve code coverage of over 95% without fudging.
 
-Here is our Feb 2014 code coverage report::
+.. image:: https://pypip.in/v/Flask-User/badge.png
+    :target: https://pypi.python.org/pypi/Flask-User
 
-    > coverage report
-    Name                                                            Stmts   Miss  Cover
-    -----------------------------------------------------------------------------------
-    flask_user/__init__                                                93      0   100%
-    flask_user/db_interfaces                                           51      0   100%
-    flask_user/emails                                                  28      0   100%
-    flask_user/forms                                                  149      3    98%
-    flask_user/passwords                                                4      0   100%
-    flask_user/tokens                                                  37      0   100%
-    flask_user/views                                                  128     13    90%
-    -----------------------------------------------------------------------------------
-    TOTAL                                                             490     16    97%
+.. image:: https://travis-ci.org/lingthio/flask-user.png?branch=master
+    :target: https://travis-ci.org/lingthio/flask-user
+
+.. image:: https://coveralls.io/repos/lingthio/flask-user/badge.png?branch=master
+    :target: https://coveralls.io/r/lingthio/flask-user?branch=master
+
+.. image:: https://pypip.in/d/Flask-User/badge.png
+    :target: https://pypi.python.org/pypi/Flask-User
+
+.. image:: https://pypip.in/license/Flask-User/badge.png
+    :target: https://pypi.python.org/pypi/Flask-User
 
 Secure
 ------
 
-Passwords are hashed using bcrypt by default and can be customized to any hashing
-algorithm that ``passlib`` supports.
+Passwords are hashed using ``bcrypt`` by default and can be customized to any
+set of hashing algorithms that ``passlib`` supports.
 
-The user ID in Confirm email and Reset password tokens are encrypted using AES
-and signed using the ``itsdangerous`` package.
+Tokens are encrypted using ``AES`` and signed using the ``itsdangerous`` package.
 
 
 Fully Customizable
@@ -74,11 +73,10 @@ See :doc:`install`
 Easy to Setup
 -------------
 
-See :doc:`minimal-app`
+See :doc:`minimal-app` or :doc:`basic-app`
 
 Planned Features
 ----------------
-* Event signaling through blinker
 * Registration by invitation only
 * Profile editing with pictures and thumbnails
 * Role based authorization
