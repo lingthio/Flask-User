@@ -1,21 +1,28 @@
 Flask-User
 ==========
 
-|travis|  |coverall|
+.. image:: https://pypip.in/v/Flask-User/badge.png
+    :target: https://pypi.python.org/pypi/Flask-User
 
-.. |travis| image:: https://travis-ci.org/lingthio/flask-user.png?branch=master
+.. image:: https://travis-ci.org/lingthio/flask-user.png?branch=master
     :target: https://travis-ci.org/lingthio/flask-user
 
-.. |coverall| image:: https://coveralls.io/repos/lingthio/flask-user/badge.png?branch=master
+.. image:: https://coveralls.io/repos/lingthio/flask-user/badge.png?branch=master
     :target: https://coveralls.io/r/lingthio/flask-user?branch=master
+
+.. image:: https://pypip.in/d/Flask-User/badge.png
+    :target: https://pypi.python.org/pypi/Flask-User
+
+.. image:: https://pypip.in/license/Flask-User/badge.png
+    :target: https://pypi.python.org/pypi/Flask-User
 
 ::
 
     !! Newsflash: In v0.3.1 and v0.3.2 confirmation emails were not working !!
        Please upgrade to v0.3.3 or later. Thank you.
 
-User Login for Flask: Register, Confirm email, Login, Forgot password and more
-------------------------------------------------------------------------------
+Customizable User Login for Flask: Register, Confirm email, Login, Forgot password and more
+-------------------------------------------------------------------------------------------
 
 | Many Flask websites require that their users can Register, Confirm email, Login, Logout, Change password and Reset forgotten passwords.
 | Each website often requires different and precise customization of this process.

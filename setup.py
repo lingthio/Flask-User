@@ -3,10 +3,10 @@
 
     !! Newsflash !!
     In v0.3.1 and v0.3.2 confirmation emails were not working.
-    Please upgrade to v0.3.4. Thank you.
+    Please upgrade to v0.3.5. Thank you.
 
-User Login for Flask
---------------------
+Customizable User Login for Flask
+---------------------------------
 **Register, Confirm email, Login, Forgot password and more**
 
 .. image:: https://pypip.in/v/Flask-User/badge.png
@@ -55,13 +55,14 @@ Flask-Security offers additional role based authentication.
 
 Revision History
 ----------------
-* v0.3.4 Added support for Python 3.3 (while retaining support for 2.7 and 2.6)
-* v0.3.3 Added minimal-app and basic-app examples
-* v0.3.2 Bug fix for Confirm email
+* v0.3.5 Added: Signals. Refactored automated tests.
+* v0.3.4 Added: Support for Python 3.3 (while retaining support for 2.7 and 2.6)
+* v0.3.3 Added: Minimal-app and basic-app examples to docs
+* v0.3.2 Bug fix: Confirm email did not send confirmation emails
 * v0.3.1 Alpha release
-* v0.3 Confirm email, Forgot password, Reset password
-* v0.2 Change username, Change password
-* v0.1 Register, Login, Logout
+* v0.3 Added: Confirm email, Forgot password, Reset password
+* v0.2 Added: Change username, Change password
+* v0.1 Initial version: Register, Login, Logout
 
 Contact
 -------
@@ -73,11 +74,11 @@ from setuptools import setup
 
 setup(
     name='Flask-User',
-    version='0.3.4',
+    version='0.3.5',
     author='Ling Thio',
     author_email='ling.thio@gmail.com',
     url='http://github.com/lingthio/flask-user',
-    description='Customizable User Login for Flask: Register, Confirm, Forgot password and more',
+    description='Customizable User Login for Flask: Register, Confirm email, Login, Forgot password and more',
     keywords='Flask User Registration Email Confirmation Reset',
     long_description=__doc__,
     packages=['flask_user'],

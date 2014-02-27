@@ -29,5 +29,5 @@ def docs():
     local('cd docs/build && zip -u -r docs *')
 
 @task
-def release_to_pypi():
+def upload_to_pypi():
     local('python setup.py sdist upload')
