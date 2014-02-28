@@ -1,6 +1,5 @@
 Flask-User
 ==========
-
 .. image:: https://pypip.in/v/Flask-User/badge.png
     :target: https://pypi.python.org/pypi/Flask-User
 
@@ -18,8 +17,12 @@ Flask-User
 
 ::
 
-    !! Newsflash: In v0.3.1 and v0.3.2 confirmation emails were not working !!
-       Please upgrade to v0.3.3 or later. Thank you.
+    !! Newsflash !!
+    In v0.3.1 and v0.3.2 confirmation emails were not working
+    Please upgrade to v0.3.3 or later. Thank you.
+
+    !! Headsup !!
+    The upcoming v0.4 will break v0.3 compatibility. See the Status section below.
 
 Customizable User Login for Flask: Register, Confirm email, Login, Forgot password and more
 -------------------------------------------------------------------------------------------
@@ -35,18 +38,22 @@ Flask-User aims to provide a ready to use **and** fully customizable package tha
 * **Fully customizable** (Field labels, Flash messages, Form templates, Emails, URLs, and more)
 * **Well documented**
 
-Documentation
--------------
-.. toctree::
-    :maxdepth: 1
+Status
+------
 
-    features
-    install
-    minimal-app
-    basic-app
-    customize
-    signals
-    revision-history
+v0.3 is an Alpha release. We would appreciate it if you enter issues, suggestions and
+feature requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
+
+v0.4 is in active development AND WILL BREAK v0.3 COMPATIBILITY. The main purpose of this release is:
+
+* Allowing full Flask-Login customization
+* Offering view functions as over-loadable class functions
+* Breaking view function content into re-usable helper functions
+  to ease view function customization
+
+Revision History
+----------------
+See :doc:`revision-history`
 
 Extension Packages
 ------------------

@@ -75,15 +75,16 @@ from setuptools import setup
 setup(
     name='Flask-User',
     version='0.3.5',
+    url='http://github.com/lingthio/flask-user',
+    license='BSD License',
     author='Ling Thio',
     author_email='ling.thio@gmail.com',
-    url='http://github.com/lingthio/flask-user',
     description='Customizable User Login for Flask: Register, Confirm email, Login, Forgot password and more',
-    keywords='Flask User Registration Email Confirmation Reset',
     long_description=__doc__,
+    keywords='Flask User Registration Email Username Confirmation Password Reset',
     packages=['flask_user'],
-    include_package_data=True,
     zip_safe=False,
+    include_package_data=True,
     platforms='any',
     install_requires=[
         'passlib',
@@ -112,6 +113,4 @@ setup(
         'Topic :: Security',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    #cmdclass={'audit': run_audit},
-    #test_suite='flask.testsuite.suite'
 )
