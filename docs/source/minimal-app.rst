@@ -1,21 +1,14 @@
 ===========
 Minimal App
 ===========
-The **Minimal App** is a Flask-User app with default feature configuration.
+The **Minimal App** is a Flask app with default configuration and no customization.
 
-**Features**
+**Features**: Register with email, Login with email, Logout, and Change password.
 
-* Register with email
-* Login with email
-* Logout
-* Change password
+**Customizations**: None
 
-**Custom Configuration**
-
-* None
-
-Set up environment
-------------------
+Prepare environment
+-------------------
 We recommend working with virtualenv and virtualenvwrapper::
 
     mkvirtualenv my_env
@@ -99,6 +92,4 @@ Run the minimal app with the following command::
 
 And point your browser to ``http://localhost:5000``.
 
-See also
---------
 See also: :doc:`basic-app` and :doc:`customize`

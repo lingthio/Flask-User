@@ -1,6 +1,7 @@
 # .coveragerc to control coverage.py
 
 [run]
+omit=flask_user/tests/*
 
 [report]
 exclude_lines =

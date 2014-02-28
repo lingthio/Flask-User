@@ -44,16 +44,34 @@ Status
 v0.3 is an Alpha release. We would appreciate it if you enter issues, suggestions and
 feature requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
 
-v0.4 is in active development AND WILL BREAK v0.3 COMPATIBILITY. The main purpose of this release is:
+The v0.4 Beta release is in active development. The main purpose of this release is:
 
 * Allowing full Flask-Login customization
-* Offering view functions as over-loadable class functions
 * Breaking view function content into re-usable helper functions
   to ease view function customization
 
+Documentation
+-------------
+.. toctree::
+    :maxdepth: 2
+
+    features
+    install
+    minimal-app
+    basic-app
+    customize
+    signals
+
 Revision History
 ----------------
-See :doc:`revision-history`
+* v0.3.5 Added: Signals. Refactored automated tests.
+* v0.3.4 Added: Support for Python 3.3 (while retaining support for 2.7 and 2.6)
+* v0.3.3 Added: Minimal-app and basic-app examples to docs
+* v0.3.2 Bug fix: Confirm email did not send confirmation emails
+* v0.3.1 Alpha release
+* v0.3 Added: Confirm email, Forgot password, Reset password
+* v0.2 Added: Change username, Change password
+* v0.1 Initial version: Register, Login, Logout
 
 Extension Packages
 ------------------

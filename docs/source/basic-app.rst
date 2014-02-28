@@ -1,37 +1,31 @@
 =========
 Basic App
 =========
-The **Basic App** is a Flask-User application with basic configuration:
+The **Basic App** is a Flask application with basic configuration and no customization.
 
-**Features:**
+**Features:**: Register (with username and email), Confirm email, Login (with email), Logout,
+Change username, Change password, and Forgot password.
 
-* Register with username and email
-* Confirm email
-* Login with username
-* Logout
-* Change username
-* Change password
-* Reset forgotten password
+::
 
-**Custom Configuration**
+    # Configure Flask-User
+    USER_ENABLE_CONFIRM_EMAIL   = True
+    USER_ENABLE_CHANGE_USERNAME = True
+    USER_ENABLE_CHANGE_PASSWORD = True
+    USER_ENABLE_FORGOT_PASSWORD = True
+    USER_LOGIN_WITH_USERNAME    = True
 
-* Define an SMTP server and an SMTP account with the ``MAIL_*`` settings.
-    * MAIL_SERVER   = 'smtp.gmail.com'
-    * MAIL_PORT     = 465
-    * MAIL_USE_SSL  = True
-    * MAIL_USERNAME = 'email@company.com'
-    * MAIL_PASSWORD = 'password'
-    * MAIL_DEFAULT_SENDER = '"Website" <noreply@example.com>'
-    * See `Flask-Mail documentation <http://pythonhosted.org/flask-mail/>`_
-* ``USER_ENABLE_CONFIRM_EMAIL   = True``
-* ``USER_ENABLE_CHANGE_USERNAME = True``
-* ``USER_ENABLE_CHANGE_PASSWORD = True``
-* ``USER_ENABLE_FORGOT_PASSWORD = True``
-* ``USER_LOGIN_WITH_USERNAME    = True``
+    # Configure Flask-Mail -- See http://pythonhosted.org/flask-mail/
+    MAIL_SERVER   = 'smtp.gmail.com'
+    MAIL_PORT     = 465
+    MAIL_USE_SSL  = True
+    MAIL_USERNAME = 'email@company.com'
+    MAIL_PASSWORD = 'password'
+    MAIL_DEFAULT_SENDER = '"Website" <noreply@example.com>'
 
 
-Set up environment
-------------------
+Prepare environment
+-------------------
 We recommend working with virtualenv and virtualenvwrapper::
 
     mkvirtualenv my_env
@@ -165,6 +159,4 @@ If you receive an EmailException error message,
 of if the Registration form does not respond quickly
 then you may have specified incorrect SMTP settings.
 
-See also
---------
 See also: :doc:`minimal-app` and :doc:`customize`

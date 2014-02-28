@@ -206,10 +206,8 @@ def logout():
     flash(_('You have signed out successfully.'), 'success')
 
     # Redirect to logout_next endpoint or '/'
-    if user_manager.logout_next:
-        return redirect(url_for(user_manager.logout_next))
-    else:
-        return redirect('/')
+    next = request.args.get('next', '/')  # Get 'next' query param
+    return redirect(next)
 
 
 def register():

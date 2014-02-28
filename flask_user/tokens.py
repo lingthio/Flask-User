@@ -16,17 +16,17 @@ from Crypto.Cipher import AES
 from itsdangerous import BadSignature, SignatureExpired, TimestampSigner
 
 class TokenManager():
-    def __init__(self, app_secret):
+    def setup(self, secret):
         """
         Create a cypher to encrypt IDs and a signer to sign tokens.
         """
         # Create cypher to encrypt IDs
-        key = app_secret + '0123456789abcdef'  # ensure >=16 characters
+        key = secret + '0123456789abcdef'  # ensure >=16 characters
         sixteen_byte_key = key[0:16]  # get first 16 characters
         self.cipher = AES.new(sixteen_byte_key)
 
         # Create signer to sign tokens
-        self.signer = TimestampSigner(app_secret)
+        self.signer = TimestampSigner(secret)
 
     def encrypt_id(self, id):
         """

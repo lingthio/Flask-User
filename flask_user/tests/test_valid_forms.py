@@ -27,21 +27,22 @@ user1 = None
 # The 'client' and 'app' parameters are set up in conftest.py
 # Functions that start with 'test' will be run automatically by the test suite runner (py.test)
 
-def test_with_email(client, db):
+def test_with_email(client):
     """
     Test all forms with all enabled features and login_with_username=False
     """
     um = current_app.user_manager
     um.enable_register = True
     um.enable_confirm_email = True
-    um.enable_change_username = True
+    um.login_with_username = False
+    um.enable_change_username = False
     um.enable_change_password = True
     um.enable_forgot_password = True
 
     um.login_with_username = False      # Login with email
-    check_all_valid_forms(um, client, db)
+    check_all_valid_forms(um, client)
 
-def test_with_username(client, db):
+def test_with_username(client):
     """
     Test all forms with all enabled features and login_with_username=True
     """
@@ -56,7 +57,7 @@ def test_with_username(client, db):
 
     # Login with username
     um.login_with_username = True       # Login with username
-    check_all_valid_forms(um, client, db)
+    check_all_valid_forms(um, client)
 
 # *****************************
 # ** Explicitly called Tests **
@@ -71,11 +72,11 @@ def do_test_all_possible_config_combinations(client, db):
     print("Testing all forms for all possible config combinations")
     um =  current_app.user_manager
     
-    for um.enable_registration in (True, False):
+    for um.enable_register in (True, False):
       for um.register_with_email in (True, False):
         for um.retype_password in (True, False):
           for um.enable_confirm_email in (True, False):
-            print("Config:", um.enable_registration, um.register_with_email, um.retype_password, um.enable_confirm_email, "...")
+            print("Config:", um.enable_register, um.register_with_email, um.retype_password, um.enable_confirm_email, "...")
             for um.login_with_username in (True, False):
               for um.enable_change_password in (True, False):
                 for um.enable_change_username in (True, False):
@@ -87,14 +88,18 @@ def do_test_all_possible_config_combinations(client, db):
 # **************************
 # Below we check each form by submitting fields depending on the config settings.
 
-def check_all_valid_forms(um, client, db):
-    # Skip tests for invalid config combinations
-    # Registrations must have either email or username
-    if um.enable_registration and not um.register_with_email and not um.login_with_username: return
-    # Confirmations must have email
+def check_all_valid_forms(um, client):
+    # ** Skip tests for invalid config combinations
+    # USER_ENABLE_REGISTER=True must have USER_LOGIN_WITH_USERNAME=True or USER_REGISTER_WITH_EMAIL=True or both.
+    if um.enable_register and not um.register_with_email and not um.login_with_username: return
+    # USER_ENABLE_CONFIRM_EMAIL=True must have USER_REGISTER_WITH_EMAIL=True
     if um.enable_confirm_email and not um.register_with_email: return
+    # USER_ENABLE_MULTIPLE_EMAILS=True must have USER_REGISTER_WITH_EMAIL=True
+    if um.enable_multiple_emails_per_user and not um.register_with_email: return
+    # ENABLE_CHANGE_USERNAME=True must have LOGIN_WITH_USERNAME=True.
+    if um.enable_change_username and not um.login_with_username: return
 
-    check_valid_register_form(um, client, db)
+    check_valid_register_form(um, client, current_app.db)
     check_valid_confirm_email_page(um, client)
     check_valid_login_form(um, client)
     check_valid_change_password_form(um, client)
@@ -102,7 +107,7 @@ def check_all_valid_forms(um, client, db):
     check_valid_logout_form(um, client)
     check_valid_forgot_password_form(um, client)
     check_valid_reset_password_page(um, client)
-    delete_user1(db)
+    delete_user1(current_app.db)
 
 def check_valid_register_form(um, client, db):
     # Using global variable for speed
@@ -122,7 +127,7 @@ def check_valid_register_form(um, client, db):
         kwargs['email'] = email
     kwargs['password'] = password
 
-    if um.enable_registration:
+    if um.enable_register:
         # Create User by submitting a form
         if um.retype_password:
             kwargs['retype_password'] = password
@@ -156,7 +161,7 @@ def check_valid_register_form(um, client, db):
 
 def check_valid_confirm_email_page(um, client):
     # Skip test for certain config combinations
-    if not um.enable_registration: return
+    if not um.enable_register: return
     if not um.register_with_email: return
     if not um.enable_confirm_email: return
 

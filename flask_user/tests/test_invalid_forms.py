@@ -55,7 +55,7 @@ def test_init(db):
 
     # Enable all features
     um =  current_app.user_manager
-    um.enable_registration = True
+    um.enable_register = True
     um.enable_change_username = True
     um.enable_change_password = True
     um.enable_confirm_email = True
@@ -365,8 +365,8 @@ def test_cleanup(db):
     user4 = None
 
 # Workaround for py.test coverage issue
-def run_all_tests(client, db):
-    test_init(db)
+def run_all_tests(client):
+    test_init(current_app.db)
     test_invalid_register_with_username_form(client)
     test_invalid_register_with_email_form(client)
     test_invalid_confirm_email_page(client)
@@ -376,7 +376,7 @@ def run_all_tests(client, db):
     test_invalid_change_password_form(client)
     test_invalid_forgot_password_form(client)
     test_invalid_reset_password(client)
-    test_cleanup(db)
+    test_cleanup(current_app.db)
 
 # TODO:
 # Register without confirming email and try to log in

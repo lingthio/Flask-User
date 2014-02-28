@@ -97,6 +97,7 @@ setup(
         'Flask-SQLAlchemy',     # Includes SQLAlchemy
         'Flask-WTF',            # Includes WTForms
     ],
+    test_suite="flask_user.tests.run_tests",
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',

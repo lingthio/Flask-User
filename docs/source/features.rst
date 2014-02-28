@@ -1,25 +1,19 @@
-========
-Features
-========
-+-----------------------------------+------------------------------------+
-| * Reliable                        | * Register with email address      |
-| * Secure                          | * Register with username           |
-| * Easy to Install and Setup       | * Confirm email address            |
-| * Ready to use                    | * Login and Logout                 |
-| * Fully Customizable              | * Change username                  |
-| * Data model agnostic             | * Change password                  |
-|   (provide your own User model)   | * Reset forgotten password         |
-| * Database ORM abstraction        | * Notification signals             |
-|   (SQLAlchemyAdapter provided)    |                                    |
-| * Internationalization Ready      |                                    |
-+-----------------------------------+------------------------------------+
+============
+Design Goals
+============
+
+* `Reliable`_
+* `Secure`_
+* `Easy to Install`_
+* `Ready to use`_
+* `Fully Customizable`_
+* `Good Feature Set`_
+* Data model agnostic (provide your own User model)
+* Database ORM abstraction (SQLAlchemyAdapter provided)
+* Internationalization Ready
 
 Reliable
 --------
-We understand that you are looking for an easy yet reliable way to manage your users.
-We've run our code through automated tests from the very beginning and we're proud
-to consistently achieve code coverage of over 95% without fudging.
-
 .. image:: https://pypip.in/v/Flask-User/badge.png
     :target: https://pypi.python.org/pypi/Flask-User
 
@@ -29,11 +23,9 @@ to consistently achieve code coverage of over 95% without fudging.
 .. image:: https://coveralls.io/repos/lingthio/flask-user/badge.png?branch=master
     :target: https://coveralls.io/r/lingthio/flask-user?branch=master
 
-.. image:: https://pypip.in/d/Flask-User/badge.png
-    :target: https://pypi.python.org/pypi/Flask-User
-
-.. image:: https://pypip.in/license/Flask-User/badge.png
-    :target: https://pypi.python.org/pypi/Flask-User
+We understand that you are looking for an easy yet reliable way to manage your users.
+We've run our code through automated tests from the very beginning and we're proud
+to consistently achieve code coverage of over 95% without fudging.
 
 Secure
 ------
@@ -43,37 +35,65 @@ set of hashing algorithms that ``passlib`` supports.
 
 Tokens are encrypted using ``AES`` and signed using the ``itsdangerous`` package.
 
-
-Fully Customizable
-------------------
-The following aspects work out-of the box **and** can be full customized:
-
-* **Email message templates**
-* **Field labels**
-* **Flash messages**
-* **Form classes**
-* **Form templates**
-* **Password hashing methods**
-* **Password validator**
-* **URLs**
-* **Username validator**
-* **Validation messages**
-* **View functions**
-
-See :doc:`customize`
-
 Easy to Install
 ---------------
-::
-
-    pip install flask-user
+Installing is as easy as: ``pip install flask-user``
 
 See :doc:`install`
 
-Easy to Setup
--------------
+Ready to use
+------------
+::
 
-See :doc:`minimal-app` or :doc:`basic-app`
+    # Setup Flask-User
+    db_adapter = SQLAlchemyAdapter(db,  User)       # Select database adapter
+    user_manager = UserManager(db_adapter, app)     # Init Flask-User and bind to app
+
+See :doc:`minimal-app`
+
+Fully Customizable
+------------------
+* Email Subject lines, HTML messages and Text messages
+* Features
+* Field labels
+* Field validators
+* Field validation messages
+* Flash messages
+* Forms
+* Form templates,
+* Password hashing algorithms,
+* Password validator
+* Token generator,
+* Username validator
+* URLs
+* View functions,
+
+See `customize`
+
+Good Feature Set
+----------------
+**Forms**
+
+* Change password
+* Change username
+* Forgot password
+* Login
+* Logout
+* Register with email
+* Register with username
+
+**Functionality**
+
+* Event notification -- See :doc:`signals`.
+    * confirmation_email_sent
+    * reset_password_email_sent
+    * user_changed_password
+    * user_changed_username
+    * user_confirmed_email
+    * user_logged_in
+    * user_logged_out
+    * user_registered
+    * user_reset_password
 
 Planned Features
 ----------------

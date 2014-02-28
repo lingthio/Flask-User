@@ -1,6 +1,21 @@
-=======
-Install
-=======
+============
+Installation
+============
+
+We recommend making use of virtualenv and virtualenvwrapper::
+
+    mkvirtualenv my_env
+    workon my_env
+
+Installation Instructions
+-------------------------
+
+After that, installation is as easy as::
+
+    pip install flask-user
+
+
+See also: :doc:`minimal-app`
 
 Requirements
 ------------
@@ -21,17 +36,3 @@ Optional requirements needed to register for signals
 
 - blinker
 
-Install
--------
-
-We recommend making use of virtualenv and virtualenvwrapper
-::
-
-    mkvirtualenv my_env
-    workon my_env
-    pip install flask-user
-
-See also
---------
-
-See also: :doc:`minimal-app`

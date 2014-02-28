@@ -8,11 +8,11 @@ def runserver():
 
 @task
 def test():
-    local('py.test --tb short -v -s tests')
+    local('python flask_user/tests/run_tests.py')
 
 @task
 def coverage():
-    local('coverage run --source=flask_user tests/conftest.py')
+    local('coverage run --source=flask_user flask_user/tests/run_tests.py')
     local('coverage report -m')
 
 @task
