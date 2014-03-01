@@ -4,6 +4,10 @@ language:
 python:
   - "2.7"
 
+branches:
+  only:
+    - master
+
 # Install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
   - pip install -r requirements.txt --quiet
