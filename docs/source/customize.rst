@@ -130,7 +130,7 @@ Flash messages are those one-time system messages that appear on the next page.
 Form Classes
 ------------
 The built-in Form Classes contain considerable form validation logic, so we recommend first
-trying the approach of `Customizing Form Templates`_
+trying the approach of Customizing `Form Templates`_
 before making use of customized Form Classes.
 
 Custom Form classes are specified by setting an attribute on the Flask-User's UserManager object::
@@ -237,7 +237,7 @@ Custom validators can be specified by setting an attribute on the Flask-User's U
 View Functions
 --------------
 The built-in View Functions contain considerable business logic, so we recommend first
-trying the approach of `Customizing Form Templates`_
+trying the approach of Customizing `Form Templates`_
 before making use of customized View Functions.
 
 Custom view functions are specified by setting an attribute on the Flask-User's UserManager object::

@@ -11,8 +11,7 @@
 from __future__ import print_function
 import unittest
 
-from flask_user import basic_app
-from flask_user.tests import tstutils, test_valid_forms, test_invalid_forms
+from flask_user.tests import basic_app, tstutils, test_valid_forms, test_invalid_forms
 
 # Configure app
 test_config = dict(

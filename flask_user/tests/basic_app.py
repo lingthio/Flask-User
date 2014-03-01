@@ -2,7 +2,7 @@ from flask import Flask, render_template_string
 from flask.ext.babel import Babel
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.user import UserManager, UserMixin, SQLAlchemyAdapter
+from flask.ext.user import login_required, UserManager, UserMixin, SQLAlchemyAdapter
 
 from sqlalchemy.sql import func
 
@@ -96,6 +96,10 @@ def create_app(test_config=None):
                 {% endif %}
             {% endblock %}
             """)
+
+    @login_required
+    def protected():
+        pass
 
     return app
 

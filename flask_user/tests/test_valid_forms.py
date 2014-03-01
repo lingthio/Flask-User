@@ -104,9 +104,10 @@ def check_all_valid_forms(um, client):
     check_valid_login_form(um, client)
     check_valid_change_password_form(um, client)
     check_valid_change_username_form(um, client)
-    check_valid_logout_form(um, client)
+    check_valid_logout_link(um, client)
     check_valid_forgot_password_form(um, client)
     check_valid_reset_password_page(um, client)
+
     delete_user1(current_app.db)
 
 def check_valid_register_form(um, client, db):
@@ -128,6 +129,8 @@ def check_valid_register_form(um, client, db):
     kwargs['password'] = password
 
     if um.enable_register:
+        print("test_valid_register_form")
+
         # Create User by submitting a form
         if um.retype_password:
             kwargs['retype_password'] = password
@@ -165,6 +168,8 @@ def check_valid_confirm_email_page(um, client):
     if not um.register_with_email: return
     if not um.enable_confirm_email: return
 
+    print("test_valid_confirm_email_page")
+
     # Generate confirmation token for user 1
     confirmation_token = um.token_manager.generate_token(user1.id)
 
@@ -176,6 +181,8 @@ def check_valid_confirm_email_page(um, client):
     assert user1.email_confirmed_at != None
 
 def check_valid_login_form(um, client):
+    print("test_valid_login_form")
+
     # Define defaults
     username = 'user1'
     email = username+'@example.com'
@@ -198,6 +205,8 @@ def check_valid_login_form(um, client):
 def check_valid_change_password_form(um, client):
     # Skip test for certain config combinations
     if not um.enable_change_password: return
+
+    print("test_valid_change_password_form")
 
     # Define defaults
     password = 'Password1'
@@ -224,6 +233,8 @@ def check_valid_change_username_form(um, client):
     # Skip test for certain config combinations
     if not um.enable_change_username: return
 
+    print("test_valid_change_username_form")
+
     # Define defaults
     username = 'user1'
     password = 'Password1'
@@ -238,7 +249,8 @@ def check_valid_change_username_form(um, client):
     # Change username back to old password for subsequent tests
     user1.username = username
 
-def check_valid_logout_form(um, client):
+def check_valid_logout_link(um, client):
+    print("test_valid_logout_link")
     # Retrieve page and verify that response has no errors
     client.get_valid_page(url_for('user.logout'))
 
@@ -246,6 +258,8 @@ def check_valid_forgot_password_form(um, client):
     # Skip test for certain config combinations
     if not um.register_with_email: return
     if not um.enable_forgot_password: return
+
+    print("test_valid_forgot_password_form")
 
     # Define defaults
     email = 'user1@example.com'
@@ -257,6 +271,8 @@ def check_valid_reset_password_page(um, client):
     # Skip test for certain config combinations
     if not um.register_with_email: return
     if not um.enable_forgot_password: return
+
+    print("test_valid_reset_password_page")
 
     # Simulate a valid forgot password form
     user1.reset_password_token = um.token_manager.generate_token(user1.id)

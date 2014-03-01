@@ -1,5 +1,4 @@
-from example_apps.basic_app import create_app
+from example_apps.minimal_app import app
 
-app = create_app()
 app.run(host='0.0.0.0', port=5000, debug=True)
 

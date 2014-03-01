@@ -64,6 +64,7 @@ Documentation
 
 Revision History
 ----------------
+* v0.3.6 Added: Provide @login_required. Handle multiple apps.
 * v0.3.5 Added: Signals. Refactored automated tests.
 * v0.3.4 Added: Support for Python 3.3 (while retaining support for 2.7 and 2.6)
 * v0.3.3 Added: Minimal-app and basic-app examples to docs

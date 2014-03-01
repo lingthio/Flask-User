@@ -9,6 +9,8 @@
     :license: Simplified BSD License, see LICENSE.txt for more details.
 """
 
+from __future__ import print_function
+
 import time
 
 from flask import current_app, url_for
@@ -90,6 +92,8 @@ def test_init(db):
 
 
 def test_invalid_register_with_username_form(client):
+    print("test_invalid_register_with_username_form")
+
     User = current_app.User
 
     # Choose config
@@ -133,6 +137,8 @@ def test_invalid_register_with_username_form(client):
             username=username, email=email, password='Password1', retype_password='Password9')
 
 def test_invalid_register_with_email_form(client):
+    print("test_invalid_register_with_email_form")
+
     User = current_app.User
 
     # Choose config
@@ -171,6 +177,8 @@ def test_invalid_register_with_email_form(client):
             email=email, password='Password1', retype_password='Password9')
 
 def test_invalid_confirm_email_page(client):
+    print("test_invalid_confirm_email_page")
+
     User = current_app.User
 
     # Test Invalid token
@@ -189,6 +197,8 @@ def test_invalid_confirm_email_page(client):
 
 
 def test_invalid_login_with_username_form(client):
+    print("test_invalid_login_with_username_form")
+
     # Choose config
     um = current_app.user_manager
     um.login_with_username = True
@@ -215,6 +225,8 @@ def test_invalid_login_with_username_form(client):
             username=username, password='XPassword1')
 
 def test_invalid_login_with_email_form(client):
+    print("test_invalid_login_with_email_form")
+
     # Choose config
     um = current_app.user_manager
     um.login_with_username = False
@@ -241,6 +253,8 @@ def test_invalid_login_with_email_form(client):
             email=email, password='XPassword1')
 
 def test_invalid_change_username_form(client):
+    print("test_invalid_change_username_form")
+
     # Set user manager config
     um =  current_app.user_manager
     um.login_with_username = True
@@ -277,6 +291,8 @@ def test_invalid_change_username_form(client):
     client.logout()
 
 def test_invalid_change_password_form(client):
+    print("test_invalid_change_password_form")
+
     # Set user manager config
     um =  current_app.user_manager
     um.login_with_username = False
@@ -315,6 +331,8 @@ def test_invalid_change_password_form(client):
 
 
 def test_invalid_forgot_password_form(client):
+    print("test_invalid_forgot_password_form")
+
     url = url_for('user.forgot_password')
 
     # Test invalid email
@@ -323,6 +341,8 @@ def test_invalid_forgot_password_form(client):
 
 
 def test_invalid_reset_password(client):
+    print("test_invalid_reset_password")
+
     # Set user manager config
     um =  current_app.user_manager
 

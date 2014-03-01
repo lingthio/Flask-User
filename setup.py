@@ -3,7 +3,7 @@
 
     !! Newsflash !!
     In v0.3.1 and v0.3.2 confirmation emails were not working.
-    Please upgrade to v0.3.5. Thank you.
+    Please upgrade to v0.3.6. Thank you.
 
 Customizable User Login for Flask
 ---------------------------------
@@ -55,6 +55,7 @@ Flask-Security offers additional role based authentication.
 
 Revision History
 ----------------
+* v0.3.6 Added: Provide @login_required. Handle multiple apps.
 * v0.3.5 Added: Signals. Refactored automated tests.
 * v0.3.4 Added: Support for Python 3.3 (while retaining support for 2.7 and 2.6)
 * v0.3.3 Added: Minimal-app and basic-app examples to docs
@@ -74,7 +75,7 @@ from setuptools import setup
 
 setup(
     name='Flask-User',
-    version='0.3.5',
+    version='0.3.6',
     url='http://github.com/lingthio/flask-user',
     license='BSD License',
     author='Ling Thio',
@@ -90,12 +91,12 @@ setup(
         'passlib',
         'py-bcrypt',
         'pycrypto',
-        'Flask',                # Includes itsdangerous
+        'Flask',
         'Flask-Babel',
         'Flask-Login',
-        'Flask-Mail',           # Includes blinker
-        'Flask-SQLAlchemy',     # Includes SQLAlchemy
-        'Flask-WTF',            # Includes WTForms
+        'Flask-Mail',
+        'Flask-SQLAlchemy',
+        'Flask-WTF',
     ],
     test_suite="flask_user.tests.run_tests",
     classifiers=[

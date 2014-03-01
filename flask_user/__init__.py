@@ -10,7 +10,7 @@
 
 from flask import Blueprint, current_app
 from flask_babel import gettext as _
-from flask_login import LoginManager, UserMixin as LoginUserMixin
+from flask_login import login_required, fresh_login_required, LoginManager, UserMixin as LoginUserMixin
 from flask_user.db_interfaces import DBInterface
 
 from .db_interfaces import SQLAlchemyAdapter
@@ -20,7 +20,7 @@ from . import settings
 from . import tokens
 from . import views
 
-__version__ = '0.4.1'
+__version__ = '0.3.6'
 
 def _user_loader(user_id):
     """
@@ -95,8 +95,8 @@ class UserManager():
         self.password_crypt_context = password_crypt_context
         self.token_manager = token_manager
 
+        self.app = app
         if app:
-            self.app = app              # Set user_manager.app only if app is specified in UserManager()
             self.init_app(app)
 
     def init_app(self, app):
