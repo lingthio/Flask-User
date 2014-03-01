@@ -1,9 +1,4 @@
 """
-::
-
-    !! Newsflash !!
-    In v0.3.1 and v0.3.2 confirmation emails were not working.
-    Please upgrade to v0.3.6. Thank you.
 
 Customizable User Login for Flask
 ---------------------------------
@@ -30,9 +25,9 @@ Customizable User Login for Flask
 Flask-User aims to provide a ready to use **and** fully customizable package that is:
 
 * **Reliable** (Automated tests cover over 95% of the code base)
-* **Secure** (``bcrypt`` password hashing, ``AES`` token encryption, ``itsdangerous`` token signing)
+* **Secure** (``bcrypt`` for passwords, ``AES`` and ``itsdangerous`` for tokens)
 * **Ready to use**
-* **Fully customizable** (Email, Field labels, Flash messages, Form templates, URLs, and more)
+* **Fully customizable** (Emails, Templates, Validators, Views and more)
 * **Well documented**
 
 Documentation
@@ -55,7 +50,7 @@ Flask-Security offers additional role based authentication.
 
 Revision History
 ----------------
-* v0.3.6 Added: Provide @login_required. Handle multiple apps.
+* v0.3.6 Provides @login_required. Handles multiple apps.
 * v0.3.5 Added: Signals. Refactored automated tests.
 * v0.3.4 Added: Support for Python 3.3 (while retaining support for 2.7 and 2.6)
 * v0.3.3 Added: Minimal-app and basic-app examples to docs
