@@ -42,7 +42,6 @@ class UserManager():
     """
 
     def __init__(self, db_adapter, app=None,
-                login_manager=LoginManager(),
                 # Forms
                 change_password_form=forms.ChangePasswordForm,
                 change_username_form=forms.ChangeUsernameForm,
@@ -64,8 +63,10 @@ class UserManager():
                 resend_confirmation_email_view_function = views.resend_confirmation_email,
                 reset_password_view_function   = views.reset_password,
                 # Misc
+                login_manager=LoginManager(),
+                token_manager=tokens.TokenManager(),
                 password_crypt_context=passwords.crypt_context,
-                token_manager=tokens.TokenManager()):
+                ):
         """
         Initialize the UserManager with custom or built-in attributes
         """

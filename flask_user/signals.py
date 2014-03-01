@@ -15,30 +15,41 @@ from flask.signals import Namespace
 # Place Flask-User signals in our own namespace
 _signals = Namespace()
 
-# Signal sent just after a user registered
-user_registered = _signals.signal('user.user_registered')
+# *******************
+# ** Flask Signals **
+# *******************
+# Flask signals are based on blinker
+# Neither Flask nor Flask-User installs blinker
+# If you plan to use signals, please install blinker with 'pip install blinker'
+# See http://flask.pocoo.org/docs/signals/
 
-# Signal sent just after a confirmation email was sent
+# Sent when: A confirmation email was sent
 confirmation_email_sent = _signals.signal('user.confirmation_email_sent')
-
-# Signal sent just after an email was confirmed
-email_confirmed = _signals.signal('user.email_confirmed')
-
-# Signal sent just after a user logged in
-user_logged_in = _signals.signal('user.user_logged_in')
-
-# Signal sent just before a user logged out
-user_logged_out = _signals.signal('user.user_logged_out')
-
-# Signal sent just after a username was changed
-username_changed = _signals.signal('user.username_changed')
-
-# Signal sent just after a password was changed
-password_changed = _signals.signal('user.password_changed')
 
 # Signal sent just after a reset password email was sent
 reset_password_email_sent = _signals.signal('user.reset_password_email_sent')
 
+# Sent when: A user changed their password
+user_changed_password = _signals.signal('user.user_changed_password')
+
+# Sent when: A user changed their username
+user_changed_username = _signals.signal('user.user_changed_username')
+
+# Sent when: A user confirmed their email
+user_confirmed_email = _signals.signal('user.user_confirmed_email')
+
+# Sent when: A user logged in
+user_logged_in = _signals.signal('user.user_logged_in')
+
+# Sent when: A user logged out
+user_logged_out = _signals.signal('user.user_logged_out')
+
+# Sent when: A user registered a new account
+user_registered = _signals.signal('user.user_registered')
+
 # Signal sent just after a password was reset
-password_reset = _signals.signal('user.password_reset')
+user_reset_password = _signals.signal('user.user_reset_password')
+
+# Signal sent just after a password was reset  # TODO: Not yet implemented
+user_sent_invitation = _signals.signal('user.user_sent_invitation')
 

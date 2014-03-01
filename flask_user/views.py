@@ -39,7 +39,7 @@ def confirm_email(token):
     user, email = user_manager.db_adapter.confirm_email(object_id)
 
     # Send email_confirmed signal
-    signals.email_confirmed.send(current_app._get_current_object(), user=user, email=email)
+    signals.user_confirmed_email.send(current_app._get_current_object(), user=user, email=email)
 
     # Prepare one-time system message
     flash(_('Your email has been confirmed. Please sign in.'), 'success')
@@ -67,7 +67,7 @@ def change_password():
         user_manager.db_adapter.set_password(current_user, hashed_password)
 
         # Send password_changed signal
-        signals.password_changed.send(current_app._get_current_object(), user=current_user)
+        signals.user_changed_password.send(current_app._get_current_object(), user=current_user)
 
         # Prepare one-time system message
         flash(_('Your password has been changed successfully.'), 'success')
@@ -98,7 +98,7 @@ def change_username():
         user_manager.db_adapter.set_username(current_user, new_username)
 
         # Send username_changed signal
-        signals.username_changed.send(current_app._get_current_object(), user=current_user)
+        signals.user_changed_username.send(current_app._get_current_object(), user=current_user)
 
         # Prepare one-time system message
         flash(_("Your username has been changed to '%(username)s'.", username=new_username), 'success')
