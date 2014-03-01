@@ -12,7 +12,7 @@ install:
 
 # Run automated tests with coverage
 script:
-  export PYTHONPATH=. && coverage run --source=flask_user tests/conftest.py
+  export PYTHONPATH=. && coverage run --source=flask_user flask_user/tests/run_tests.py
   coverage report -m
 
 # Upload coverage data to coveralls 

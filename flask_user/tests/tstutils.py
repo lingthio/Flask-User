@@ -7,7 +7,7 @@
     :author: Ling Thio (ling.thio@gmail.com)
     :license: Simplified BSD License, see LICENSE.txt for more details.
 """
-
+from __future__ import print_function
 from flask import url_for
 
 # Checks to see if response.data contains the specified string.
@@ -25,7 +25,7 @@ def response_has_errors(response):
 def response_has_no_errors(response):
     has_errors = response_has_errors(response)
     if has_errors:
-        print response.data
+        print(response.data)
     return not has_errors
 
 class TstClient():
@@ -52,7 +52,7 @@ class TstClient():
         assert response.status_code == 200, "POST %s returned %d" % (url, response.status_code)
         response_has_error = response_has_string(response, expected_error)
         if not response_has_error:
-            print response.data
+            print(response.data)
         assert response_has_error, "POST %s did not contain '%s' error" % (url, expected_error)
         return response
 
@@ -73,7 +73,7 @@ class TstClient():
         assert response.status_code == 200, "POST %s returned %d" % (url, response.status_code)
         response_has_error = response_has_string(response, expected_error)
         if not response_has_error:
-            print response.data
+            print(response.data)
         assert response_has_error, "POST %s did not contain '%s' error" % (url, expected_error)
         return response
 

@@ -37,6 +37,7 @@ Flask-User aims to provide a ready to use **and** fully customizable package tha
 * **Ready to use**
 * **Fully customizable** (Field labels, Flash messages, Form templates, Emails, URLs, and more)
 * **Well documented**
+* Tested on Python 2.6, 2.7 and 3.3
 
 Status
 ------

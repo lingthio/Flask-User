@@ -58,7 +58,9 @@ class TokenManager():
         """
         Return token with id, timestamp and signature
         """
-        return self.signer.sign(self.encrypt_id(id))
+        # In Python3 we must make sure that bytes are converted to strings.
+        # Hence the addition of '.decode()'
+        return self.signer.sign(self.encrypt_id(id)).decode()
 
     def verify_token(self, token, expiration_in_seconds):
         """
