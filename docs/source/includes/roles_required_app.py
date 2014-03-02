@@ -2,7 +2,8 @@ from flask import Flask, render_template_string
 from flask.ext.babel import Babel
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.user import login_required, roles_required, SQLAlchemyAdapter, UserManager, UserMixin
+from flask.ext.user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
+from flask.ext.user import roles_required
 
 # Use a Class-based config to avoid needing a 2nd file
 class ConfigClass(object):
@@ -76,7 +77,7 @@ def create_app(test_config=None):                   # For automated tests
     db.create_all()
 
     # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db,  User, RoleClass=Role)
+    db_adapter = SQLAlchemyAdapter(db,  User)
     user_manager = UserManager(db_adapter, app)
 
     # Create 'user007' user with 'secret' and 'agent' roles
@@ -91,7 +92,7 @@ def create_app(test_config=None):                   # For automated tests
 
     # The '/' page requires a logged-in user
     @app.route('/')
-    @login_required                                 # Use of @roles_required decorator
+    @login_required                                 # Use of @login_required decorator
     def profile_page():
         return render_template_string(
             """
@@ -109,7 +110,7 @@ def create_app(test_config=None):                   # For automated tests
             {% endblock %}
             """)
 
-    # The '/special' page requires a user that has the 'special' and ('sauce' or 'agent') role.
+    # The '/special' page requires a user that has the 'special' AND ('sauce' OR 'agent') role.
     @app.route('/special')
     @roles_required('secret', ['sauce', 'agent'])   # Use of @roles_required decorator
     def special_page():

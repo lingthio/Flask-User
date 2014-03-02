@@ -27,16 +27,16 @@ class ConfigClass(object):
     USER_ENABLE_CONFIRM_EMAIL   = True
     USER_ENABLE_FORGOT_PASSWORD = True
 
-def create_app(test_config=None):
+def create_app(test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
     app = Flask(__name__)
     app.config.from_object(__name__+'.ConfigClass')
 
-    # Load local_settings.py if file exists
+    # Load local_settings.py if file exists         # For automated tests
     try: app.config.from_object('local_settings')
     except: pass
 
-    # Over-write app config with test_config settings when specified
+    # Over-write app config                         # For automated tests
     if test_config:
         for key, value in test_config.items():
             app.config[key] = value
@@ -76,10 +76,10 @@ def create_app(test_config=None):
     db.create_all()
 
     # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db,  User, RoleClass=Role)
+    db_adapter = SQLAlchemyAdapter(db,  User)
     user_manager = UserManager(db_adapter, app)
 
-    # Create user007 with 'secret' and 'agent' roles
+    # Create 'user007' user with 'secret' and 'agent' roles
     role1 = Role(name='secret')
     role2 = Role(name='agent')
     user1 = User(username='user007', email='user007@example.com', active=True,
