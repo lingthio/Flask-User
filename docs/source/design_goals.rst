@@ -8,6 +8,7 @@ Design Goals
 * `Ready to use`_
 * `Fully Customizable`_
 * `Nice Feature Set`_
+* Well documented
 * Data model agnostic (provide your own User model)
 * Database ORM abstraction (SQLAlchemyAdapter provided)
 * Internationalization Ready
@@ -62,7 +63,7 @@ Fully Customizable
 * URLs
 * View functions
 
-See :mod:`customize`
+See :doc:`customize`
 
 Nice Feature Set
 ----------------
@@ -70,10 +71,10 @@ Nice Feature Set
 * Register with username or email,
 * Confirm email, Login, Logout
 * Change username, Change password, Forgot password
-* Role-based Authorization
 * Secure password hashing and token generation
-* Easy to setup and Ready to use
-* Fully customizable
+* Role-based Authorization -- See :doc:`authorization`
+* Easy to setup and Ready to use -- See :doc:`minimal_app`
+* Fully customizable -- See :doc:`customize`
 * Form validation
 * Event notification -- See :doc:`signals`.
 * Internationalization ready

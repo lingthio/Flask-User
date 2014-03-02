@@ -53,7 +53,7 @@ Documentation
 
     design_goals
     install
-    decorators
+    authorization
     recipes
     customize
     signals
