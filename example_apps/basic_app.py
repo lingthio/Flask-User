@@ -26,16 +26,16 @@ class ConfigClass(object):
     USER_ENABLE_CONFIRM_EMAIL   = True
     USER_ENABLE_FORGOT_PASSWORD = True
 
-def create_app(test_config=None):
+def create_app(test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
     app = Flask(__name__)
     app.config.from_object(__name__+'.ConfigClass')
 
-    # Load local_settings.py if file exists
+    # Load local_settings.py if file exists         # For automated tests
     try: app.config.from_object('local_settings')
     except: pass
 
-    # Over-write app config with test_config settings when specified
+    # Over-write app config                         # For automated tests
     if test_config:
         for key, value in test_config.items():
             app.config[key] = value

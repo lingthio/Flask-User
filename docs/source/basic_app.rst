@@ -7,7 +7,7 @@ Basic App
 | and adds:
 | - **Login with Username** and **Change username**
 | - **Email confirmation** and **Forgot password**
-| - the ``create_app()`` application factory pattern
+| - the ``create_app()`` application factory pattern (for automated tests)
 |
 | This app requires appropriate SMTP configuration.
 

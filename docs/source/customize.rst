@@ -4,17 +4,17 @@ Customizing
 Flask-User has been designed with customization in mind, and here is a list of
 behaviors that can be customized as needed.
 
-* `Emails`_ (Subject lines, HTML messages and Text messages)
+* `Emails`_
 * `Features and Settings`_
 * `Field labels`_
 * `Flash messages`_
 * `Form classes`_
 * `Form templates`_
+* `Password and Username validators`_
 * `Password hashing`_
 * `Token generator`_
 * `URLs`_
 * `Validation messages`_
-* `Validators`_ (password validator, username validator)
 * `View functions`_
 
 Overview
@@ -171,6 +171,31 @@ The path is relative to the application's ``templates`` directory.
 
 Form templates can make full use of Jinja2.
 
+Password and Username Validators
+--------------------------------
+Flask-User comes standard
+with a password validator (at least 6 chars, 1 upper case letter, 1 lower case letter, 1 digit) and
+with a username validator (at least 3 alphanumeric characters).
+
+Custom validators can be specified by setting an attribute on the Flask-User's UserManager object::
+
+    def my_password_validator(form, field):
+        password = field.data
+        if len(password) < 8:
+            raise ValidationError(_('Password must have at least 8 characters'))
+
+    def my_username_validator(form, field):
+        username = field.data
+        if len(username) < 4:
+            raise ValidationError(_('Username must be at least 4 characters long'))
+        if not username.isalnum():
+            raise ValidationError(_('Username may only contain letters and numbers'))
+
+    user_manager = UserManager(db_adapter)
+    user_manager.password_validator = my_password_validator
+    user_manager.username_validator = my_username_validator
+    user_manager.init_app(app)
+
 Password Hashing
 ----------------
 Flask-User makes use of passlib's CryptContext to provide password hashing.
@@ -195,31 +220,6 @@ URLs can be customized through the application's config
 Validation messages
 -------------------
 The built-in Form validation messages be customized by editing the 'en' Babel translation file. [To be documented]
-
-Validators
-----------
-Flask-User comes standard
-with a password validator (at least 6 chars, 1 upper case letter, 1 lower case letter, 1 digit) and
-with a username validator (at least 3 alphanumeric characters).
-
-Custom validators can be specified by setting an attribute on the Flask-User's UserManager object::
-
-    def my_password_validator(form, field):
-        password = field.data
-        if len(password) < 8:
-            raise ValidationError(_('Password must have at least 8 characters'))
-
-    def my_username_validator(form, field):
-        username = field.data
-        if len(username) < 4:
-            raise ValidationError(_('Username must be at least 4 characters long'))
-        if not username.isalnum():
-            raise ValidationError(_('Username may only contain letters and numbers'))
-
-    user_manager = UserManager(db_adapter)
-    user_manager.password_validator = my_password_validator
-    user_manager.username_validator = my_username_validator
-    user_manager.init_app(app)
 
 View Functions
 --------------

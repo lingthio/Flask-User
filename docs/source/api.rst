@@ -7,7 +7,7 @@ Flask-User API
 
 Config Settings
 ---------------
-.. include:: includes/config_settings.txt
+.. include:: includes/config_features.txt
 
 .. include:: includes/config_settings.txt
 

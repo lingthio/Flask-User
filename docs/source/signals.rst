@@ -7,7 +7,15 @@ the application that something happened.
 
 Applications can subscribe to any provided signal.
 
-See the `Flask documentation on signals <http://flask.pocoo.org/docs/signals/>`_
+See the http://flask.pocoo.org/docs/signals/
+
+Requires Blinker
+----------------
+Flask Signals depend on the Blinker package::
+
+    pip install blinker
+
+See http://pythonhosted.org/blinker/
 
 Available Events
 ----------------
@@ -31,4 +39,4 @@ An application can receive event notifications by using the event signal's ``con
 | the ``sender`` param points to the app, and
 | the ``user`` param points to the user that is associated with this event.
 
-See the `Flask documentation on subscribing to signals <http://flask.pocoo.org/docs/signals/#subscribing-to-signals>`_
+See the `Subscribing to signals <http://flask.pocoo.org/docs/signals/#subscribing-to-signals>`_

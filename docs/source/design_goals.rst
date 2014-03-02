@@ -7,7 +7,7 @@ Design Goals
 * `Easy to Install`_
 * `Ready to use`_
 * `Fully Customizable`_
-* `Good Feature Set`_
+* `Nice Feature Set`_
 * Data model agnostic (provide your own User model)
 * Database ORM abstraction (SQLAlchemyAdapter provided)
 * Internationalization Ready
@@ -48,37 +48,34 @@ The :doc:`minimal_app` requires only eleven lines of additional code.
 
 Fully Customizable
 ------------------
-* Email Subject lines, HTML messages and Text messages
+* Emails
 * Features
 * Field labels
 * Field validators
 * Field validation messages
 * Flash messages
 * Forms
-* Form templates,
-* Password hashing algorithms,
-* Password validator
-* Token generator,
-* Username validator
+* Form templates
+* Password and Username validators
+* Password hashing algorithms
+* Token generator
 * URLs
-* View functions,
+* View functions
 
 See :mod:`customize`
 
-Good Feature Set
+Nice Feature Set
 ----------------
 
-* Change password Form (with or without retype password)
-* Change username Form
-* Forgot password Form
-* Login Form
-* Logout Form
-* Register Form (with email, username or both)
-* Reset password Form (with or without retype password)
+* Register with username or email,
+* Confirm email, Login, Logout
+* Change username, Change password, Forgot password
+* Role-based Authorization
 * Secure password hashing and token generation
+* Easy to setup and Ready to use
+* Fully customizable
 * Form validation
 * Event notification -- See :doc:`signals`.
-* Fully customizable
 * Internationalization ready
 
 Planned Features

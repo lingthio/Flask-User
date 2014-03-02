@@ -53,6 +53,7 @@ Documentation
 
     design_goals
     install
+    decorators
     recipes
     customize
     signals
