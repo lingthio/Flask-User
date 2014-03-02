@@ -17,10 +17,12 @@ class DBInterface(object):
     This object is used to shield Flask-User from ORM specific dependencies.
     It's used as the base class for ORM specific adapters like SQLAlchemyAdapter.
     """
-    def __init__(self, db, UserClass, EmailClass=None):
+    def __init__(self, db, UserClass, RoleClass=None, ProfileClass=None, EmailClass=None):
         self.db = db
-        self.UserClass = UserClass
-        self.EmailClass = EmailClass
+        self.UserClass = UserClass          # email, password, etc.
+        self.ProfileClass = ProfileClass    # For Additional registration fields
+        self.RoleClass = RoleClass          # For role based authorization
+        self.EmailClass = EmailClass        # For multiple emails per user
 
     def find_user_by_email(self, email): # pragma: no cover
         raise NotImplementedError('DBInterface.find_user_by_email() has not been implemented')
@@ -60,8 +62,8 @@ class SQLAlchemyAdapter(DBInterface):
     """
     This object is used to shield Flask-User from SQLAlchemy specific dependencies.
     """
-    def __init__(self, db, UserClass, EmailClass=None):
-        super(SQLAlchemyAdapter, self).__init__(db, UserClass, EmailClass)
+    def __init__(self, db, UserClass, RoleClass=None, ProfileClass=None, EmailClass=None):
+        super(SQLAlchemyAdapter, self).__init__(db, UserClass, RoleClass, ProfileClass, EmailClass)
 
     def add_user(self, **kwargs):
         """

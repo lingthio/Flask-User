@@ -3,10 +3,16 @@ from flask.ext.babel import Babel
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.user import login_required, UserManager, UserMixin, SQLAlchemyAdapter
 
-# Setup Flask
+# Use a Class-based config to avoid needing a 2nd file
+class ConfigClass(object):
+    # Configure Flask
+    SECRET_KEY = 'THIS IS AN INSECURE SECRET'             # Change this for production!!!
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///minimal_app.db'  # Use Sqlite file db
+    CSRF_ENABLED = True
+
+# Setup Flask and read config from ConfigClass defined above
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'my-super-secret-key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///minimal_app.db'
+app.config.from_object(__name__+'.ConfigClass')
 
 # Setup Flask-Babel and Flask-SQLAlchemy
 app.babel = Babel(app)
@@ -14,15 +20,12 @@ db = SQLAlchemy(app)
 
 # Define User model. Make sure to add flask.ext.user UserMixin!!
 class User(db.Model, UserMixin):
-    # Required fields for Flask-Login
     id = db.Column(db.Integer, primary_key=True)
     active = db.Column(db.Boolean(), nullable=False, default=False)
-    # Required fields for Flask-User
-    email = db.Column(db.String(255), nullable=True, unique=True)
-    password = db.Column(db.String(255), nullable=False, default='')
-    # Optional fields for Flask-User (depends on app config settings)
     username = db.Column(db.String(50), nullable=True, unique=True)
+    email = db.Column(db.String(255), nullable=True, unique=True)
     email_confirmed_at = db.Column(db.DateTime())
+    password = db.Column(db.String(255), nullable=False, default='')
     reset_password_token = db.Column(db.String(100), nullable=False, default='')
 
 # Create all database tables

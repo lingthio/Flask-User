@@ -39,8 +39,8 @@ coverage.xml
 .idea
 
 # Temp files
+docs/source/include/*_app.py
 example_apps/*.db
-docs/build/
 
 # Private files
 example_apps/local_settings.py

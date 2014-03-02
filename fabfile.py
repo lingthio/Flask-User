@@ -24,9 +24,10 @@ def babel():
 
 @task
 def docs():
-    local('touch docs/source/*.rst')
-    local('sphinx-build -b html docs/source docs/build')
-    local('cd docs/build && zip -u -r docs *')
+    local('cp example_apps/*_app.py docs/source/includes/.')
+    #local('touch docs/source/*.rst')
+    local('sphinx-build -b html docs/source ../builds/flask_user/docs')
+    local('cd ../builds/flask_user/docs && zip -u -r docs *')
 
 @task
 def upload_to_pypi():

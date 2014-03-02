@@ -41,7 +41,6 @@ Extension Packages
 We plan to offer the following Flask-User extensions in the future:
 
 * Flask-User-Profiles: View profile, Edit profile, Upload profile picture
-* Flask-User-Roles: Role based authentication
 * Flask-User-Social: Login via Google, Facebook and Twitter authentication
 
 Alternative Packages
@@ -51,6 +50,7 @@ Flask-Security offers additional role based authentication.
 
 Revision History
 ----------------
+* v0.3.7 Added role based authorization with @roles_required.
 * v0.3.6 Provides @login_required. Handles multiple apps.
 * v0.3.5 Added: Signals. Refactored automated tests.
 * v0.3.4 Added: Support for Python 3.3 (while retaining support for 2.7 and 2.6)

@@ -10,7 +10,7 @@
 
 from flask import Blueprint, current_app
 from flask_babel import gettext as _
-from flask_login import login_required, fresh_login_required, LoginManager, UserMixin as LoginUserMixin
+from flask_login import LoginManager, UserMixin as LoginUserMixin
 from flask_user.db_interfaces import DBInterface
 
 from .db_interfaces import SQLAlchemyAdapter
@@ -21,6 +21,10 @@ from . import tokens
 from . import views
 
 __version__ = '0.3.6'
+
+# expose decorators
+from flask.ext.login import fresh_login_required, login_required
+from .decorators import *
 
 def _user_loader(user_id):
     """

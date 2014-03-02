@@ -11,7 +11,7 @@
 from __future__ import print_function
 import unittest
 
-from flask_user.tests import basic_app, tstutils, test_valid_forms, test_invalid_forms
+from flask_user.tests import tst_app, tstutils, test_valid_forms, test_invalid_forms
 
 # Configure app
 test_config = dict(
@@ -23,7 +23,7 @@ test_config = dict(
 )
 
 # Create app
-app = basic_app.create_app(test_config)
+app = tst_app.create_app(test_config)
 app.testing = True           # Propagate exceptions (don't show 500 error page)
 
 # create client

@@ -8,7 +8,7 @@ from flask.ext.user import login_required, UserManager, UserMixin, SQLAlchemyAda
 class ConfigClass(object):
     # Configure Flask
     SECRET_KEY = 'THIS IS AN INSECURE SECRET'           # Change this for production!!!
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///basic_app.db'  # Use Sqlite file db
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'      # Use Sqlite in-memory db
     CSRF_ENABLED = True
 
     # Configure Flask-Mail -- Change this to test Confirm email and Forgot password!
