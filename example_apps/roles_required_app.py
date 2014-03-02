@@ -4,21 +4,17 @@ from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.user import login_required, roles_required, SQLAlchemyAdapter, UserManager, UserMixin
 
-# Initialize SQLAlchemy
-db = SQLAlchemy()
-
-
 # Use a Class-based config to avoid needing a 2nd file
 class ConfigClass(object):
     # Configure Flask
-    SECRET_KEY = 'THIS IS AN INSECURE SECRET'           # Change this for production!!!
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///user_roles_app.db'  # Use Sqlite file db
+    SECRET_KEY = 'THIS IS AN INSECURE SECRET'       # Change this for production!!!
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///roles_required_app.db'  # Use Sqlite file db
     CSRF_ENABLED = True
 
-    # Configure Flask-Mail -- Change this to test Confirm email and Forgot password!
+    # Configure Flask-Mail -- Required for Confirm email and Forgot password features
     MAIL_SERVER   = 'smtp.gmail.com'
     MAIL_PORT     = 465
-    MAIL_USE_SSL  = True                 # Some servers use MAIL_USE_TLS=True instead
+    MAIL_USE_SSL  = True                            # Some servers use MAIL_USE_TLS=True instead
     MAIL_USERNAME = 'email@example.com'
     MAIL_PASSWORD = 'password'
     MAIL_DEFAULT_SENDER = '"Sender" <noreply@example.com>'
@@ -56,6 +52,11 @@ def create_app(test_config=None):
         db.Column('user_id', db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE')),
         db.Column('role_id', db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE')))
 
+    # Define Role model
+    class Role(db.Model):
+        id = db.Column(db.Integer(), primary_key=True)
+        name = db.Column(db.String(50), unique=True)
+
     # Define User model. Make sure to add flask.ext.user UserMixin!!
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
@@ -70,57 +71,51 @@ def create_app(test_config=None):
                 backref=db.backref('users', lazy='dynamic'))
     app.User = User
 
-    # Define Role model
-    class Role(db.Model):
-        id = db.Column(db.Integer(), primary_key=True)
-        name = db.Column(db.String(50), unique=True)
-
-    # Create all database tables
-    db.drop_all()
+    # Reset all the database tables
+    db.drop_all()                                   # Do not try this in Production!
     db.create_all()
 
     # Setup Flask-User
     db_adapter = SQLAlchemyAdapter(db,  User, RoleClass=Role)
     user_manager = UserManager(db_adapter, app)
 
-    # Create special user with special roles to access special_page
+    # Create user007 with 'secret' and 'agent' roles
     role1 = Role(name='secret')
     role2 = Role(name='agent')
-    # Create a user with both roles
-    user1 = User(username='user007', email='user007@example.com',
-            active=True,
-            password=user_manager.password_crypt_context.encrypt('Password1'),
-            )
-    db.session.add(user1)
+    user1 = User(username='user007', email='user007@example.com', active=True,
+            password=user_manager.password_crypt_context.encrypt('Password1'))
     user1.roles.append(role1)
     user1.roles.append(role2)
+    db.session.add(user1)
     db.session.commit()
 
-    # For profile page, user must have logged in
-    @app.route('/')     # Mapped to the URL '/'
-    @login_required     # Requires an authenticated user
-    def profile():
+    # The '/' page requires a logged-in user
+    @app.route('/')
+    @login_required                                 # Use of @roles_required decorator
+    def profile_page():
         return render_template_string(
             """
             {% extends "base.html" %}
-
             {% block content %}
                 <h2>Profile Page</h2>
-                <p>{%trans%}Hello{%endtrans%} {{ current_user.username or current_user.email }},</p>
-                <p><a href="{{ url_for('user.change_username') }}">{%trans%}Change username{%endtrans%}</a></p>
-                <p><a href="{{ url_for('user.change_password') }}">{%trans%}Change password{%endtrans%}</a></p>
-                <p><a href="{{ url_for('user.logout') }}?next={{ url_for('user.login') }}">{%trans%}Sign out{%endtrans%}</a></p>
+                <p> {%trans%}Hello{%endtrans%}
+                    {{ current_user.username or current_user.email }},</p>
+                <p> <a href="{{ url_for('user.change_username') }}">
+                    {%trans%}Change username{%endtrans%}</a></p>
+                <p> <a href="{{ url_for('user.change_password') }}">
+                    {%trans%}Change password{%endtrans%}</a></p>
+                <p> <a href="{{ url_for('user.logout') }}?next={{ url_for('user.login') }}">
+                    {%trans%}Sign out{%endtrans%}</a></p>
             {% endblock %}
             """)
 
-    # For profile page, user must have logged in
-    @app.route('/special')  # Route this URL
-    @roles_required('secret', ['sauce', 'agent'])  # Requires 'special' and ('sauce' or 'agent')
+    # The '/special' page requires a user that has the 'special' and ('sauce' or 'agent') role.
+    @app.route('/special')
+    @roles_required('secret', ['sauce', 'agent'])   # Use of @roles_required decorator
     def special_page():
         return render_template_string(
             """
             {% extends "base.html" %}
-
             {% block content %}
                 <h2>Special Page</h2>
             {% endblock %}

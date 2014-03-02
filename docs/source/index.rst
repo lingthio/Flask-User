@@ -19,8 +19,9 @@ Flask-User
 Customizable User Login for Flask: Register, Confirm email, Login, Forgot password and more
 -------------------------------------------------------------------------------------------
 
-| Many Flask websites require that their users can Register, Confirm email, Login, Logout, Change password and Reset forgotten passwords.
-| Each website often requires different and precise customization of this process.
+| Many websites require that their users can **Register**, **Confirm email**, **Login**, **Change password** and handle **Forgot passwords**.
+| Some websites require **Role-based Authorization**.
+| *Each website often requires different and precise customization of this process*.
 
 Flask-User aims to provide a ready to use **and** fully customizable package that is:
 
@@ -30,6 +31,8 @@ Flask-User aims to provide a ready to use **and** fully customizable package tha
 * **Fully customizable** (Field labels, Flash messages, Form templates, Emails, URLs, and more)
 * **Well documented**
 * Tested on Python 2.6, 2.7 and 3.3
+
+:doc:`minimal_app` requires only eleven lines of additional code!
 
 Status
 ------

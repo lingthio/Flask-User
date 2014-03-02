@@ -8,6 +8,7 @@ class ConfigClass(object):
     # Configure Flask
     SECRET_KEY = 'THIS IS AN INSECURE SECRET'             # Change this for production!!!
     SQLALCHEMY_DATABASE_URI = 'sqlite:///minimal_app.db'  # Use Sqlite file db
+    CSRF_ENABLED = True
 
 # Setup Flask and read config from ConfigClass defined above
 app = Flask(__name__)
@@ -19,16 +20,10 @@ db = SQLAlchemy(app)
 
 # Define User model. Make sure to add flask.ext.user UserMixin!!
 class User(db.Model, UserMixin):
-    # Required fields for Flask-Login
     id = db.Column(db.Integer, primary_key=True)
     active = db.Column(db.Boolean(), nullable=False, default=False)
-    # Required fields for Flask-User
     email = db.Column(db.String(255), nullable=True, unique=True)
     password = db.Column(db.String(255), nullable=False, default='')
-    # Optional fields for Flask-User (depends on app config settings)
-    username = db.Column(db.String(50), nullable=True, unique=True)
-    email_confirmed_at = db.Column(db.DateTime())
-    reset_password_token = db.Column(db.String(100), nullable=False, default='')
 
 # Create all database tables
 db.create_all()
@@ -37,18 +32,21 @@ db.create_all()
 db_adapter = SQLAlchemyAdapter(db,  User)       # Select database adapter
 user_manager = UserManager(db_adapter, app)     # Init Flask-User and bind to app
 
-# User profile page
-@app.route('/')     # Mapped to the URL '/'
-@login_required     # Requires an authenticated user
-def profile():
+# The '/' page requires a logged-in user
+@app.route('/')
+@login_required                                 # Use of @login_required decorator
+def profile_page():
     return render_template_string(
         """
         {% extends "base.html" %}
-
         {% block content %}
-            <p>{%trans%}Hello{%endtrans%} {{ current_user.username or current_user.email }},</p>
-            <p><a href="{{ url_for('user.change_password') }}">{%trans%}Change password{%endtrans%}</a></p>
-            <p><a href="{{ url_for('user.logout') }}?next={{ url_for('user.login') }}">{%trans%}Sign out{%endtrans%}</a></p>
+            <h2>Profile Page</h2>
+            <p> {%trans%}Hello{%endtrans%}
+                {{ current_user.username or current_user.email }},</p>
+            <p> <a href="{{ url_for('user.change_password') }}">
+                {%trans%}Change password{%endtrans%}</a></p>
+            <p> <a href="{{ url_for('user.logout') }}?next={{ url_for('user.login') }}">
+                {%trans%}Sign out{%endtrans%}</a></p>
         {% endblock %}
         """)
 

@@ -22,11 +22,8 @@ db = SQLAlchemy(app)
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     active = db.Column(db.Boolean(), nullable=False, default=False)
-    username = db.Column(db.String(50), nullable=True, unique=True)
     email = db.Column(db.String(255), nullable=True, unique=True)
-    email_confirmed_at = db.Column(db.DateTime())
     password = db.Column(db.String(255), nullable=False, default='')
-    reset_password_token = db.Column(db.String(100), nullable=False, default='')
 
 # Create all database tables
 db.create_all()
@@ -35,18 +32,21 @@ db.create_all()
 db_adapter = SQLAlchemyAdapter(db,  User)       # Select database adapter
 user_manager = UserManager(db_adapter, app)     # Init Flask-User and bind to app
 
-# User profile page
-@app.route('/')     # Mapped to the URL '/'
-@login_required     # Requires an authenticated user
-def profile():
+# The '/' page requires a logged-in user
+@app.route('/')
+@login_required                                 # Use of @login_required decorator
+def profile_page():
     return render_template_string(
         """
         {% extends "base.html" %}
-
         {% block content %}
-            <p>{%trans%}Hello{%endtrans%} {{ current_user.username or current_user.email }},</p>
-            <p><a href="{{ url_for('user.change_password') }}">{%trans%}Change password{%endtrans%}</a></p>
-            <p><a href="{{ url_for('user.logout') }}?next={{ url_for('user.login') }}">{%trans%}Sign out{%endtrans%}</a></p>
+            <h2>Profile Page</h2>
+            <p> {%trans%}Hello{%endtrans%}
+                {{ current_user.username or current_user.email }},</p>
+            <p> <a href="{{ url_for('user.change_password') }}">
+                {%trans%}Change password{%endtrans%}</a></p>
+            <p> <a href="{{ url_for('user.logout') }}?next={{ url_for('user.login') }}">
+                {%trans%}Sign out{%endtrans%}</a></p>
         {% endblock %}
         """)
 

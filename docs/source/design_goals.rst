@@ -43,13 +43,8 @@ See :doc:`install`
 
 Ready to use
 ------------
-::
 
-    # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db,  User)       # Select database adapter
-    user_manager = UserManager(db_adapter, app)     # Init Flask-User and bind to app
-
-See :doc:`minimal_app`
+The :doc:`minimal_app` requires only eleven lines of additional code.
 
 Fully Customizable
 ------------------

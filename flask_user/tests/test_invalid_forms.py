@@ -372,6 +372,10 @@ def test_invalid_reset_password(client):
             new_password = new_password, retype_password='XPassword5')
 
 def test_valid_roles(client):
+    # Perform only for roles_required_app
+    user007 = current_app.User.query.filter(current_app.User.username=='user007').first()
+    if not user007: return
+
     print("test_valid_roles")
     um =  current_app.user_manager
     um.login_with_username = True
@@ -383,6 +387,10 @@ def test_valid_roles(client):
     client.logout()
 
 def test_invalid_roles(client):
+    # Perform only for roles_required_app
+    user007 = current_app.User.query.filter(current_app.User.username=='user007').first()
+    if not user007: return
+
     print("test_invalid_roles")
     um =  current_app.user_manager
     um.login_with_username = True
@@ -410,6 +418,7 @@ def test_cleanup(db):
 
 # Workaround for py.test coverage issue
 def run_all_tests(client):
+    print()
     test_init(current_app.db)
     test_invalid_register_with_username_form(client)
     test_invalid_register_with_email_form(client)
