@@ -15,6 +15,8 @@ import time
 
 from flask import current_app, url_for
 
+from .tstutils import response_has_string
+
 # **********************
 # ** Global Variables **
 # **********************
@@ -369,6 +371,28 @@ def test_invalid_reset_password(client):
     client.post_invalid_form(url, 'New Password and Retype Password did not match',
             new_password = new_password, retype_password='XPassword5')
 
+def test_valid_roles(client):
+    print("test_valid_roles")
+    um =  current_app.user_manager
+    um.login_with_username = True
+
+    client.login(username='user007', password='Password1')
+    url = url_for('special_page')
+    response = client.get_valid_page(url)
+    assert not response_has_string(response, 'Please Sign in to access this page.')
+    client.logout()
+
+def test_invalid_roles(client):
+    print("test_invalid_roles")
+    um =  current_app.user_manager
+    um.login_with_username = True
+
+    client.login(username='user1', password='Password1')
+    url = url_for('special_page')
+    response = client.get_valid_page(url)
+    assert response_has_string(response, 'Please Sign in to access this page.')
+    client.logout()
+
 def test_cleanup(db):
     """
     Delete user1 and user2
@@ -396,6 +420,10 @@ def run_all_tests(client):
     test_invalid_change_password_form(client)
     test_invalid_forgot_password_form(client)
     test_invalid_reset_password(client)
+
+    test_valid_roles(client)
+    test_invalid_roles(client)
+
     test_cleanup(current_app.db)
 
 # TODO:

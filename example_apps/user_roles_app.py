@@ -12,7 +12,7 @@ db = SQLAlchemy()
 class ConfigClass(object):
     # Configure Flask
     SECRET_KEY = 'THIS IS AN INSECURE SECRET'           # Change this for production!!!
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///user_roles.db'  # Use Sqlite file db
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///user_roles_app.db'  # Use Sqlite file db
     CSRF_ENABLED = True
 
     # Configure Flask-Mail -- Change this to test Confirm email and Forgot password!
@@ -25,10 +25,10 @@ class ConfigClass(object):
 
     # Configure Flask-User
     USER_LOGIN_WITH_USERNAME    = True
-    USER_REGISTER_WITH_EMAIL = False
+    USER_REGISTER_WITH_EMAIL    = True
     USER_ENABLE_CHANGE_USERNAME = True
     USER_ENABLE_CHANGE_PASSWORD = True
-    USER_ENABLE_CONFIRM_EMAIL   = False
+    USER_ENABLE_CONFIRM_EMAIL   = True
     USER_ENABLE_FORGOT_PASSWORD = True
 
 def create_app(test_config=None):
@@ -68,6 +68,7 @@ def create_app(test_config=None):
         # Relationships
         roles = db.relationship('Role', secondary=user_roles,
                 backref=db.backref('users', lazy='dynamic'))
+    app.User = User
 
     # Define Role model
     class Role(db.Model):
@@ -82,11 +83,11 @@ def create_app(test_config=None):
     db_adapter = SQLAlchemyAdapter(db,  User, RoleClass=Role)
     user_manager = UserManager(db_adapter, app)
 
-    # Create some roles
-    role1 = Role(name='role1')
-    role2 = Role(name='role2')
+    # Create special user with special roles to access special_page
+    role1 = Role(name='secret')
+    role2 = Role(name='agent')
     # Create a user with both roles
-    user1 = User(username='user1', email='user1@example.com',
+    user1 = User(username='user007', email='user007@example.com',
             active=True,
             password=user_manager.password_crypt_context.encrypt('Password1'),
             )
@@ -97,14 +98,14 @@ def create_app(test_config=None):
 
     # For profile page, user must have logged in
     @app.route('/')     # Mapped to the URL '/'
-    #@login_required     # Requires an authenticated user
-    @roles_required('role2', ['role4', 'role3'])
+    @login_required     # Requires an authenticated user
     def profile():
         return render_template_string(
             """
             {% extends "base.html" %}
 
             {% block content %}
+                <h2>Profile Page</h2>
                 <p>{%trans%}Hello{%endtrans%} {{ current_user.username or current_user.email }},</p>
                 <p><a href="{{ url_for('user.change_username') }}">{%trans%}Change username{%endtrans%}</a></p>
                 <p><a href="{{ url_for('user.change_password') }}">{%trans%}Change password{%endtrans%}</a></p>
@@ -112,6 +113,18 @@ def create_app(test_config=None):
             {% endblock %}
             """)
 
+    # For profile page, user must have logged in
+    @app.route('/special')  # Route this URL
+    @roles_required('secret', ['sauce', 'agent'])  # Requires 'special' and ('sauce' or 'agent')
+    def special_page():
+        return render_template_string(
+            """
+            {% extends "base.html" %}
+
+            {% block content %}
+                <h2>Special Page</h2>
+            {% endblock %}
+            """)
 
     return app
 
@@ -119,4 +132,3 @@ def create_app(test_config=None):
 if __name__=='__main__':
     app = create_app()
     app.run(host='0.0.0.0', port=5000, debug=True)
-
