@@ -126,7 +126,7 @@ class ChangePasswordForm(Form):
     new_password = PasswordField(_('New Password'), validators=[
         validators.Required(_('New Password is required')),
         ])
-    retype_password = PasswordField(_('Retype New Password'), validators=[
+    enable_retype_passwords = PasswordField(_('Retype New Password'), validators=[
         validators.EqualTo('new_password', message=_('New Password and Retype Password did not match'))
         ])
     next = HiddenField()
@@ -135,8 +135,8 @@ class ChangePasswordForm(Form):
     def validate(self):
         # Use feature config to remove unused form fields
         user_manager =  current_app.user_manager
-        if not user_manager.retype_password:
-            delattr(self, 'retype_password')
+        if not user_manager.enable_retype_passwords:
+            delattr(self, 'enable_retype_passwords')
 
         # Add custom password validator if needed
         has_been_added = False
@@ -185,7 +185,7 @@ class LoginForm(Form):
     def validate(self):
         # Remove fields depending on configuration
         user_manager =  current_app.user_manager
-        if user_manager.login_with_username:
+        if user_manager.enable_usernames:
             delattr(self, 'email')
         else:
             delattr(self, 'username')
@@ -195,14 +195,14 @@ class LoginForm(Form):
             return False
 
         # Retrieve User by username or email
-        if user_manager.login_with_username:
+        if user_manager.enable_usernames:
             user = user_manager.db_adapter.find_user_by_username(self.username.data)
         else:
             user = user_manager.db_adapter.find_user_by_email(self.email.data)
 
         # Verify user and password
         if not user or not user_manager.password_crypt_context.verify(self.password.data, user.password):
-            if user_manager.login_with_username:
+            if user_manager.enable_usernames:
                 self.username.errors.append(_('Incorrect Username and Password'))
             else:
                 self.email.errors.append(_('Incorrect Email and Password'))
@@ -228,7 +228,7 @@ class RegisterForm(Form):
     password = PasswordField(_('Password'), validators=[
         validators.Required(_('Password is required')),
         ])
-    retype_password = PasswordField(_('Retype Password'), validators=[
+    enable_retype_passwords = PasswordField(_('Retype Password'), validators=[
         validators.EqualTo('password', message=_('Password and Retype Password did not match'))
         ])
     submit = SubmitField(_('Register'))
@@ -236,15 +236,15 @@ class RegisterForm(Form):
     def validate(self):
         # remove certain form fields depending on user manager config
         user_manager =  current_app.user_manager
-        if not user_manager.login_with_username:
+        if not user_manager.enable_usernames:
             delattr(self, 'username')
-        if not user_manager.register_with_email:
+        if not user_manager.enable_emails:
             delattr(self, 'email')
-        if not user_manager.retype_password:
-            delattr(self, 'retype_password')
+        if not user_manager.enable_retype_passwords:
+            delattr(self, 'enable_retype_passwords')
 
         # Add custom username validator if needed
-        if user_manager.login_with_username:
+        if user_manager.enable_usernames:
             has_been_added = False
             for v in self.username.validators:
                 if v==user_manager.username_validator:
@@ -271,7 +271,7 @@ class ResetPasswordForm(Form):
     new_password = PasswordField(_('New Password'), validators=[
         validators.Required(_('New Password is required')),
         ])
-    retype_password = PasswordField(_('Retype New Password'), validators=[
+    enable_retype_passwords = PasswordField(_('Retype New Password'), validators=[
         validators.EqualTo('new_password', message=_('New Password and Retype Password did not match'))
         ])
     next = HiddenField()
@@ -280,8 +280,8 @@ class ResetPasswordForm(Form):
     def validate(self):
         # Use feature config to remove unused form fields
         user_manager =  current_app.user_manager
-        if not user_manager.retype_password:
-            delattr(self, 'retype_password')
+        if not user_manager.enable_retype_passwords:
+            delattr(self, 'enable_retype_passwords')
 
         # Add custom password validator if needed
         has_been_added = False

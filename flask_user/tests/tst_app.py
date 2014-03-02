@@ -2,7 +2,8 @@ from flask import Flask, render_template_string
 from flask.ext.babel import Babel
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.user import login_required, roles_required, SQLAlchemyAdapter, UserManager, UserMixin
+from flask.ext.user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
+from flask.ext.user import roles_required
 
 # Use a Class-based config to avoid needing a 2nd file
 class ConfigClass(object):
@@ -20,11 +21,11 @@ class ConfigClass(object):
     MAIL_DEFAULT_SENDER = '"Sender" <noreply@example.com>'
 
     # Configure Flask-User
-    USER_LOGIN_WITH_USERNAME    = True
-    USER_REGISTER_WITH_EMAIL    = True
+    USER_ENABLE_USERNAMES       = True              # Register and Login with username
+    USER_ENABLE_EMAILS          = True              # Register with email
+    USER_ENABLE_CONFIRM_EMAIL   = True              # Require email confirmation
     USER_ENABLE_CHANGE_USERNAME = True
     USER_ENABLE_CHANGE_PASSWORD = True
-    USER_ENABLE_CONFIRM_EMAIL   = True
     USER_ENABLE_FORGOT_PASSWORD = True
 
 def create_app(test_config=None):                   # For automated tests
@@ -91,7 +92,7 @@ def create_app(test_config=None):                   # For automated tests
 
     # The '/' page requires a logged-in user
     @app.route('/')
-    @login_required                                 # Use of @roles_required decorator
+    @login_required                                 # Use of @login_required decorator
     def profile_page():
         return render_template_string(
             """
@@ -109,7 +110,7 @@ def create_app(test_config=None):                   # For automated tests
             {% endblock %}
             """)
 
-    # The '/special' page requires a user that has the 'special' and ('sauce' or 'agent') role.
+    # The '/special' page requires a user that has the 'special' AND ('sauce' OR 'agent') role.
     @app.route('/special')
     @roles_required('secret', ['sauce', 'agent'])   # Use of @roles_required decorator
     def special_page():

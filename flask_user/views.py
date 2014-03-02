@@ -161,7 +161,7 @@ def login():
     # Process valid POST
     if request.method=='POST' and form.validate():
         # Retrieve User
-        if user_manager.login_with_username:
+        if user_manager.enable_usernames:
             user = user_manager.db_adapter.find_user_by_username(form.username.data)
         else:
             user = user_manager.db_adapter.find_user_by_email(form.email.data)
@@ -241,14 +241,14 @@ def register():
         user_kwargs['password'] = user_manager.password_crypt_context.encrypt(form.password.data)
 
         # Store email address depending on config
-        if user_manager.register_with_email:
+        if user_manager.enable_emails:
             email_address = form.email.data
             email_kwargs['email'] = email_address
         else:
             email_address = None
 
         # Store username depending on config
-        if user_manager.login_with_username:
+        if user_manager.enable_usernames:
             user_kwargs['username'] = form.username.data
 
         # Store active=True or active=False depending on config

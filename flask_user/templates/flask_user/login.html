@@ -6,7 +6,7 @@
 
 <form action="" method="POST" class="form" role="form">
     {{ form.hidden_tag() }}
-    {% if user_manager.login_with_username %}
+    {% if user_manager.enable_usernames %}
         {{ render_field(form.username) }}
     {% else %}
         {{ render_field(form.email) }}

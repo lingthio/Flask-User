@@ -20,10 +20,10 @@ class ConfigClass(object):
     MAIL_DEFAULT_SENDER = '"Sender" <noreply@example.com>'
 
     # Configure Flask-User
-    USER_LOGIN_WITH_USERNAME    = True
+    USER_ENABLE_USERNAMES       = True              # Register and Login with username
+    USER_ENABLE_CONFIRM_EMAIL   = True              # Require Email confirmation
     USER_ENABLE_CHANGE_USERNAME = True
     USER_ENABLE_CHANGE_PASSWORD = True
-    USER_ENABLE_CONFIRM_EMAIL   = True
     USER_ENABLE_FORGOT_PASSWORD = True
 
 def create_app(test_config=None):                   # For automated tests
