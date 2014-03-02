@@ -1,0 +1,18 @@
+::
+
+    # Settings                     # Default   # Description
+    USER_CONFIRM_EMAIL_EXPIRATION  = 2*24*3600 # Confirmation expiration in seconds
+                                               # (2*24*3600 represents 2 days)
+
+    USER_LOGIN_WITH_USERNAME       = False     # Login with username instead of email
+
+    USER_REGISTER_WITH_EMAIL       = True      # Prompt for email during registration
+                                               # Requires USER_ENABLE_REGISTRATION=True
+
+    USER_RESET_PASSWORD_EXPIRATION = 2*24*3600 # Reset password expiration in seconds
+                                               # (2*24*3600 represents 2 days)
+
+    USER_RETYPE_PASSWORD           = True      # Prompt for `retype password` in:
+                                               #   - registration form,
+                                               #   - change password form, and
+                                               #   - reset password forms.

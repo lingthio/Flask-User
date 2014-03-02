@@ -10,12 +10,9 @@ We recommend making use of virtualenv and virtualenvwrapper::
 Installation Instructions
 -------------------------
 
-After that, installation is as easy as::
+After setting up virtualenv, installation is as easy as::
 
     pip install flask-user
-
-
-See also: :doc:`minimal-app`
 
 Requirements
 ------------

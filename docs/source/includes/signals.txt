@@ -1,0 +1,13 @@
+::
+
+    # Signal                    # Sent when ...
+    confirmation_email_sent     # a confirmation email was sent
+    reset_password_email_sent   # a reset password email was sent
+    user_changed_password       # a user changed their password
+    user_changed_username       # a user changed their username
+    user_confirmed_email        # a user confirmed their email
+    user_logged_in              # a user logged in
+    user_logged_out             # a user logged out
+    user_registered             # a user registered for a new account
+    user_reset_password         # a user reset their password (forgot password)
+    user_sent_invitation        # Not yet implemented

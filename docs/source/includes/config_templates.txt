@@ -1,0 +1,10 @@
+::
+
+    # Form template files                   # Defaults
+    USER_CHANGE_PASSWORD_TEMPLATE           = 'flask_user/change_password.html'
+    USER_CHANGE_USERNAME_TEMPLATE           = 'flask_user/change_username.html'
+    USER_FORGOT_PASSWORD_TEMPLATE           = 'flask_user/forgot_password.html'
+    USER_LOGIN_TEMPLATE                     = 'flask_user/login.html'
+    USER_REGISTER_TEMPLATE                  = 'flask_user/register.html'
+    USER_RESEND_CONFIRMATION_EMAIL_TEMPLATE = 'flask_user/resend_confirmation_email.html'
+    USER_RESET_PASSWORD_TEMPLATE            = 'flask_user/reset_password.html'

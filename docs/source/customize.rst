@@ -4,18 +4,18 @@ Customizing
 Flask-User has been designed with customization in mind, and here is a list of
 behaviors that can be customized as needed.
 
-* Emails (Subject lines, HTML messages and Text messages)
-* Features and Settings
-* Field labels
-* Flash messages
-* Form classes
-* Form templates,
-* Password hashing algorithms,
-* Token generator,
-* URLs
-* Validation messages
-* Validator (password validator, username validator)
-* View functions,
+* `Emails`_ (Subject lines, HTML messages and Text messages)
+* `Features and Settings`_
+* `Field labels`_
+* `Flash messages`_
+* `Form classes`_
+* `Form templates`_
+* `Password hashing`_
+* `Token generator`_
+* `URLs`_
+* `Validation messages`_
+* `Validators`_ (password validator, username validator)
+* `View functions`_
 
 Overview
 --------
@@ -29,19 +29,25 @@ Built-in Flask-User behavior can be customized in one of two ways:
     # Application Config Settings
     app.config['USER_ENABLE_CONFIRM_EMAIL'] = True                      # Set custom config settings
     app.config['USER_CONFIRM_EMAIL_EXPIRATION'] = 5*24*3600  # 5 days
-    user_manager = UserManager(db_adapter)
-    user_manager.init_app(app)                                          # Ready to use config settings
 
-    # user_manager attributes
-    user_manager = UserManager(db_adapter)                              # Set built-in attributes
-    user_manager.password_validator = my_password_validator             # Overwrite custom attributes
-    user_manager.username_validator = my_username_validator
-    user_manager.init_app(app)                                          # Ready to use attributes
+    # user_manager Attributes
+    user_manager = UserManager(db_adapter, app,
+            password_validator = my_password_validator,
+            username_validator = my_username_validator)
 
 Emails
 ------
-All user management Emails can be customized by copying the default Jinja2 email templates
-from flask_user's ``/templates/flask_user/emails`` dir to your application's ``/templates/flask_user/emails`` dir.
+All user management Emails can be customized by copying the Flask-User email template files
+into the application's ``templates`` dir.
+
+To find out where flask_user got installed, type the following::
+
+    python -c "from distutils.sysconfig import get_python_lib; print get_python_lib();"
+
+If the command returned something like ``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages``,
+the email template files will be in
+``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/flask_user/templates/flask_user/emails/``,
+and you should copy them to something like: ``~/path/to/YOURAPP/templates/flask_user/emails/``
 
 Emails are sent as multipart messages with a subject, HTML message body and a Text message body. HTML capable
 email clients will display the HTML message body while Text-only email clients will display the Text message body.
@@ -92,27 +98,12 @@ The email template files, along with available template variables listed below:
 
 Features and Settings
 ---------------------
-Features and settings can be customized through the application's config::
+Features and settings can be customized through the application's config
 
-    # Features                      # Default   # Comments
-    USER_ENABLE_CHANGE_PASSWORD     = True      # Allow users to change their password
-    USER_ENABLE_CHANGE_USERNAME     = True      # Allow users to change their username
-                                                # Only valid if USER_LOGIN_WITH_USERNAME == True
-    USER_ENABLE_CONFIRM_EMAIL       = False     # Require users to confirm their email
-                                                # Only valid if USER_ENABLE_REGISTRATION == True
-    USER_ENABLE_FORGOT_PASSWORD     = False     # Allow users to reset their passwords
-    USER_ENABLE_REGISTRATION        = True      # Allow new users to registers
-    USER_ENABLE_REQUIRE_INVITATION  = False     # Require an invitation to register new users
-                                                # Not yet implemented
+.. include:: includes/config_features.txt
 
-    # Settings                      # Default    # Comments
-    USER_CONFIRM_EMAIL_EXPIRATION   = 2*24*3600  # Confirmation expiration in seconds (2 days)
-    USER_LOGIN_WITH_USERNAME        = False      # Login with username instead of email
-    USER_REGISTER_WITH_EMAIL        = True       # Prompt for email during registration
-                                                 # Only useful in when USER_LOGIN_WITH_USERNAME == True
-                                                 # Must be True if USER_ENABLE_CONFIRM_EMAIL == True
-    USER_RESET_PASSWORD_EXPIRATION  = 2*24*3600  # Reset password expiration in seconds (2 days)
-    USER_RETYPE_PASSWORD            = True
+.. include:: includes/config_settings.txt
+
 
 Field Labels
 ------------
@@ -160,18 +151,23 @@ defined in flask.ext.user.forms and to always call the base validate() function:
 
 Form Templates
 --------------
-Forms can be customized by copying the default form templates to the application's ``templates/flask_user`` dir.
+Forms can be customized by copying the Flask-User form template files into the the application's ``templates`` directory.
 
-In addition, the location of each form template file can be set in the application's config::
+To find out where flask_user got installed, type the following::
 
-    # Form template files
-    USER_CHANGE_USERNAME_TEMPLATE           = 'flask_user/change_username.html'
-    USER_CHANGE_PASSWORD_TEMPLATE           = 'flask_user/change_password.html'
-    USER_FORGOT_PASSWORD_TEMPLATE           = 'flask_user/forgot_password.html'
-    USER_LOGIN_TEMPLATE                     = 'flask_user/login.html'
-    USER_REGISTER_TEMPLATE                  = 'flask_user/register.html'
-    USER_RESEND_CONFIRMATION_EMAIL_TEMPLATE = 'flask_user/resend_confirmation_email.html'
-    USER_RESET_PASSWORD_TEMPLATE            = 'flask_user/reset_password.html'
+    python -c "from distutils.sysconfig import get_python_lib; print get_python_lib();"
+
+If the command returned something like ``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages``,
+the form template files will be in
+``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/flask_user/templates/flask_user/``,
+and you should copy them to something like: ``~/path/to/YOURAPP/templates/flask_user/``
+
+In addition, the path and name of each form template file can be customized individually
+through the application's config
+
+.. include:: includes/config_templates.txt
+
+The path is relative to the application's ``templates`` directory.
 
 Form templates can make full use of Jinja2.
 
@@ -192,18 +188,9 @@ TBD.
 
 URLs
 ----
-URLs can be customized through the application's config::
+URLs can be customized through the application's config
 
-    # URLs                              # Defaults
-    USER_CHANGE_PASSWORD_URL            = '/user/change-password'
-    USER_CHANGE_USERNAME_URL            = '/user/change-username'
-    USER_CONFIRM_EMAIL_URL              = '/user/confirm-email/<token>'
-    USER_FORGOT_PASSWORD_URL            = '/user/forgot-password'
-    USER_LOGIN_URL                      = '/user/login'
-    USER_LOGOUT_URL                     = '/user/logout'
-    USER_REGISTER_URL                   = '/user/register'
-    USER_RESEND_CONFIRMATION_EMAIL_URL  = '/user/resend-confirmation-email'
-    USER_RESET_PASSWORD_URL             = '/user/reset-password/<token>'
+.. include:: includes/config_urls.txt
 
 Validation messages
 -------------------

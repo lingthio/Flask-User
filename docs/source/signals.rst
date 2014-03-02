@@ -13,32 +13,7 @@ Available Events
 ----------------
 Flask-User provides the following event signals:
 
-| ``flask.ext.user.signals.confirmation_email_sent``
-|     Sent just after a confirmation email was sent
-
-| ``flask.ext.user.signals.email_confirmed``
-|     Sent just after an email was confirmed
-
-| ``flask.ext.user.signals.user_logged_in``
-|     Sent just after a user logged in
-
-| ``flask.ext.user.signals.user_logged_out``
-|     Sent just before a user logged out
-
-| ``flask.ext.user.signals.user_registered``
-|     Sent just after a user registered
-
-| ``flask.ext.user.signals.password_changed``
-|     Sent just after a password was changed
-
-| ``flask.ext.user.signals.password_reset``
-|     Sent just after a password was reset
-
-| ``flask.ext.user.signals.reset_password_email_sent``
-|     Sent just after a reset password email was sent
-
-| ``flask.ext.user.signals.username_changed``
-|     Sent just after a username was changed
+.. include:: includes/signals.txt
 
 
 Subscribing to Signals

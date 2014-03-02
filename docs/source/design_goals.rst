@@ -49,7 +49,7 @@ Ready to use
     db_adapter = SQLAlchemyAdapter(db,  User)       # Select database adapter
     user_manager = UserManager(db_adapter, app)     # Init Flask-User and bind to app
 
-See :doc:`minimal-app`
+See :doc:`minimal_app`
 
 Fully Customizable
 ------------------
@@ -68,32 +68,23 @@ Fully Customizable
 * URLs
 * View functions,
 
-See `customize`
+See :mod:`customize`
 
 Good Feature Set
 ----------------
-**Forms**
 
-* Change password
-* Change username
-* Forgot password
-* Login
-* Logout
-* Register with email
-* Register with username
-
-**Functionality**
-
+* Change password Form (with or without retype password)
+* Change username Form
+* Forgot password Form
+* Login Form
+* Logout Form
+* Register Form (with email, username or both)
+* Reset password Form (with or without retype password)
+* Secure password hashing and token generation
+* Form validation
 * Event notification -- See :doc:`signals`.
-    * confirmation_email_sent
-    * reset_password_email_sent
-    * user_changed_password
-    * user_changed_username
-    * user_confirmed_email
-    * user_logged_in
-    * user_logged_out
-    * user_registered
-    * user_reset_password
+* Fully customizable
+* Internationalization ready
 
 Planned Features
 ----------------

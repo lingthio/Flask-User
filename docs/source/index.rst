@@ -15,14 +15,6 @@ Flask-User
 .. image:: https://pypip.in/license/Flask-User/badge.png
     :target: https://pypi.python.org/pypi/Flask-User
 
-::
-
-    !! Newsflash !!
-    In v0.3.1 and v0.3.2 confirmation emails were not working
-    Please upgrade to v0.3.3 or later. Thank you.
-
-    !! Headsup !!
-    The upcoming v0.4 will break v0.3 compatibility. See the Status section below.
 
 Customizable User Login for Flask: Register, Confirm email, Login, Forgot password and more
 -------------------------------------------------------------------------------------------
@@ -56,12 +48,12 @@ Documentation
 .. toctree::
     :maxdepth: 2
 
-    features
+    design_goals
     install
-    minimal-app
-    basic-app
+    recipes
     customize
     signals
+    api
 
 Revision History
 ----------------
