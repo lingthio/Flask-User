@@ -138,8 +138,8 @@ def test_invalid_register_with_username_form(client):
     client.post_invalid_form(url, 'Password and Retype Password did not match',
             username=username, email=email, password='Password1', enable_retype_passwords='Password9')
 
-def test_invalid_enable_emails_form(client):
-    print("test_invalid_enable_emails_form")
+def test_invalid_register_with_email_form(client):
+    print("test_invalid_register_with_email_form")
 
     User = current_app.User
 
@@ -421,7 +421,7 @@ def run_all_tests(client):
     print()
     test_init(current_app.db)
     test_invalid_register_with_username_form(client)
-    test_invalid_enable_emails_form(client)
+    test_invalid_register_with_email_form(client)
     test_invalid_confirm_email_page(client)
     test_invalid_enable_usernames_form(client)
     test_invalid_login_with_email_form(client)

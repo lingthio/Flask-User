@@ -20,7 +20,7 @@ from . import settings
 from . import tokens
 from . import views
 
-__version__ = '0.3.6'
+__version__ = '0.3.8'
 
 # expose decorators
 from flask.ext.login import fresh_login_required, login_required
