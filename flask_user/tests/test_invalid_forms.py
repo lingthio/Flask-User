@@ -383,7 +383,7 @@ def test_valid_roles(client):
     client.login(username='user007', password='Password1')
     url = url_for('special_page')
     response = client.get_valid_page(url)
-    assert not response_has_string(response, 'Please Sign in to access this page.')
+    assert not response_has_string(response, 'You must be signed in to access')
     client.logout()
 
 def test_invalid_roles(client):
@@ -398,7 +398,7 @@ def test_invalid_roles(client):
     client.login(username='user1', password='Password1')
     url = url_for('special_page')
     response = client.get_valid_page(url)
-    assert response_has_string(response, 'Please Sign in to access this page.')
+    assert response_has_string(response, 'You do not have permission to access')
     client.logout()
 
 def test_cleanup(db):

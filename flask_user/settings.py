@@ -32,6 +32,8 @@ def set_default_settings(user_manager, app_config):
     um.register_url             = sd('USER_REGISTER_URL',               '/user/register')
     um.resend_confirmation_email_url = sd('USER_RESEND_CONFIRMATION_EMAIL_URL', '/user/resend-confirmation-email')
     um.reset_password_url       = sd('USER_RESET_PASSWORD_URL',         '/user/reset-password/<token>')
+    um.unauthenticated_url      = sd('USER_UNAUTHENTICATED_URL',        um.login_url)
+    um.unauthorized_url         = sd('USER_UNAUTHORIZED_URL',           '/')
 
     # Set default template files
     um.change_password_template = sd('USER_CHANGE_PASSWORD_TEMPLATE',  'flask_user/change_password.html')

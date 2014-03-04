@@ -3,53 +3,63 @@ from functools import wraps
 from flask import current_app
 from flask.ext.login import current_user
 
-def _user_has_roles(*required_roles):
-    '''
-    Check to see if user has all required roles
-    This function accepts a variable number of arguments
-    Each argument can be a Role name or a tuple of Sub-role names.
-    Roles are AND-ed. Sub-roles are OR-ed.
-        @_user_has_roles('a', ('b', 'c'))
-    Translates to User must have: role 'a' AND (role 'b' OR role 'c')
-    '''
+def login_required(func):
+    """
+    This decorator ensures that the current user is logged in
+    before calling the actual view.
+    Calls the unauthorized_view_function() when the user is not logged in.
+    """
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        # User must be authenticated
+        if not current_user.is_authenticated():
+            # Redirect to unauthenticated page
+            return current_app.user_manager.unauthenticated_view_function()
 
-    user = current_user
-    user_roles = [role.name for role in user.roles]
+        # Call the actual view
+        return func(*args, **kwargs)
+    return decorated_view
 
-    for role in required_roles:
-        if isinstance(role, (list, tuple)):
-            authorized = False
-            for sub_role in role:
-                if sub_role in user_roles:
-                    authorized = True
-                    break       # Found valid sub-role: break out of loop
-            if not authorized:
-                return False    # All sub-roles failed: Deny authorization.
-        else:
-            if not role in user_roles:
-                return False    # One role failed: Deny authorization.
-
-    return True
 
 def roles_required(*required_roles):
-    '''
-    Decorator for view function that require users to have certain roles.
-    This decorator accepts a variable number of arguments
-    Each argument can be a role name or a tuple of role names.
-    Tuples are OR-ed, arguments are AND-ed.
-        @role_required( ('a','b'), 'c')
-    Translates to User must have: (role 'a' OR role 'b') AND role 'c'
-    '''
+    """
+    This decorator ensures that the current user has all the required roles
+    before calling the actual view.
+    Calls the unauthorized_view_function() when requirements fail.
+
+    roles_required() accepts a list of requirements:
+        roles_required(requirement1, requirement2, requirement3).
+
+    Each requirement is either a role_name, or a tuple_of_role_names.
+        role_name example:   'manager'
+        tuple_of_role_names: ('funny', 'witty', 'hilarious')
+    A role_name-requirement is accepted when the user has this role.
+    A tuple_of_role_names-requirement is accepted when the user has ONE of these roles.
+    roles_required() returns true if ALL of the requirements have been accepted.
+
+    For example:
+        roles_required('a', ('b', 'c'), d)
+    Translates to:
+        User must have role 'a' AND (role 'b' OR role 'c') AND role 'd'
+
+    """
     def wrapper(func):
         @wraps(func)
 
         def decorated_view(*args, **kwargs):
-            # User must be logged in and have the required roles
-            if current_user.is_authenticated() and _user_has_roles(*required_roles):
-                return func(*args, **kwargs)
 
-            # Redirect to login page
-            return current_app.user_manager.lm.unauthorized()
+            # User must be logged
+            if not current_user.is_authenticated():
+                # Redirect to the unauthenticated page
+                return current_app.user_manager.unauthenticated_view_function()
+
+            # User must have the required roles
+            if not current_user.has_roles(*required_roles):
+                # Redirect to the unauthorized page
+                return current_app.user_manager.unauthorized_view_function()
+
+            # Call the actual view
+            return func(*args, **kwargs)
 
         return decorated_view
 

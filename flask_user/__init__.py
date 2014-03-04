@@ -23,7 +23,6 @@ from . import views
 __version__ = '0.3.8'
 
 # expose decorators
-from flask.ext.login import fresh_login_required, login_required
 from .decorators import *
 
 def _user_loader(user_id):
@@ -65,7 +64,9 @@ class UserManager():
                 logout_view_function=views.logout,
                 register_view_function=views.register,
                 resend_confirmation_email_view_function = views.resend_confirmation_email,
-                reset_password_view_function   = views.reset_password,
+                reset_password_view_function = views.reset_password,
+                unauthenticated_view_function = views.unauthenticated,
+                unauthorized_view_function = views.unauthorized,
                 # Misc
                 login_manager=LoginManager(),
                 token_manager=tokens.TokenManager(),
@@ -96,6 +97,8 @@ class UserManager():
         self.register_view_function = register_view_function
         self.resend_confirmation_email_view_function = resend_confirmation_email_view_function
         self.reset_password_view_function = reset_password_view_function
+        self.unauthenticated_view_function = unauthenticated_view_function
+        self.unauthorized_view_function = unauthorized_view_function
         # Misc
         self.password_crypt_context = password_crypt_context
         self.token_manager = token_manager
@@ -158,13 +161,54 @@ class UserManager():
             app.add_url_rule(self.reset_password_url, 'user.reset_password', self.reset_password_view_function, methods=['GET', 'POST'])
 
 
-# *****************************
-# ** Local Utility Functions **
-# *****************************
-
 
 class UserMixin(LoginUserMixin):
     """
-    Encapsulates Flask-Login UserMixin in our own Flask-User UserMixin
+    This class adds methods to the User model class required by Flask-Login and Flask-User.
     """
-    pass
+    
+    def has_roles(self, *requirements):
+        """
+        Return True if the user has all of the specified roles. Return False otherwise.
+        
+        has_roles() accepts a list of requirements:
+            has_role(requirement1, requirement2, requirement3).
+            
+        Each requirement is either a role_name, or a tuple_of_role_names.
+            role_name example:   'manager'
+            tuple_of_role_names: ('funny', 'witty', 'hilarious')
+        A role_name-requirement is accepted when the user has this role.
+        A tuple_of_role_names-requirement is accepted when the user has ONE of these roles.
+        has_roles() returns true if ALL of the requirements have been accepted.
+         
+        For example:
+            has_roles('a', ('b', 'c'), d)
+        Translates to:
+            User has role 'a' AND (role 'b' OR role 'c') AND role 'd'
+        """
+
+        # Translates a list of role objects to a list of role_names
+        user_roles = [role.name for role in self.roles]
+
+        # has_role() accepts a list of requirements
+        for requirement in requirements:
+            if isinstance(requirement, (list, tuple)):
+                # this is a tuple_of_role_names requirement
+                tuple_of_role_names = requirement
+                authorized = False
+                for role_name in tuple_of_role_names:
+                    if role_name in user_roles:
+                        # tuple_of_role_names requirement was met: break out of loop
+                        authorized = True
+                        break
+                if not authorized:
+                    return False                    # tuple_of_role_names requirement failed: return False
+            else:
+                # this is a role_name requirement
+                role_name = requirement
+                # the user must have this role
+                if not role_name in user_roles:
+                    return False                    # role_name requirement failed: return False
+
+        # All requirements have been met: return True
+        return True

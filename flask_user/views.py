@@ -373,3 +373,27 @@ def reset_password(token):
 
     # Process GET or invalid POST
     return render_template(user_manager.reset_password_template, form=form)
+
+def unauthenticated():
+    """
+    Prepare a Flash message and redirect to USER_UNAUTHENTICATED_URL
+    """
+    # Prepare Flash message
+    url = request.script_root + request.path
+    flash(_('You must be signed in to access %(url)s.', url=url), 'error')
+
+    # Redirect to USER_UNAUTHENTICATED_URL
+    user_manager = current_app.user_manager
+    return redirect(user_manager.unauthenticated_url)
+
+def unauthorized():
+    """
+    Prepare a Flash message and redirect to USER_UNAUTHORIZED_URL
+    """
+    # Prepare Flash message
+    url = request.script_root + request.path
+    flash(_('You do not have permission to access %(url)s.', url=url), 'error')
+
+    # Redirect to USER_UNAUTHORIZED_URL
+    user_manager = current_app.user_manager
+    return redirect(user_manager.unauthorized_url)

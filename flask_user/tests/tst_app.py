@@ -2,7 +2,7 @@ from flask import Flask, render_template_string
 from flask.ext.babel import Babel
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
+from flask.ext.user import current_user, login_required, SQLAlchemyAdapter, UserManager, UserMixin
 from flask.ext.user import roles_required
 
 # Use a Class-based config to avoid needing a 2nd file
@@ -73,7 +73,6 @@ def create_app(test_config=None):                   # For automated tests
     app.User = User
 
     # Reset all the database tables
-    db.drop_all()                                   # Do not try this in Production!
     db.create_all()
 
     # Setup Flask-User
@@ -81,32 +80,43 @@ def create_app(test_config=None):                   # For automated tests
     user_manager = UserManager(db_adapter, app)
 
     # Create 'user007' user with 'secret' and 'agent' roles
-    role1 = Role(name='secret')
-    role2 = Role(name='agent')
-    user1 = User(username='user007', email='user007@example.com', active=True,
-            password=user_manager.password_crypt_context.encrypt('Password1'))
-    user1.roles.append(role1)
-    user1.roles.append(role2)
-    db.session.add(user1)
-    db.session.commit()
+    if not User.query.filter(User.username=='user007').first():
+        user1 = User(username='user007', email='user007@example.com', active=True,
+                password=user_manager.password_crypt_context.encrypt('Password1'))
+        user1.roles.append(Role(name='secret'))
+        user1.roles.append(Role(name='agent'))
+        db.session.add(user1)
+        db.session.commit()
 
-    # The '/' page requires a logged-in user
+    # The '/' page is accessible to anyone
     @app.route('/')
-    @login_required                                 # Use of @login_required decorator
-    def profile_page():
-        return render_template_string(
-            """
+    def home_page():
+        if current_user.is_authenticated():
+            return profile_page()
+        return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
-                <h2>Profile Page</h2>
-                <p> {%trans%}Hello{%endtrans%}
-                    {{ current_user.username or current_user.email }},</p>
-                <p> <a href="{{ url_for('user.change_username') }}">
-                    {%trans%}Change username{%endtrans%}</a></p>
-                <p> <a href="{{ url_for('user.change_password') }}">
-                    {%trans%}Change password{%endtrans%}</a></p>
-                <p> <a href="{{ url_for('user.logout') }}?next={{ url_for('user.login') }}">
-                    {%trans%}Sign out{%endtrans%}</a></p>
+            <h2>Home Page</h2>
+            <p><a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
+            {% endblock %}
+            """)
+
+    # The '/profile' page requires a logged-in user
+    @app.route('/profile')
+    @login_required                                 # Use of @login_required decorator
+    def profile_page():
+        return render_template_string("""
+            {% extends "base.html" %}
+            {% block content %}
+            <h2>Profile Page</h2>
+            <p> {%trans%}Hello{%endtrans%}
+                {{ current_user.username or current_user.email }},</p>
+            <p> <a href="{{ url_for('user.change_username') }}">
+                {%trans%}Change username{%endtrans%}</a></p>
+            <p> <a href="{{ url_for('user.change_password') }}">
+                {%trans%}Change password{%endtrans%}</a></p>
+            <p> <a href="{{ url_for('user.logout') }}?next={{ url_for('user.login') }}">
+                {%trans%}Sign out{%endtrans%}</a></p>
             {% endblock %}
             """)
 
@@ -114,11 +124,10 @@ def create_app(test_config=None):                   # For automated tests
     @app.route('/special')
     @roles_required('secret', ['sauce', 'agent'])   # Use of @roles_required decorator
     def special_page():
-        return render_template_string(
-            """
+        return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
-                <h2>Special Page</h2>
+            <h2>Special Page</h2>
             {% endblock %}
             """)
 
