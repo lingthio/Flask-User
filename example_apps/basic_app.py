@@ -2,7 +2,7 @@ from flask import Flask, render_template_string
 from flask.ext.babel import Babel
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.user import login_required, UserManager, UserMixin, SQLAlchemyAdapter
+from flask.ext.user import current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
 
 # Use a Class-based config to avoid needing a 2nd file
 class ConfigClass(object):

@@ -2,7 +2,7 @@ from flask import Flask, render_template_string
 from flask.ext.babel import Babel
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.user import current_user, login_required, SQLAlchemyAdapter, UserManager, UserMixin
+from flask.ext.user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
 from flask.ext.user import roles_required
 
 # Use a Class-based config to avoid needing a 2nd file
@@ -91,8 +91,9 @@ def create_app(test_config=None):                   # For automated tests
     # The '/' page is accessible to anyone
     @app.route('/')
     def home_page():
-        if current_user.is_authenticated():
-            return profile_page()
+        print("home page")
+        # if current_user.is_authenticated():
+        #     return profile_page()
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}

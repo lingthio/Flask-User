@@ -22,6 +22,8 @@ from . import views
 
 __version__ = '0.3.8'
 
+from flask_login import current_user
+
 # expose decorators
 from .decorators import *
 
@@ -152,13 +154,15 @@ class UserManager():
             app.add_url_rule(self.change_password_url, 'user.change_password', self.change_password_view_function, methods=['GET', 'POST'])
         if self.enable_change_username:
             app.add_url_rule(self.change_username_url, 'user.change_username', self.change_username_view_function, methods=['GET', 'POST'])
+        if self.enable_forgot_password:
+            app.add_url_rule(self.forgot_password_url, 'user.forgot_password', self.forgot_password_view_function, methods=['GET', 'POST'])
+            app.add_url_rule(self.reset_password_url, 'user.reset_password', self.reset_password_view_function, methods=['GET', 'POST'])
         app.add_url_rule(self.login_url,  'user.login',  self.login_view_function,  methods=['GET', 'POST'])
         app.add_url_rule(self.logout_url, 'user.logout', self.logout_view_function, methods=['GET', 'POST'])
         if self.enable_register:
             app.add_url_rule(self.register_url, 'user.register', self.register_view_function, methods=['GET', 'POST'])
-        if self.enable_forgot_password:
-            app.add_url_rule(self.forgot_password_url, 'user.forgot_password', self.forgot_password_view_function, methods=['GET', 'POST'])
-            app.add_url_rule(self.reset_password_url, 'user.reset_password', self.reset_password_view_function, methods=['GET', 'POST'])
+        # We can not define 'user.unauthenticated' here because it clashes with 'user.login'
+        # We can not define 'user.unauthorized' here because it clashes with 'home_page'
 
 
 
