@@ -1,7 +1,7 @@
 from flask import Flask, render_template_string
 from flask.ext.babel import Babel
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.user import login_required, UserManager, UserMixin, SQLAlchemyAdapter
+from flask.ext.user import current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
 
 # Use a Class-based config to avoid needing a 2nd file
 class ConfigClass(object):
@@ -32,12 +32,24 @@ db.create_all()
 db_adapter = SQLAlchemyAdapter(db,  User)       # Select database adapter
 user_manager = UserManager(db_adapter, app)     # Init Flask-User and bind to app
 
-# The '/' page requires a logged-in user
+# The '/' page is accessible to anyone
 @app.route('/')
+def home_page():
+    if current_user.is_authenticated():
+        return profile_page()
+    return render_template_string("""
+        {% extends "base.html" %}
+        {% block content %}
+        <h2>Home Page</h2>
+        <p><a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
+        {% endblock %}
+        """)
+
+# The '/profile' page requires a logged-in user
+@app.route('/profile')
 @login_required                                 # Use of @login_required decorator
 def profile_page():
-    return render_template_string(
-        """
+    return render_template_string("""
         {% extends "base.html" %}
         {% block content %}
             <h2>Profile Page</h2>

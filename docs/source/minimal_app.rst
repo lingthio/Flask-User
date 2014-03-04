@@ -12,7 +12,7 @@ Create ~/dev/example/minimal_app.py with the content below.
 .. literalinclude:: includes/minimal_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 4, 21-26, 31-33, 37
+   :emphasize-lines: 4, 21-26, 31-33, 50
 
 | The highlighted lines show how you can add User Registration and Login
 | with only eleven lines of additional code.

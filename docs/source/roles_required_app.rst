@@ -22,7 +22,7 @@ Make sure to adjust the ``MAIL_*`` settings below to the correct SMTP server and
 .. literalinclude:: includes/roles_required_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 6, 50-59, 67-69, 76, 83-91, 115
+   :emphasize-lines: 6, 50-59, 67-69, 82-90, 126
 
 Highlighted code shows what was added from the Basic App.
 

@@ -11,12 +11,12 @@
 
     USER_ENABLE_FORGOT_PASSWORD    = False     # Allow users to reset their passwords
 
-    USER_ENABLE_EMAILS             = True      # Prompt for email during registration
+    USER_ENABLE_EMAILS             = True      # Register with Email
                                                # Requires USER_ENABLE_REGISTRATION=True
 
     USER_ENABLE_MULTIPLE_EMAILS    = False     # Not yet implemented
 
-    USER_ENABLE_REGISTRATION       = True      # Allow new users to registers
+    USER_ENABLE_REGISTRATION       = True      # Allow new users to register
 
     USER_ENABLE_REQUIRE_INVITATION = False     # Registration requires invitation
                                                # Not yet implemented
@@ -26,5 +26,5 @@
                                                #   - change password form, and
                                                #   - reset password forms.
 
-    USER_ENABLE_USERNAMES          = False     # Login with username instead of email
+    USER_ENABLE_USERNAMES          = False     # Register and Login with username
 

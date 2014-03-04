@@ -1,12 +1,21 @@
 ::
 
-    # URLs                              # Defaults
-    USER_CHANGE_PASSWORD_URL            = '/user/change-password'
-    USER_CHANGE_USERNAME_URL            = '/user/change-username'
-    USER_CONFIRM_EMAIL_URL              = '/user/confirm-email/<token>'
-    USER_FORGOT_PASSWORD_URL            = '/user/forgot-password'
-    USER_LOGIN_URL                      = '/user/login'
-    USER_LOGOUT_URL                     = '/user/logout'
-    USER_REGISTER_URL                   = '/user/register'
-    USER_RESEND_CONFIRMATION_EMAIL_URL  = '/user/resend-confirmation-email'
-    USER_RESET_PASSWORD_URL             = '/user/reset-password/<token>'
+    # URL                     # Default
+    USER_CHANGE_PASSWORD_URL  = '/user/change-password'
+    USER_CHANGE_USERNAME_URL  = '/user/change-username'
+    USER_CONFIRM_EMAIL_URL    = '/user/confirm-email/<token>'
+    USER_FORGOT_PASSWORD_URL  = '/user/forgot-password'
+    USER_LOGIN_URL            = '/user/login'
+    USER_LOGOUT_URL           = '/user/logout'
+    USER_REGISTER_URL         = '/user/register'
+    USER_RESET_PASSWORD_URL   = '/user/reset-password/<token>'
+
+    # Unauthenticated users trying to access a view
+    # that has been decorated with @login_required or @roles_required
+    # will be redirected to this URL
+    USER_UNAUTHENTICATED_URL  = USER_LOGIN_URL
+
+    # Unauthorized users trying to access a view
+    # that has been decorated with @roles_required
+    # will be redirected to this URL
+    USER_UNAUTHORIZED_URL     = '/'

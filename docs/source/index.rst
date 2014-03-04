@@ -18,10 +18,10 @@ Flask-User
 ::
 
     !! News Flash !!
-    The following application config names have changed for intuitive and consistency reasons:
+    Some config settings have been renamed for intuitive and consistency reasons:
     - USER_LOGIN_WITH_USERNAME --> USER_ENABLE_USERNAMES (plural)
     - USER_REGISTER_WITH_EMAIL --> USER_ENABLE_EMAILS (plural)
-    - USER_RETYPE_PASSWORD     --> USER_USER_ENABLE_RETYPE_PASSWORDS (plural)
+    - USER_RETYPE_PASSWORD     --> USER_ENABLE_RETYPE_PASSWORDS (plural)
     We apologize for any inconvenience but feel confident this will help going forward.
 
 Customizable User Login for Flask: Register, Confirm email, Login, Forgot password and more

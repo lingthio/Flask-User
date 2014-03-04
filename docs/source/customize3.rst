@@ -5,13 +5,13 @@ Customizing Three
 Level Three customizations require editing of Python files. You must rely on
 your own test suites to make sure that Flask-User operations have not been broken.
 
-* `Password and Username validators`_
-* `Password hashing`_
-* `Token generation`_
-* `View functions`_
+* `Customizing Password and Username validators`_
+* `Customizing Password hashing`_
+* `Customizing Token generation`_
+* `Customizing View functions`_
 
-Password and Username Validators
---------------------------------
+Customizing Password and Username Validators
+--------------------------------------------
 Flask-User comes standard
 with a password validator (at least 6 chars, 1 upper case letter, 1 lower case letter, 1 digit) and
 with a username validator (at least 3 alphanumeric characters).
@@ -35,8 +35,8 @@ Custom validators can be specified by setting an attribute on the Flask-User's U
     user_manager.username_validator = my_username_validator
     user_manager.init_app(app)
 
-Password Hashing
-----------------
+Customizing Password Hashing
+----------------------------
 Flask-User makes use of passlib's CryptContext to provide password hashing.
 
 By default, the following built-in CryptContext is used::
@@ -46,12 +46,12 @@ You can supply your own CryptContext by setting an attribute on the Flask-User's
 
     user_manager.crypt_context = my_crypt_context
 
-Token Generation
-----------------
+Customizing Token Generation
+----------------------------
 To be documented.
 
-View Functions
---------------
+Customizing View Functions
+--------------------------
 The built-in View Functions contain considerable business logic, so we recommend first
 trying the approach of Customizing `Form Templates`_
 before making use of customized View Functions.

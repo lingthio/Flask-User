@@ -5,14 +5,14 @@ Level Two customizations require editing a non-Python file such as a template fi
 or a Babel translation file. Mistakes in these files are visible to customers
 but it's unlikely that they will endanger the stability of your website.
 
-* `Emails`_
-* `Field labels`_
-* `Flash messages`_
-* `Form templates`_
-* `Validation messages`_
+* `Customizing Emails`_
+* `Customizing Field labels`_
+* `Customizing Flash messages`_
+* `Customizing Form templates`_
+* `Customizing Validation messages`_
 
-Emails
-------
+Customizing Emails
+------------------
 All user management Emails can be customized by copying the Flask-User email template files
 into the application's ``templates`` dir.
 
@@ -72,18 +72,18 @@ The email template files, along with available template variables listed below:
     * ``user`` - For example: ``{{ user.email }}``
     * ``reset_password_link`` - For example: ``{{ reset_password_link }}``
 
-Field Labels
-------------
+Customizing Field Labels
+------------------------
 The built-in Form field labels can be customized by editing the 'en' Babel translation file.
 
 [To be documented]
 
-Flash messages
---------------
+Customizing Flash messages
+--------------------------
 Flash messages are those one-time system messages that appear on the next page.
 
-Form Templates
---------------
+Customizing Form Templates
+--------------------------
 Forms can be customized by copying the Flask-User form template files into the the application's ``templates`` directory.
 
 To find out where flask_user got installed, type the following::
@@ -104,8 +104,8 @@ The path is relative to the application's ``templates`` directory.
 
 Form templates can make full use of Jinja2.
 
-Validation messages
--------------------
+Customizing Validation messages
+-------------------------------
 The built-in Form validation messages be customized by editing the 'en' Babel translation file.
 
 [To be documented]

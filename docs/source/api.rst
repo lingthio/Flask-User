@@ -3,6 +3,8 @@ Flask-User API
 * `Config Settings`_
 * `SQLAlchemyAdapter`_
 * `UserManager`_
+* `Template variables`_
+* `Template functions`_
 * `Signals`_
 
 Config Settings
@@ -18,6 +20,18 @@ Config Settings
 SQLAlchemyAdapter
 -----------------
 Work in progress. See :doc:`basic_app` for now.
+
+Template variables
+------------------
+The following template variables are available for use in email and form templates:
+
+.. include:: includes/template_variables.txt
+
+Template functions
+------------------
+The following template functions are available for use in email and form templates:
+
+.. include:: includes/template_functions.txt
 
 UserManager
 -----------

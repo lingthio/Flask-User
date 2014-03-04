@@ -2,7 +2,7 @@ from flask import Flask, render_template_string
 from flask.ext.babel import Babel
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.user import login_required, UserManager, UserMixin, SQLAlchemyAdapter
+from flask.ext.user import current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
 
 # Use a Class-based config to avoid needing a 2nd file
 class ConfigClass(object):
@@ -20,10 +20,10 @@ class ConfigClass(object):
     MAIL_DEFAULT_SENDER = '"Sender" <noreply@example.com>'
 
     # Configure Flask-User
-    USER_ENABLE_USERNAMES    = True
+    USER_ENABLE_USERNAMES       = True              # Register and Login with username
+    USER_ENABLE_CONFIRM_EMAIL   = True              # Require Email confirmation
     USER_ENABLE_CHANGE_USERNAME = True
     USER_ENABLE_CHANGE_PASSWORD = True
-    USER_ENABLE_CONFIRM_EMAIL   = True
     USER_ENABLE_FORGOT_PASSWORD = True
 
 def create_app(test_config=None):                   # For automated tests
@@ -63,13 +63,24 @@ def create_app(test_config=None):                   # For automated tests
     db_adapter = SQLAlchemyAdapter(db,  User)       # Select database adapter
     user_manager = UserManager(db_adapter, app)     # Init Flask-User and bind to app
 
-    # The '/' page requires a logged-in user
-    @login_required                                 # Use of @login_required decorator
+    # The '/' page is accessible to anyone
     @app.route('/')
-    @app.route('/special')                          # For testing purposes
+    def home_page():
+        if current_user.is_authenticated():
+            return profile_page()
+        return render_template_string("""
+            {% extends "base.html" %}
+            {% block content %}
+            <h2>Home Page</h2>
+            <p><a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
+            {% endblock %}
+            """)
+
+    # The '/profile' page requires a logged-in user
+    @app.route('/profile')
+    @login_required                                 # Use of @login_required decorator
     def profile_page():
-        return render_template_string(
-            """
+        return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
                 <h2>Profile Page</h2>

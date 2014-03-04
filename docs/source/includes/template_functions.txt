@@ -1,0 +1,11 @@
+::
+
+    # Function                        Setting                   # Default
+    url_for('user.change_password')   USER_CHANGE_PASSWORD_URL  = '/user/change-password'
+    url_for('user.change_username')   USER_CHANGE_USERNAME_URL  = '/user/change-username'
+    url_for('user.confirm_email')     USER_CONFIRM_EMAIL_URL    = '/user/confirm-email/<token>'
+    url_for('user.forgot_password')   USER_FORGOT_PASSWORD_URL  = '/user/forgot-password'
+    url_for('user.login')             USER_LOGIN_URL            = '/user/login'
+    url_for('user.logout')            USER_LOGOUT_URL           = '/user/logout'
+    url_for('user.register')          USER_REGISTER_URL         = '/user/register'
+    url_for('user.reset_password')    USER_RESET_PASSWORD_URL   = '/user/reset-password/<token>'
