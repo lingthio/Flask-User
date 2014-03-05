@@ -24,35 +24,29 @@ Flask-User
     - USER_RETYPE_PASSWORD     --> USER_ENABLE_RETYPE_PASSWORDS (plural)
     We apologize for any inconvenience but feel confident this will help going forward.
 
-Customizable User Login for Flask: Register, Confirm email, Login, Forgot password and more
--------------------------------------------------------------------------------------------
+Customizable User Account Management for Flask
+----------------------------------------------
 
-| Many websites require that their users can **Register**, **Confirm email**, **Login**, **Change password** and handle **Forgot passwords**.
-| Some websites require **Role-based Authorization**.
-| *Each website often requires different and precise customization of this process*.
+Flask-User offers customizable user account management features
+with sensible defaults to start using it right out of the box.
 
-Flask-User aims to provide a ready to use **and** fully customizable package that is:
-
-* **Reliable** (Automated tests cover over 95% of the code base)
-* **Secure** (``bcrypt`` password hashing, ``AES`` ID encryption, ``itsdangerous`` token signing)
-* **Ready to use**
-* **Fully customizable** (Field labels, Flash messages, Form templates, Emails, URLs, and more)
+* **Reliable**
+* **Secure**
+* **Customizable**
+* **Ready to use functionality**. With sensible defaults for **Register**, **Confirm email**,
+  **Login**, **Change password** and **Forgot passwords**.
+* **Role-based Authorization** through a simple function decorator.
 * **Well documented**
 * Tested on Python 2.6, 2.7 and 3.3
-
-:doc:`minimal_app` requires only eleven lines of additional code!
 
 Status
 ------
 
-v0.3 is an Alpha release. We would appreciate it if you enter issues, suggestions and
-feature requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
+Though v0.3  is quite stable, it is an Alpha release.
+We appreciate it if you would enter issues, suggestions and
+enhancement requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
 
-The v0.4 Beta release is in active development. The main purpose of this release is:
-
-* Allowing full Flask-Login customization
-* Breaking view function content into re-usable helper functions
-  to ease view function customization
+The v0.4 is in active development.
 
 Documentation
 -------------

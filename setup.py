@@ -19,16 +19,18 @@ Customizable User Login for Flask
 .. image:: https://pypip.in/license/Flask-User/badge.png
     :target: https://pypi.python.org/pypi/Flask-User
 
-| Many websites require that their users can **Register**, **Confirm email**, **Login**, **Change password** and handle **Forgot passwords**.
-| Some websites require **Role-based Authorization**.
-| *Each website often requires different and precise customization of this process*.
+Customizable User Account Management for Flask
+----------------------------------------------
 
-Flask-User aims to provide a ready to use **and** fully customizable package that is:
+Flask-User offers customizable user account management features
+with sensible defaults to start using it right out of the box.
 
-* **Reliable** (Automated tests cover over 95% of the code base)
-* **Secure** (``bcrypt`` for passwords, ``AES`` and ``itsdangerous`` for tokens)
-* **Ready to use**
-* **Fully customizable** (Emails, Templates, Validators, Views and more)
+* **Reliable**
+* **Secure**
+* **Customizable**
+* **Ready to use functionality**. With sensible defaults for **Register**, **Confirm email**,
+  **Login**, **Change password** and **Forgot passwords**.
+* **Role-based Authorization** through a simple function decorator.
 * **Well documented**
 * Tested on Python 2.6, 2.7 and 3.3
 
@@ -36,6 +38,10 @@ Documentation
 -------------
 
 `Flask-User Documentation <https://pythonhosted.org/Flask-User/>`_
+
+Revision History
+----------------
+`Flask-User Revision History <http://pythonhosted.org//Flask-User/index.html#revision-history>`_
 
 Extension Packages
 ------------------
@@ -46,20 +52,8 @@ We plan to offer the following Flask-User extensions in the future:
 
 Alternative Packages
 --------------------
-I've successfully used `Flask-Security <https://pythonhosted.org/Flask-Security/>`_ in the past.
+Flask-Security `Flask-Security <https://pythonhosted.org/Flask-Security/>`_
 
-Revision History
-----------------
-* v0.3.7 Added role based authorization with @roles_required.
-* v0.3.6 Provides @login_required. Handles multiple apps.
-* v0.3.5 Added: Signals. Refactored automated tests.
-* v0.3.4 Added: Support for Python 3.3 (while retaining support for 2.7 and 2.6)
-* v0.3.3 Added: Minimal-app and basic-app examples to docs
-* v0.3.2 Bug fix: Confirm email did not send confirmation emails
-* v0.3.1 Alpha release
-* v0.3 Added: Confirm email, Forgot password, Reset password
-* v0.2 Added: Change username, Change password
-* v0.1 Initial version: Register, Login, Logout
 
 Contact
 -------

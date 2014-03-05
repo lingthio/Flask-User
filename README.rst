@@ -18,26 +18,29 @@ Flask-User
 
 ::
 
-User Login for Flask
---------------------
-**Register, Confirm email, Login, Forgot password and more**
+Customizable User Account Management for Flask
+----------------------------------------------
 
-| Many websites require that their users can **Register**, **Confirm email**, **Login**, **Change password** and handle **Forgot passwords**.
-| Some websites require **Role-based Authorization**.
-| *Each website often requires different and precise customization of this process*.
+Flask-User offers customizable user account management features
+with sensible defaults to start using it right out of the box.
 
-Flask-User aims to provide a ready to use **and** fully customizable package that is:
-
-* **Reliable** (Automated tests cover 97% of the code base)
-* **Secure** (``bcrypt`` password hashing, ``AES`` ID encryption, ``itsdangerous`` token signing)
-* **Ready to use**
-* **Fully customizable** (Email, Field labels, Flash messages, Form templates, URLs, and more)
+* **Reliable**
+* **Secure**
+* **Customizable**
+* **Ready to use functionality**. With sensible defaults for **Register**, **Confirm email**,
+  **Login**, **Change password** and **Forgot passwords**.
+* **Role-based Authorization** through a simple function decorator.
 * **Well documented**
+* Tested on Python 2.6, 2.7 and 3.3
 
 Documentation
 -------------
 
 `Flask-User Documentation <https://pythonhosted.org/Flask-User/>`_
+
+Revision History
+----------------
+`Flask-User Revision History <http://pythonhosted.org//Flask-User/index.html#revision-history>`_
 
 Extension Packages
 ------------------
@@ -48,7 +51,7 @@ We plan to offer the following Flask-User extensions in the future:
 
 Alternative Packages
 --------------------
-I've successfully used `Flask-Security <https://pythonhosted.org/Flask-Security/>`_ in the past.
+Flask-Security `Flask-Security <https://pythonhosted.org/Flask-Security/>`_
 
 Contact
 -------
