@@ -21,7 +21,7 @@ Make sure to adjust the ``MAIL_*`` settings below to the correct SMTP server and
 .. literalinclude:: includes/basic_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 3, 14-27, 44, 54-56
+   :emphasize-lines: 3, 14-27, 44, 58-60
 
 Highlighted code shows what was added from the Minimal App.
 

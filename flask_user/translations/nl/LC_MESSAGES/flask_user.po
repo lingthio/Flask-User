@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-03-05 16:59-0800\n"
-"PO-Revision-Date: 2014-03-05 16:59-0800\n"
+"POT-Creation-Date: 2014-03-06 11:10-0800\n"
+"PO-Revision-Date: 2014-03-05 17:35-0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: nl <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -151,6 +151,18 @@ msgstr "Wachtwoord en Herhaal Wachtwoord komen niet overeen"
 msgid "Register"
 msgstr "Registreren"
 
+#: flask_user/translations.py:97
+msgid "Home Page"
+msgstr ""
+
+#: flask_user/translations.py:98
+msgid "Profile Page"
+msgstr ""
+
+#: flask_user/translations.py:99
+msgid "Special Page"
+msgstr ""
+
 #: flask_user/views.py:29
 msgid "Your confirmation token has expired."
 msgstr "Uw bevestigingstoken is verlopen."
@@ -239,6 +251,14 @@ msgstr "U hebt geen toestemming tot %(url)s."
 #: flask_user/templates/flask_user/forgot_password.html:5
 msgid "Forgot Password"
 msgstr "Wachtwoord vergeten"
+
+#: flask_user/templates/flask_user/login.html:13
+msgid "New here? Register."
+msgstr "Nieuw hier? Schrijf in."
+
+#: flask_user/templates/flask_user/login.html:18
+msgid "Forgot your Password?"
+msgstr "Wachtwoord vergeten?"
 
 #: flask_user/templates/flask_user/resend_confirmation_email.html:23
 msgid "Already have an account?"

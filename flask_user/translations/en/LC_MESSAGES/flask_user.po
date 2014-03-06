@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-03-05 16:59-0800\n"
-"PO-Revision-Date: 2014-03-05 16:14-0800\n"
+"POT-Creation-Date: 2014-03-06 11:10-0800\n"
+"PO-Revision-Date: 2014-03-05 17:36-0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: en <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -148,6 +147,18 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
+#: flask_user/translations.py:97
+msgid "Home Page"
+msgstr ""
+
+#: flask_user/translations.py:98
+msgid "Profile Page"
+msgstr ""
+
+#: flask_user/translations.py:99
+msgid "Special Page"
+msgstr ""
+
 #: flask_user/views.py:29
 msgid "Your confirmation token has expired."
 msgstr ""
@@ -228,6 +239,14 @@ msgstr ""
 
 #: flask_user/templates/flask_user/forgot_password.html:5
 msgid "Forgot Password"
+msgstr ""
+
+#: flask_user/templates/flask_user/login.html:13
+msgid "New here? Register."
+msgstr ""
+
+#: flask_user/templates/flask_user/login.html:18
+msgid "Forgot your Password?"
 msgstr ""
 
 #: flask_user/templates/flask_user/resend_confirmation_email.html:23

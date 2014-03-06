@@ -16,20 +16,20 @@ After setting up virtualenv, installation is as easy as::
 
 Requirements
 ------------
-- Python 3.3, 2.7 or 2.6
-- Flask (includes itsdangerous)
+- Python 2.6, 2.7 or 3.3
+- crypto, passlib and py-bcript
+- Flask
 - Flask-Babel
 - Flask-Login
 - Flask-Mail
 - Flask-WTF
-- crypto, passlib and py-bcript
 
-Optional requirements needed for SQLAlchemyAdapter:
+Optional requirements for SQLAlchemyAdapter:
 
 - SQL-Python
 - Flask-SQLAlchemy
 
-Optional requirements needed to register for signals
+Optional requirements for Event Notification:
 
 - blinker
 

@@ -1,6 +1,5 @@
-=============
-Authorization
-=============
+Authorizion
+===========
 Authorization is the process of specifying and enforcing access rights of users to resources.
 
 Flask-User offers role based authorization through the use of function decorators:

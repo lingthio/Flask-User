@@ -91,3 +91,9 @@ def render_template():
                 lambda s, p, n: get_translations().ungettext(s, p, n),
                 newstyle=True
             )
+
+# Translate some messages that pybabel extract can't find in a render_template_string() string
+_ = lazy_gettext
+_home_page = _('Home Page')
+_profile_page = _('Profile Page')
+_special_page = _('Special Page')

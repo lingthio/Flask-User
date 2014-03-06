@@ -1,9 +1,5 @@
 """
 
-Customizable User Login for Flask
----------------------------------
-**Register, Confirm email, Login, Forgot password and more**
-
 .. image:: https://pypip.in/v/Flask-User/badge.png
     :target: https://pypi.python.org/pypi/Flask-User
 
@@ -22,17 +18,45 @@ Customizable User Login for Flask
 Customizable User Account Management for Flask
 ----------------------------------------------
 
-Flask-User offers customizable user account management features
-with sensible defaults to start using it right out of the box.
+Many web applications require User Account Management features such as **Register**, **Confirm email**,
+**Login**, **Change password** and **Forgot passwords**.
+
+Some also require **Role-based Authorization**, **Internationalization**.
+
+Wouldn't it be nice to have a package that would offer these features **out-of-the-box**
+while **retaining full control over the workflow and presentation** of this process.
+
+Flask-User aims to provide such a ready-to-use **AND** fully customizable solution:
 
 * **Reliable**
 * **Secure**
-* **Customizable**
-* **Ready to use functionality**. With sensible defaults for **Register**, **Confirm email**,
-  **Login**, **Change password** and **Forgot passwords**.
-* **Role-based Authorization** through a simple function decorator.
+* **Fully customizable**
+* **Ready to use**
+* **Role-based Authorization**
+* **Internationalization**
 * **Well documented**
-* **Translatable**
+* Tested on Python 2.6, 2.7 and 3.3
+
+Customizable User Account Management for Flask
+----------------------------------------------
+
+Many web applications require User Account Management features such as **Register**, **Confirm email**,
+**Login**, **Change username**, **Change password** and **Forgot passwords**.
+
+Some also require **Role-based Authorization** and **Internationalization**.
+
+Wouldn't it be nice to have a package that would offer these features **out-of-the-box**
+while **retaining full control over the workflow and presentation** of this process?
+
+Flask-User aims to provide such a ready-to-use **AND** fully customizable solution:
+
+* **Reliable**
+* **Secure**
+* **Fully customizable**
+* **Ready to use**
+* **Role-based Authorization**
+* **Internationalization**
+* **Well documented**
 * Tested on Python 2.6, 2.7 and 3.3
 
 Documentation
@@ -66,7 +90,7 @@ from setuptools import setup
 
 setup(
     name='Flask-User',
-    version='0.3.8',
+    version='0.4.0',
     url='http://github.com/lingthio/flask-user',
     license='BSD License',
     author='Ling Thio',

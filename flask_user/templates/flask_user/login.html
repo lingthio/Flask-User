@@ -9,12 +9,14 @@
 
     {# Username or Email #}
     {% set field = form.username if user_manager.enable_usernames else form.email %}
-    {% set right_label = '<a href="' + url_for("user.register") + '">' + 'New here? Register.' + '</a>' %}
-    {{ render_field(field, right_label=right_label) }}
+    {% set right_url = url_for("user.register") %}
+    {% set right_label = _('New here? Register.') %}
+    {{ render_field(field, right_url=right_url, right_label=right_label) }}
 
     {# Password #}
-    {% set right_label = '<a href="' + url_for("user.forgot_password") + '">' + 'Forgot your Password?' + '</a>' %}
-    {{ render_field(form.password, right_label=right_label) }}
+    {% set right_url = url_for("user.forgot_password") if user_manager.enable_forgot_password else None %}
+    {% set right_label = _('Forgot your Password?') if user_manager.enable_forgot_password else None %}
+    {{ render_field(form.password, right_url=right_url, right_label=right_label) }}
 
     {# Submit button #}
     {{ render_submit_field(form.submit) }}

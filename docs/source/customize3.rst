@@ -1,6 +1,6 @@
-=================
-Customizing Three
-=================
+===============
+Customize Three
+===============
 
 Level Three customizations require editing of Python files. You must rely on
 your own test suites to make sure that Flask-User operations have not been broken.

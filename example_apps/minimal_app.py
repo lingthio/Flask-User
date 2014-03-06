@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string
+from flask import Flask, render_template_string, request
 from flask.ext.babel import Babel
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.user import current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
@@ -15,8 +15,12 @@ app = Flask(__name__)
 app.config.from_object(__name__+'.ConfigClass')
 
 # Setup Flask-Babel and Flask-SQLAlchemy
-app.babel = Babel(app)
-db = SQLAlchemy(app)
+app.babel = babel = Babel(app)
+app.db = db = SQLAlchemy(app)
+
+@babel.localeselector
+def get_locale():
+    return request.accept_languages.best_match(['en', 'nl'])
 
 # Define User model. Make sure to add flask.ext.user UserMixin!!
 class User(db.Model, UserMixin):
@@ -40,7 +44,7 @@ def home_page():
     return render_template_string("""
         {% extends "base.html" %}
         {% block content %}
-        <h2>Home Page</h2>
+        <h2>{%trans%}Home Page{%endtrans%}</h2>
         <p><a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
         {% endblock %}
         """)
@@ -52,7 +56,7 @@ def profile_page():
     return render_template_string("""
         {% extends "base.html" %}
         {% block content %}
-            <h2>Profile Page</h2>
+            <h2>{%trans%}Profile Page{%endtrans%}</h2>
             <p> {%trans%}Hello{%endtrans%}
                 {{ current_user.username or current_user.email }},</p>
             <p> <a href="{{ url_for('user.change_password') }}">

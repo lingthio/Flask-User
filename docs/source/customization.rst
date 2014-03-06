@@ -1,4 +1,3 @@
-=============
 Customization
 =============
 Flask-User has been designed with customization in mind, and and here is a list of

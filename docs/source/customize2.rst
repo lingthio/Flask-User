@@ -1,5 +1,5 @@
-Customizing Two
-===============
+Customize Two
+=============
 
 Level Two customizations require editing a non-Python file such as a template file
 or a Babel translation file. Mistakes in these files are visible to customers
@@ -76,11 +76,14 @@ Customizing Field Labels
 ------------------------
 The built-in Form field labels can be customized by editing the 'en' Babel translation file.
 
-[To be documented]
+See :doc:`translate`
 
 Customizing Flash messages
 --------------------------
 Flash messages are those one-time system messages that appear on the next page.
+The built-in Flash messages can be customized by editing the 'en' Babel translation file.
+
+See :doc:`translate`
 
 Customizing Form Templates
 --------------------------
@@ -108,5 +111,5 @@ Customizing Validation messages
 -------------------------------
 The built-in Form validation messages be customized by editing the 'en' Babel translation file.
 
-[To be documented]
+See :doc:`translate`
 

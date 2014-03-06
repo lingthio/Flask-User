@@ -18,36 +18,39 @@ Flask-User
 ::
 
     !! News Flash !!
-    Some config settings have been renamed for intuitive and consistency reasons:
-    - USER_LOGIN_WITH_USERNAME --> USER_ENABLE_USERNAMES (plural)
-    - USER_REGISTER_WITH_EMAIL --> USER_ENABLE_EMAILS (plural)
-    - USER_RETYPE_PASSWORD     --> USER_ENABLE_RETYPE_PASSWORDS (plural)
-    We apologize for any inconvenience but feel confident this will help going forward.
+    v0.4.0 released:
+    - Role-based Authorization through @roles_required (see Recipes > Roles Required App)
+    - Internationalization through babel and .po files (see Internationalization)
 
 Customizable User Account Management for Flask
 ----------------------------------------------
 
-Flask-User offers customizable user account management features
-with sensible defaults to start using it right out of the box.
+Many web applications require User Account Management features such as **Register**, **Confirm email**,
+**Login**, **Change username**, **Change password** and **Forgot passwords**.
+
+Some also require **Role-based Authorization** and **Internationalization**.
+
+Wouldn't it be nice to have a package that would offer these features **out-of-the-box**
+while retaining **full control over the workflow and presentation** of this process?
+
+Flask-User aims to provide such a ready-to-use **AND** fully customizable solution:
 
 * **Reliable**
 * **Secure**
-* **Customizable**
-* **Ready to use functionality**. With sensible defaults for **Register**, **Confirm email**,
-  **Login**, **Change password** and **Forgot passwords**.
-* **Role-based Authorization** through a simple function decorator.
+* **Fully customizable**
+* **Ready to use**
+* **Role-based Authorization**
+* **Internationalization**
 * **Well documented**
-* **Translatable**
 * Tested on Python 2.6, 2.7 and 3.3
 
 Status
 ------
 
-Though v0.3  is quite stable, it is an Alpha release.
+Though v0.4 is quite stable, it is an Alpha release.
 We appreciate it if you would enter issues, suggestions and
 enhancement requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
 
-The v0.4 is in active development.
 
 Documentation
 -------------
@@ -55,24 +58,22 @@ Documentation
     :maxdepth: 2
 
     design_goals
-    install
-    authorization
+    installation
     recipes
-    customize
-    signals
+    authorization
+    customization
+    internationalization
+    notification
     api
 
 Revision History
 ----------------
-* v0.3.6 Added: Provide @login_required. Handle multiple apps.
-* v0.3.5 Added: Signals. Refactored automated tests.
-* v0.3.4 Added: Support for Python 3.3 (while retaining support for 2.7 and 2.6)
-* v0.3.3 Added: Minimal-app and basic-app examples to docs
-* v0.3.2 Bug fix: Confirm email did not send confirmation emails
-* v0.3.1 Alpha release
-* v0.3 Added: Confirm email, Forgot password, Reset password
-* v0.2 Added: Change username, Change password
-* v0.1 Initial version: Register, Login, Logout
+* v0.4.0 Translations via Babel.
+* v0.3.8 Role-based authorization via @roles_required.
+* v0.3.5 Support for Python 2.6, 2.7 and 3.3, Event notifications.
+* v0.3.1 Email sending, Confirm email, Forgot password, Reset password.
+* v0.2 Change username, Change password.
+* v0.1 Register, Login, Logout.
 
 Extension Packages
 ------------------

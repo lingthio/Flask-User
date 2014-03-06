@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string
+from flask import Flask, render_template_string, request
 from flask.ext.babel import Babel
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -44,8 +44,12 @@ def create_app(test_config=None):                   # For automated tests
 
     # Setup Flask-Mail, Flask-Babel and Flask-SQLAlchemy
     app.mail = Mail(app)
-    app.babel = Babel(app)
+    app.babel = babel = Babel(app)
     app.db = db = SQLAlchemy(app)
+
+    @babel.localeselector
+    def get_locale():
+        return request.accept_languages.best_match(['en', 'nl'])
 
     # Define the User-Roles pivot table
     user_roles = db.Table('user_roles',

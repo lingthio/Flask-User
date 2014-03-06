@@ -1,5 +1,5 @@
-Customizing One
-===============
+Customize One
+=============
 
 ::
 
