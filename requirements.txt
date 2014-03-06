@@ -8,6 +8,7 @@ speaklater==1.3
 Flask==0.10.1
 
 # Flask packages
+Flask-Babel==0.9
 Flask-Login==0.2.9
 Flask-Mail==0.9.0
 Flask-SQLAlchemy==1.0
