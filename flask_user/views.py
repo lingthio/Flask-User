@@ -8,14 +8,12 @@
     :license: Simplified BSD License, see LICENSE.txt for more details.
 """
 
-from itsdangerous import SignatureExpired
-
 from flask import current_app, flash, redirect, render_template, request, url_for
-from flask.ext.babel import gettext as _
 from flask.ext.login import current_user, login_required, login_user, logout_user
 
 from .emails import send_confirmation_email, send_reset_password_email
 from . import signals
+from .translations import gettext as _
 
 def confirm_email(token):
     """

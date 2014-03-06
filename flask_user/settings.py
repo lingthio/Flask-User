@@ -14,7 +14,7 @@ def set_default_settings(user_manager, app_config):
     um.enable_forgot_password   = sd('USER_ENABLE_FORGOT_PASSWORD',     False)
     um.enable_register          = sd('USER_ENABLE_REGISTRATION',        True)
     um.enable_require_invitation= sd('USER_ENABLE_REQUIRE_INVITATION',  False)
-    um.enable_retype_passwords  = sd('USER_ENABLE_RETYPE_PASSWORDS',    True)
+    um.enable_retype_passwords  = sd('USER_ENABLE_RETYPE_PASSWORDS',    False)
     um.enable_usernames         = sd('USER_ENABLE_USERNAMES',           False)
     um.enable_multiple_emails   = sd('USER_ENABLE_MULTIPLE_EMAILS',     False)
 

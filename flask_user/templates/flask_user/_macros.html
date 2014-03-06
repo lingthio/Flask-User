@@ -1,8 +1,13 @@
-{% macro render_field(field, label=None, label_visible=true) -%}
+{% macro render_field(field, label=None, label_visible=true, right_label=None) -%}
     <div class="form-group {% if field.errors %}has-error{% endif %} {{ kwargs.pop('class_', '') }}">
         {% if field.type != 'HiddenField' and label_visible %}
             {% if not label %}{% set label=field.label.text %}{% endif %}
-            <label for="{{ field.id }}" class="control-label">{{ label|safe }}</label>
+            <div class="row">
+                <div class="col-sm-6"><label for="{{ field.id }}" class="control-label">{{ label|safe }}</label></div>
+                {% if right_label %}
+                    <div class="col-sm-6 text-right">{{ right_label|safe }}</div>
+                {% endif %}
+            </div>
         {% endif %}
         {{ field(class_='form-control', **kwargs) }}
         {% if field.errors %}

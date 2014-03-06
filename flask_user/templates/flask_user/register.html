@@ -6,22 +6,23 @@
 
 <form action="" method="POST" novalidate formnovalidate class="form" role="form">
     {{ form.hidden_tag() }}
-    {% if user_manager.enable_usernames %}
-        {{ render_field(form.username) }}
-    {% endif %}
-    {% if user_manager.enable_emails %}
+
+    {# Username or Email #}
+    {% set field = form.username if user_manager.enable_usernames else form.email %}
+    {% set right_label = '<a href="' + url_for("user.login") + '">' + 'Already registered? Login.' + '</a>' %}
+    {{ render_field(field, right_label=right_label) }}
+
+    {% if user_manager.enable_emails and user_manager.enable_usernames %}
         {{ render_field(form.email) }}
     {% endif %}
+
     {{ render_field(form.password) }}
+
     {% if user_manager.enable_retype_passwords %}
         {{ render_field(form.enable_retype_passwords) }}
     {% endif %}
+
     {{ render_submit_field(form.submit) }}
 </form>
 
-<br/>
-<p>{%trans%}Already have an account?{%endtrans%} <a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
-{% if user_manager.enable_forgot_password %}
-    <p>{%trans%}Forgot your Password?{%endtrans%} <a href="{{ url_for('user.forgot_password') }}">{%trans%}Reset Password{%endtrans%}</a></p>
-{% endif %}
 {% endblock %}

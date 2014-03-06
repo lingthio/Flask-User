@@ -32,6 +32,7 @@ with sensible defaults to start using it right out of the box.
   **Login**, **Change password** and **Forgot passwords**.
 * **Role-based Authorization** through a simple function decorator.
 * **Well documented**
+* **Translatable**
 * Tested on Python 2.6, 2.7 and 3.3
 
 Documentation

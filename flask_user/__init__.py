@@ -8,8 +8,7 @@
     :license: Simplified BSD License, see LICENSE.txt for more details.
 """
 
-from flask import Blueprint, current_app
-from flask_babel import gettext as _
+from flask import Blueprint
 from flask_login import LoginManager, UserMixin as LoginUserMixin
 from flask_user.db_interfaces import DBInterface
 
@@ -18,13 +17,15 @@ from . import forms
 from . import passwords
 from . import settings
 from . import tokens
+from . import translations
 from . import views
 
 __version__ = '0.3.8'
 
+# Enable the following: from flask.ext.user import current_user
 from flask_login import current_user
 
-# expose decorators
+# Enable the following: from flask.ext.user import login_required, roles_required
 from .decorators import *
 
 def _user_loader(user_id):
@@ -115,6 +116,13 @@ class UserManager():
         """
         app.user_manager = self
 
+        # Initialize Translations
+        app.jinja_env.install_gettext_callables(
+                translations.gettext,
+                translations.ngettext,
+                newstyle=True
+                )
+
         # Set default app.config settings, but only if they have not been set before
         settings.set_default_settings(self, app.config)
 
@@ -138,6 +146,7 @@ class UserManager():
         app.context_processor(_flask_user_context_processor)
 
     def setup_login_manager(self, app):
+        _ = translations.gettext
         self.lm.login_message = _('Please Sign in to access this page.')
         self.lm.login_message_category = 'error'
         self.lm.login_view = 'user.login'
