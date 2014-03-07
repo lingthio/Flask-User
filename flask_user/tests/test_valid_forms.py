@@ -53,7 +53,8 @@ def test_with_username(client):
     # Enable all features
     um = current_app.user_manager
     um.enable_register = True
-    um.enable_confirm_email = True
+    um.enable_emails = False
+    um.enable_confirm_email = False
     um.enable_change_username = True
     um.enable_change_password = True
     um.enable_forgot_password = True

@@ -11,7 +11,7 @@
 from __future__ import print_function
 import unittest
 
-from flask_user.tests import tst_app, tstutils, test_valid_forms, test_invalid_forms
+from flask_user.tests import tst_app, tstutils, test_authorization, test_valid_forms, test_invalid_forms
 
 # Configure app
 test_config = dict(
@@ -34,6 +34,10 @@ class TestFlaskUserForms(unittest.TestCase):
     """
     Automated tests for Flask-User forms
     """
+    def test_authorization(self):
+        with app.app_context():
+            test_authorization.test_authorization(client)
+
     def test_valid_forms_with_email_login(self):
         with app.app_context():
             test_valid_forms.test_with_email(client)
