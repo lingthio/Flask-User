@@ -9,8 +9,9 @@
 
     {# Username or Email #}
     {% set field = form.username if user_manager.enable_usernames else form.email %}
-    {% set right_label = '<a href="' + url_for("user.login") + '">' + 'Already registered? Login.' + '</a>' %}
-    {{ render_field(field, right_label=right_label) }}
+    {% set right_url = url_for("user.login") %}
+    {% set right_label = _('Already registered? Login.') %}
+    {{ render_field(field, right_url=right_url, right_label=right_label) }}
 
     {% if user_manager.enable_emails and user_manager.enable_usernames %}
         {{ render_field(form.email) }}
