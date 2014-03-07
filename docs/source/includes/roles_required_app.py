@@ -100,7 +100,7 @@ def create_app(test_config=None):                   # For automated tests
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
-            <h2>Home Page</h2>
+            <h2>{%trans%}Home Page{%endtrans%}</h2>
             <p><a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
             {% endblock %}
             """)
@@ -112,7 +112,7 @@ def create_app(test_config=None):                   # For automated tests
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
-            <h2>Profile Page</h2>
+            <h2>{%trans%}Profile Page{%endtrans%}</h2>
             <p> {%trans%}Hello{%endtrans%}
                 {{ current_user.username or current_user.email }},</p>
             <p> <a href="{{ url_for('user.change_username') }}">
@@ -131,7 +131,7 @@ def create_app(test_config=None):                   # For automated tests
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
-            <h2>Special Page</h2>
+            <h2>{%trans%}Special Page{%endtrans%}</h2>
             {% endblock %}
             """)
 

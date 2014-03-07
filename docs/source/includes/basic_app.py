@@ -20,11 +20,12 @@ class ConfigClass(object):
     MAIL_DEFAULT_SENDER = '"Sender" <noreply@example.com>'
 
     # Configure Flask-User
-    USER_ENABLE_USERNAMES       = True              # Register and Login with username
-    USER_ENABLE_CONFIRM_EMAIL   = True              # Require Email confirmation
-    USER_ENABLE_CHANGE_USERNAME = True
-    USER_ENABLE_CHANGE_PASSWORD = True
-    USER_ENABLE_FORGOT_PASSWORD = True
+    USER_ENABLE_USERNAMES        = True             # Register and Login with username
+    USER_ENABLE_CONFIRM_EMAIL    = True             # Require Email confirmation
+    USER_ENABLE_CHANGE_USERNAME  = True
+    USER_ENABLE_CHANGE_PASSWORD  = True
+    USER_ENABLE_FORGOT_PASSWORD  = True
+    USER_ENABLE_RETYPE_PASSWORDS = True
 
 def create_app(test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
@@ -75,7 +76,7 @@ def create_app(test_config=None):                   # For automated tests
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
-            <h2>Home Page</h2>
+            <h2>{%trans%}Home Page{%endtrans%}</h2>
             <p><a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
             {% endblock %}
             """)
@@ -87,7 +88,7 @@ def create_app(test_config=None):                   # For automated tests
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
-                <h2>Profile Page</h2>
+                <h2>{%trans%}Profile Page{%endtrans%}</h2>
                 <p> {%trans%}Hello{%endtrans%}
                     {{ current_user.username or current_user.email }},</p>
                 <p> <a href="{{ url_for('user.change_username') }}">

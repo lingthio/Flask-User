@@ -1,13 +1,14 @@
 ==================
 Roles Required App
 ==================
-| The Roles Required App builds on Basic App
-| - **Registration**, **Login**, **Change password** and **Logout**
+| The Roles Required App builds on the features of :doc:`basic_app`:
+| - **Internationalization**
+| - **Register**, **Login**, **Change password** and **Logout**
 | - **Login with Username** and **Change username**
 | - **Email confirmation** and **Forgot password**
 | - the ``create_app()`` application factory pattern
 |
-| and adds:
+| With a simple ``@roles_required`` function decorator, it adds:
 | - **Role-based Authorization** (v0.3.7 and up)
 |
 | This app requires appropriate SMTP configuration.
