@@ -220,20 +220,20 @@ def register():
     # Process valid POST
     if request.method=='POST' and form.validate():
 
-        # We are about to store user and __optional__ username and email information.
-        # To further complicate matter, the email address may be stored in a different
+        # We are about to store user information. The fields to save vary
+        # depending on the application config settings.
+        # In addition, the email address may be stored in a different
         # table when multiple email addresses are allowed per user.
 
-        # We address this variety by constructing two variable argument dictionaries:
-        # user_kwargs for the User object
-        # email_kwargs for the Email object, which may point to user_kwargs for single email per user
+        # We address these variations by constructing two variable argument dictionaries:
+        # - user_kwargs for the User object
+        # - email_kwargs for the UserEmail object
+        # The UserEmail object may be the same as the User object
         user_kwargs = {}
         if user_manager.db_adapter.EmailClass:
             email_kwargs = {}
         else:
             email_kwargs = user_kwargs
-
-        # Now we fill the kwargs dictionary with form fields, depending on the configuration
 
         # Always store hashed password
         user_kwargs['password'] = user_manager.password_crypt_context.encrypt(form.password.data)
@@ -249,7 +249,7 @@ def register():
         if user_manager.enable_usernames:
             user_kwargs['username'] = form.username.data
 
-        # Store active=True or active=False depending on config
+        # If USER_ENABLE_CONFIRM_EMAIL==True: active=False otherwise: active=True
         if user_manager.enable_confirm_email:
             user_kwargs['active'] = False
         else:
@@ -268,7 +268,6 @@ def register():
         else:
             object_id = user.id
 
-
         # Send user_registered signal
         signals.user_registered.send(current_app._get_current_object(), user=user)
 
@@ -284,7 +283,11 @@ def register():
             signals.confirmation_email_sent.send(current_app._get_current_object(), user=user)
 
             # Prepare one-time system message
-            flash(_("A confirmation email has been sent to %(email)s. Open that email and follow the instructions to complete your registration.", email=email_address), 'success')
+            flash(_('A confirmation email has been sent to %(email)s. Open that email and follow the instructions to complete your registration.', email=email_address), 'success')
+
+        else:
+            # Prepare one-time system message
+            flash(_('You have registered successfully. Please sign in.'), 'success')
 
         # Redirect to the login page
         return redirect(url_for('user.login'))
