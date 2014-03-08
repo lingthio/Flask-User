@@ -6,16 +6,22 @@ def set_default_settings(user_manager, app_config):
     um = user_manager
     sd = app_config.setdefault
 
+    # Retrieve obsoleted settings
+    # These plural settings have been replaced by singular settings
+    obsoleted_enable_emails            = sd('USER_ENABLE_EMAILS',              True)
+    obsoleted_enable_retype_passwords  = sd('USER_ENABLE_RETYPE_PASSWORDS',    False)
+    obsoleted_enable_usernames         = sd('USER_ENABLE_USERNAMES',           False)
+
     # Set default features
     um.enable_change_password   = sd('USER_ENABLE_CHANGE_PASSWORD',     True)
     um.enable_change_username   = sd('USER_ENABLE_CHANGE_USERNAME',     False)
     um.enable_confirm_email     = sd('USER_ENABLE_CONFIRM_EMAIL',       False)
-    um.enable_emails            = sd('USER_ENABLE_EMAILS',              True)
+    um.enable_email             = sd('USER_ENABLE_EMAIL',               obsoleted_enable_emails)
     um.enable_forgot_password   = sd('USER_ENABLE_FORGOT_PASSWORD',     False)
     um.enable_register          = sd('USER_ENABLE_REGISTRATION',        True)
     um.enable_require_invitation= sd('USER_ENABLE_REQUIRE_INVITATION',  False)
-    um.enable_retype_passwords  = sd('USER_ENABLE_RETYPE_PASSWORDS',    False)
-    um.enable_usernames         = sd('USER_ENABLE_USERNAMES',           False)
+    um.enable_retype_password   = sd('USER_ENABLE_RETYPE_PASSWORD',     obsoleted_enable_retype_passwords)
+    um.enable_username          = sd('USER_ENABLE_USERNAME',            obsoleted_enable_usernames)
     um.enable_multiple_emails   = sd('USER_ENABLE_MULTIPLE_EMAILS',     False)
 
     # Set default settings
@@ -55,19 +61,19 @@ def check_settings(user_manager):
     # define short names
     um = user_manager
 
-    # USER_ENABLE_REGISTER=True must have USER_ENABLE_USERNAMES=True or USER_ENABLE_EMAILS=True or both.
-    if um.enable_register and not(um.enable_usernames or um.enable_emails):
-        raise ConfigurationError('USER_ENABLE_REGISTER=True must have USER_ENABLE_USERNAMES=True or USER_ENABLE_EMAILS=True or both.')
+    # USER_ENABLE_REGISTER=True must have USER_ENABLE_USERNAME=True or USER_ENABLE_EMAIL=True or both.
+    if um.enable_register and not(um.enable_username or um.enable_email):
+        raise ConfigurationError('USER_ENABLE_REGISTER=True must have USER_ENABLE_USERNAME=True or USER_ENABLE_EMAIL=True or both.')
 
-    # USER_ENABLE_CONFIRM_EMAIL=True must have USER_ENABLE_EMAILS=True
-    if um.enable_confirm_email and not um.enable_emails:
-        raise ConfigurationError('USER_ENABLE_CONFIRM_EMAIL=True must have USER_ENABLE_EMAILS=True.')
+    # USER_ENABLE_CONFIRM_EMAIL=True must have USER_ENABLE_EMAIL=True
+    if um.enable_confirm_email and not um.enable_email:
+        raise ConfigurationError('USER_ENABLE_CONFIRM_EMAIL=True must have USER_ENABLE_EMAIL=True.')
 
-    # USER_ENABLE_MULTIPLE_EMAILS=True must have USER_ENABLE_EMAILS=True
-    if um.enable_multiple_emails and not um.enable_emails:
-        raise ConfigurationError('USER_ENABLE_MULTIPLE_EMAILS=True must have USER_ENABLE_EMAILS=True.')
+    # USER_ENABLE_MULTIPLE_EMAILS=True must have USER_ENABLE_EMAIL=True
+    if um.enable_multiple_emails and not um.enable_email:
+        raise ConfigurationError('USER_ENABLE_MULTIPLE_EMAILS=True must have USER_ENABLE_EMAIL=True.')
 
     # ENABLE_CHANGE_USERNAME=True must have ENABLE_USERNAME=True.
-    if um.enable_change_username and not um.enable_usernames:
+    if um.enable_change_username and not um.enable_username:
         raise ConfigurationError('ENABLE_CHANGE_USERNAME=True must have ENABLE_USERNAME=True.')
 

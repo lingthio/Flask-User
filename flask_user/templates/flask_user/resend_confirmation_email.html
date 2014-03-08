@@ -6,15 +6,15 @@
 
 <form action="" method="POST" novalidate formnovalidate class="form" role="form">
     {{ form.hidden_tag() }}
-    {% if user_manager.enable_usernames %}
+    {% if user_manager.enable_username %}
         {{ render_field(form.username) }}
     {% endif %}
-    {% if user_manager.enable_emails %}
+    {% if user_manager.enable_email %}
         {{ render_field(form.email) }}
     {% endif %}
     {{ render_field(form.password) }}
-    {% if user_manager.enable_retype_passwords %}
-        {{ render_field(form.enable_retype_passwords) }}
+    {% if user_manager.enable_retype_password %}
+        {{ render_field(form.retype_password) }}
     {% endif %}
     {{ render_submit_field(form.submit) }}
 </form>

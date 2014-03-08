@@ -4,14 +4,14 @@
     USER_ENABLE_CHANGE_PASSWORD    = True      # Allow users to change their password
 
     USER_ENABLE_CHANGE_USERNAME    = True      # Allow users to change their username
-                                               # Requires USER_ENABLE_USERNAMES=True
+                                               # Requires USER_ENABLE_USERNAME=True
 
     USER_ENABLE_CONFIRM_EMAIL      = False     # Force users to confirm their email
                                                # Requires USER_ENABLE_REGISTRATION=True
 
     USER_ENABLE_FORGOT_PASSWORD    = False     # Allow users to reset their passwords
 
-    USER_ENABLE_EMAILS             = True      # Register with Email
+    USER_ENABLE_EMAIL              = True      # Register with Email
                                                # Requires USER_ENABLE_REGISTRATION=True
 
     USER_ENABLE_MULTIPLE_EMAILS    = False     # Not yet implemented
@@ -21,10 +21,10 @@
     USER_ENABLE_REQUIRE_INVITATION = False     # Registration requires invitation
                                                # Not yet implemented
 
-    USER_ENABLE_RETYPE_PASSWORDS   = True      # Prompt for `retype password` in:
+    USER_ENABLE_RETYPE_PASSWORD    = True      # Prompt for `retype password` in:
                                                #   - registration form,
                                                #   - change password form, and
                                                #   - reset password forms.
 
-    USER_ENABLE_USERNAMES          = False     # Register and Login with username
+    USER_ENABLE_USERNAME           = False     # Register and Login with username
 

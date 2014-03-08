@@ -29,38 +29,38 @@ user1 = None
 
 def test_with_email(client):
     """
-    Test all forms with all enabled features and enable_usernames=False
+    Test all forms with all enabled features and enable_username=False
     """
     print()
 
     um = current_app.user_manager
     um.enable_register = True
     um.enable_confirm_email = True
-    um.enable_usernames = False
+    um.enable_username = False
     um.enable_change_username = False
     um.enable_change_password = True
     um.enable_forgot_password = True
 
-    um.enable_usernames = False      # Login with email
+    um.enable_username = False      # Login with email
     check_all_valid_forms(um, client)
 
 def test_with_username(client):
     """
-    Test all forms with all enabled features and enable_usernames=True
+    Test all forms with all enabled features and enable_username=True
     """
     print()
 
     # Enable all features
     um = current_app.user_manager
     um.enable_register = True
-    um.enable_emails = False
+    um.enable_email = False
     um.enable_confirm_email = False
     um.enable_change_username = True
     um.enable_change_password = True
     um.enable_forgot_password = True
 
     # Login with username
-    um.enable_usernames = True       # Login with username
+    um.enable_username = True       # Login with username
     check_all_valid_forms(um, client)
 
 # *****************************
@@ -77,11 +77,11 @@ def do_test_all_possible_config_combinations(client, db):
     um =  current_app.user_manager
     
     for um.enable_register in (True, False):
-      for um.enable_emails in (True, False):
-        for um.enable_retype_passwords in (True, False):
+      for um.enable_email in (True, False):
+        for um.enable_retype_password in (True, False):
           for um.enable_confirm_email in (True, False):
-            print("Config:", um.enable_register, um.enable_emails, um.enable_retype_passwords, um.enable_confirm_email, "...")
-            for um.enable_usernames in (True, False):
+            print("Config:", um.enable_register, um.enable_email, um.enable_retype_password, um.enable_confirm_email, "...")
+            for um.enable_username in (True, False):
               for um.enable_change_password in (True, False):
                 for um.enable_change_username in (True, False):
                   for um.enable_forgot_password in (True, False):
@@ -94,14 +94,14 @@ def do_test_all_possible_config_combinations(client, db):
 
 def check_all_valid_forms(um, client):
     # ** Skip tests for invalid config combinations
-    # USER_ENABLE_REGISTER=True must have USER_ENABLE_USERNAMES=True or USER_ENABLE_EMAILS=True or both.
-    if um.enable_register and not um.enable_emails and not um.enable_usernames: return
-    # USER_ENABLE_CONFIRM_EMAIL=True must have USER_ENABLE_EMAILS=True
-    if um.enable_confirm_email and not um.enable_emails: return
-    # USER_ENABLE_MULTIPLE_EMAILS=True must have USER_ENABLE_EMAILS=True
-    if um.enable_multiple_emails and not um.enable_emails: return
+    # USER_ENABLE_REGISTER=True must have USER_ENABLE_USERNAME=True or USER_ENABLE_EMAIL=True or both.
+    if um.enable_register and not um.enable_email and not um.enable_username: return
+    # USER_ENABLE_CONFIRM_EMAIL=True must have USER_ENABLE_EMAIL=True
+    if um.enable_confirm_email and not um.enable_email: return
+    # USER_ENABLE_MULTIPLE_EMAILS=True must have USER_ENABLE_EMAIL=True
+    if um.enable_multiple_emails and not um.enable_email: return
     # ENABLE_CHANGE_USERNAME=True must have ENABLE_USERNAME=True.
-    if um.enable_change_username and not um.enable_usernames: return
+    if um.enable_change_username and not um.enable_username: return
 
     check_valid_register_form(um, client, current_app.db)
     check_valid_confirm_email_page(um, client)
@@ -126,9 +126,9 @@ def check_valid_register_form(um, client, db):
 
     # Build variable argument list depending on config settings
     kwargs = {}
-    if um.enable_usernames:
+    if um.enable_username:
         kwargs['username'] = username
-    if um.enable_emails:
+    if um.enable_email:
         kwargs['email'] = email
     kwargs['password'] = password
 
@@ -136,13 +136,13 @@ def check_valid_register_form(um, client, db):
         print("test_valid_register_form")
 
         # Create User by submitting a form
-        if um.enable_retype_passwords:
-            kwargs['enable_retype_passwords'] = password
+        if um.enable_retype_password:
+            kwargs['retype_password'] = password
 
         # Submit form and verify that response has no errors
         client.post_valid_form(url_for('user.register'), **kwargs)
 
-        if um.enable_usernames:
+        if um.enable_username:
             user1 = User.query.filter(User.username==username).first()
         else:
             user1 = User.query.filter(User.email==email).first()
@@ -169,7 +169,7 @@ def check_valid_register_form(um, client, db):
 def check_valid_confirm_email_page(um, client):
     # Skip test for certain config combinations
     if not um.enable_register: return
-    if not um.enable_emails: return
+    if not um.enable_email: return
     if not um.enable_confirm_email: return
 
     print("test_valid_confirm_email_page")
@@ -194,9 +194,9 @@ def check_valid_login_form(um, client):
 
     # Build variable argument list depending on config settings
     kwargs = {}
-    if um.enable_usernames:
+    if um.enable_username:
         kwargs['username'] = username
-    if um.enable_emails:
+    if um.enable_email:
         kwargs['email'] = email
     kwargs['password'] = password
 
@@ -221,8 +221,8 @@ def check_valid_change_password_form(um, client):
     kwargs = {}
     kwargs['old_password'] = password
     kwargs['new_password'] = new_password
-    if um.enable_retype_passwords:
-        kwargs['enable_retype_passwords'] = new_password
+    if um.enable_retype_password:
+        kwargs['retype_password'] = new_password
 
     # Submit form and verify that response has no errors
     client.post_valid_form(url_for('user.change_password'), **kwargs)
@@ -260,7 +260,7 @@ def check_valid_logout_link(um, client):
 
 def check_valid_forgot_password_form(um, client):
     # Skip test for certain config combinations
-    if not um.enable_emails: return
+    if not um.enable_email: return
     if not um.enable_forgot_password: return
 
     print("test_valid_forgot_password_form")
@@ -273,7 +273,7 @@ def check_valid_forgot_password_form(um, client):
 
 def check_valid_reset_password_page(um, client):
     # Skip test for certain config combinations
-    if not um.enable_emails: return
+    if not um.enable_email: return
     if not um.enable_forgot_password: return
 
     print("test_valid_reset_password_page")
@@ -291,8 +291,8 @@ def check_valid_reset_password_page(um, client):
     # Build variable argument list depending on config settings
     kwargs = {}
     kwargs['new_password'] = new_password
-    if um.enable_retype_passwords:
-        kwargs['enable_retype_passwords'] = new_password
+    if um.enable_retype_password:
+        kwargs['retype_password'] = new_password
 
     # Submit form and verify that response has no errors
     client.post_valid_form(url, **kwargs)

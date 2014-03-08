@@ -64,8 +64,8 @@ def test_init(db):
     um.enable_change_password = True
     um.enable_confirm_email = True
     um.enable_reset_password = True
-    um.enable_emails = True
-    um.enable_retype_passwords = True
+    um.enable_email = True
+    um.enable_retype_password = True
 
     hashed_password = um.password_crypt_context.encrypt('Password1')
     User = current_app.User
@@ -100,7 +100,7 @@ def test_invalid_register_with_username_form(client):
 
     # Choose config
     um =  current_app.user_manager
-    um.enable_usernames = True
+    um.enable_username = True
 
     # Set default values
     url = url_for('user.register')
@@ -110,33 +110,33 @@ def test_invalid_register_with_username_form(client):
 
     # Test empty username
     client.post_invalid_form(url, 'Username is required',
-            username='', email=email, password=password, enable_retype_passwords=password)
+            username='', email=email, password=password, retype_password=password)
 
     # Test short username
     client.post_invalid_form(url, 'Username must be at least 3 characters long',
-            username=SHORT_USERNAME, email=email, password=password, enable_retype_passwords=password)
+            username=SHORT_USERNAME, email=email, password=password, retype_password=password)
 
     # Test invalid usernames
     for invalid_username in invalid_usernames:
         client.post_invalid_form(url, 'Username may only contain letters and numbers',
-                username=invalid_username, email=email, password=password, enable_retype_passwords=password)
+                username=invalid_username, email=email, password=password, retype_password=password)
 
     # Test existing username (case INsensitive!)
     client.post_invalid_form(url, 'This Username is no longer available. Please try another one.',
-            username='UsEr1', email=email, password=password, enable_retype_passwords=password)
+            username='UsEr1', email=email, password=password, retype_password=password)
 
     # Test empty password
     client.post_invalid_form(url, 'Password is required',
-            username=username, email=email, password='', enable_retype_passwords='')
+            username=username, email=email, password='', retype_password='')
 
     # Test invalid passwords
     for invalid_password in invalid_passwords:
         client.post_invalid_form(url, 'Password must have at least 6 characters with one lowercase letter, one uppercase letter and one number',
-                username=username, email=email, password=invalid_password, enable_retype_passwords=invalid_password)
+                username=username, email=email, password=invalid_password, retype_password=invalid_password)
 
     # Test non-matching passwords
     client.post_invalid_form(url, 'Password and Retype Password did not match',
-            username=username, email=email, password='Password1', enable_retype_passwords='Password9')
+            username=username, email=email, password='Password1', retype_password='Password9')
 
 def test_invalid_register_with_email_form(client):
     print("test_invalid_register_with_email_form")
@@ -145,7 +145,7 @@ def test_invalid_register_with_email_form(client):
 
     # Choose config
     um =  current_app.user_manager
-    um.enable_usernames = False
+    um.enable_username = False
 
     # Set default values
     url = url_for('user.register')
@@ -154,29 +154,29 @@ def test_invalid_register_with_email_form(client):
 
     # Test empty email
     client.post_invalid_form(url, 'Email is required',
-            email='', password=password, enable_retype_passwords=password)
+            email='', password=password, retype_password=password)
 
     # Test invalid email
     client.post_invalid_form(url, 'Invalid Email',
-            email=INVALID_EMAIL, password=password, enable_retype_passwords=password)
+            email=INVALID_EMAIL, password=password, retype_password=password)
 
     # Test existing email (case INsensitive!)
     # TODO: Debug
     #client.post_invalid_form(url, 'This Email is no longer available. Please try another one.',
-    #        email='UsEr1@ExAmPlE.CoM', password=password, enable_retype_passwords=password)
+    #        email='UsEr1@ExAmPlE.CoM', password=password, retype_password=password)
 
     # Test empty password
     client.post_invalid_form(url, 'Password is required',
-            email=email, password='', enable_retype_passwords='')
+            email=email, password='', retype_password='')
 
     # Test invalid passwords
     for invalid_password in invalid_passwords:
         client.post_invalid_form(url, 'Password must have at least 6 characters with one lowercase letter, one uppercase letter and one number',
-                email=email, password=invalid_password, enable_retype_passwords=invalid_password)
+                email=email, password=invalid_password, retype_password=invalid_password)
 
     # Test non-matching passwords
     client.post_invalid_form(url, 'Password and Retype Password did not match',
-            email=email, password='Password1', enable_retype_passwords='Password9')
+            email=email, password='Password1', retype_password='Password9')
 
 def test_invalid_confirm_email_page(client):
     print("test_invalid_confirm_email_page")
@@ -198,12 +198,12 @@ def test_invalid_confirm_email_page(client):
     client.get_invalid_page(url, 'Your confirmation token has expired.')
 
 
-def test_invalid_enable_usernames_form(client):
-    print("test_invalid_enable_usernames_form")
+def test_invalid_login_with_username_form(client):
+    print("test_invalid_login_with_username_form")
 
     # Choose config
     um = current_app.user_manager
-    um.enable_usernames = True
+    um.enable_username = True
 
     # Set default values
     url = url_for('user.login')
@@ -231,7 +231,7 @@ def test_invalid_login_with_email_form(client):
 
     # Choose config
     um = current_app.user_manager
-    um.enable_usernames = False
+    um.enable_username = False
 
     # Set default values
     url = url_for('user.login')
@@ -259,7 +259,7 @@ def test_invalid_change_username_form(client):
 
     # Set user manager config
     um =  current_app.user_manager
-    um.enable_usernames = True
+    um.enable_username = True
 
     # Set default values
     username = 'user1'
@@ -297,7 +297,7 @@ def test_invalid_change_password_form(client):
 
     # Set user manager config
     um =  current_app.user_manager
-    um.enable_usernames = False
+    um.enable_username = False
 
     # Set default values
     email = 'user2@example.com'
@@ -310,24 +310,24 @@ def test_invalid_change_password_form(client):
 
     # Test empty old password
     client.post_invalid_form(url, 'Old Password is required',
-            old_password='', new_password=new_password, enable_retype_passwords=new_password)
+            old_password='', new_password=new_password, retype_password=new_password)
 
     # Test incorrect old password
     client.post_invalid_form(url, 'Old Password is incorrect',
-            old_password='XPassword1', new_password=new_password, enable_retype_passwords=new_password)
+            old_password='XPassword1', new_password=new_password, retype_password=new_password)
 
     # Test empty password
     client.post_invalid_form(url, 'New Password is required',
-            old_password=old_password, new_password='', enable_retype_passwords=new_password)
+            old_password=old_password, new_password='', retype_password=new_password)
 
     # Test invalid passwords
     for invalid_password in invalid_passwords:
         client.post_invalid_form(url, 'Password must have at least 6 characters with one lowercase letter, one uppercase letter and one number',
-            old_password=old_password, new_password=invalid_password, enable_retype_passwords=new_password)
+            old_password=old_password, new_password=invalid_password, retype_password=new_password)
 
     # Test non-matching passwords
     client.post_invalid_form(url, 'New Password and Retype Password did not match',
-            old_password=old_password, new_password=new_password, enable_retype_passwords='Xpassword5')
+            old_password=old_password, new_password=new_password, retype_password='Xpassword5')
 
     client.logout()
 
@@ -357,19 +357,19 @@ def test_invalid_reset_password(client):
     # Test invalid token
     url = url_for('user.reset_password', token='InvalidToken')
     client.post_invalid_form(url, 'Your reset password token is invalid.',
-            new_password=new_password, enable_retype_passwords=new_password)
+            new_password=new_password, retype_password=new_password)
 
     # Expired Token
     url = url_for('user.reset_password', token=token)
     um.reset_password_expiration = 1    # set 1 second expiration
     time.sleep(2)                       # wait for 2 seconds
     client.post_invalid_form(url, 'Your reset password token has expired.',
-            new_password=new_password, enable_retype_passwords=new_password)
+            new_password=new_password, retype_password=new_password)
     um.reset_password_expiration = 2*24*3600  # 2 days
 
     # Invalid retype password
     client.post_invalid_form(url, 'New Password and Retype Password did not match',
-            new_password = new_password, enable_retype_passwords='XPassword5')
+            new_password = new_password, retype_password='XPassword5')
 
 def test_valid_roles(client):
     # Perform only for roles_required_app
@@ -378,7 +378,7 @@ def test_valid_roles(client):
 
     print("test_valid_roles")
     um =  current_app.user_manager
-    um.enable_usernames = True
+    um.enable_username = True
 
     client.login(username='user007', password='Password1')
     url = url_for('special_page')
@@ -393,7 +393,7 @@ def test_invalid_roles(client):
 
     print("test_invalid_roles")
     um =  current_app.user_manager
-    um.enable_usernames = True
+    um.enable_username = True
 
     client.login(username='user1', password='Password1')
     url = url_for('special_page')
@@ -423,7 +423,7 @@ def run_all_tests(client):
     test_invalid_register_with_username_form(client)
     test_invalid_register_with_email_form(client)
     test_invalid_confirm_email_page(client)
-    test_invalid_enable_usernames_form(client)
+    test_invalid_login_with_username_form(client)
     test_invalid_login_with_email_form(client)
     test_invalid_change_username_form(client)
     test_invalid_change_password_form(client)

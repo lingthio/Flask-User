@@ -34,10 +34,10 @@ def test_authorization(client):
     """
     um = current_app.user_manager
     um.enable_register = True
-    um.enable_usernames = True
-    um.enable_emails = False
+    um.enable_username = True
+    um.enable_email = False
     um.enable_confirm_email = False
-    um.enable_retype_passwords = False
+    um.enable_retype_password = False
     User = current_app.User
 
     # Test as anonymous user

@@ -8,19 +8,19 @@
     {{ form.hidden_tag() }}
 
     {# Username or Email #}
-    {% set field = form.username if user_manager.enable_usernames else form.email %}
+    {% set field = form.username if user_manager.enable_username else form.email %}
     {% set right_url = url_for("user.login") %}
     {% set right_label = _('Already registered? Login.') %}
     {{ render_field(field, right_url=right_url, right_label=right_label) }}
 
-    {% if user_manager.enable_emails and user_manager.enable_usernames %}
+    {% if user_manager.enable_email and user_manager.enable_username %}
         {{ render_field(form.email) }}
     {% endif %}
 
     {{ render_field(form.password) }}
 
-    {% if user_manager.enable_retype_passwords %}
-        {{ render_field(form.enable_retype_passwords) }}
+    {% if user_manager.enable_retype_password %}
+        {{ render_field(form.retype_password) }}
     {% endif %}
 
     {{ render_submit_field(form.submit) }}

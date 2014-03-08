@@ -8,7 +8,7 @@
     {{ form.hidden_tag() }}
 
     {# Username or Email #}
-    {% set field = form.username if user_manager.enable_usernames else form.email %}
+    {% set field = form.username if user_manager.enable_username else form.email %}
     {% set right_url = url_for("user.register") %}
     {% set right_label = _('New here? Register.') %}
     {{ render_field(field, right_url=right_url, right_label=right_label) }}
