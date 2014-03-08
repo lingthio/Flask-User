@@ -26,7 +26,7 @@ Customizable User Account Management for Flask
 ----------------------------------------------
 
 Many web applications require User Account Management features such as **Register**, **Confirm email**,
-**Login**, **Change username**, **Change password** and **Forgot passwords**.
+**Login**, **Change username**, **Change password** and **Forgot password**.
 
 Some also require **Role-based Authorization** and **Internationalization**.
 

@@ -30,3 +30,17 @@ Customizing Endpoint URLs
 Endpoint URLs can be customized through the application's config
 
 .. include:: includes/config_urls.txt
+
+Obsoleted Settings
+------------------
+The following settings have been renamed and are now obsolete. Please rename to the new setting.
+
+::
+
+    # Obsoleted setting             # New setting
+    USER_ENABLE_EMAILS              USER_ENABLE_EMAIL
+    USER_ENABLE_USERNAMES           USER_ENABLE_USERNAME
+    USER_ENABLE_RETYPE_PASSWORDS    USER_ENABLE_RETYPE_PASSWORD
+    USER_LOGIN_WITH_USERNAME        USER_ENABLE_USERNAME
+    USER_REGISTER_WITH_EMAIL        USER_ENABLE_EMAIL
+    USER_RETYPE_PASSWORD            USER_ENABLE_RETYPE_PASSWORD

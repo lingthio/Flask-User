@@ -7,19 +7,23 @@
                                                # Requires USER_ENABLE_USERNAME=True
 
     USER_ENABLE_CONFIRM_EMAIL      = False     # Force users to confirm their email
-                                               # Requires USER_ENABLE_REGISTRATION=True
+                                               # Requires USER_ENABLE_EMAIL=True
 
     USER_ENABLE_FORGOT_PASSWORD    = False     # Allow users to reset their passwords
+                                               # Requires USER_ENABLE_EMAIL=True
 
     USER_ENABLE_EMAIL              = True      # Register with Email
                                                # Requires USER_ENABLE_REGISTRATION=True
 
-    USER_ENABLE_MULTIPLE_EMAILS    = False     # Not yet implemented
+    USER_ENABLE_MULTIPLE_EMAILS    = False     # Users may register multiple emails
+                                               # Not yet implemented
+                                               # Requires USER_ENABLE_EMAIL=True
 
     USER_ENABLE_REGISTRATION       = True      # Allow new users to register
 
     USER_ENABLE_REQUIRE_INVITATION = False     # Registration requires invitation
                                                # Not yet implemented
+                                               # Requires USER_ENABLE_EMAIL=True
 
     USER_ENABLE_RETYPE_PASSWORD    = True      # Prompt for `retype password` in:
                                                #   - registration form,
