@@ -112,7 +112,7 @@ class ChangeUsernameForm(Form):
             return False
 
         # Verify current_user and current_password
-        if not current_user or not user_manager.password_crypt_context.verify(self.old_password.data, current_user.password):
+        if not current_user or not user_manager.verify_password(self.old_password.data, current_user.password):
             self.old_password.errors.append(_('Old Password is incorrect'))
             return False
 
@@ -152,7 +152,7 @@ class ChangePasswordForm(Form):
             return False
 
         # Verify current_user and current_password
-        if not current_user or not user_manager.password_crypt_context.verify(self.old_password.data, current_user.password):
+        if not current_user or not user_manager.verify_password(self.old_password.data, current_user.password):
             self.old_password.errors.append(_('Old Password is incorrect'))
             return False
 
@@ -202,7 +202,7 @@ class LoginForm(Form):
             user = user_manager.db_adapter.find_user_by_email(self.email.data)
 
         # Verify user and password
-        if not user or not user_manager.password_crypt_context.verify(self.password.data, user.password):
+        if not user or not user_manager.verify_password(self.password.data, user.password):
             if user_manager.enable_username:
                 self.username.errors.append(_('Incorrect Username and Password'))
             else:

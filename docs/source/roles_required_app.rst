@@ -43,4 +43,4 @@ then you may have specified incorrect SMTP settings.
 If you receive a SQLAlchemy error message, delete the roles_required.db file and restart the app.
 You may be using an old DB schema in that file.
 
-Next :doc:`customize`
+Next :doc:`customization`

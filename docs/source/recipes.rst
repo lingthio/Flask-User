@@ -43,5 +43,5 @@ and that the code resides in ~/dev/example::
     basic_app
     roles_required_app
 
-See :doc:`customize` and :doc:`api` for more information.
+See :doc:`customization` and :doc:`api` for more information.
 

@@ -59,7 +59,7 @@ We plan to offer the following Flask-User extensions in the future:
 
 Alternative Packages
 --------------------
-Flask-Security `Flask-Security <https://pythonhosted.org/Flask-Security/>`_
+`Flask-Security <https://pythonhosted.org/Flask-Security/>`_
 
 Contact
 -------

@@ -40,7 +40,7 @@ Easy to Install
 ---------------
 Installing is as easy as: ``pip install flask-user``
 
-See :doc:`install`
+See :doc:`installation`
 
 Ready to use
 ------------
@@ -63,7 +63,7 @@ Fully Customizable
 * URLs
 * View functions
 
-See :doc:`customize`
+See :doc:`customization`
 
 Nice Feature Set
 ----------------
@@ -74,9 +74,9 @@ Nice Feature Set
 * Secure password hashing and token generation
 * Role-based Authorization -- See :doc:`authorization`
 * Easy to setup and Ready to use -- See :doc:`minimal_app`
-* Fully customizable -- See :doc:`customize`
+* Fully customizable -- See :doc:`customization`
 * Form validation
-* Event notification -- See :doc:`signals`.
+* Event notification -- See :doc:`notification`.
 * Internationalization ready
 
 Planned Features

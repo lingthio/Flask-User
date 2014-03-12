@@ -17,8 +17,7 @@ Flask-User
 
 ::
 
-    !! News Flash !!
-    v0.4.0 released:
+    !! News Flash: v0.4.0 Beta released !!
     - Role-based Authorization through @roles_required (see Recipes > Roles Required App)
     - Internationalization through babel and .po files (see Internationalization)
 
@@ -47,8 +46,8 @@ Flask-User aims to provide such a ready-to-use **AND** fully customizable soluti
 Status
 ------
 
-Though v0.4 is quite stable, it is an Alpha release.
-We appreciate it if you would enter issues, suggestions and
+Though v0.4 is quite stable, it is a Beta release.
+We appreciate it if you would enter issues and
 enhancement requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
 
 
@@ -68,10 +67,10 @@ Documentation
 
 Revision History
 ----------------
-* v0.4.0 Translations via Babel.
+* v0.4.0 Beta release. Translations via Babel.
 * v0.3.8 Role-based authorization via @roles_required.
 * v0.3.5 Support for Python 2.6, 2.7 and 3.3, Event notifications.
-* v0.3.1 Email sending, Confirm email, Forgot password, Reset password.
+* v0.3.1 Alpha release. Email sending, Confirm email, Forgot password, Reset password.
 * v0.2 Change username, Change password.
 * v0.1 Register, Login, Logout.
 
@@ -85,8 +84,7 @@ We plan to offer the following Flask-User extensions in the future:
 
 Alternative Packages
 --------------------
-I've successfully used `Flask-Security <https://pythonhosted.org/Flask-Security/>`_ in the past.
-Flask-Security offers additional role based authentication.
+`Flask-Security <https://pythonhosted.org/Flask-Security/>`_
 
 Contact
 -------

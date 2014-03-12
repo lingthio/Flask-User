@@ -158,7 +158,7 @@ def check_valid_register_form(um, client, db):
         # Create user record manually
 
         # hash password
-        kwargs['password'] = um.password_crypt_context.encrypt(password)
+        kwargs['password'] = um.generate_password_hash(password)
 
         # Create User
         user1 = User(active=True, email_confirmed_at=datetime.datetime.utcnow(), **kwargs)
@@ -228,7 +228,7 @@ def check_valid_change_password_form(um, client):
     client.post_valid_form(url_for('user.change_password'), **kwargs)
 
     # Verify operations
-    assert um.password_crypt_context.verify(new_password, user1.password)
+    assert um.verify_password(new_password, user1.password)
 
     # Change password back to old password for subsequent tests
     user1.password = old_hashed_password
@@ -298,7 +298,7 @@ def check_valid_reset_password_page(um, client):
     client.post_valid_form(url, **kwargs)
 
     # Verify operations
-    assert um.password_crypt_context.verify(new_password, user1.password)
+    assert um.verify_password(new_password, user1.password)
 
     # Change password back to old password for subsequent tests
     user1.password = old_hashed_password

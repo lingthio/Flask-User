@@ -30,21 +30,58 @@ Custom validators can be specified by setting an attribute on the Flask-User's U
         if not username.isalnum():
             raise ValidationError(_('Username may only contain letters and numbers'))
 
-    user_manager = UserManager(db_adapter)
-    user_manager.password_validator = my_password_validator
-    user_manager.username_validator = my_username_validator
+    user_manager = UserManager(db_adapter,
+            password_validator=my_password_validator,
+            username_validator=my_username_validator)
     user_manager.init_app(app)
 
 Customizing Password Hashing
 ----------------------------
 Flask-User makes use of passlib's CryptContext to provide password hashing.
 
-By default, the following built-in CryptContext is used::
-    CryptContext(schemes=['bcrypt', 'sha512_crypt', 'pbkdf2_sha512'], default='bcrypt')
+**Default CryptContext**
 
-You can supply your own CryptContext by setting an attribute on the Flask-User's UserManager object::
+By default, the following built-in CryptContext is used:
 
-    user_manager.crypt_context = my_crypt_context
+::
+
+    CryptContext(schemes=[app.config['USER_PASSWORD_HASH']])
+
+You can change the hashing algorithm by setting an application config setting to any
+algorithm supported by passlib:
+
+::
+
+    USER_PASSWORD_HASH = 'pbkdf2_sha512'
+
+See `PassLib Quick Start <http://pythonhosted.org//passlib/new_app_quickstart.html>`_.
+
+**Custom CryptContext**
+
+You can supply your own CryptContext by setting an attribute on the Flask-User's UserManager object:
+
+::
+
+    my_crypt_context = CryptContext(schemes=['bcrypt'])
+    user_manager = UserManager(db_adapter,
+            password_crypt_context=my_crypt_context)
+    user_manager.init_app(app)
+
+
+**Backward compatibility with Flask-Security**
+Flask-Security performs a SHA512 HMAC prior to calling passlib. To continue using passwords that have
+been generated with Flask-Security, add the following settings to your application config:
+
+::
+
+    # Keep the following Flask-Security settings
+    SECURITY_PASSWORD_HASH = ...
+    SECURITY_PASSWORD_SALT = ...
+
+    # Set Flask-Security backward compatibility mode
+    USER_PASSWORD_HASH_MODE = 'Flask-Security'
+    USER_PASSWORD_HASH      = SECURITY_PASSWORD_HASH
+    USER_PASSWORD_SALT      = SECURITY_PASSWORD_SALT
 
 Customizing Token Generation
 ----------------------------
@@ -59,13 +96,14 @@ before making use of customized View Functions.
 Custom view functions are specified by setting an attribute on the Flask-User's UserManager object::
 
     # View functions
-    user_manager.change_password_view_function
-    user_manager.change_username_view_function
-    user_manager.confirm_email_view_function
-    user_manager.forgot_password_view_function
-    user_manager.login_view_function
-    user_manager.logout_view_function
-    user_manager.register_view_function
-    user_manager.resend_confirmation_email_view_function
-    user_manager.reset_password_view_function
+    user_manager = UserManager(db_adapter,
+            change_password_view_function   =my_view_function1,
+            change_username_view_function   =my_view_function2,
+            confirm_email_view_function     =my_view_function3,
+            forgot_password_view_function   =my_view_function4,
+            login_view_function             =my_view_function5,
+            logout_view_function            =my_view_function6,
+            register_view_function          =my_view_function7,
+            reset_password_view_function    =my_view_function8)
+    user_manager.init_app(app)
 

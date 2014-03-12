@@ -8,7 +8,9 @@
     :license: Simplified BSD License, see LICENSE.txt for more details.
 """
 
-from flask import Blueprint
+from passlib.context import CryptContext
+
+from flask import Blueprint, current_app
 from flask_login import LoginManager, UserMixin as LoginUserMixin
 from flask_user.db_interfaces import DBInterface
 
@@ -73,7 +75,7 @@ class UserManager():
                 # Misc
                 login_manager=LoginManager(),
                 token_manager=tokens.TokenManager(),
-                password_crypt_context=passwords.crypt_context,
+                password_crypt_context=None,
                 ):
         """
         Initialize the UserManager with custom or built-in attributes
@@ -116,18 +118,24 @@ class UserManager():
         """
         app.user_manager = self
 
-        # Initialize Translations
-        app.jinja_env.install_gettext_callables(
-                translations.gettext,
-                translations.ngettext,
-                newstyle=True
-                )
-
         # Set default app.config settings, but only if they have not been set before
         settings.set_default_settings(self, app.config)
 
         # Verify config combinations. Produce a helpful error messages for invalid combinations.
         settings.check_settings(self)
+
+        # Initialize Translations -- Only if Flask-Babel has been installed
+        if hasattr(app.jinja_env, 'install_gettext_callables'):
+            app.jinja_env.install_gettext_callables(
+                    translations.gettext,
+                    translations.ngettext,
+                    newstyle=True
+                    )
+
+        # Create password_crypt_context if needed
+        if not self.password_crypt_context:
+            self.password_crypt_context = CryptContext(
+                    schemes=[app.config['USER_PASSWORD_HASH']])
 
         # Setup Flask-Login
         self.setup_login_manager(app)
@@ -173,7 +181,17 @@ class UserManager():
         # We can not define 'user.unauthenticated' here because it clashes with 'user.login'
         # We can not define 'user.unauthorized' here because it clashes with 'home_page'
 
+    def generate_password_hash(self, password):
+        return passwords.generate_password_hash(self, password)
 
+    def verify_password(self, password, password_hash):
+        return passwords.verify_password(self, password, password_hash)
+
+    def generate_token(self, user_id):
+        return self.token_manager.generate_token(user_id)
+
+    def check_token(self, token, expiration_in_seconds):
+        return self.token_manager.verify_token(token, expiration_in_seconds)
 
 class UserMixin(LoginUserMixin):
     """

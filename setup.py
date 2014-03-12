@@ -92,7 +92,7 @@ setup(
     ],
     test_suite="flask_user.tests.run_tests",
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Framework :: Flask',
         'Intended Audience :: Developers',

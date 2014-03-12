@@ -76,14 +76,14 @@ Customizing Field Labels
 ------------------------
 The built-in Form field labels can be customized by editing the 'en' Babel translation file.
 
-See :doc:`translate`
+See :doc:`internationalization`
 
 Customizing Flash messages
 --------------------------
 Flash messages are those one-time system messages that appear on the next page.
 The built-in Flash messages can be customized by editing the 'en' Babel translation file.
 
-See :doc:`translate`
+See :doc:`internationalization`
 
 Customizing Form Templates
 --------------------------
@@ -111,5 +111,5 @@ Customizing Validation messages
 -------------------------------
 The built-in Form validation messages be customized by editing the 'en' Babel translation file.
 
-See :doc:`translate`
+See :doc:`internationalization`
 

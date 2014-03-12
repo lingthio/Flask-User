@@ -113,12 +113,12 @@ Here's a SQLAlchemy example::
     role1 = Role(name='secret')
     role2 = Role(name='agent')
     user1 = User(username='user007', email='user007@example.com', active=True,
-            password=user_manager.password_crypt_context.encrypt('Password1'))
+            password=user_manager.generate_password_hash('Password1'))
     user1.roles.append(role1)
     user1.roles.append(role2)
     db.session.add(user1)
     db.session.commit()
 
-See :doc:`roles_required_app`_
+See :doc:`roles_required_app`
 
 

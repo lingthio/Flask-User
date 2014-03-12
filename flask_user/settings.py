@@ -27,6 +27,9 @@ def set_default_settings(user_manager, app_config):
     # Set default settings
     um.confirm_email_expiration = sd('USER_CONFIRM_EMAIL_EXPIRATION',   2*24*3600) # 2 days
     um.reset_password_expiration= sd('USER_RESET_PASSWORD_EXPIRATION',  2*24*3600) # 2 days
+    um.password_hash_mode       = sd('USER_PASSWORD_HASH_MODE',         'passlib')
+    um.password_hash            = sd('USER_PASSWORD_HASH',              'bcrypt')
+    um.password_salt            = sd('USER_PASSWORD_SALT',              app_config['SECRET_KEY'])
 
     # Set default URLs
     um.change_password_url      = sd('USER_CHANGE_PASSWORD_URL',        '/user/change-password')
@@ -49,6 +52,7 @@ def set_default_settings(user_manager, app_config):
     um.register_template        = sd('USER_REGISTER_TEMPLATE',         'flask_user/register.html')
     um.resend_confirmation_email_template = sd('USER_RESEND_CONFIRMATION_EMAIL_TEMPLATE', 'flask_user/resend_confirmation_email.html')
     um.reset_password_template  = sd('USER_RESET_PASSWORD_TEMPLATE',    'flask_user/reset_password.html')
+
 
 def check_settings(user_manager):
     """

@@ -59,7 +59,7 @@ def change_password():
     # Process valid POST
     if request.method=='POST' and form.validate():
         # Hash password
-        hashed_password = user_manager.password_crypt_context.encrypt(form.new_password.data)
+        hashed_password = user_manager.generate_password_hash(form.new_password.data)
 
         # Change password
         user_manager.db_adapter.set_password(current_user, hashed_password)
@@ -236,7 +236,7 @@ def register():
             email_kwargs = user_kwargs
 
         # Always store hashed password
-        user_kwargs['password'] = user_manager.password_crypt_context.encrypt(form.password.data)
+        user_kwargs['password'] = user_manager.generate_password_hash(form.password.data)
 
         # Store email address depending on config
         if user_manager.enable_email:
@@ -363,7 +363,7 @@ def reset_password(token):
         user_manager.db_adapter.set_reset_password_token(user, '')
 
         # Change password
-        hashed_password = user_manager.password_crypt_context.encrypt(form.new_password.data)
+        hashed_password = user_manager.generate_password_hash(form.new_password.data)
         user_manager.db_adapter.set_password(user, hashed_password)
 
         # Prepare one-time system message

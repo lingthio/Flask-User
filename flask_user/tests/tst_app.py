@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string
+from flask import Flask, render_template_string, request
 from flask.ext.babel import Babel
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -8,8 +8,8 @@ from flask.ext.user import roles_required
 # Use a Class-based config to avoid needing a 2nd file
 class ConfigClass(object):
     # Configure Flask
-    SECRET_KEY = 'THIS IS AN INSECURE SECRET'       # Change this for production!!!
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///roles_required_app.db'  # Use Sqlite file db
+    SECRET_KEY = 'THIS IS AN INSECURE SECRET'                        # Change this for production!!!
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///roles_required_app.sqlite'  # Use Sqlite file db
     CSRF_ENABLED = True
 
     # Configure Flask-Mail -- Required for Confirm email and Forgot password features
@@ -44,8 +44,12 @@ def create_app(test_config=None):                   # For automated tests
 
     # Setup Flask-Mail, Flask-Babel and Flask-SQLAlchemy
     app.mail = Mail(app)
-    app.babel = Babel(app)
+    app.babel = babel = Babel(app)
     app.db = db = SQLAlchemy(app)
+
+    @babel.localeselector
+    def get_locale():
+        return request.accept_languages.best_match(['en', 'nl'])
 
     # Define the User-Roles pivot table
     user_roles = db.Table('user_roles',
@@ -82,7 +86,7 @@ def create_app(test_config=None):                   # For automated tests
     # Create 'user007' user with 'secret' and 'agent' roles
     if not User.query.filter(User.username=='user007').first():
         user1 = User(username='user007', email='user007@example.com', active=True,
-                password=user_manager.password_crypt_context.encrypt('Password1'))
+                password=user_manager.generate_password_hash('Password1'))
         user1.roles.append(Role(name='secret'))
         user1.roles.append(Role(name='agent'))
         db.session.add(user1)
@@ -96,7 +100,7 @@ def create_app(test_config=None):                   # For automated tests
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
-            <h2>Home Page</h2>
+            <h2>{%trans%}Home Page{%endtrans%}</h2>
             <p><a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
             {% endblock %}
             """)
@@ -108,7 +112,7 @@ def create_app(test_config=None):                   # For automated tests
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
-            <h2>Profile Page</h2>
+            <h2>{%trans%}Profile Page{%endtrans%}</h2>
             <p> {%trans%}Hello{%endtrans%}
                 {{ current_user.username or current_user.email }},</p>
             <p> <a href="{{ url_for('user.change_username') }}">
@@ -127,7 +131,7 @@ def create_app(test_config=None):                   # For automated tests
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
-            <h2>Special Page</h2>
+            <h2>{%trans%}Special Page{%endtrans%}</h2>
             {% endblock %}
             """)
 
@@ -136,4 +140,4 @@ def create_app(test_config=None):                   # For automated tests
 # Start development web server
 if __name__=='__main__':
     app = create_app()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)
