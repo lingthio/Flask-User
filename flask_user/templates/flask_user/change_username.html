@@ -6,9 +6,9 @@
 
 <form action="" method="POST" class="form" role="form">
     {{ form.hidden_tag() }}
-    {{ render_field(form.new_username) }}
-    {{ render_field(form.old_password) }}
-    {{ render_submit_field(form.submit) }}
+    {{ render_field(form.new_username, tabindex=10) }}
+    {{ render_field(form.old_password, tabindex=20) }}
+    {{ render_submit_field(form.submit, tabindex=90) }}
 </form>
 
 {% endblock %}
