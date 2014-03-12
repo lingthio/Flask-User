@@ -90,7 +90,7 @@ class SQLAlchemyAdapter(DBInterface):
 
     def confirm_email(self, object_id):
         """
-        Mark the user record as active and sets email_confirmed_at to utcnow().
+        Mark the user record as active and sets confirmed_at to utcnow().
         object_id can either be a user_id or an email_id for the multiple_emails_per_user feature
         """
         if not self.EmailClass:
@@ -98,8 +98,8 @@ class SQLAlchemyAdapter(DBInterface):
             if user:
                 if not user.active:
                     user.active = True
-                    if hasattr(user, 'email_confirmed_at'):
-                        user.email_confirmed_at = datetime.utcnow()
+                    if hasattr(user, 'confirmed_at'):
+                        user.confirmed_at = datetime.utcnow()
                     self.db.session.commit()
             else:                                               # pragma: no cover
                 assert False, "Invalid user id "+str(object_id)

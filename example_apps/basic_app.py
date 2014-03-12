@@ -57,7 +57,7 @@ def create_app(test_config=None):                   # For automated tests
         email = db.Column(db.String(255), nullable=True, unique=True)
         password = db.Column(db.String(255), nullable=False, default='')
         username = db.Column(db.String(50), nullable=True, unique=True)
-        email_confirmed_at = db.Column(db.DateTime())
+        confirmed_at = db.Column(db.DateTime())
         reset_password_token = db.Column(db.String(100), nullable=False, default='')
     app.User = User
 

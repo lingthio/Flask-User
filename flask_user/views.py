@@ -180,7 +180,7 @@ def login():
                 # Redirect to 'next' URL
                 return redirect(form.next.data)
             else:
-                if user_manager.enable_confirm_email and not user.email_confirmed_at:
+                if user_manager.enable_confirm_email and not user.confirmed_at:
                     flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email and follow the instructions to activate your account.'), 'error')
                 else:
                     flash(_('Your account has been disabled.'), 'error')

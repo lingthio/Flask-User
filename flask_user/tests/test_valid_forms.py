@@ -161,7 +161,7 @@ def check_valid_register_form(um, client, db):
         kwargs['password'] = um.generate_password_hash(password)
 
         # Create User
-        user1 = User(active=True, email_confirmed_at=datetime.datetime.utcnow(), **kwargs)
+        user1 = User(active=True, confirmed_at=datetime.datetime.utcnow(), **kwargs)
         db.session.add(user1)
         db.session.commit()
         assert user1
@@ -182,7 +182,7 @@ def check_valid_confirm_email_page(um, client):
 
     # Verify operations
     assert user1.active
-    assert user1.email_confirmed_at != None
+    assert user1.confirmed_at != None
 
 def check_valid_login_form(um, client):
     print("test_valid_login_form")
