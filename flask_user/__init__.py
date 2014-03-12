@@ -22,7 +22,7 @@ from . import tokens
 from . import translations
 from . import views
 
-__version__ = '0.4.0'
+__version__ = '0.4.1'
 
 # Enable the following: from flask.ext.user import current_user
 from flask_login import current_user
@@ -68,7 +68,7 @@ class UserManager():
                 login_view_function=views.login,
                 logout_view_function=views.logout,
                 register_view_function=views.register,
-                resend_confirmation_email_view_function = views.resend_confirmation_email,
+                resend_confirm_email_view_function = views.resend_confirm_email,
                 reset_password_view_function = views.reset_password,
                 unauthenticated_view_function = views.unauthenticated,
                 unauthorized_view_function = views.unauthorized,
@@ -100,7 +100,7 @@ class UserManager():
         self.login_view_function = login_view_function
         self.logout_view_function = logout_view_function
         self.register_view_function = register_view_function
-        self.resend_confirmation_email_view_function = resend_confirmation_email_view_function
+        self.resend_confirm_email_view_function = resend_confirm_email_view_function
         self.reset_password_view_function = reset_password_view_function
         self.unauthenticated_view_function = unauthenticated_view_function
         self.unauthorized_view_function = unauthorized_view_function
@@ -166,7 +166,7 @@ class UserManager():
         # Add URL Routes
         if self.enable_confirm_email:
             app.add_url_rule(self.confirm_email_url, 'user.confirm_email', self.confirm_email_view_function)
-            app.add_url_rule(self.resend_confirmation_email_url, 'user.resend_confirmation_email', self.resend_confirmation_email_view_function)
+            app.add_url_rule(self.resend_confirm_email_url, 'user.resend_confirm_email', self.resend_confirm_email_view_function)
         if self.enable_change_password:
             app.add_url_rule(self.change_password_url, 'user.change_password', self.change_password_view_function, methods=['GET', 'POST'])
         if self.enable_change_username:
@@ -190,7 +190,7 @@ class UserManager():
     def generate_token(self, user_id):
         return self.token_manager.generate_token(user_id)
 
-    def check_token(self, token, expiration_in_seconds):
+    def verify_token(self, token, expiration_in_seconds):
         return self.token_manager.verify_token(token, expiration_in_seconds)
 
 class UserMixin(LoginUserMixin):

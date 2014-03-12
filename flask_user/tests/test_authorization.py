@@ -67,6 +67,14 @@ def test_authorization(client):
     client.get_valid_page(url_for('profile_page'))
     client.get_valid_page(url_for('special_page'))
 
+    # Test translations.ngettext
+    from flask_user.translations import ngettext
+    count = 1
+    text = ngettext('I have %(count)s apple', 'I have %(count)s apples', count, count=count)
+    assert(text=='I have 1 apple')
+    count = 2
+    text = ngettext('I have %(count)s apple', 'I have %(count)s apples', count, count=count)
+    assert(text=='I have 2 apples')
 
 
 # Workaround for py.test coverage issue

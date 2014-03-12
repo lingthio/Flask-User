@@ -189,7 +189,7 @@ def test_invalid_confirm_email_page(client):
 
     # Generate valid token
     um = current_app.user_manager
-    token = um.token_manager.generate_token(user1.id)
+    token = um.generate_token(user1.id)
     url = url_for('user.confirm_email', token=token)
 
     # Test Expired token
@@ -351,7 +351,7 @@ def test_invalid_reset_password(client):
     # Set default values
     new_password = 'Password5'
     # Simulate a valid forgot password form
-    user1.reset_password_token = um.token_manager.generate_token(user1.id)
+    user1.reset_password_token = um.generate_token(user1.id)
     token = user1.reset_password_token
 
     # Test invalid token

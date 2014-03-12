@@ -175,7 +175,7 @@ def check_valid_confirm_email_page(um, client):
     print("test_valid_confirm_email_page")
 
     # Generate confirmation token for user 1
-    confirmation_token = um.token_manager.generate_token(user1.id)
+    confirmation_token = um.generate_token(user1.id)
 
     # Retrieve page and verify that response has no errors
     client.get_valid_page(url_for('user.confirm_email', token=confirmation_token))
@@ -279,7 +279,7 @@ def check_valid_reset_password_page(um, client):
     print("test_valid_reset_password_page")
 
     # Simulate a valid forgot password form
-    user1.reset_password_token = um.token_manager.generate_token(user1.id)
+    user1.reset_password_token = um.generate_token(user1.id)
     token = user1.reset_password_token
 
     # Define defaults

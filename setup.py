@@ -67,7 +67,7 @@ from setuptools import setup
 
 setup(
     name='Flask-User',
-    version='0.4.0',
+    version='0.4.1',
     url='http://github.com/lingthio/flask-user',
     license='BSD License',
     author='Ling Thio',

@@ -58,9 +58,6 @@ class DBInterface(object):
         # See if new_username is available
         return new_username==old_username or self.find_user_by_username(new_username)==None
 
-    def verify_reset_password_token(self, user, token):
-        return user.reset_password_token == token
-
     # def get_email(self, user):
     #     return user.email
 
@@ -106,9 +103,9 @@ class SQLAlchemyAdapter(DBInterface):
                     self.db.session.commit()
             else:                                               # pragma: no cover
                 assert False, "Invalid user id "+str(object_id)
-            return (user.id, None)
         else:
             raise NotImplementedError   # TODO:
+        return user
 
     def set_object_fields(self, object, **kwargs):
         super(SQLAlchemyAdapter, self).set_object_fields(object, **kwargs)

@@ -6,5 +6,5 @@
     USER_FORGOT_PASSWORD_TEMPLATE           = 'flask_user/forgot_password.html'
     USER_LOGIN_TEMPLATE                     = 'flask_user/login.html'
     USER_REGISTER_TEMPLATE                  = 'flask_user/register.html'
-    USER_RESEND_CONFIRMATION_EMAIL_TEMPLATE = 'flask_user/resend_confirmation_email.html'
+    USER_RESEND_CONFIRM_EMAIL_TEMPLATE = 'flask_user/resend_confirm_email.html'
     USER_RESET_PASSWORD_TEMPLATE            = 'flask_user/reset_password.html'

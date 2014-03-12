@@ -46,7 +46,7 @@ Flask-User aims to provide such a ready-to-use **AND** fully customizable soluti
 Status
 ------
 
-Though v0.4 is quite stable, it is a Beta release.
+Though v0.4 is quite stable, it is a Beta release and the API is subject to small changes.
 We appreciate it if you would enter issues and
 enhancement requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
 
@@ -67,6 +67,7 @@ Documentation
 
 Revision History
 ----------------
+* v0.4.1 Customized email messages.
 * v0.4.0 Beta release. Translations via Babel.
 * v0.3.8 Role-based authorization via @roles_required.
 * v0.3.5 Support for Python 2.6, 2.7 and 3.3, Event notifications.

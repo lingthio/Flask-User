@@ -12,7 +12,7 @@ from flask import current_app, flash, redirect, render_template, request, url_fo
 from flask.ext.login import current_user, login_user, logout_user
 
 from .decorators import login_required
-from .emails import send_confirmation_email, send_reset_password_email
+from .emails import send_registered_email, send_forgot_password_email
 from . import signals
 from .translations import gettext as _
 
@@ -22,7 +22,7 @@ def confirm_email(token):
     """
     # Verify token
     user_manager = current_app.user_manager
-    is_valid, has_expired, object_id = user_manager.token_manager.verify_token(
+    is_valid, has_expired, object_id = user_manager.verify_token(
             token,
             user_manager.confirm_email_expiration)
 
@@ -35,10 +35,10 @@ def confirm_email(token):
         return redirect(user_manager.login_url)
 
     # Confirm email
-    user, email = user_manager.db_adapter.confirm_email(object_id)
+    user = user_manager.db_adapter.confirm_email(object_id)
 
     # Send email_confirmed signal
-    signals.user_confirmed_email.send(current_app._get_current_object(), user=user, email=email)
+    signals.user_confirmed_email.send(current_app._get_current_object(), user=user)
 
     # Prepare one-time system message
     flash(_('Your email has been confirmed. Please sign in.'), 'success')
@@ -126,16 +126,17 @@ def forgot_password():
         user = user_manager.db_adapter.find_user_by_email(email)
         if user:
             # Generate password reset token
-            token = user_manager.token_manager.generate_token(user.id)
+            token = user_manager.generate_token(user.id)
 
             # Store token
-            user_manager.db_adapter.set_object_fields(user, reset_password_token=token)
+            if hasattr(user, 'reset_password_token'):
+                user_manager.db_adapter.set_object_fields(user, reset_password_token=token)
 
-            # Send confirmation email
-            send_reset_password_email(email, user, token)
+            # Send forgot password email
+            send_forgot_password_email(email, user, token)
 
-            # Send reset_password_email_sent signal
-            signals.reset_password_email_sent.send(current_app._get_current_object(), user=user)
+            # Send forgot_password_email_sent signal
+            signals.forgot_password_email_sent.send(current_app._get_current_object(), user=user)
 
         # Prepare one-time system message
         flash(_("A reset password email has been sent to '%(email)s'. Open that email and follow the instructions to reset your password.", email=email), 'success')
@@ -273,22 +274,19 @@ def register():
         signals.user_registered.send(current_app._get_current_object(), user=user)
 
         if user_manager.enable_confirm_email:
-
             # Generate password reset token
-            token = user_manager.token_manager.generate_token(object_id)
-
-            # Send confirmation email
-            send_confirmation_email(email_address, user, token)
-
-            # Send confirmation_email_sent signal
-            signals.confirmation_email_sent.send(current_app._get_current_object(), user=user)
+            token = user_manager.generate_token(object_id)
 
             # Prepare one-time system message
             flash(_('A confirmation email has been sent to %(email)s. Open that email and follow the instructions to complete your registration.', email=email_address), 'success')
 
         else:
+            token = None
             # Prepare one-time system message
             flash(_('You have registered successfully. Please sign in.'), 'success')
+
+        # Send registered email
+        send_registered_email(email_address, user, token)
 
         # Redirect to the login page
         return redirect(url_for('user.login'))
@@ -298,7 +296,7 @@ def register():
 
 
 # TODO:
-def resend_confirmation_email():
+def resend_confirm_email():
     pass
     # """
     # Prompt for email and re-send the confirmation email.
@@ -306,7 +304,7 @@ def resend_confirmation_email():
     # user_manager =  current_app.user_manager
     #
     # # Initialize form
-    # form = user_manager.resend_confirmation_email_form(request.form)
+    # form = user_manager.resend_confirm_email_form(request.form)
     #
     # # Process valid POST
     # if request.method=='POST' and form.validate():
@@ -317,7 +315,7 @@ def resend_confirmation_email():
     #     if user:
     #
     #         # Send confirmation email
-    #         send_confirmation_email(email, user)
+    #         send_confirm_email_email(email, user)
     #
     #     # Prepare one-time system message
     #     flash(_("A confirmation email has been sent to %(email)s. Open that email and follow the instructions to complete your registration.", email=email), 'success')
@@ -329,7 +327,7 @@ def resend_confirmation_email():
     #     return redirect(next)
     #
     # # Process GET or invalid POST
-    # return render_template(user_manager.resend_confirmation_email_template, form=form)
+    # return render_template(user_manager.resend_confirm_email_template, form=form)
 
 
 def reset_password(token):
@@ -338,7 +336,7 @@ def reset_password(token):
     """
     # Verify token
     user_manager = current_app.user_manager
-    is_valid, has_expired, user_id = user_manager.token_manager.verify_token(
+    is_valid, has_expired, user_id = user_manager.verify_token(
             token,
             user_manager.reset_password_expiration)
 
@@ -351,7 +349,13 @@ def reset_password(token):
         return redirect(user_manager.login_url)
 
     user = user_manager.db_adapter.find_user_by_id(user_id)
-    if not user or not user_manager.db_adapter.verify_reset_password_token(user, token):
+    if user:
+        # Avoid re-using old tokens
+        if hasattr(user, 'reset_password_token'):
+            verified = user.reset_password_token == token
+        else:
+            verified = True
+    if not user or not verified:
         flash(_('Your reset password token is invalid.'), 'error')
         return redirect(user_manager.login_url)
 
@@ -361,7 +365,8 @@ def reset_password(token):
     # Process valid POST
     if request.method=='POST' and form.validate():
         # Invalidate the token by clearing the stored token
-        user_manager.db_adapter.set_object_fields(user, reset_password_token='')
+        if hasattr(user, 'reset_password_token'):
+            user_manager.db_adapter.set_object_fields(user, reset_password_token='')
 
         # Change password
         hashed_password = user_manager.generate_password_hash(form.new_password.data)

@@ -84,13 +84,6 @@ def lazy_gettext(string, **variables):
     from speaklater import make_lazy_string
     return make_lazy_string(gettext, string, **variables)
 
-def render_template():
-    # Restore Flask-Babel
-    app.jinja_env.install_gettext_callables(
-                lambda x: get_translations().ugettext(x),
-                lambda s, p, n: get_translations().ungettext(s, p, n),
-                newstyle=True
-            )
 
 # Translate some messages that pybabel extract can't find in a render_template_string() string
 _ = lazy_gettext

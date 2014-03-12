@@ -6,8 +6,8 @@ from flask.ext.user import current_user, login_required, UserManager, UserMixin,
 # Use a Class-based config to avoid needing a 2nd file
 class ConfigClass(object):
     # Configure Flask
-    SECRET_KEY = 'THIS IS AN INSECURE SECRET'             # Change this for production!!!
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///minimal_app.db'  # Use Sqlite file db
+    SECRET_KEY = 'THIS IS AN INSECURE SECRET'                 # Change this for production!!!
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///minimal_app.sqlite'  # Use Sqlite file db
     CSRF_ENABLED = True
 
 # Setup Flask and read config from ConfigClass defined above

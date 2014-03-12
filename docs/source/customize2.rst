@@ -52,25 +52,27 @@ The base templates are used to define email elements that are similar in all typ
         The Flask-User Team</p>
     </div>
 
-and define the confirmation specific messages in ``templates/flask_user/emails/confirmation_message.html`` like so::
+and define the confirmation specific messages in ``templates/flask_user/emails/confirm_email_message.html`` like so::
 
     {% extends "flask_user/emails/base_message.html" %}
 
     {% block message %}
     <p>Thank you for registering with Flask-User.</p>
     <p>Visit the link below to complete your registration:</p>
-    <p><a href="{{ confirmation_link }}">Confirm your email address</a>.</p>
+    <p><a href="{{ confirm_email_link }}">Confirm your email address</a>.</p>
     <p>If you did not initiate this registration, you may safely ignore this email.</p>
     {% endblock %}
 
 The email template files, along with available template variables listed below:
 
-* templates/flask_user/confirmation_[subject.txt|message.html|message.txt]
+* templates/flask_user/confirm_email_[subject.txt|message.html|message.txt]
     * ``user`` - For example: ``{{ user.email }}``
-    * ``confirmation_link`` - For example: ``{{ confirmation_link }}``
-* templates/flask_user/reset_password_[subject.txt|message.html|message.txt]
+    * ``confirm_email_link`` - For example: ``{{ confirm_email_link }}``
+* templates/flask_user/forgot_password_[subject.txt|message.html|message.txt]
     * ``user`` - For example: ``{{ user.email }}``
     * ``reset_password_link`` - For example: ``{{ reset_password_link }}``
+
+If you need other email notifications, please enter a feature request to our Github issue tracker. Thank you.
 
 Customizing Field Labels
 ------------------------

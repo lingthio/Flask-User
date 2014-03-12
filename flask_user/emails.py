@@ -54,36 +54,36 @@ def _send_email(recipient, subject, html_message, text_message):
     except smtplib.SMTPAuthenticationError:
         raise SendEmailError('SMTP Authentication error: Check your MAIL_USERNAME and MAIL_PASSWORD settings.')
 
-
-
-def send_confirmation_email(email, user, token):
+def send_registered_email(email, user, token):
     # Verify certain conditions
     user_manager =  current_app.user_manager
-    assert email
-    assert user_manager.enable_confirm_email
+    if not user_manager.enable_email: return
+    if not user_manager.send_registered_email: return
+    assert(email)
 
     # Generate confirmation link
-    confirmation_link = url_for('user.confirm_email', token=token, _external=True)
+    confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
 
     # Render subject, html message and text message
-    subject, html_message, text_message = _render_email('confirmation',
-            user=user, confirmation_link=confirmation_link)
+    subject, html_message, text_message = _render_email('registered',
+            user=user, confirm_email_link=confirm_email_link)
 
     # Send email message using Flask-Mail
     _send_email(email, subject, html_message, text_message)
 
 
-def send_reset_password_email(email, user, token):
+def send_forgot_password_email(email, user, token):
     # Verify certain conditions
     user_manager =  current_app.user_manager
-    assert email
+    if not user_manager.enable_email: return
     assert user_manager.enable_forgot_password
+    assert email
 
     # Generate confirmation link
     reset_password_link = url_for('user.reset_password', token=token, _external=True)
 
     # Render subject, html message and text message
-    subject, html_message, text_message = _render_email('reset_password',
+    subject, html_message, text_message = _render_email('forgot_password',
             user=user,
             reset_password_link=reset_password_link)
 

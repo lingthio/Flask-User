@@ -8,8 +8,8 @@ from flask.ext.user import roles_required
 # Use a Class-based config to avoid needing a 2nd file
 class ConfigClass(object):
     # Configure Flask
-    SECRET_KEY = 'THIS IS AN INSECURE SECRET'       # Change this for production!!!
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///roles_required_app.db'  # Use Sqlite file db
+    SECRET_KEY = 'THIS IS AN INSECURE SECRET'                        # Change this for production!!!
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///roles_required_app.sqlite'  # Use Sqlite file db
     CSRF_ENABLED = True
 
     # Configure Flask-Mail -- Required for Confirm email and Forgot password features
