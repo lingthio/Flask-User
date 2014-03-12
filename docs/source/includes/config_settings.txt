@@ -1,9 +1,21 @@
 ::
 
-    # Settings                     # Default   # Description
-    USER_CONFIRM_EMAIL_EXPIRATION  = 2*24*3600 # Confirmation expiration in seconds
-                                               # (2*24*3600 represents 2 days)
+    # Settings                     # Default     # Description
+    USER_CONFIRM_EMAIL_EXPIRATION  = 2*24*3600   # Confirmation expiration in seconds
+                                                 # (2*24*3600 represents 2 days)
 
-    USER_RESET_PASSWORD_EXPIRATION = 2*24*3600 # Reset password expiration in seconds
-                                               # (2*24*3600 represents 2 days)
+    USER_RESET_PASSWORD_EXPIRATION = 2*24*3600   # Reset password expiration in seconds
+                                                 # (2*24*3600 represents 2 days)
+
+    USER_PASSWORD_HASH             = 'bcrypt'    # Any passlib crypt algorithm
+
+    USER_PASSWORD_HASH_MODE        = 'passlib'   # Set to 'Flask-Security' for
+                                                 # Flask-Security compatible hashing
+
+    USER_PASSWORD_SALT             = SECRET_KEY  # Only needed for
+                                                 # Flask-Security compatible hashing
+
+    USER_REQUIRE_INVITATION        = False       # Registration requires invitation
+                                                 # Not yet implemented
+                                                 # Requires USER_ENABLE_EMAIL=True
 

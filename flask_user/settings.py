@@ -19,7 +19,6 @@ def set_default_settings(user_manager, app_config):
     um.enable_email             = sd('USER_ENABLE_EMAIL',               obsoleted_enable_emails)
     um.enable_forgot_password   = sd('USER_ENABLE_FORGOT_PASSWORD',     False)
     um.enable_register          = sd('USER_ENABLE_REGISTRATION',        True)
-    um.enable_require_invitation= sd('USER_ENABLE_REQUIRE_INVITATION',  False)
     um.enable_retype_password   = sd('USER_ENABLE_RETYPE_PASSWORD',     obsoleted_enable_retype_passwords)
     um.enable_username          = sd('USER_ENABLE_USERNAME',            obsoleted_enable_usernames)
     um.enable_multiple_emails   = sd('USER_ENABLE_MULTIPLE_EMAILS',     False)
@@ -27,6 +26,7 @@ def set_default_settings(user_manager, app_config):
     # Set default settings
     um.confirm_email_expiration = sd('USER_CONFIRM_EMAIL_EXPIRATION',   2*24*3600) # 2 days
     um.reset_password_expiration= sd('USER_RESET_PASSWORD_EXPIRATION',  2*24*3600) # 2 days
+    um.require_invitation       = sd('USER_REQUIRE_INVITATION',         False)
     um.password_hash_mode       = sd('USER_PASSWORD_HASH_MODE',         'passlib')
     um.password_hash            = sd('USER_PASSWORD_HASH',              'bcrypt')
     um.password_salt            = sd('USER_PASSWORD_SALT',              app_config['SECRET_KEY'])

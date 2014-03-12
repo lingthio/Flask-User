@@ -17,7 +17,7 @@
                 <label for="{{ field.id }}" class="control-label">{{ label }}</label>
             </div>
             <div class="col-sm-6 text-right">
-                {% if user_manager.enable_register %}
+                {% if user_manager.enable_register and not user_manager.require_invitation %}
                     <a href="{{ url_for('user.register') }}" tabindex='110'>
                         {%trans%}New here? Register.{%endtrans%}</a>
                 {% endif %}

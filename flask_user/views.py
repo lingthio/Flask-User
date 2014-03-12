@@ -9,8 +9,9 @@
 """
 
 from flask import current_app, flash, redirect, render_template, request, url_for
-from flask.ext.login import current_user, login_required, login_user, logout_user
+from flask.ext.login import current_user, login_user, logout_user
 
+from .decorators import login_required
 from .emails import send_confirmation_email, send_reset_password_email
 from . import signals
 from .translations import gettext as _
@@ -62,7 +63,7 @@ def change_password():
         hashed_password = user_manager.generate_password_hash(form.new_password.data)
 
         # Change password
-        user_manager.db_adapter.set_password(current_user, hashed_password)
+        user_manager.db_adapter.set_object_fields(current_user, password=hashed_password)
 
         # Send password_changed signal
         signals.user_changed_password.send(current_app._get_current_object(), user=current_user)
@@ -93,7 +94,7 @@ def change_username():
         new_username = form.new_username.data
 
         # Change username
-        user_manager.db_adapter.set_username(current_user, new_username)
+        user_manager.db_adapter.set_object_fields(current_user, username=new_username)
 
         # Send username_changed signal
         signals.user_changed_username.send(current_app._get_current_object(), user=current_user)
@@ -128,7 +129,7 @@ def forgot_password():
             token = user_manager.token_manager.generate_token(user.id)
 
             # Store token
-            user_manager.db_adapter.set_reset_password_token(user, token)
+            user_manager.db_adapter.set_object_fields(user, reset_password_token=token)
 
             # Send confirmation email
             send_reset_password_email(email, user, token)
@@ -360,11 +361,11 @@ def reset_password(token):
     # Process valid POST
     if request.method=='POST' and form.validate():
         # Invalidate the token by clearing the stored token
-        user_manager.db_adapter.set_reset_password_token(user, '')
+        user_manager.db_adapter.set_object_fields(user, reset_password_token='')
 
         # Change password
         hashed_password = user_manager.generate_password_hash(form.new_password.data)
-        user_manager.db_adapter.set_password(user, hashed_password)
+        user_manager.db_adapter.set_object_fields(user, password=hashed_password)
 
         # Prepare one-time system message
         flash(_("Your password has been reset successfully. Please sign in with your new password"), 'success')

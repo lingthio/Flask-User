@@ -21,10 +21,6 @@
 
     USER_ENABLE_REGISTRATION       = True      # Allow new users to register
 
-    USER_ENABLE_REQUIRE_INVITATION = False     # Registration requires invitation
-                                               # Not yet implemented
-                                               # Requires USER_ENABLE_EMAIL=True
-
     USER_ENABLE_RETYPE_PASSWORD    = True      # Prompt for `retype password` in:
                                                #   - registration form,
                                                #   - change password form, and

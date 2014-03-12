@@ -30,6 +30,13 @@ class DBInterface(object):
     def find_user_by_username(self, username): # pragma: no cover
         raise NotImplementedError('DBInterface.find_user_by_username() has not been implemented')
 
+    def set_object_fields(self, object, **kwargs):
+        for key,value in kwargs.items():
+            if hasattr(object, key):
+                setattr(object, key, value)
+            else:
+                raise KeyError("Object '%s' has no field '%s'." % (type(object), key))
+
     def email_is_available(self, new_email):
         """
         Return True if new_email does not exist.
@@ -103,17 +110,21 @@ class SQLAlchemyAdapter(DBInterface):
         else:
             raise NotImplementedError   # TODO:
 
-    def set_username(self, user, username):
-        user.username = username
+    def set_object_fields(self, object, **kwargs):
+        super(SQLAlchemyAdapter, self).set_object_fields(object, **kwargs)
         self.db.session.commit()
 
-    def set_password(self, user, hashed_password):
-        user.password = hashed_password
-        self.db.session.commit()
-
-    def set_reset_password_token(self, user, token):
-        user.reset_password_token = token
-        self.db.session.commit()
+    # def set_username(self, user, username):
+    #     user.username = username
+    #     self.db.session.commit()
+    #
+    # def set_password(self, user, hashed_password):
+    #     user.password = hashed_password
+    #     self.db.session.commit()
+    #
+    # def set_reset_password_token(self, user, token):
+    #     user.reset_password_token = token
+    #     self.db.session.commit()
 
     def find_user_by_id(self, user_id):
         return self.UserClass.query.filter(self.UserClass.id==user_id).first()
