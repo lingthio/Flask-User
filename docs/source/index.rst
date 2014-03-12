@@ -17,9 +17,12 @@ Flask-User
 
 ::
 
-    !! News Flash: v0.4.0 Beta released !!
-    - Role-based Authorization through @roles_required (see Recipes > Roles Required App)
-    - Internationalization through babel and .po files (see Internationalization)
+    !! News Flash: v0.4.1 API changes !!
+    - templates/flask_user/emails/confirmation_email_* --> registered_*
+    - signals.confirmation_email_set                   --> user_registered
+    - template variable {{ confirmation_link }}        --> {{ confirm_email_link }}
+    - templates/flask_user/emails/reset_password_*     --> forgot_password_*
+    - signals.reset_password_email_sent                --> forgot_password_email_sent
 
 Customizable User Account Management for Flask
 ----------------------------------------------

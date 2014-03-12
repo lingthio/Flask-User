@@ -17,9 +17,7 @@ import socket
 from flask import current_app, render_template, url_for
 from flask_mail import Message
 
-def _render_email(email_name, **kwargs):
-    filename = 'flask_user/emails/'+email_name
-
+def _render_email(filename, **kwargs):
     # Render subject
     subject = render_template(filename+'_subject.txt', **kwargs)
     # Make sure that subject lines do not contain newlines
@@ -65,7 +63,8 @@ def send_registered_email(email, user, token):
     confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
 
     # Render subject, html message and text message
-    subject, html_message, text_message = _render_email('registered',
+    subject, html_message, text_message = _render_email(
+            user_manager.registered_email_template,
             user=user, confirm_email_link=confirm_email_link)
 
     # Send email message using Flask-Mail
@@ -83,7 +82,8 @@ def send_forgot_password_email(email, user, token):
     reset_password_link = url_for('user.reset_password', token=token, _external=True)
 
     # Render subject, html message and text message
-    subject, html_message, text_message = _render_email('forgot_password',
+    subject, html_message, text_message = _render_email(
+            user_manager.forgot_password_email_template,
             user=user,
             reset_password_link=reset_password_link)
 

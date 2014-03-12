@@ -1,0 +1,10 @@
+::
+
+    # Email template files                  # Defaults
+    USER_FORGOT_PASSWORD_EMAIL_TEMPLATES    = 'flask_user/emails/forgot_password'
+    USER_REGISTERED_EMAIL_TEMPLATES         = 'flask_user/emails/registered'
+
+    # These settings correspond to the start of three template files:
+    # SOMETHING_subject.txt   # Email subject
+    # SOMETHING_message.html  # Email message in HTML format
+    # SOMETHING_message.txt   # Email message in Text format

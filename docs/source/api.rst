@@ -13,9 +13,12 @@ Config Settings
 
 .. include:: includes/config_settings.txt
 
-.. include:: includes/config_templates.txt
-
 .. include:: includes/config_urls.txt
+
+.. include:: includes/config_email_templates.txt
+
+.. include:: includes/config_form_templates.txt
+
 
 SQLAlchemyAdapter
 -----------------

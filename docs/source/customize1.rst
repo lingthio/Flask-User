@@ -24,12 +24,26 @@ Settings can be customized through the application's config
 .. include:: includes/config_settings.txt
 
 
-
 Customizing Endpoint URLs
 -------------------------
 Endpoint URLs can be customized through the application's config
 
 .. include:: includes/config_urls.txt
+
+
+Customizing Email Templates
+---------------------------
+Email template files can be customized through the application's config
+
+.. include:: includes/config_email_templates.txt
+
+
+Customizing Form Templates
+--------------------------
+Form template files can be customized through the application's config
+
+.. include:: includes/config_form_templates.txt
+
 
 Obsoleted Settings
 ------------------
