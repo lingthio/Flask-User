@@ -1,2 +1,2 @@
-include AUTHORS.txt CHANGES.txt LICENSE.txt README.md
+include AUTHORS.txt CHANGES.txt LICENSE.txt README.rst
 recursive-include flask_user *

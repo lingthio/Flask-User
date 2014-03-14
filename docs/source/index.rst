@@ -6,8 +6,8 @@ Flask-User
 .. image:: https://travis-ci.org/lingthio/flask-user.png?branch=master
     :target: https://travis-ci.org/lingthio/flask-user
 
-.. image:: https://coveralls.io/repos/lingthio/flask-user/badge.png?branch=master
-    :target: https://coveralls.io/r/lingthio/flask-user?branch=master
+.. comment .. image:: https://coveralls.io/repos/lingthio/flask-user/badge.png?branch=master
+.. comment    :target: https://coveralls.io/r/lingthio/flask-user?branch=master
 
 .. image:: https://pypip.in/d/Flask-User/badge.png
     :target: https://pypi.python.org/pypi/Flask-User
@@ -23,7 +23,7 @@ Flask-User
     - signals.confirmation_email_set                   --> user_registered
     - template variable {{ confirmation_link }}        --> {{ confirm_email_link }}
     - templates/flask_user/emails/reset_password_*     --> forgot_password_*
-    - signals.reset_password_email_sent                --> forgot_password_email_sent
+    - signals.reset_password_email_sent                --> user_forgot_password
 
 Customizable User Account Management for Flask
 ----------------------------------------------

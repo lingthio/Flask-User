@@ -44,7 +44,7 @@ def _flask_user_context_processor():
     return dict(user_manager=current_app.user_manager)
 
 
-class UserManager():
+class UserManager(object):
     """
     This is the Flask-User object that manages the User management process.
     """
@@ -116,12 +116,13 @@ class UserManager():
         """
         Initialize app.user_manager.
         """
+        # Bind Flask-USER to app
         app.user_manager = self
 
-        # Set default app.config settings, but only if they have not been set before
+        # Set defaults for undefined settings
         settings.set_default_settings(self, app.config)
 
-        # Verify config combinations. Produce a helpful error messages for invalid combinations.
+        # Make sure the settings are valid -- raise ConfigurationError if not
         settings.check_settings(self)
 
         # Initialize Translations -- Only if Flask-Babel has been installed

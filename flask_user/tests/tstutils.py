@@ -28,7 +28,7 @@ def response_has_no_errors(response):
         print(response.data)
     return not has_errors
 
-class TstClient():
+class TstClient(object):
     """
     Utility class for tests
     """
