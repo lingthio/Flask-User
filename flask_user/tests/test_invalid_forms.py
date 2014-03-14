@@ -67,7 +67,7 @@ def test_init(db):
     um.enable_email = True
     um.enable_retype_password = True
 
-    hashed_password = um.generate_password_hash('Password1')
+    hashed_password = um.hash_password('Password1')
     User = current_app.User
     
     # Create user1 with username and email

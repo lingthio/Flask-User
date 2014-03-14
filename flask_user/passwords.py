@@ -10,7 +10,7 @@ def generate_sha512_hmac(password_salt, password):
     """
     return base64.b64encode(hmac.new(password_salt, password.encode('utf-8'), hashlib.sha512).digest())
 
-def generate_password_hash(user_manager, password):
+def hash_password(user_manager, password):
     """
     Generate hashed password using SHA512 HMAC and the USER_PASSWORD_HASH hash function.
     """
@@ -23,9 +23,9 @@ def generate_password_hash(user_manager, password):
         password = generate_sha512_hmac(user_manager.password_salt, password)
 
     # Use passlib to hash password
-    password_hash = user_manager.password_crypt_context.encrypt(password)
+    hashed_password = user_manager.password_crypt_context.encrypt(password)
 
-    return password_hash
+    return hashed_password
 
 def verify_password(user_manager, password, hashed_password):
     """

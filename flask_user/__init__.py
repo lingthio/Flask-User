@@ -34,8 +34,8 @@ def _user_loader(user_id):
     """
     Flask-Login helper function to load user by user_id
     """
-    user_manager = current_app.user_manager
-    return user_manager.db_adapter.find_user_by_id(user_id=user_id)
+    um = current_app.user_manager
+    return um.db_adapter.find_user_by_id(user_id=user_id)
 
 def _flask_user_context_processor():
     """
@@ -155,8 +155,6 @@ class UserManager():
 
     def setup_login_manager(self, app):
         _ = translations.gettext
-        self.lm.login_message = _('Please Sign in to access this page.')
-        self.lm.login_message_category = 'error'
         self.lm.login_view = 'user.login'
         self.lm.user_loader(_user_loader)
         #login_manager.token_loader(_token_loader)
@@ -182,10 +180,13 @@ class UserManager():
         # We can not define 'user.unauthorized' here because it clashes with 'home_page'
 
     def generate_password_hash(self, password):
-        return passwords.generate_password_hash(self, password)
+        return passwords.hash_password(self, password)
 
-    def verify_password(self, password, password_hash):
-        return passwords.verify_password(self, password, password_hash)
+    def hash_password(self, password):
+        return passwords.hash_password(self, password)
+
+    def verify_password(self, password, hashed_password):
+        return passwords.verify_password(self, password, hashed_password)
 
     def generate_token(self, user_id):
         return self.token_manager.generate_token(user_id)

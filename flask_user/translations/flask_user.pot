@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-03-11 17:49-0700\n"
+"POT-Creation-Date: 2014-03-12 13:52-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,10 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
-
-#: flask_user/__init__.py:158
-msgid "Please Sign in to access this page."
-msgstr ""
 
 #: flask_user/forms.py:49
 msgid ""
@@ -146,96 +142,96 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
-#: flask_user/translations.py:97
+#: flask_user/translations.py:90
 msgid "Home Page"
 msgstr ""
 
-#: flask_user/translations.py:98
+#: flask_user/translations.py:91
 msgid "Profile Page"
 msgstr ""
 
-#: flask_user/translations.py:99
+#: flask_user/translations.py:92
 msgid "Special Page"
 msgstr ""
 
-#: flask_user/views.py:29
+#: flask_user/views.py:30
 msgid "Your confirmation token has expired."
 msgstr ""
 
-#: flask_user/views.py:33
+#: flask_user/views.py:34
 msgid "Invalid confirmation token."
 msgstr ""
 
-#: flask_user/views.py:43
+#: flask_user/views.py:44
 msgid "Your email has been confirmed. Please sign in."
 msgstr ""
 
-#: flask_user/views.py:71
+#: flask_user/views.py:72
 msgid "Your password has been changed successfully."
 msgstr ""
 
-#: flask_user/views.py:102
+#: flask_user/views.py:103
 #, python-format
 msgid "Your username has been changed to '%(username)s'."
 msgstr ""
 
-#: flask_user/views.py:140
+#: flask_user/views.py:142
 #, python-format
 msgid ""
 "A reset password email has been sent to '%(email)s'. Open that email and "
 "follow the instructions to reset your password."
 msgstr ""
 
-#: flask_user/views.py:176
+#: flask_user/views.py:178
 msgid "You have signed in successfully."
 msgstr ""
 
-#: flask_user/views.py:182
+#: flask_user/views.py:184
 msgid ""
 "Your email address has not yet been confirmed. Check your email Inbox and"
 " Spam folders for the confirmation email and follow the instructions to "
 "activate your account."
 msgstr ""
 
-#: flask_user/views.py:184
+#: flask_user/views.py:186
 msgid "Your account has been disabled."
 msgstr ""
 
-#: flask_user/views.py:204
+#: flask_user/views.py:206
 msgid "You have signed out successfully."
 msgstr ""
 
-#: flask_user/views.py:286
+#: flask_user/views.py:281
 #, python-format
 msgid ""
 "A confirmation email has been sent to %(email)s. Open that email and "
 "follow the instructions to complete your registration."
 msgstr ""
 
-#: flask_user/views.py:290
+#: flask_user/views.py:286
 msgid "You have registered successfully. Please sign in."
 msgstr ""
 
-#: flask_user/views.py:345
+#: flask_user/views.py:344
 msgid "Your reset password token has expired."
 msgstr ""
 
-#: flask_user/views.py:349 flask_user/views.py:354
+#: flask_user/views.py:348 flask_user/views.py:359
 msgid "Your reset password token is invalid."
 msgstr ""
 
-#: flask_user/views.py:370
+#: flask_user/views.py:376
 msgid ""
 "Your password has been reset successfully. Please sign in with your new "
 "password"
 msgstr ""
 
-#: flask_user/views.py:384
+#: flask_user/views.py:390
 #, python-format
 msgid "You must be signed in to access %(url)s."
 msgstr ""
 
-#: flask_user/views.py:396
+#: flask_user/views.py:402
 #, python-format
 msgid "You do not have permission to access %(url)s."
 msgstr ""
@@ -259,4 +255,12 @@ msgstr ""
 #: flask_user/templates/flask_user/reset_password.html:5
 msgid "Reset Password"
 msgstr ""
+
+#: flask_user/tests/test_authorization.py:73
+#: flask_user/tests/test_authorization.py:76
+#, python-format
+msgid "I have %(count)s apple"
+msgid_plural "I have %(count)s apples"
+msgstr[0] ""
+msgstr[1] ""
 

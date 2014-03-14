@@ -158,7 +158,7 @@ def check_valid_register_form(um, client, db):
         # Create user record manually
 
         # hash password
-        kwargs['password'] = um.generate_password_hash(password)
+        kwargs['password'] = um.hash_password(password)
 
         # Create User
         user1 = User(active=True, confirmed_at=datetime.datetime.utcnow(), **kwargs)

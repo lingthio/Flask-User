@@ -23,9 +23,6 @@ _signals = Namespace()
 # If you plan to use signals, please install blinker with 'pip install blinker'
 # See http://flask.pocoo.org/docs/signals/
 
-# Signal sent just after a reset password email was sent
-forgot_password_email_sent = _signals.signal('user.forgot_password_email_sent')
-
 # Sent when: A user changed their password
 user_changed_password = _signals.signal('user.user_changed_password')
 
@@ -34,6 +31,9 @@ user_changed_username = _signals.signal('user.user_changed_username')
 
 # Sent when: A user confirmed their email
 user_confirmed_email = _signals.signal('user.user_confirmed_email')
+
+# Sent when: A user submitted a password reset request
+user_forgot_password = _signals.signal('user.forgot_password')
 
 # Sent when: A user logged in
 user_logged_in = _signals.signal('user.user_logged_in')
@@ -47,6 +47,6 @@ user_registered = _signals.signal('user.user_registered')
 # Signal sent just after a password was reset
 user_reset_password = _signals.signal('user.user_reset_password')
 
-# Signal sent just after a password was reset  # TODO: Not yet implemented
+# Signal sent just after a user sent an invitation  # TODO: Not yet implemented
 user_sent_invitation = _signals.signal('user.user_sent_invitation')
 

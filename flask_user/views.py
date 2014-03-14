@@ -60,7 +60,7 @@ def change_password():
     # Process valid POST
     if request.method=='POST' and form.validate():
         # Hash password
-        hashed_password = user_manager.generate_password_hash(form.new_password.data)
+        hashed_password = user_manager.hash_password(form.new_password.data)
 
         # Change password
         user_manager.db_adapter.set_object_fields(current_user, password=hashed_password)
@@ -135,8 +135,8 @@ def forgot_password():
             # Send forgot password email
             send_forgot_password_email(email, user, token)
 
-            # Send forgot_password_email_sent signal
-            signals.forgot_password_email_sent.send(current_app._get_current_object(), user=user)
+            # Send forgot_password signal
+            signals.user_forgot_password.send(current_app._get_current_object(), user=user)
 
         # Prepare one-time system message
         flash(_("A reset password email has been sent to '%(email)s'. Open that email and follow the instructions to reset your password.", email=email), 'success')
@@ -238,7 +238,7 @@ def register():
             email_kwargs = user_kwargs
 
         # Always store hashed password
-        user_kwargs['password'] = user_manager.generate_password_hash(form.password.data)
+        user_kwargs['password'] = user_manager.hash_password(form.password.data)
 
         # Store email address depending on config
         if user_manager.enable_email:
@@ -369,7 +369,7 @@ def reset_password(token):
             user_manager.db_adapter.set_object_fields(user, reset_password_token='')
 
         # Change password
-        hashed_password = user_manager.generate_password_hash(form.new_password.data)
+        hashed_password = user_manager.hash_password(form.new_password.data)
         user_manager.db_adapter.set_object_fields(user, password=hashed_password)
 
         # Prepare one-time system message
