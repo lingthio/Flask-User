@@ -1,6 +1,6 @@
 ::
 
-    # URL                     # Default
+    # URLs                    # Default
     USER_CHANGE_PASSWORD_URL  = '/user/change-password'
     USER_CHANGE_USERNAME_URL  = '/user/change-username'
     USER_CONFIRM_EMAIL_URL    = '/user/confirm-email/<token>'

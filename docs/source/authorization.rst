@@ -1,5 +1,5 @@
-Authorizion
-===========
+Authorization
+=============
 Authorization is the process of specifying and enforcing access rights of users to resources.
 
 Flask-User offers role based authorization through the use of function decorators:
@@ -113,12 +113,12 @@ Here's a SQLAlchemy example::
     role1 = Role(name='secret')
     role2 = Role(name='agent')
     user1 = User(username='user007', email='user007@example.com', active=True,
-            password=user_manager.generate_password_hash('Password1'))
+            password=user_manager.hash_password('Password1'))
     user1.roles.append(role1)
     user1.roles.append(role2)
     db.session.add(user1)
     db.session.commit()
 
-See :doc:`roles_required_app`
+See :doc:`recipes_roles_required_app`
 
 

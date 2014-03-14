@@ -45,7 +45,7 @@ See :doc:`installation`
 Ready to use
 ------------
 
-The :doc:`minimal_app` requires only eleven lines of additional code.
+The :doc:`recipes_minimal_app` requires only eleven lines of additional code.
 
 Fully Customizable
 ------------------
@@ -73,7 +73,7 @@ Nice Feature Set
 * Change username, Change password, Forgot password
 * Secure password hashing and token generation
 * Role-based Authorization -- See :doc:`authorization`
-* Easy to setup and Ready to use -- See :doc:`minimal_app`
+* Easy to setup and Ready to use -- See :doc:`recipes_minimal_app`
 * Fully customizable -- See :doc:`customization`
 * Form validation
 * Event notification -- See :doc:`notification`.

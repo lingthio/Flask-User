@@ -65,11 +65,12 @@ and define the confirmation specific messages in ``templates/flask_user/emails/c
 
 The email template files, along with available template variables listed below:
 
-* templates/flask_user/confirm_email_[subject.txt|message.html|message.txt]
+* Template variables available in any email template
+    * ``user_manager`` - For example: ``{% if user_manager.enable_confirm_email %}``
     * ``user`` - For example: ``{{ user.email }}``
+* templates/flask_user/registered_[subject.txt|message.html|message.txt]
     * ``confirm_email_link`` - For example: ``{{ confirm_email_link }}``
 * templates/flask_user/forgot_password_[subject.txt|message.html|message.txt]
-    * ``user`` - For example: ``{{ user.email }}``
     * ``reset_password_link`` - For example: ``{{ reset_password_link }}``
 
 If you need other email notifications, please enter a feature request to our Github issue tracker. Thank you.
@@ -89,7 +90,7 @@ See :doc:`internationalization`
 
 Customizing Form Templates
 --------------------------
-Forms can be customized by copying the Flask-User form template files into the the application's ``templates`` directory.
+Forms can be customized by copying the Flask-User form template files into the the application's ``templates/flask_user/`` directory.
 
 To find out where flask_user got installed, type the following::
 
@@ -105,7 +106,7 @@ through the application's config
 
 .. include:: includes/config_templates.txt
 
-The path is relative to the application's ``templates`` directory.
+These path settings are relative to the application's ``templates`` directory.
 
 Form templates can make full use of Jinja2.
 

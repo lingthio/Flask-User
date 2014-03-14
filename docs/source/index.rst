@@ -18,6 +18,7 @@ Flask-User
 ::
 
     !! News Flash: v0.4.1 API changes !!
+    - User.email_confirmed_at                          --> confirmed_at
     - templates/flask_user/emails/confirmation_email_* --> registered_*
     - signals.confirmation_email_set                   --> user_registered
     - template variable {{ confirmation_link }}        --> {{ confirm_email_link }}

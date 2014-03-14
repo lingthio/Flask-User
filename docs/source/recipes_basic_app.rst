@@ -1,7 +1,7 @@
 =========
 Basic App
 =========
-| The Basic App builds on the features of :doc:`minimal_app`:
+| The Basic App builds on the features of :doc:`recipes_minimal_app`:
 | - **Internationalization**
 | - **Register**, **Login**, **Change password** and **Logout**
 |
@@ -41,4 +41,4 @@ then you may have specified incorrect SMTP settings.
 If you receive a SQLAlchemy error message, delete the basic_app.db file and restart the app.
 You may be using an old DB schema in that file.
 
-Up Next: :doc:`roles_required_app`
+Up Next: :doc:`recipes_roles_required_app`

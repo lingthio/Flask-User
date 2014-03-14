@@ -1,7 +1,7 @@
 ==================
 Roles Required App
 ==================
-| The Roles Required App builds on the features of :doc:`basic_app`:
+| The Roles Required App builds on the features of :doc:`recipes_basic_app`:
 | - **Internationalization**
 | - **Register**, **Login**, **Change password** and **Logout**
 | - **Login with Username** and **Change username**

@@ -22,7 +22,7 @@ Config Settings
 
 SQLAlchemyAdapter
 -----------------
-Work in progress. See :doc:`basic_app` for now.
+Work in progress. See :doc:`recipes_basic_app` for now.
 
 Template variables
 ------------------
@@ -38,7 +38,95 @@ The following template functions are available for use in email and form templat
 
 UserManager
 -----------
-Work in progress. See :doc:`basic_app` for now.
+Work in progress. See :doc:`recipes_basic_app` for now.
+
+UserManager()
+~~~~~~~~~~~~~
+::
+
+    user_manager = UserManager(
+            db_adapter,                     # typically from SQLAlchemyAdapter()
+            app = None,                     # typically from Flask() or None
+            change_password_form            = forms.ChangePasswordForm,
+            change_username_form            = forms.ChangeUsernameForm,
+            forgot_password_form            = forms.ForgotPasswordForm,
+            login_form                      = forms.LoginForm,
+            register_form                   = forms.RegisterForm,
+            reset_password_form             = forms.ResetPasswordForm,
+            username_validator              = forms.username_validator,
+            password_validator              = forms.password_validator,
+            change_password_view_function   = views.change_password,
+            change_username_view_function   = views.change_username,
+            confirm_email_view_function     = views.confirm_email,
+            forgot_password_view_function   = views.forgot_password,
+            login_view_function             = views.login,
+            logout_view_function            = views.logout,
+            register_view_function          = views.register,
+            reset_password_view_function    = views.reset_password,
+            unauthenticated_view_function   = views.unauthenticated,
+            unauthorized_view_function      = views.unauthorized,
+            login_manager                   = LoginManager(),
+            token_manager                   = tokens.TokenManager(),
+            password_crypt_context          = None,
+            )
+
+Typical use:
+
+::
+
+    app = Flask(__name__)
+    db = SQLAlchemy(app)
+    db_adapter = SQLAlchemyAdapter(db, User)
+    user_manager = UserManager(db_adapter, app,
+            register_form=my_register_form,
+            register_view_function=my_register_view_function,
+            )
+
+init_app()
+~~~~~~~~~~
+::
+
+    user_manager.init_app(app)
+    # Binds 'user_manager' to 'app'
+    # Use either:  user_manager=UserManager(db_adapter, app)
+    #         or:  user_manager=UserManager(db_adapter, app=None); user_manager.init_app(app)
+    # But not both
+
+Typical use:
+
+::
+
+    db = SQLAlchemy()
+    db_adapter = SQLAlchemyAdapter(db, User)
+    user_manager = UserManager(db_adapter,
+            register_form=my_register_form,
+            register_view_function=my_register_view_function,
+            )
+
+    def create_app():
+        app = Flask(__name__)
+        db.init_app(app)
+        user_manager.init_app(app)
+
+
+hash_password()
+~~~~~~~~~~~~~~~
+::
+
+    user_manager.hash_password(password)
+    # Returns hashed 'password' using the configured password hash
+    # Config settings: USER_PASSWORD_HASH_MODE = 'passlib'
+    #                  USER_PASSWORD_HASH      = 'bcrypt'
+    #                  USER_PASSWORD_SALT      = SECRET_KEY
+
+
+verify_password()
+~~~~~~~~~~~~~~~~~
+::
+
+    user_manager.verify_password(password, hashed_password)
+    # Returns True if 'password' matches 'hashed password'
+    # Returns False otherwise.
 
 Signals
 -------

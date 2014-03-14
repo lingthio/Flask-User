@@ -27,4 +27,4 @@ And point your browser to ``http://localhost:5000``.
 
 To test Internationalization, set your browser to use 'Dutch' as the preferred language.
 
-Up Next: :doc:`basic_app`
+Up Next: :doc:`recipes_basic_app`

@@ -23,25 +23,26 @@ and that the code resides in ~/dev/example::
 | *None of these techniques are recommended outside of tutorial usage*.
 
 | **Minimal App**
-| The :doc:`minimal_app` offers features that do not require SMTP:
+| The :doc:`recipes_minimal_app` offers features that do not require SMTP:
 | - **Registration**, **Login**, **Change password** and **Logout**
 
 | **Basic App**
-| The :doc:`basic_app` builds on Minimal App and adds:
+| The :doc:`recipes_basic_app` builds on Minimal App and adds:
 | - **Login with Username** and **Change username**
 | - **Email confirmation** and **Forgot password** (requires SMTP)
 | - the ``create_app()`` application factory pattern
 
 | **Roles Required App**
-| The :doc:`roles_required_app` builds on Basic App and adds:
+| The :doc:`recipes_roles_required_app` builds on Basic App and adds:
 | - **Role-based Authorization** (v0.3.7 and up)
 
 .. toctree::
     :maxdepth: 1
 
-    minimal_app
-    basic_app
-    roles_required_app
+    recipes_minimal_app
+    recipes_basic_app
+    recipes_roles_required_app
+    recipes_misc
 
 See :doc:`customization` and :doc:`api` for more information.
 
