@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flask-CMS Demo</title>
+
+    <!-- Bootstrap -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>.col-centered { float: none; margin: 0 auto; }</style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    {% block body %}
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8 col-md-7 col-lg-6 col-centered">
+            <h1><a href="/">Flask-CSM Demo</a></h1>
+            <hr>
+            {% block flash_messages %}
+                {%- with messages = get_flashed_messages(with_categories=true) -%}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            {% if category=='error' %}
+                                {% set category='danger' %}
+                            {% endif %}
+                            <div class="alert alert-{{category}}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {%- endwith %}
+            {% endblock %}
+
+            {% block content %}
+            {% endblock %}
+            <hr>
+            Copyright 2013 - SolidBuilds.com
+        </div>
+      </div>
+    </div>
+    {% endblock %}
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  </body>
+</html>

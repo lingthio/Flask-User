@@ -54,7 +54,6 @@ Though v0.4 is quite stable, it is a Beta release and the API is subject to smal
 We appreciate it if you would enter issues and
 enhancement requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
 
-
 Documentation
 -------------
 .. toctree::
@@ -68,6 +67,10 @@ Documentation
     internationalization
     notification
     api
+
+Contact Information
+-------------------
+Ling Thio - ling.thio [at] gmail.com
 
 Revision History
 ----------------
@@ -84,13 +87,22 @@ Extension Packages
 We plan to offer the following Flask-User extensions in the future:
 
 * Flask-User-Profiles: View profile, Edit profile, Upload profile picture
-* Flask-User-Roles: Role based authentication
 * Flask-User-Social: Login via Google, Facebook and Twitter authentication
 
-Alternative Packages
---------------------
+Acknowledgements
+----------------
+This project would not be possible without the use of the following amazing offerings:
+
+* `Flask <http://flask.pocoo.org/>`_
+* `Flask-Babel <http://babel.pocoo.org/>`_
+* `Flask-Login <https://flask-login.readthedocs.org/en/latest/>`_
+* `Flask-Mail <http://pythonhosted.org/flask-mail/>`_
+* `Flask-SQLAlchemy <http://pythonhosted.org/Flask-SQLAlchemy/>`_
+* `Flask-WTF <https://flask-wtf.readthedocs.org/en/latest/>`_
+* `SQLAlchemy <http://www.sqlalchemy.org/>`_
+* `WTForms <http://wtforms.readthedocs.org/en/latest/>`_
+
+Alternative Flask Extensions
+----------------------------
 `Flask-Security <https://pythonhosted.org/Flask-Security/>`_
 
-Contact
--------
-Ling Thio - ling.thio [at] gmail.com
