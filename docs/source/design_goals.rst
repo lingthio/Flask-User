@@ -18,8 +18,8 @@ Reliable
 .. image:: https://pypip.in/v/Flask-User/badge.png
     :target: https://pypi.python.org/pypi/Flask-User
 
-.. image:: https://travis-ci.org/lingthio/flask-user.png?branch=master
-    :target: https://travis-ci.org/lingthio/flask-user
+.. image:: https://travis-ci.org/lingthio/Flask-User.png?branch=master
+    :target: https://travis-ci.org/lingthio/Flask-User
 
 .. image:: https://coveralls.io/repos/lingthio/flask-user/badge.png?branch=master
     :target: https://coveralls.io/r/lingthio/flask-user?branch=master
