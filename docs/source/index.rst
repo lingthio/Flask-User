@@ -72,6 +72,8 @@ Contact Information
 -------------------
 Ling Thio - ling.thio [at] gmail.com
 
+Feeling generous? `Tip me on Gittip <https://www.gittip.com/lingthio/>`_
+
 Revision History
 ----------------
 * v0.4.1 Customized email messages.

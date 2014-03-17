@@ -104,7 +104,7 @@ and you should copy them to something like: ``~/path/to/YOURAPP/templates/flask_
 In addition, the path and name of each form template file can be customized individually
 through the application's config
 
-.. include:: includes/config_templates.txt
+.. include:: includes/config_form_templates.txt
 
 These path settings are relative to the application's ``templates`` directory.
 
