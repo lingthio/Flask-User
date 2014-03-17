@@ -16,8 +16,6 @@ Flask-User
 .. image:: https://pypip.in/license/Flask-User/badge.png
     :target: https://pypi.python.org/pypi/Flask-User
 
-::
-
 Customizable User Account Management for Flask
 ----------------------------------------------
 
@@ -50,17 +48,24 @@ Revision History
 ----------------
 `Flask-User Revision History <http://pythonhosted.org//Flask-User/index.html#revision-history>`_
 
-Extension Packages
-------------------
-We plan to offer the following Flask-User extensions in the future:
+Contact Information
+-------------------
+Ling Thio - ling.thio [at] gmail.com
 
-* Flask-User-Profiles: View profile, Edit profile, Upload profile picture
-* Flask-User-Social: Login via Google, Facebook and Twitter authentication
+Acknowledgements
+----------------
+This project would not be possible without the use of the following amazing offerings:
+
+* `Flask <http://flask.pocoo.org/>`_
+* `Flask-Babel <http://babel.pocoo.org/>`_
+* `Flask-Login <https://flask-login.readthedocs.org/en/latest/>`_
+* `Flask-Mail <http://pythonhosted.org/flask-mail/>`_
+* `Flask-SQLAlchemy <http://pythonhosted.org/Flask-SQLAlchemy/>`_
+* `Flask-WTF <https://flask-wtf.readthedocs.org/en/latest/>`_
+* `SQLAlchemy <http://www.sqlalchemy.org/>`_
+* `WTForms <http://wtforms.readthedocs.org/en/latest/>`_
 
 Alternative Packages
 --------------------
 `Flask-Security <https://pythonhosted.org/Flask-Security/>`_
 
-Contact
--------
-Ling Thio - ling.thio [at] gmail.com

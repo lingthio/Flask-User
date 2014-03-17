@@ -24,7 +24,7 @@ Many web applications require User Account Management features such as **Registe
 Some also require **Role-based Authorization** and **Internationalization**.
 
 Wouldn't it be nice to have a package that would offer these features **out-of-the-box**
-while retaining **full control over the workflow and presentation** of this process?
+while **retaining full control over the workflow and presentation** of this process?
 
 Flask-User aims to provide such a ready-to-use **AND** fully customizable solution:
 
@@ -37,6 +37,7 @@ Flask-User aims to provide such a ready-to-use **AND** fully customizable soluti
 * **Well documented**
 * Tested on Python 2.6, 2.7 and 3.3
 
+
 Documentation
 -------------
 
@@ -46,20 +47,26 @@ Revision History
 ----------------
 `Flask-User Revision History <http://pythonhosted.org//Flask-User/index.html#revision-history>`_
 
-Extension Packages
-------------------
-We plan to offer the following Flask-User extensions in the future:
+Contact Information
+-------------------
+Ling Thio - ling.thio [at] gmail.com
 
-* Flask-User-Profiles: View profile, Edit profile, Upload profile picture
-* Flask-User-Social: Login via Google, Facebook and Twitter authentication
+Acknowledgements
+----------------
+This project would not be possible without the use of the following amazing offerings:
+
+* `Flask <http://flask.pocoo.org/>`_
+* `Flask-Babel <http://babel.pocoo.org/>`_
+* `Flask-Login <https://flask-login.readthedocs.org/en/latest/>`_
+* `Flask-Mail <http://pythonhosted.org/flask-mail/>`_
+* `Flask-SQLAlchemy <http://pythonhosted.org/Flask-SQLAlchemy/>`_
+* `Flask-WTF <https://flask-wtf.readthedocs.org/en/latest/>`_
+* `SQLAlchemy <http://www.sqlalchemy.org/>`_
+* `WTForms <http://wtforms.readthedocs.org/en/latest/>`_
 
 Alternative Packages
 --------------------
 `Flask-Security <https://pythonhosted.org/Flask-Security/>`_
-
-Contact
--------
-Ling Thio - ling.thio [at] gmail.com
 """
 
 from __future__ import print_function
@@ -67,7 +74,7 @@ from setuptools import setup
 
 setup(
     name='Flask-User',
-    version='0.4.1',
+    version='0.4.2',
     url='http://github.com/lingthio/Flask-User',
     license='BSD License',
     author='Ling Thio',
