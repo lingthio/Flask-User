@@ -1,7 +1,7 @@
 """
     flask_user.forms
     ----------------
-    This module defines default Flask-User forms.
+    This module defines and validates Flask-User forms.
 
     Forms are based on the WTForms module.
 

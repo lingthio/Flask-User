@@ -1,9 +1,9 @@
 """
     flask_user.signals
     ------------------
-    Signals send notifications to subscribed listeners (like your app)
+    This module creates event notification signals for Flask-User.
 
-    Flask-User.signals is based on Flask.signals which is based on the blinker module.
+    Signals are based on Flask.signals which are based on the blinker signals.
 
     :copyright: (c) 2013 by Ling Thio
     :author: Ling Thio (ling.thio@gmail.com)

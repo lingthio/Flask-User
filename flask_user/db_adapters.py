@@ -1,7 +1,7 @@
 """
     flask_user.db_adapters
     ----------------------
-    This module abstracts database/ORM specific code for Flask-User.
+    This module shields Flask-User code from database/ORM specific functions.
 
     :copyright: (c) 2013 by Ling Thio
     :author: Ling Thio (ling.thio@gmail.com)
@@ -40,7 +40,6 @@ class SQLAlchemyAdapter(DBAdapter):
         query = ObjectClass.query
         # For all name/value pairs in **kwargs
         for field_name, field_value in kwargs.items():
-            field_name, field_value = kwargs.items()[0]
             # Retrieve Class attribute from field_name
             field = getattr(ObjectClass, field_name, None)
             if not field:
@@ -58,7 +57,6 @@ class SQLAlchemyAdapter(DBAdapter):
         query = ObjectClass.query
         # For all name/value pairs in **kwargs
         for field_name, field_value in kwargs.items():
-            field_name, field_value = kwargs.items()[0]
             # Retrieve Class attribute from field_name
             field = getattr(ObjectClass, field_name, None)
             if not field:

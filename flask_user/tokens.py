@@ -1,7 +1,7 @@
 """
     flask_user.tokens
     -----------------
-    This module contains Flask-User functions that deal with generating and verifying tokens.
+    This module contains functions to generate and verify tokens for Flask-User.
 
     Tokens contain an encoded user ID and a signature.
     The signature is managed by the itsdangerous module.

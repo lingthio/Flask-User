@@ -1,3 +1,13 @@
+"""
+    flask_user.settings
+    -------------------
+    This module handles default application config settings for Flask-User.
+
+    :copyright: (c) 2013 by Ling Thio
+    :author: Ling Thio (ling.thio@gmail.com)
+    :license: Simplified BSD License, see LICENSE.txt for more details.
+"""
+
 def set_default_settings(user_manager, app_config):
     """
     Set default app.config settings, but only if they have not been set before

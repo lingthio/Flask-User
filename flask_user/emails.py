@@ -1,7 +1,7 @@
 """
     flask_user.emails
     -----------------
-    This module contains Flask-User functions that deal with sending emails.
+    This module contains email sending functions for Flask-User.
 
     It uses Jinja2 to render email subject and email message.
     It uses Flask-Mail to send email.

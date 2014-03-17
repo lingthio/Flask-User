@@ -1,3 +1,13 @@
+"""
+    flask_user.passwords
+    --------------------
+    This module hashes and verifies passwords for Flask-User.
+
+    :copyright: (c) 2013 by Ling Thio
+    :author: Ling Thio (ling.thio@gmail.com)
+    :license: Simplified BSD License, see LICENSE.txt for more details.
+"""
+
 from __future__ import print_function
 
 import hashlib

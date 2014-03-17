@@ -1,7 +1,7 @@
 """
     flask_user.views
     ----------------
-    This module contains default Flask-User view functions.
+    This module contains view functions for Flask-User forms.
 
     :copyright: (c) 2013 by Ling Thio
     :author: Ling Thio (ling.thio@gmail.com)

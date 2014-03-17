@@ -1,7 +1,9 @@
 """
-    flask_user.tokens
-    -----------------
-    This module contains Flask-User functions that deal with gettext and babel translations
+    flask_user.translations
+    -----------------------
+    This module contains functions to translate strings for Flask-User.
+
+    The functions are based on Flask-Babel.
 
     It redefines flask_babel.get_translations() to change the following:
     - look for translations first in the app.root_dir, then in the flask_user dir
