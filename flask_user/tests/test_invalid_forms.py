@@ -11,6 +11,7 @@
 
 from __future__ import print_function
 
+from datetime import datetime
 import time
 
 from flask import current_app, url_for
@@ -401,6 +402,42 @@ def test_invalid_roles(client):
     assert response_has_string(response, 'You do not have permission to access')
     client.logout()
 
+def test_login_without_confirm(client):
+    print("test_login_without_confirm")
+
+    um = current_app.user_manager
+    um.enable_username = False
+    um.enable_email = True
+    um.enable_confirm_email = True
+    um.enable_retype_password = False
+
+    email = 'notconfirmed@example.com'
+    password = 'Password1'
+
+    # register user
+    client.post_valid_form(url_for('user.register'),
+            email=email,
+            password=password)
+
+    # Try logging in without confirming email
+    client.post_invalid_form(url_for('user.login'),
+            'Your email address has not yet been confirmed.',
+            email=email,
+            password=password)
+
+    # Confirm email manually, but disable account
+    User = current_app.User
+    user = User.query.filter(User.email==email).first()
+    assert(user)
+    user.active = False
+    user.confirmed_at = datetime.utcnow()
+
+    # Try logging in into  disabled account
+    client.post_invalid_form(url_for('user.login'),
+            'Your account has been disabled.',
+            email=email,
+            password=password)
+
 def test_cleanup(db):
     """
     Delete user1 and user2
@@ -432,6 +469,8 @@ def run_all_tests(client):
 
     test_valid_roles(client)
     test_invalid_roles(client)
+
+    test_login_without_confirm(client)
 
     test_cleanup(current_app.db)
 

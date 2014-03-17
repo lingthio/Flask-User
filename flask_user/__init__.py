@@ -12,9 +12,9 @@ from passlib.context import CryptContext
 
 from flask import Blueprint, current_app
 from flask_login import LoginManager, UserMixin as LoginUserMixin
-from flask_user.db_interfaces import DBInterface
+from flask_user.db_adapters import DBAdapter
 
-from .db_interfaces import SQLAlchemyAdapter
+from .db_adapters import SQLAlchemyAdapter
 from . import forms
 from . import passwords
 from . import settings
@@ -35,7 +35,7 @@ def _user_loader(user_id):
     Flask-Login helper function to load user by user_id
     """
     um = current_app.user_manager
-    return um.db_adapter.find_user_by_id(user_id=user_id)
+    return um.find_user_by_id(user_id)
 
 def _flask_user_context_processor():
     """
@@ -180,6 +180,7 @@ class UserManager(object):
         # We can not define 'user.unauthenticated' here because it clashes with 'user.login'
         # We can not define 'user.unauthorized' here because it clashes with 'home_page'
 
+    # Obsoleted function. Replace with hash_password()
     def generate_password_hash(self, password):
         return passwords.hash_password(self, password)
 
@@ -194,6 +195,35 @@ class UserManager(object):
 
     def verify_token(self, token, expiration_in_seconds):
         return self.token_manager.verify_token(token, expiration_in_seconds)
+
+    def find_user_by_id(self, user_id):
+        return self.db_adapter.find_object(self.db_adapter.UserClass, id=user_id)
+
+    def find_user_by_username(self, username):
+        return self.db_adapter.ifind_object(self.db_adapter.UserClass, username=username)
+
+    def find_user_by_email(self, email):
+        return self.db_adapter.ifind_object(self.db_adapter.UserClass, email=email)
+
+    def email_is_available(self, new_email):
+        """
+        Return True if new_email does not exist.
+        Return False otherwise.
+        """
+        return self.find_user_by_email(new_email)==None
+
+    def username_is_available(self, new_username):
+        """
+        Return True if new_username does not exist or if new_username equals old_username.
+        Return False otherwise.
+        """
+        # Allow user to change username to the current username
+        if current_user.is_authenticated() and new_username == current_user.username:
+            return True
+        # See if new_username is available
+        return self.find_user_by_username(new_username)==None
+
+
 
 class UserMixin(LoginUserMixin):
     """

@@ -69,7 +69,7 @@ def unique_username_validator(form, field):
     Username must be unqiue
     """
     user_manager =  current_app.user_manager
-    if not user_manager.db_adapter.username_is_available(field.data):
+    if not user_manager.username_is_available(field.data):
         raise ValidationError(_('This Username is no longer available. Please try another one.'))
 
 
@@ -78,7 +78,7 @@ def unique_email_validator(form, field):
     Username must be unqiue
     """
     user_manager =  current_app.user_manager
-    if not user_manager.db_adapter.email_is_available(field.data):
+    if not user_manager.email_is_available(field.data):
         raise ValidationError(_('This Email is no longer available. Please try another one.'))
 
 # ***********
@@ -195,13 +195,16 @@ class LoginForm(Form):
         if not super(LoginForm, self).validate():
             return False
 
-        # Retrieve User by username or email
         if user_manager.enable_username:
-            user = user_manager.db_adapter.find_user_by_username(self.username.data)
+            # Find user by username or email
+            user = user_manager.find_user_by_username(self.username.data)
+            if not user:
+                user = user_manager.find_user_by_email(self.username.data)
         else:
-            user = user_manager.db_adapter.find_user_by_email(self.email.data)
+            # Find user by email
+            user = user_manager.find_user_by_email(self.email.data)
 
-        # Verify user and password
+        # Validate user and password
         if not user or not user_manager.verify_password(self.password.data, user.password):
             if user_manager.enable_username:
                 self.username.errors.append(_('Incorrect Username and Password'))

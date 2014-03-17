@@ -8,6 +8,8 @@
     :license: Simplified BSD License, see LICENSE.txt for more details.
 """
 
+from datetime import datetime
+
 from flask import current_app, flash, redirect, render_template, request, url_for
 from flask.ext.login import current_user, login_user, logout_user
 
@@ -34,8 +36,19 @@ def confirm_email(token):
         flash(_('Invalid confirmation token.'), 'error')
         return redirect(user_manager.login_url)
 
-    # Confirm email
-    user = user_manager.db_adapter.confirm_email(object_id)
+    # Confirm email by setting User.active=True and User.confirmed_at=utcnow()
+    if not user_manager.db_adapter.EmailClass:
+        user = user_manager.find_user_by_id(object_id)
+        if user:
+            user_manager.db_adapter.update_object(user,
+                    active=True,
+                    confirmed_at=datetime.utcnow(),
+                    )
+        else:                                               # pragma: no cover
+            flash(_('Invalid confirmation token.'), 'error')
+            return redirect(user_manager.login_url)
+    else:
+        raise NotImplementedError   # TODO:
 
     # Send email_confirmed signal
     signals.user_confirmed_email.send(current_app._get_current_object(), user=user)
@@ -63,7 +76,7 @@ def change_password():
         hashed_password = user_manager.hash_password(form.new_password.data)
 
         # Change password
-        user_manager.db_adapter.set_object_fields(current_user, password=hashed_password)
+        user_manager.db_adapter.update_object(current_user, password=hashed_password)
 
         # Send password_changed signal
         signals.user_changed_password.send(current_app._get_current_object(), user=current_user)
@@ -94,7 +107,7 @@ def change_username():
         new_username = form.new_username.data
 
         # Change username
-        user_manager.db_adapter.set_object_fields(current_user, username=new_username)
+        user_manager.db_adapter.update_object(current_user, username=new_username)
 
         # Send username_changed signal
         signals.user_changed_username.send(current_app._get_current_object(), user=current_user)
@@ -123,14 +136,14 @@ def forgot_password():
         email = form.email.data
 
         # Find user by email
-        user = user_manager.db_adapter.find_user_by_email(email)
+        user = user_manager.find_user_by_email(email)
         if user:
             # Generate password reset token
             token = user_manager.generate_token(user.id)
 
             # Store token
             if hasattr(user, 'reset_password_token'):
-                user_manager.db_adapter.set_object_fields(user, reset_password_token=token)
+                user_manager.db_adapter.update_object(user, reset_password_token=token)
 
             # Send forgot password email
             send_forgot_password_email(email, user, token)
@@ -162,9 +175,9 @@ def login():
     if request.method=='POST' and form.validate():
         # Retrieve User
         if user_manager.enable_username:
-            user = user_manager.db_adapter.find_user_by_username(form.username.data)
+            user = user_manager.find_user_by_username(form.username.data)
         else:
-            user = user_manager.db_adapter.find_user_by_email(form.email.data)
+            user = user_manager.find_user_by_email(form.email.data)
 
         if user:
             if user.active:
@@ -258,7 +271,7 @@ def register():
             user_kwargs['active'] = True
 
         # Add User record with named arguments
-        user = user_manager.db_adapter.add_user(**user_kwargs)
+        user = user_manager.db_adapter.add_object(user_manager.db_adapter.UserClass, **user_kwargs)
 
         # For multiple emails per user, add Email object
         if user_manager.db_adapter.EmailClass:
@@ -311,7 +324,7 @@ def resend_confirm_email():
     #     email = form.email.data
     #
     #     # Find user by email
-    #     user = user_manage.db_adapter.find_user_by_email(email)
+    #     user = user_manage.find_user_by_email(email)
     #     if user:
     #
     #         # Send confirmation email
@@ -348,7 +361,7 @@ def reset_password(token):
         flash(_('Your reset password token is invalid.'), 'error')
         return redirect(user_manager.login_url)
 
-    user = user_manager.db_adapter.find_user_by_id(user_id)
+    user = user_manager.find_user_by_id(user_id)
     if user:
         # Avoid re-using old tokens
         if hasattr(user, 'reset_password_token'):
@@ -366,11 +379,11 @@ def reset_password(token):
     if request.method=='POST' and form.validate():
         # Invalidate the token by clearing the stored token
         if hasattr(user, 'reset_password_token'):
-            user_manager.db_adapter.set_object_fields(user, reset_password_token='')
+            user_manager.db_adapter.update_object(user, reset_password_token='')
 
         # Change password
         hashed_password = user_manager.hash_password(form.new_password.data)
-        user_manager.db_adapter.set_object_fields(user, password=hashed_password)
+        user_manager.db_adapter.update_object(user, password=hashed_password)
 
         # Prepare one-time system message
         flash(_("Your password has been reset successfully. Please sign in with your new password"), 'success')
