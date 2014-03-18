@@ -17,7 +17,7 @@ install:
   - pip install coverage --quiet
   - pip install coveralls --quiet
 
-# Run automated tests with coverage
+# Run automated tests with coverage 
 script:
   - export PYTHONPATH=. && coverage run --source=flask_user flask_user/tests/run_tests.py
   - coverage report -m
