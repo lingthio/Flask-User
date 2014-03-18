@@ -9,32 +9,50 @@ but it's unlikely that they will endanger the stability of your website.
 * `Customizing Field labels`_
 * `Customizing Flash messages`_
 * `Customizing Form templates`_
+* `Customizing Form template filenames`_
 * `Customizing Validation messages`_
 
 Customizing Emails
 ------------------
-All user management Emails can be customized by copying the Flask-User email template files
-into the application's ``templates`` dir.
+Emails can be customized by copying the built-in email template files
+from the flask_user templates directory to your application's templates directory.
 
-To find out where flask_user got installed, type the following::
+The flask_user directory depends on Python, virtualenv and pip
+and can be determined with the following command::
 
     python -c "from distutils.sysconfig import get_python_lib; print get_python_lib();"
 
-If the command returned something like ``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages``,
-the email template files will be in
-``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/flask_user/templates/flask_user/emails/``,
-and you should copy them to something like: ``~/path/to/YOURAPP/templates/flask_user/emails/``
+Let's assume that:
 
-Emails are sent as multipart messages with a subject, HTML message body and a Text message body. HTML capable
-email clients will display the HTML message body while Text-only email clients will display the Text message body.
+* This command returned: ``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/``
+* Your app directory is: ``~/path/to/YOURAPP/``
 
-Each part has a corresponding base template::
+Emails can be customized by copying the email template files like so::
+
+    mkdir -p ~/path/to/YOURAPP/templates/flask_user/emails
+    cp ~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/flask_user/templates/flask_user/emails/* ~/path/to/YOURAPP/templates/flask_user/emails/.
+
+and by editing the copies to your liking.
+
+Flask-User currently offers the following email types::
+
+    registered       # Sent to users after they submitted a registration form
+    forgot_password  # Sent to users after they submitted a forgot password form
+
+Each email type has three email template files.
+The 'registered' email for example has the following files::
+
+    templates/flask_user/emails/registered_subject.txt   # The email subject line
+    templates/flask_user/emails/registered_message.html  # The email message in HTML format
+    templates/flask_user/emails/registered_message.txt   # The email message in Text format
+
+Each file is extended from the base template file::
 
     templates/flask_user/emails/base_subject.txt
     templates/flask_user/emails/base_message.html
     templates/flask_user/emails/base_message.txt
 
-The base templates are used to define email elements that are similar in all types of email messages.
+The base template files are used to define email elements that are similar in all types of email messages.
 
 | If, for example, for every email you want to:
 | - Set the background color and padding,
@@ -90,18 +108,41 @@ See :doc:`internationalization`
 
 Customizing Form Templates
 --------------------------
-Forms can be customized by copying the Flask-User form template files into the the application's ``templates/flask_user/`` directory.
+Forms can be customized by copying the built-in form template files
+from the flask_user templates directory to your application's templates directory.
 
-To find out where flask_user got installed, type the following::
+The flask_user directory depends on Python, virtualenv and pip
+and can be determined with the following command::
 
     python -c "from distutils.sysconfig import get_python_lib; print get_python_lib();"
 
-If the command returned something like ``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages``,
-the form template files will be in
-``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/flask_user/templates/flask_user/``,
-and you should copy them to something like: ``~/path/to/YOURAPP/templates/flask_user/``
+Let's assume that:
 
-In addition, the path and name of each form template file can be customized individually
+* This command returned: ``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/``
+* Your app directory is: ``~/path/to/YOURAPP/``
+
+Forms can be customized by copying the form template files like so::
+
+    mkdir -p ~/path/to/YOURAPP/templates/flask_user
+    cp ~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/flask_user/templates/flask_user/*.html ~/path/to/YOURAPP/templates/flask_user/.
+
+and by editing the copies to your liking.
+
+The following form template files can be customized::
+
+    templates/flask_user/base.html
+    templates/flask_user/change_password.html   # extends your application's 'base.html'
+    templates/flask_user/change_username.html   # extends your application's 'base.html'
+    templates/flask_user/forgot_password.html   # extends 'flask_user/base.html'
+    templates/flask_user/login.html             # extends 'flask_user/base.html'
+    templates/flask_user/register.html          # extends 'flask_user/base.html'
+    templates/flask_user/reset_password.html    # extends 'flask_user/base.html'
+
+
+Customizing Form Template filenames
+-----------------------------------
+In addition to customizing the Form Template file,
+the path and filename of each form template file can be customized individually
 through the application's config
 
 .. include:: includes/config_form_templates.txt

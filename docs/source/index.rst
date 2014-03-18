@@ -76,7 +76,8 @@ Feeling generous? `Tip me on Gittip <https://www.gittip.com/lingthio/>`_
 
 Revision History
 ----------------
-* v0.4.1 Customized email messages.
+* v0.4.2 Cleanup of SQLAlchemyAdapter.
+* v0.4.1 Cleanup of customized email messages and signals.
 * v0.4.0 Beta release. Translations via Babel.
 * v0.3.8 Role-based authorization via @roles_required.
 * v0.3.5 Support for Python 2.6, 2.7 and 3.3, Event notifications.
