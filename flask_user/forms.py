@@ -183,6 +183,13 @@ class LoginForm(Form):
     next = HiddenField()
     submit = SubmitField(_('Sign in'))
 
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+        user_manager =  current_app.user_manager
+        if user_manager.enable_username and user_manager.enable_email:
+            # Renamed 'Username' label to 'Username or Email'
+            self.username.label.text = _('Username or Email')
+
     def validate(self):
         # Remove fields depending on configuration
         user_manager =  current_app.user_manager
@@ -196,12 +203,12 @@ class LoginForm(Form):
             return False
 
         if user_manager.enable_username:
-            # Find user by username or email
+            # Find user by username or email address
             user = user_manager.find_user_by_username(self.username.data)
-            if not user:
+            if not user and user_manager.enable_email:
                 user = user_manager.find_user_by_email(self.username.data)
         else:
-            # Find user by email
+            # Find user by email address
             user = user_manager.find_user_by_email(self.email.data)
 
         # Validate user and password

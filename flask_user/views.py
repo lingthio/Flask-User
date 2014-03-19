@@ -175,8 +175,12 @@ def login():
     if request.method=='POST' and form.validate():
         # Retrieve User
         if user_manager.enable_username:
+            # Find user by username or email address
             user = user_manager.find_user_by_username(form.username.data)
+            if not user and user_manager.enable_email:
+                user = user_manager.find_user_by_email(form.username.data)
         else:
+            # Find user by email address
             user = user_manager.find_user_by_email(form.email.data)
 
         if user:

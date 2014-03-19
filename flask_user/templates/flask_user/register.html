@@ -9,12 +9,11 @@
 
     {# Username or Email #}
     {% set field = form.username if user_manager.enable_username else form.email %}
-    {% set label = 'Username' if user_manager.enable_username else 'Email' %}
     <div class="form-group {% if field.errors %}has-error{% endif %}">
         {# Label on left, "Already registered? Login." on right #}
         <div class="row">
             <div class="col-sm-6">
-                <label for="{{ field.id }}" class="control-label">{{ label }}</label>
+                <label for="{{ field.id }}" class="control-label">{{ field.label.text }}</label>
             </div>
             <div class="col-sm-6 text-right">
                 {% if user_manager.enable_register %}
