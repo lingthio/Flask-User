@@ -42,8 +42,8 @@ def test_authorization(client):
 
     # Test as anonymous user
     client.get_valid_page(url_for('home_page'))
-    client.get_invalid_page(url_for('profile_page'), 'You must be signed in to access /profile.')
-    client.get_invalid_page(url_for('special_page'), 'You must be signed in to access /special.')
+    client.get_invalid_page(url_for('profile_page'), "You must be signed in to access ")
+    client.get_invalid_page(url_for('special_page'), "You must be signed in to access ")
 
     # Register and Log in as user1 without any roles
     client.post_valid_form(url_for('user.register'),
@@ -52,7 +52,7 @@ def test_authorization(client):
 
     client.get_valid_page(url_for('home_page'))
     client.get_valid_page(url_for('profile_page'))
-    client.get_invalid_page(url_for('special_page'), 'You do not have permission to access /special.')
+    client.get_invalid_page(url_for('special_page'), "You do not have permission to access ")
 
     # Delete userX
     user = User.query.filter(User.username=='userX').first()

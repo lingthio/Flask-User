@@ -38,10 +38,12 @@ Flask-User aims to provide such a ready-to-use **AND** fully customizable soluti
 * **Well documented**
 * Tested on Python 2.6, 2.7 and 3.3
 
+Demo
+----
+`Flask-User Demo <https://flask-user-demo.herokuapp.com/>`_
 
 Documentation
 -------------
-
 `Flask-User Documentation <https://pythonhosted.org/Flask-User/>`_
 
 Revision History

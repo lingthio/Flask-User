@@ -404,7 +404,7 @@ def unauthenticated():
     """
     # Prepare Flash message
     url = request.script_root + request.path
-    flash(_('You must be signed in to access %(url)s.', url=url), 'error')
+    flash(_("You must be signed in to access '%(url)s'.", url=url), 'error')
 
     # Redirect to USER_UNAUTHENTICATED_URL
     user_manager = current_app.user_manager
@@ -416,7 +416,7 @@ def unauthorized():
     """
     # Prepare Flash message
     url = request.script_root + request.path
-    flash(_('You do not have permission to access %(url)s.', url=url), 'error')
+    flash(_("You do not have permission to access '%(url)s'.", url=url), 'error')
 
     # Redirect to USER_UNAUTHORIZED_URL
     user_manager = current_app.user_manager
