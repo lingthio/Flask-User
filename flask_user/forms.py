@@ -1,22 +1,14 @@
-"""
-    flask_user.forms
-    ----------------
-    This module defines and validates Flask-User forms.
-
-    Forms are based on the WTForms module.
+""" This file defines and validates Flask-User forms. Forms are based on the WTForms module.
 
     :copyright: (c) 2013 by Ling Thio
     :author: Ling Thio (ling.thio@gmail.com)
-    :license: Simplified BSD License, see LICENSE.txt for more details.
-"""
+    :license: Simplified BSD License, see LICENSE.txt for more details."""
 
 from flask import current_app
 from flask.ext.login import current_user
 from flask.ext.wtf import Form
-
 from wtforms import BooleanField, HiddenField, PasswordField, SubmitField, StringField
 from wtforms import validators, ValidationError
-
 from .translations import lazy_gettext as _
 
 # **************************
@@ -24,14 +16,7 @@ from .translations import lazy_gettext as _
 # **************************
 
 def password_validator(form, field):
-    """
-    Password must have one lowercase letter, one uppercase letter and one digit.
-
-    A custom password validator can be specified:
-        user_manager = UserManager.init(db_adapter)
-        user_manager.password_validator = my_custom_password_validator
-        user_manager.init_app(app)
-    """
+    """ Password must have one lowercase letter, one uppercase letter and one digit."""
     # Convert string to list of characters
     password = list(field.data)
     password_length = len(password)
@@ -49,14 +34,7 @@ def password_validator(form, field):
         raise ValidationError(_('Password must have at least 6 characters with one lowercase letter, one uppercase letter and one number'))
 
 def username_validator(form, field):
-    """
-    Username must cont at least 3 alphanumeric characters long
-
-    A custom username validator can be specified:
-        user_manager = UserManager.init(db_adapter)
-        user_manager.username_validator = my_custom_username_validator
-        user_manager.init_app(app)
-    """
+    """ Username must cont at least 3 alphanumeric characters long"""
     username = field.data
     username_length=len(username)
     if username_length < 3:
@@ -65,18 +43,14 @@ def username_validator(form, field):
         raise ValidationError(_('Username may only contain letters and numbers'))
 
 def unique_username_validator(form, field):
-    """
-    Username must be unqiue
-    """
+    """ Username must be unique"""
     user_manager =  current_app.user_manager
     if not user_manager.username_is_available(field.data):
         raise ValidationError(_('This Username is no longer available. Please try another one.'))
 
 
 def unique_email_validator(form, field):
-    """
-    Username must be unqiue
-    """
+    """ Username must be unique"""
     user_manager =  current_app.user_manager
     if not user_manager.email_is_available(field.data):
         raise ValidationError(_('This Email is no longer available. Please try another one.'))
@@ -119,7 +93,6 @@ class ChangeUsernameForm(Form):
         # All is well
         return True
 
-
 class ChangePasswordForm(Form):
     old_password = PasswordField(_('Old Password'), validators=[
         validators.Required(_('Old Password is required')),
@@ -159,14 +132,12 @@ class ChangePasswordForm(Form):
         # All is well
         return True
 
-
 class ForgotPasswordForm(Form):
     email = StringField(_('Email'), validators=[
         validators.Required(_('Email is required')),
         validators.Email(_('Invalid Email')),
         ])
     submit = SubmitField(_('Send reset password email'))
-
 
 class LoginForm(Form):
     username = StringField(_('Username'), validators=[
@@ -223,25 +194,20 @@ class LoginForm(Form):
         # All is well
         return True
 
-
 class RegisterForm(Form):
     password_validator_added = False
 
     username = StringField(_('Username'), validators=[
         validators.Required(_('Username is required')),
-        unique_username_validator,
-        ])
+        unique_username_validator])
     email = StringField(_('Email'), validators=[
         validators.Required(_('Email is required')),
         validators.Email(_('Invalid Email')),
-        unique_email_validator,
-        ])
+        unique_email_validator])
     password = PasswordField(_('Password'), validators=[
-        validators.Required(_('Password is required')),
-        ])
+        validators.Required(_('Password is required'))])
     retype_password = PasswordField(_('Retype Password'), validators=[
-        validators.EqualTo('password', message=_('Password and Retype Password did not match'))
-        ])
+        validators.EqualTo('password', message=_('Password and Retype Password did not match'))])
     submit = SubmitField(_('Register'))
 
     def validate(self):
@@ -253,7 +219,6 @@ class RegisterForm(Form):
             delattr(self, 'email')
         if not user_manager.enable_retype_password:
             delattr(self, 'retype_password')
-
         # Add custom username validator if needed
         if user_manager.enable_username:
             has_been_added = False
@@ -262,7 +227,6 @@ class RegisterForm(Form):
                     has_been_added = True
             if not has_been_added:
                 self.username.validators.append(user_manager.username_validator)
-
         # Add custom password validator if needed
         has_been_added = False
         for v in self.password.validators:
@@ -270,21 +234,17 @@ class RegisterForm(Form):
                 has_been_added = True
         if not has_been_added:
             self.password.validators.append(user_manager.password_validator)
-
         # Validate field-validators
         if not super(RegisterForm, self).validate():
             return False
-
         # All is well
         return True
 
 class ResetPasswordForm(Form):
     new_password = PasswordField(_('New Password'), validators=[
-        validators.Required(_('New Password is required')),
-        ])
+        validators.Required(_('New Password is required'))])
     retype_password = PasswordField(_('Retype New Password'), validators=[
-        validators.EqualTo('new_password', message=_('New Password and Retype Password did not match'))
-        ])
+        validators.EqualTo('new_password', message=_('New Password and Retype Password did not match'))])
     next = HiddenField()
     submit = SubmitField(_('Change Password'))
 
@@ -293,7 +253,6 @@ class ResetPasswordForm(Form):
         user_manager =  current_app.user_manager
         if not user_manager.enable_retype_password:
             delattr(self, 'retype_password')
-
         # Add custom password validator if needed
         has_been_added = False
         for v in self.new_password.validators:
@@ -301,10 +260,8 @@ class ResetPasswordForm(Form):
                 has_been_added = True
         if not has_been_added:
             self.new_password.validators.append(user_manager.password_validator)
-
         # Validate field-validators
         if not super(ResetPasswordForm, self).validate():
             return False
-
         # All is well
         return True

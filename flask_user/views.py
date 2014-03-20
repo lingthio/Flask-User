@@ -1,27 +1,19 @@
-"""
-    flask_user.views
-    ----------------
-    This module contains view functions for Flask-User forms.
+""" This file contains view functions for Flask-User forms.
 
     :copyright: (c) 2013 by Ling Thio
     :author: Ling Thio (ling.thio@gmail.com)
-    :license: Simplified BSD License, see LICENSE.txt for more details.
-"""
+    :license: Simplified BSD License, see LICENSE.txt for more details."""
 
 from datetime import datetime
-
 from flask import current_app, flash, redirect, render_template, request, url_for
 from flask.ext.login import current_user, login_user, logout_user
-
 from .decorators import login_required
 from .emails import send_registered_email, send_forgot_password_email
 from . import signals
 from .translations import gettext as _
 
 def confirm_email(token):
-    """
-    Verify email confirmation token and activate the user account.
-    """
+    """ Verify email confirmation token and activate the user account."""
     # Verify token
     user_manager = current_app.user_manager
     is_valid, has_expired, object_id = user_manager.verify_token(
@@ -61,9 +53,7 @@ def confirm_email(token):
 
 @login_required
 def change_password():
-    """
-    Prompt for old password and new password and change the user's password.
-    """
+    """ Prompt for old password and new password and change the user's password."""
     user_manager =  current_app.user_manager
 
     # Initialize form
@@ -90,12 +80,9 @@ def change_password():
     # Process GET or invalid POST
     return render_template(user_manager.change_password_template, form=form)
 
-
 @login_required
 def change_username():
-    """
-    Prompt for new username and old password and change the user's username.
-    """
+    """ Prompt for new username and old password and change the user's username."""
     user_manager =  current_app.user_manager
 
     # Initialize form
@@ -123,9 +110,7 @@ def change_username():
 
 
 def forgot_password():
-    """
-    Prompt for email and send reset password email.
-    """
+    """Prompt for email and send reset password email."""
     user_manager =  current_app.user_manager
 
     # Initialize form
@@ -162,9 +147,7 @@ def forgot_password():
 
 
 def login():
-    """
-    Prompt for username/email and password and sign the user in.
-    """
+    """ Prompt for username/email and password and sign the user in."""
     user_manager =  current_app.user_manager
 
     # Initialize form
@@ -202,15 +185,11 @@ def login():
                 else:
                     flash(_('Your account has been disabled.'), 'error')
 
-
     # Process GET or invalid POST
     return render_template(user_manager.login_template, form=form)
 
-
 def logout():
-    """
-    Sign the user out.
-    """
+    """ Sign the user out."""
     user_manager =  current_app.user_manager
 
     # Send user_logged_out signal
@@ -228,9 +207,7 @@ def logout():
 
 
 def register():
-    """
-    Prompt for username/email and password, send confirmation email, and create an inactive user account.
-    """
+    """ Prompt for username/email and password, send confirmation email, and create an inactive user account."""
     user_manager =  current_app.user_manager
 
     # Initialize form
@@ -315,42 +292,9 @@ def register():
 # TODO:
 def resend_confirm_email():
     pass
-    # """
-    # Prompt for email and re-send the confirmation email.
-    # """
-    # user_manager =  current_app.user_manager
-    #
-    # # Initialize form
-    # form = user_manager.resend_confirm_email_form(request.form)
-    #
-    # # Process valid POST
-    # if request.method=='POST' and form.validate():
-    #     email = form.email.data
-    #
-    #     # Find user by email
-    #     user = user_manage.find_user_by_email(email)
-    #     if user:
-    #
-    #         # Send confirmation email
-    #         send_confirm_email_email(email, user)
-    #
-    #     # Prepare one-time system message
-    #     flash(_("A confirmation email has been sent to %(email)s. Open that email and follow the instructions to complete your registration.", email=email), 'success')
-    #
-    #     # Redirect to 'next' URL or '/'
-    #     next = form.next.data
-    #     if not next:
-    #         return redirect('/')
-    #     return redirect(next)
-    #
-    # # Process GET or invalid POST
-    # return render_template(user_manager.resend_confirm_email_template, form=form)
-
 
 def reset_password(token):
-    """
-    Verify the password reset token, Prompt for new password, and set the user's password.
-    """
+    """ Verify the password reset token, Prompt for new password, and set the user's password."""
     # Verify token
     user_manager = current_app.user_manager
     is_valid, has_expired, user_id = user_manager.verify_token(
@@ -399,9 +343,7 @@ def reset_password(token):
     return render_template(user_manager.reset_password_template, form=form)
 
 def unauthenticated():
-    """
-    Prepare a Flash message and redirect to USER_UNAUTHENTICATED_URL
-    """
+    """ Prepare a Flash message and redirect to USER_UNAUTHENTICATED_URL"""
     # Prepare Flash message
     url = request.script_root + request.path
     flash(_("You must be signed in to access '%(url)s'.", url=url), 'error')
@@ -411,9 +353,7 @@ def unauthenticated():
     return redirect(user_manager.unauthenticated_url)
 
 def unauthorized():
-    """
-    Prepare a Flash message and redirect to USER_UNAUTHORIZED_URL
-    """
+    """ Prepare a Flash message and redirect to USER_UNAUTHORIZED_URL"""
     # Prepare Flash message
     url = request.script_root + request.path
     flash(_("You do not have permission to access '%(url)s'.", url=url), 'error')

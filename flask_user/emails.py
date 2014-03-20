@@ -1,19 +1,12 @@
-"""
-    flask_user.emails
-    -----------------
-    This module contains email sending functions for Flask-User.
-
-    It uses Jinja2 to render email subject and email message.
-    It uses Flask-Mail to send email.
+""" This file contains email sending functions for Flask-User.
+    It uses Jinja2 to render email subject and email message. It uses Flask-Mail to send email.
 
     :copyright: (c) 2013 by Ling Thio
     :author: Ling Thio (ling.thio@gmail.com)
-    :license: Simplified BSD License, see LICENSE.txt for more details.
-"""
+    :license: Simplified BSD License, see LICENSE.txt for more details."""
 
 import smtplib
 import socket
-
 from flask import current_app, render_template, url_for
 from flask_mail import Message
 
@@ -23,10 +16,8 @@ def _render_email(filename, **kwargs):
     # Make sure that subject lines do not contain newlines
     subject = subject.replace('\n', ' ')
     subject = subject.replace('\r', ' ')
-
     # Render HTML message
     html_message = render_template(filename+'_message.html', **kwargs)
-
     # Render text message
     text_message = render_template(filename+'_message.txt', **kwargs)
 
@@ -58,18 +49,14 @@ def send_registered_email(email, user, token):
     if not user_manager.enable_email: return
     if not user_manager.send_registered_email: return
     assert(email)
-
     # Generate confirmation link
     confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
-
     # Render subject, html message and text message
     subject, html_message, text_message = _render_email(
             user_manager.registered_email_template,
             user=user, confirm_email_link=confirm_email_link)
-
     # Send email message using Flask-Mail
     _send_email(email, subject, html_message, text_message)
-
 
 def send_forgot_password_email(email, user, token):
     # Verify certain conditions

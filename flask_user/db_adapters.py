@@ -1,22 +1,15 @@
-"""
-    flask_user.db_adapters
-    ----------------------
-    This module shields Flask-User code from database/ORM specific functions.
+""" This file shields Flask-User code from database/ORM specific functions.
 
     :copyright: (c) 2013 by Ling Thio
     :author: Ling Thio (ling.thio@gmail.com)
-    :license: Simplified BSD License, see LICENSE.txt for more details.
-"""
+    :license: Simplified BSD License, see LICENSE.txt for more details."""
 
 from datetime import datetime
-
 from flask_login import current_user
 
 class DBAdapter(object):
-    """
-    This object is used to shield Flask-User from ORM specific functions.
-    It's used as the base class for ORM specific adapters like SQLAlchemyAdapter.
-    """
+    """ This object is used to shield Flask-User from ORM specific functions.
+        It's used as the base class for ORM specific adapters like SQLAlchemyAdapter."""
     def __init__(self, db, UserClass, RoleClass=None, ProfileClass=None, EmailClass=None):
         self.db = db
         self.UserClass = UserClass          # email, password, etc.
@@ -26,16 +19,12 @@ class DBAdapter(object):
 
 
 class SQLAlchemyAdapter(DBAdapter):
-    """
-    This object is used to shield Flask-User from SQLAlchemy specific functions.
-    """
+    """ This object is used to shield Flask-User from SQLAlchemy specific functions."""
     def __init__(self, db, UserClass, RoleClass=None, ProfileClass=None, EmailClass=None):
         super(SQLAlchemyAdapter, self).__init__(db, UserClass, RoleClass, ProfileClass, EmailClass)
 
     def find_object(self, ObjectClass, **kwargs):
-        """
-        Find object of class 'ObjectClass' by specified '**kwargs' -- case sensitive!!
-        """
+        """ Find object of class 'ObjectClass' by specified '**kwargs' -- case sensitive!!"""
         # Prepare base query
         query = ObjectClass.query
         # For all name/value pairs in **kwargs
@@ -50,9 +39,7 @@ class SQLAlchemyAdapter(DBAdapter):
         return query.first()
 
     def ifind_object(self, ObjectClass, **kwargs):
-        """
-        Find object of class 'ObjectClass' by specified '**kwargs' -- case INsensitive!!
-        """
+        """ Find object of class 'ObjectClass' by specified '**kwargs' -- case INsensitive!!"""
         # Prepare base query
         query = ObjectClass.query
         # For all name/value pairs in **kwargs
@@ -67,18 +54,14 @@ class SQLAlchemyAdapter(DBAdapter):
         return query.first()
 
     def add_object(self, ObjectClass, **kwargs):
-        """
-        Add an object of class 'ObjectClass' with fields and values specified in '**kwargs'.
-        """
+        """ Add an object of class 'ObjectClass' with fields and values specified in '**kwargs'."""
         object=ObjectClass(**kwargs)
         self.db.session.add(object)
         self.db.session.commit()
         return object
 
     def update_object(self, object, **kwargs):
-        """
-        Update 'object' with the fields and values specified in '**kwargs'.
-        """
+        """ Update 'object' with the fields and values specified in '**kwargs'."""
         for key,value in kwargs.items():
             if hasattr(object, key):
                 setattr(object, key, value)
