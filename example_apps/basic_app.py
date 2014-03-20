@@ -48,7 +48,8 @@ def create_app(test_config=None):                   # For automated tests
 
     @babel.localeselector
     def get_locale():
-        return request.accept_languages.best_match(['en', 'nl'])
+        translations = [str(translation) for translation in babel.list_translations()]
+        return request.accept_languages.best_match(translations)
 
     # Define User model. Make sure to add flask.ext.user UserMixin!!
     class User(db.Model, UserMixin):
