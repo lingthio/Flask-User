@@ -16,7 +16,8 @@ import time
 
 from flask import current_app, url_for
 
-from .tstutils import response_has_string
+from flask_user_tests.tstutils import response_has_string
+
 
 # **********************
 # ** Global Variables **

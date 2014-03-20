@@ -11,9 +11,9 @@
 from __future__ import print_function
 import unittest
 
-from flask_user.tests import tst_app, tstutils, test_authorization, test_valid_forms, test_invalid_forms
-
 # Configure app
+from flask_user_tests import test_valid_forms, test_authorization, tst_app, test_invalid_forms, tstutils
+
 test_config = dict(
     SQLALCHEMY_DATABASE_URI='sqlite:///:memory:',   # In-memory sqlite DB
     WTF_CSRF_ENABLED=False,  # Disable CSRF token in Flask-Wtf

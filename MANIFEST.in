@@ -1,2 +1,7 @@
 include AUTHORS.txt CHANGES.txt LICENSE.txt README.rst
 recursive-include flask_user *
+recursive-include flask_user_tests *
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.sqlite
+
