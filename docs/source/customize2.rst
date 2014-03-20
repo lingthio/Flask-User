@@ -106,6 +106,8 @@ The built-in Flash messages can be customized by editing the 'en' Babel translat
 
 See :doc:`internationalization`
 
+.. _customizingformtemplates:
+
 Customizing Form Templates
 --------------------------
 Forms can be customized by copying the built-in form template files

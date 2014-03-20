@@ -90,7 +90,7 @@ To be documented.
 Customizing View Functions
 --------------------------
 The built-in View Functions contain considerable business logic, so we recommend first
-trying the approach of Customizing `Form Templates`_
+trying the approach of :ref:`customizingformtemplates`
 before making use of customized View Functions.
 
 Custom view functions are specified by setting an attribute on the Flask-User's UserManager object::

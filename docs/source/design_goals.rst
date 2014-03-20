@@ -4,7 +4,6 @@ Design Goals
 
 * `Reliable`_
 * `Secure`_
-* `Easy to Install`_
 * `Ready to use`_
 * `Fully Customizable`_
 * `Nice Feature Set`_
@@ -15,14 +14,6 @@ Design Goals
 
 Reliable
 --------
-.. image:: https://pypip.in/v/Flask-User/badge.png
-    :target: https://pypi.python.org/pypi/Flask-User
-
-.. image:: https://travis-ci.org/lingthio/Flask-User.png?branch=master
-    :target: https://travis-ci.org/lingthio/Flask-User
-
-.. image:: https://coveralls.io/repos/lingthio/flask-user/badge.png?branch=master
-    :target: https://coveralls.io/r/lingthio/flask-user?branch=master
 
 We understand that you are looking for an easy yet reliable way to manage your users.
 We've run our code through automated tests from the very beginning and we're proud
@@ -36,14 +27,10 @@ set of hashing algorithms that ``passlib`` supports.
 
 Tokens are encrypted using ``AES`` and signed using the ``itsdangerous`` package.
 
-Easy to Install
----------------
-Installing is as easy as: ``pip install flask-user``
-
-See :doc:`installation`
 
 Ready to use
 ------------
+Installing is as easy as: ``pip install flask-user``. See :doc:`installation`.
 
 The :doc:`recipes_minimal_app` requires only eleven lines of additional code.
 
@@ -73,14 +60,7 @@ Nice Feature Set
 * Change username, Change password, Forgot password
 * Secure password hashing and token generation
 * Role-based Authorization -- See :doc:`authorization`
-* Easy to setup and Ready to use -- See :doc:`recipes_minimal_app`
+* Internationalization -- See :doc:`internationalization`
 * Fully customizable -- See :doc:`customization`
-* Form validation
 * Event notification -- See :doc:`notification`.
-* Internationalization ready
 
-Planned Features
-----------------
-* Registration by invitation only
-* Profile editing with pictures and thumbnails
-* Role based authorization

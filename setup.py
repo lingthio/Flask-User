@@ -39,7 +39,8 @@ Flask-User aims to provide such a ready-to-use **AND** fully customizable soluti
 
 Demo
 ----
-`Flask-User Demo <https://flask-user-demo.herokuapp.com/>`_
+| `Flask-User Demo <https://flask-user-demo.herokuapp.com/>`_
+| (If you're the first visitor in the last hour, this may take a few seconds to load)
 
 Documentation
 -------------

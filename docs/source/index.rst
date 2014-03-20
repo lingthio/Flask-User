@@ -40,12 +40,17 @@ Flask-User aims to provide such a ready-to-use **AND** fully customizable soluti
 
 * **Reliable**
 * **Secure**
-* **Fully customizable**
 * **Ready to use**
+* **Fully customizable**
 * **Role-based Authorization**
 * **Internationalization**
 * **Well documented**
 * Tested on Python 2.6, 2.7 and 3.3
+
+Demo
+----
+| `Flask-User Demo <https://flask-user-demo.herokuapp.com/>`_
+| (If you're the first visitor in the last hour, this may take a few seconds to load)
 
 Status
 ------
@@ -66,7 +71,9 @@ Documentation
     customization
     internationalization
     notification
+    faq
     api
+
 
 Contact Information
 -------------------
@@ -76,7 +83,7 @@ Feeling generous? `Tip me on Gittip <https://www.gittip.com/lingthio/>`_
 
 Revision History
 ----------------
-* v0.4.2 Cleanup of SQLAlchemyAdapter.
+* v0.4.2 Cleanup of SQLAlchemyAdapter. Added tox for Python 3.4
 * v0.4.1 Cleanup of customized email messages and signals.
 * v0.4.0 Beta release. Translations via Babel.
 * v0.3.8 Role-based authorization via @roles_required.
