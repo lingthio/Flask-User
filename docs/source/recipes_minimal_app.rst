@@ -14,7 +14,7 @@ The highlighted lines show Flask-User specific code.
 .. literalinclude:: includes/minimal_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 4, 26-30, 36-37, 54
+   :emphasize-lines: 4, 27-31, 37-38, 55
 
 Run the Minimal App
 -------------------

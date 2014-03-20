@@ -49,7 +49,8 @@ def create_app(test_config=None):                   # For automated tests
 
     @babel.localeselector
     def get_locale():
-        return request.accept_languages.best_match(['en', 'nl'])
+        translations = [str(translation) for translation in babel.list_translations()]
+        return request.accept_languages.best_match(translations)
 
     # Define the User-Roles pivot table
     user_roles = db.Table('user_roles',

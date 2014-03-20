@@ -18,15 +18,15 @@ Locate the python package installation directory::
     python -c "from distutils.sysconfig import get_python_lib; print get_python_lib();"
 
 | This document assumes that it returned:
-| ``~/.virtualenvs/YOURAPP/lib/python2.7/site-packages``
+| ``~/.virtualenvs/YOURENV/lib/python2.7/site-packages``
 | and that your application directory is:
-| ``~/path/to/YOURAPP``
+| ``~/path/to/YOURAPP/YOURAPP``
 | (your application directory typically has a 'templates' sub-directory).
 
 Copy the ``translations`` directory from flask_user to your application directory::
 
-    cd ~/path/to/YOURAPP
-    cp -r ~/.virtualenvs/YOURAPP/lib/python2.7/site-packages/flask_user/translations .
+    cd ~/path/to/YOURAPP/YOURAPP
+    cp -r ~/.virtualenvs/YOURENV/lib/python2.7/site-packages/flask_user/translations .
 
 | To edit the translations file. We recommend using a translation editor such as Poedit
 |       `Download poedit <http://www.poedit.net/download.php>`_
@@ -49,7 +49,7 @@ Safe the .po file when you're done.
 
 Compile a .mo compiled translation file from a .po translation file like so::
 
-    cd ~/path/to/YOURAPP
+    cd ~/path/to/YOURAPP/YOURAPP
     pybabel compile -d translations -D flask_user -f
 
 **Verify**
@@ -70,7 +70,7 @@ This document assumes that you chose 'es' for Spanish.
 
 ::
 
-    cd ~/path/to/YOURAPP
+    cd ~/path/to/YOURAPP/YOURAPP
     pybabel init -d translations -l es -D flask_user -i translations/flask_user.pot
 
 Note that the above command overwrites the file ``translations/es/LC_MESSAGES/flask_user.po``.
@@ -86,7 +86,7 @@ Translate any message that you wish to translate. Safe the .po file when you're 
 
 Compile a .mo compiled translation file from a .po translation file like so::
 
-    cd ~/path/to/YOURAPP
+    cd ~/path/to/YOURAPP/YOURAPP
     pybabel compile -d translations -D flask_user -f
 
 **Verify**
