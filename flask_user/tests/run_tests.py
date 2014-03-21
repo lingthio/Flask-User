@@ -12,7 +12,7 @@ from __future__ import print_function
 import unittest
 
 # Configure app
-from flask_user_tests import test_valid_forms, test_authorization, tst_app, test_invalid_forms, tstutils
+from flask_user.tests import test_valid_forms, test_authorization, tst_app, test_invalid_forms, tstutils
 
 test_config = dict(
     SQLALCHEMY_DATABASE_URI='sqlite:///:memory:',   # In-memory sqlite DB

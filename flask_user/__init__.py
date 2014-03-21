@@ -16,7 +16,7 @@ from . import tokens
 from . import translations
 from . import views
 
-__version__ = '0.4.2'
+__version__ = '0.4.3'
 
 # Enable the following: from flask.ext.user import current_user
 from flask_login import current_user

@@ -16,7 +16,8 @@ import time
 
 from flask import current_app, url_for
 
-from flask_user_tests.tstutils import response_has_string
+from flask_user.tests.tstutils import response_has_string
+
 
 
 # **********************
