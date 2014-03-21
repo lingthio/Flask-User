@@ -1,16 +1,14 @@
 Internationalization
 ====================
-Flask-User has encapsulated all user-facing messages and uses the Babel package
-to customize or translate these messages.
-
-Flask-User ships with a Dutch translation, and allows all messages to be
-translated to any other language.
+Flask-User stores all user-facing messages in a translation file,
+ships with English and Dutch translations,
+and allows all messages to be translated to other languages.
 
 English message customization is achieved by 'translating' built-in english
 messages to custom english messages.
 
-Preparing for translations
---------------------------
+Preparing for translation
+-------------------------
 We need to copy Flask-User's ``translations`` directory to your application directory.
 
 Locate the python package installation directory::
@@ -19,6 +17,7 @@ Locate the python package installation directory::
 
 | This document assumes that it returned:
 | ``~/.virtualenvs/YOURENV/lib/python2.7/site-packages``
+
 | and that your application directory is:
 | ``~/path/to/YOURAPP/YOURAPP``
 | (your application directory typically has a 'templates' sub-directory).
@@ -30,7 +29,8 @@ Copy the ``translations`` directory from flask_user to your application director
 
 | To edit the translations file. We recommend using a translation editor such as Poedit
 |       `Download poedit <http://www.poedit.net/download.php>`_
-| If you run Mac OS 10.6 or older, you'll need to download `version 1.5 from here <http://sourceforge.net/projects/poedit/files/poedit/1.5/>`_.
+| If you run Mac OS 10.6 or older, you'll need to download
+  `version 1.5 from here <http://sourceforge.net/projects/poedit/files/poedit/1.5/>`_.
 
 Customizing Messages
 --------------------

@@ -17,13 +17,10 @@ Flask-User
 
 ::
 
-    !! News Flash: v0.4.1 API changes !!
-    - User.email_confirmed_at                          --> confirmed_at
-    - templates/flask_user/emails/confirmation_email_* --> registered_*
-    - signals.confirmation_email_set                   --> user_registered
-    - template variable {{ confirmation_link }}        --> {{ confirm_email_link }}
-    - templates/flask_user/emails/reset_password_*     --> forgot_password_*
-    - signals.reset_password_email_sent                --> user_forgot_password
+    !! News-flash: v0.4.3 API changes !!
+    Form templates now inherit from templates/flask_user/public_base.html,
+    templates/flask_user/member_base.html and templates/base.html.
+    See the 'Base templates' link on the left
 
 Customizable User Account Management for Flask
 ----------------------------------------------
@@ -66,6 +63,7 @@ Documentation
 
     design_goals
     installation
+    base_templates
     recipes
     authorization
     customization
@@ -83,8 +81,28 @@ Feeling generous? `Tip me on Gittip <https://www.gittip.com/lingthio/>`_
 
 Revision History
 ----------------
+* v0.4.3 base.html, flask_user/public_base.html, flask_user/member_base.html.
+  Cleanup. Reduced package size from 83KB to 30KB.
+
+::
+
+    v0.4.3 API changes
+    Form templates now inherit from templates/flask_user/public_base.html,
+    templates/flask_user/member_base.html and templates/base.html.
+
 * v0.4.2 Cleanup of SQLAlchemyAdapter. Added tox for Python 3.4
 * v0.4.1 Cleanup of customized email messages and signals.
+
+::
+
+    v0.4.1 API changes
+    - User.email_confirmed_at                          --> confirmed_at
+    - templates/flask_user/emails/confirmation_email_* --> registered_*
+    - signals.confirmation_email_set                   --> user_registered
+    - template variable {{ confirmation_link }}        --> {{ confirm_email_link }}
+    - templates/flask_user/emails/reset_password_*     --> forgot_password_*
+    - signals.reset_password_email_sent                --> user_forgot_password
+
 * v0.4.0 Beta release. Translations via Babel.
 * v0.3.8 Role-based authorization via @roles_required.
 * v0.3.5 Support for Python 2.6, 2.7 and 3.3, Event notifications.

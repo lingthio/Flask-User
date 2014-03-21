@@ -1,7 +1,7 @@
 Flask-User API
 ==============
 * `Config Settings`_
-* `SQLAlchemyAdapter`_
+* `SQLAlchemyAdapter()`_
 * `UserManager`_
 * `Template variables`_
 * `Template functions`_
@@ -19,10 +19,30 @@ Config Settings
 
 .. include:: includes/config_form_templates.txt
 
+.. _sqlalchemyadapter:
 
-SQLAlchemyAdapter
------------------
-Work in progress. See :doc:`recipes_basic_app` for now.
+SQLAlchemyAdapter()
+-------------------
+Flask-User shields itself from database operations through a DBAdapter.
+It ships with a SQLAlchemyAdapter, but the API is very simple, so other adapters
+can be easily added.
+
+::
+
+    class SQLAlchemyAdapter(DBAdapter):
+        """ This object shields Flask-User from database specific functions. """
+
+        def find_object(self, ObjectClass, **kwargs):
+            """ Case sensitive find object by specified kwargs. """
+
+        def ifind_object(self, ObjectClass, **kwargs):
+            """ Case INsensitive find object by specified kwargs. """
+
+        def add_object(self, ObjectClass, **kwargs):
+            """ Add an object with fields and values specified in kwargs. """
+
+        def update_object(self, object, **kwargs):
+            """ Update an object with fields and values specified in kwargs. """
 
 Template variables
 ------------------
@@ -38,7 +58,6 @@ The following template functions are available for use in email and form templat
 
 UserManager
 -----------
-Work in progress. See :doc:`recipes_basic_app` for now.
 
 UserManager()
 ~~~~~~~~~~~~~
@@ -79,35 +98,26 @@ Typical use:
     db_adapter = SQLAlchemyAdapter(db, User)
     user_manager = UserManager(db_adapter, app,
             register_form=my_register_form,
-            register_view_function=my_register_view_function,
-            )
+            register_view_function=my_register_view_function)
+
+Work in progress. See :doc:`recipes_basic_app` for now.
 
 init_app()
 ~~~~~~~~~~
-::
+init_app() is used by Application Factories to bind the UserManager to a specific app.
 
-    user_manager.init_app(app)
-    # Binds 'user_manager' to 'app'
-    # Use either:  user_manager=UserManager(db_adapter, app)
-    #         or:  user_manager=UserManager(db_adapter, app=None); user_manager.init_app(app)
-    # But not both
-
-Typical use:
-
-::
+typical use::
 
     db = SQLAlchemy()
     db_adapter = SQLAlchemyAdapter(db, User)
-    user_manager = UserManager(db_adapter,
-            register_form=my_register_form,
-            register_view_function=my_register_view_function,
-            )
+    user_manager = UserManager(db_adapter)
 
     def create_app():
         app = Flask(__name__)
         db.init_app(app)
         user_manager.init_app(app)
 
+Work in progress. See :doc:`recipes_basic_app` for now.
 
 hash_password()
 ~~~~~~~~~~~~~~~

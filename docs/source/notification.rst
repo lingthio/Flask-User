@@ -5,28 +5,23 @@ Event Notification
 Flask Applications that want to be kept informed about certain actions that took place
 in underlying Flask extensions can do so by registering to receive event notification.
 
+Flask-User defines the following events:
+
+.. include:: includes/signals.txt
+
 Flask-Util makes use of Flask Signals, which in turn makes use of the Blinker signals.
 
 See the http://flask.pocoo.org/docs/signals/
 
 Installing Blinker
 ------------------
-Since not all applications require notification, Flask-User does not install nor require
-the Blinker package.
-If your application requires notification please install the Blinker package like so:
+The ``blinker`` package is required to receive event notifications.
 
 ::
 
     pip install blinker
 
 See http://pythonhosted.org/blinker/
-
-Available Events
-----------------
-Flask-User provides the following event notifications:
-
-.. include:: includes/signals.txt
-
 
 Subscribing to Signals
 ----------------------
