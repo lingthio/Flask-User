@@ -49,8 +49,13 @@ def send_registered_email(email, user, token):
     if not user_manager.enable_email: return
     if not user_manager.send_registered_email: return
     assert(email)
+
     # Generate confirmation link
-    confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
+    if user_manager.enable_confirm_email:
+        confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
+    else:
+        confirm_email_link = 'USER_ENABLE_CONFIRM_EMAIL was disabled'
+
     # Render subject, html message and text message
     subject, html_message, text_message = _render_email(
             user_manager.registered_email_template,
