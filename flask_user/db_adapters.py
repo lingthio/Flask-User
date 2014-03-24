@@ -24,7 +24,7 @@ class SQLAlchemyAdapter(DBAdapter):
         super(SQLAlchemyAdapter, self).__init__(db, UserClass, RoleClass, ProfileClass, EmailClass)
 
     def find_object(self, ObjectClass, **kwargs):
-        """ Find object of class 'ObjectClass' by specified '**kwargs' -- case sensitive!!"""
+        """ Find object of class 'ObjectClass' by specified '**kwargs' -- case sensitive!! """
         # Prepare base query
         query = ObjectClass.query
         # For all name/value pairs in **kwargs
@@ -39,7 +39,7 @@ class SQLAlchemyAdapter(DBAdapter):
         return query.first()
 
     def ifind_object(self, ObjectClass, **kwargs):
-        """ Find object of class 'ObjectClass' by specified '**kwargs' -- case INsensitive!!"""
+        """ Find object of class 'ObjectClass' by specified '**kwargs' -- case INsensitive!! """
         # Prepare base query
         query = ObjectClass.query
         # For all name/value pairs in **kwargs
@@ -54,17 +54,22 @@ class SQLAlchemyAdapter(DBAdapter):
         return query.first()
 
     def add_object(self, ObjectClass, **kwargs):
-        """ Add an object of class 'ObjectClass' with fields and values specified in '**kwargs'."""
+        """ Add an object of class 'ObjectClass' with fields and values specified in '**kwargs'. """
         object=ObjectClass(**kwargs)
         self.db.session.add(object)
         self.db.session.commit()
         return object
 
     def update_object(self, object, **kwargs):
-        """ Update 'object' with the fields and values specified in '**kwargs'."""
+        """ Update object 'object' with the fields and values specified in '**kwargs'. """
         for key,value in kwargs.items():
             if hasattr(object, key):
                 setattr(object, key, value)
             else:
                 raise KeyError("Object '%s' has no field '%s'." % (type(object), key))
+        self.db.session.commit()
+
+    def delete_object(self, object):
+        """ Delete object 'object'. """
+        self.db.session.delete(object)
         self.db.session.commit()

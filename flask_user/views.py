@@ -123,15 +123,16 @@ def forgot_password():
         # Find user by email
         user = user_manager.find_user_by_email(email)
         if user:
-            # Generate password reset token
+            # Generate reset password link
             token = user_manager.generate_token(user.id)
+            reset_password_link = url_for('user.reset_password', token=token, _external=True)
+
+            # Send forgot password email
+            send_forgot_password_email(email, user, reset_password_link)
 
             # Store token
             if hasattr(user, 'reset_password_token'):
                 user_manager.db_adapter.update_object(user, reset_password_token=token)
-
-            # Send forgot password email
-            send_forgot_password_email(email, user, token)
 
             # Send forgot_password signal
             signals.user_forgot_password.send(current_app._get_current_object(), user=user)
@@ -264,23 +265,29 @@ def register():
         else:
             object_id = user.id
 
+        # Generate confirm email link
+        if user_manager.enable_confirm_email:
+            token = user_manager.generate_token(object_id)
+            confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
+        else:
+            confirm_email_link = 'USER_ENABLE_CONFIRM_EMAIL was disabled'
+
+        # Send registered email
+        try:
+            send_registered_email(email_address, user, confirm_email_link)
+        except Exception as e:
+            # delete newly registered user if send email fails
+            user_manager.db_adapter.delete_object(user)
+            raise e
+
         # Send user_registered signal
         signals.user_registered.send(current_app._get_current_object(), user=user)
 
+        # Prepare one-time system message
         if user_manager.enable_confirm_email:
-            # Generate password reset token
-            token = user_manager.generate_token(object_id)
-
-            # Prepare one-time system message
             flash(_('A confirmation email has been sent to %(email)s. Open that email and follow the instructions to complete your registration.', email=email_address), 'success')
-
         else:
-            token = None
-            # Prepare one-time system message
             flash(_('You have registered successfully. Please sign in.'), 'success')
-
-        # Send registered email
-        send_registered_email(email_address, user, token)
 
         # Redirect to the login page
         return redirect(url_for('user.login'))
