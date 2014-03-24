@@ -130,15 +130,19 @@ Forms can be customized by copying the form template files like so::
 
 and by editing the copies to your liking.
 
-The following form template files can be customized::
+The following form template files resides in the ``templates`` directory and can be customized::
 
-    templates/flask_user/base.html
-    templates/flask_user/change_password.html   # extends your application's 'base.html'
-    templates/flask_user/change_username.html   # extends your application's 'base.html'
-    templates/flask_user/forgot_password.html   # extends 'flask_user/base.html'
-    templates/flask_user/login.html             # extends 'flask_user/base.html'
-    templates/flask_user/register.html          # extends 'flask_user/base.html'
-    templates/flask_user/reset_password.html    # extends 'flask_user/base.html'
+    base.html                         # root template
+
+    flask_user/member_base.html       # extends base.html
+    flask_user/change_password.html   # extends flask_user/member_base.html
+    flask_user/change_username.html   # extends flask_user/member_base.html
+
+    flask_user/public_base.html       # extends base.html
+    flask_user/forgot_password.html   # extends flask_user/public_base.html
+    flask_user/login.html             # extends flask_user/public_base.html
+    flask_user/register.html          # extends flask_user/public_base.html
+    flask_user/reset_password.html    # extends flask_user/public_base.html
 
 
 Customizing Form Template filenames

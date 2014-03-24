@@ -44,6 +44,9 @@ can be easily added.
         def update_object(self, object, **kwargs):
             """ Update an object with fields and values specified in kwargs. """
 
+        def delete_object(self, object):
+            """ Delete object 'object'. """
+
 Template variables
 ------------------
 The following template variables are available for use in email and form templates:
@@ -66,14 +69,20 @@ UserManager()
     user_manager = UserManager(
             db_adapter,                     # typically from SQLAlchemyAdapter()
             app = None,                     # typically from Flask() or None
+
+            # Forms
             change_password_form            = forms.ChangePasswordForm,
             change_username_form            = forms.ChangeUsernameForm,
             forgot_password_form            = forms.ForgotPasswordForm,
             login_form                      = forms.LoginForm,
             register_form                   = forms.RegisterForm,
             reset_password_form             = forms.ResetPasswordForm,
+
+            # Validators
             username_validator              = forms.username_validator,
             password_validator              = forms.password_validator,
+
+            # View functions
             change_password_view_function   = views.change_password,
             change_username_view_function   = views.change_username,
             confirm_email_view_function     = views.confirm_email,
@@ -84,9 +93,12 @@ UserManager()
             reset_password_view_function    = views.reset_password,
             unauthenticated_view_function   = views.unauthenticated,
             unauthorized_view_function      = views.unauthorized,
+
+            # Miscellaneous
             login_manager                   = LoginManager(),
-            token_manager                   = tokens.TokenManager(),
             password_crypt_context          = None,
+            send_email_function             = emails.send_email,
+            token_manager                   = tokens.TokenManager(),
             )
 
 Typical use:

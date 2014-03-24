@@ -45,3 +45,18 @@ create the ``templates/flask_user/member_base.html`` file in your application's
 
     {% extends 'my_member_base.html' %}
 
+**Summary**
+
+The following template files reside in the ``templates`` directory::
+
+    base.html                         # root template
+
+    flask_user/member_base.html       # extends base.html
+    flask_user/change_password.html   # extends flask_user/member_base.html
+    flask_user/change_username.html   # extends flask_user/member_base.html
+
+    flask_user/public_base.html       # extends base.html
+    flask_user/forgot_password.html   # extends flask_user/public_base.html
+    flask_user/login.html             # extends flask_user/public_base.html
+    flask_user/register.html          # extends flask_user/public_base.html
+    flask_user/reset_password.html    # extends flask_user/public_base.html
