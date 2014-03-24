@@ -7,7 +7,7 @@
 
 import smtplib
 import socket
-from flask import current_app, render_template, url_for
+from flask import current_app, render_template
 from flask_mail import Message
 
 def _render_email(filename, **kwargs):
@@ -24,6 +24,8 @@ def _render_email(filename, **kwargs):
     return (subject, html_message, text_message)
 
 def send_email(recipient, subject, html_message, text_message):
+    """ Send email from default sender to 'recipient' """
+
     class SendEmailError(Exception):
         pass
 
@@ -43,35 +45,27 @@ def send_email(recipient, subject, html_message, text_message):
     except smtplib.SMTPAuthenticationError:
         raise SendEmailError('SMTP Authentication error: Check your MAIL_USERNAME and MAIL_PASSWORD settings.')
 
-def send_registered_email(email, user, token):
+def send_registered_email(email, user, confirm_email_link):
     # Verify certain conditions
     user_manager =  current_app.user_manager
     if not user_manager.enable_email: return
     if not user_manager.send_registered_email: return
     assert(email)
 
-    # Generate confirmation link
-    if user_manager.enable_confirm_email:
-        confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
-    else:
-        confirm_email_link = 'USER_ENABLE_CONFIRM_EMAIL was disabled'
-
     # Render subject, html message and text message
     subject, html_message, text_message = _render_email(
             user_manager.registered_email_template,
             user=user, confirm_email_link=confirm_email_link)
+
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
 
-def send_forgot_password_email(email, user, token):
+def send_forgot_password_email(email, user, reset_password_link):
     # Verify certain conditions
     user_manager =  current_app.user_manager
     if not user_manager.enable_email: return
     assert user_manager.enable_forgot_password
     assert email
-
-    # Generate confirmation link
-    reset_password_link = url_for('user.reset_password', token=token, _external=True)
 
     # Render subject, html message and text message
     subject, html_message, text_message = _render_email(
