@@ -32,7 +32,7 @@ def set_default_settings(user_manager, app_config):
     um.password_salt            = sd('USER_PASSWORD_SALT',              app_config['SECRET_KEY'])
     um.reset_password_expiration= sd('USER_RESET_PASSWORD_EXPIRATION',  2*24*3600)   # 2 days
     um.require_invitation       = sd('USER_REQUIRE_INVITATION',         False)
-    um.send_registered_email    = sd('USER_SEND_REGISTERED_EMAIL',      True)
+    um.send_registered_email    = sd('USER_SEND_REGISTERED_EMAIL',      False)
     # Set default URLs
     um.change_password_url      = sd('USER_CHANGE_PASSWORD_URL',        '/user/change-password')
     um.change_username_url      = sd('USER_CHANGE_USERNAME_URL',        '/user/change-username')
@@ -76,6 +76,6 @@ def check_settings(user_manager):
     # USER_ENABLE_CHANGE_USERNAME=True must have USER_ENABLE_USERNAME=True.
     if um.enable_change_username and not um.enable_username:
         raise ConfigurationError('USER_ENABLE_CHANGE_USERNAME=True must have USER_ENABLE_USERNAME=True.')
-    # USER_ENABLE_CONFIRM_EMAIL=True must have USER_SEND_REGISTERED_EMAIL=True.
-    if um.enable_confirm_email and not um.send_registered_email:
-        raise ConfigurationError('USER_ENABLE_CONFIRM_EMAIL=True must have USER_SEND_REGISTERED_EMAIL=True.')
+    # USER_SEND_REGISTERED_EMAIL=True must have USER_ENABLE_EMAIL=True
+    if um.send_registered_email and not um.enable_email:
+        raise ConfigurationError('USER_SEND_REGISTERED_EMAIL=True must have USER_ENABLE_EMAIL=True.')

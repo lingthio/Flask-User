@@ -8,7 +8,6 @@
 import smtplib
 import socket
 from flask import current_app, render_template
-from flask_mail import Message
 
 def _render_email(filename, **kwargs):
     # Render subject
@@ -28,6 +27,11 @@ def send_email(recipient, subject, html_message, text_message):
 
     class SendEmailError(Exception):
         pass
+
+    try:
+        from flask_mail import Message
+    except:
+        raise SendEmailError("Flask-Mail is missing. Please install Flask-Mail ('pip install Flask-Mail').")
 
     # Construct Flash-Mail message
     message = Message(subject,
@@ -49,7 +53,7 @@ def send_registered_email(email, user, confirm_email_link):
     # Verify certain conditions
     user_manager =  current_app.user_manager
     if not user_manager.enable_email: return
-    if not user_manager.send_registered_email: return
+    if not user_manager.send_registered_email and not user_manager.enable_confirm_email: return
     assert(email)
 
     # Render subject, html message and text message
