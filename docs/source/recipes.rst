@@ -8,12 +8,17 @@ Here we explain the use of Flask-User through code recipes.
 These tutorials assume that you are working with virtualenv and virtualenvwrapper
 and that the code resides in ~/dev/example::
 
+    # Create virtual env 'my_env'
     mkvirtualenv my_env
     workon my_env
-    pip install flask-user
 
+    # Change working directory
     mkdir -p ~dev/example
     cd ~/dev/example                # or C:\dev\example on Windows
+
+    # Install required Python packages
+    pip install flask-user
+    pip install flask-mail
 
 | **Single-file techniques**
 | To keep the examples simple and in a single file, we are using some unusual techniques:

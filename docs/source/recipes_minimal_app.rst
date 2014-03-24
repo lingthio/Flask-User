@@ -1,6 +1,6 @@
 Minimal App
 ===========
-| With only nine additional lies of code, the Minimal App offers the following features:
+| With only nine additional lines of code, the Minimal App offers the following features:
 | - **Internationalization**
 | - **Registration**, **Login**, **Change password** and **Logout**
 
@@ -26,5 +26,8 @@ Run the Minimal App with the following command::
 And point your browser to ``http://localhost:5000``.
 
 To test Internationalization, set your browser to use 'Dutch' as the preferred language.
+
+If you receive a SQLAlchemy error message, delete the minimal_app.sqlite file and restart the app.
+You may be using an old DB schema in that file.
 
 Up Next: :doc:`recipes_basic_app`

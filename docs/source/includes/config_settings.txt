@@ -20,4 +20,4 @@
                                                  # (2*24*3600 represents 2 days)
 
     USER_SEND_REGISTERED_EMAIL     = True        # Send registered email
-                                                 # Must be True if USER_ENABLE_CONFIRM_EMAIL=True
+                                                 # Requires USER_ENABLE_EMAIL=True
