@@ -37,8 +37,7 @@ coverage.xml
 
 # Temp files
 docs/source/include/*_app.py
-example_apps/*.db
-example_apps/*.sqlite
+*.sqlite
 example_apps/translations/
 
 # Private files
