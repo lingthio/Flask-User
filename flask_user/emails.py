@@ -23,7 +23,7 @@ def _render_email(filename, **kwargs):
 
     return (subject, html_message, text_message)
 
-def _send_email(recipient, subject, html_message, text_message):
+def send_email(recipient, subject, html_message, text_message):
     class SendEmailError(Exception):
         pass
 
@@ -61,7 +61,7 @@ def send_registered_email(email, user, token):
             user_manager.registered_email_template,
             user=user, confirm_email_link=confirm_email_link)
     # Send email message using Flask-Mail
-    _send_email(email, subject, html_message, text_message)
+    user_manager.send_email_function(email, subject, html_message, text_message)
 
 def send_forgot_password_email(email, user, token):
     # Verify certain conditions
@@ -80,4 +80,4 @@ def send_forgot_password_email(email, user, token):
             reset_password_link=reset_password_link)
 
     # Send email message using Flask-Mail
-    _send_email(email, subject, html_message, text_message)
+    user_manager.send_email_function(email, subject, html_message, text_message)

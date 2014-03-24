@@ -9,6 +9,7 @@ from flask import Blueprint, current_app
 from flask_login import LoginManager, UserMixin as LoginUserMixin
 from flask_user.db_adapters import DBAdapter
 from .db_adapters import SQLAlchemyAdapter
+from . import emails
 from . import forms
 from . import passwords
 from . import settings
@@ -16,13 +17,13 @@ from . import tokens
 from . import translations
 from . import views
 
-__version__ = '0.4.3'
-
 # Enable the following: from flask.ext.user import current_user
 from flask_login import current_user
 
 # Enable the following: from flask.ext.user import login_required, roles_required
 from .decorators import *
+
+__version__ = '0.4.3'
 
 def _user_loader(user_id):
     """ Flask-Login helper function to load user by user_id"""
@@ -61,12 +62,12 @@ class UserManager(object):
                 unauthorized_view_function = views.unauthorized,
                 # Misc
                 login_manager=LoginManager(),
-                token_manager=tokens.TokenManager(),
                 password_crypt_context=None,
+                send_email_function = emails.send_email,
+                token_manager=tokens.TokenManager(),
                 ):
         """ Initialize the UserManager with custom or built-in attributes"""
         self.db_adapter = db_adapter
-        self.lm = login_manager
         # Forms
         self.change_password_form = change_password_form
         self.change_username_form = change_username_form
@@ -90,7 +91,9 @@ class UserManager(object):
         self.unauthenticated_view_function = unauthenticated_view_function
         self.unauthorized_view_function = unauthorized_view_function
         # Misc
+        self.lm = login_manager
         self.password_crypt_context = password_crypt_context
+        self.send_email_function = send_email_function
         self.token_manager = token_manager
 
         self.app = app
