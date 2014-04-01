@@ -23,7 +23,7 @@ from flask_login import current_user
 # Enable the following: from flask.ext.user import login_required, roles_required
 from .decorators import *
 
-__version__ = '0.4.4'
+__version__ = '0.4.5'
 
 def _user_loader(user_id):
     """ Flask-Login helper function to load user by user_id"""

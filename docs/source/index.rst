@@ -81,6 +81,7 @@ Feeling generous? `Tip me on Gittip <https://www.gittip.com/lingthio/>`_
 
 Revision History
 ----------------
+* v0.4.5 Save custom Register fields to User or UserProfile
 * v0.4.4 Enhancements and Fixes: Github issues #6, #7 & #8
 * v0.4.3 base.html, flask_user/public_base.html, flask_user/member_base.html.
   Cleanup. Reduced package size from 83KB to 30KB.
