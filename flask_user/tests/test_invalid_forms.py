@@ -36,7 +36,6 @@ SHORT_USERNAME = 'Aa'
 INVALID_EMAIL = 'user1.example.com'
 invalid_usernames = (
     'with space',
-    'with_symbol',
     'with&symbol',
     "with'symbol",
     )
@@ -121,7 +120,7 @@ def test_invalid_register_with_username_form(client):
 
     # Test invalid usernames
     for invalid_username in invalid_usernames:
-        client.post_invalid_form(url, 'Username may only contain letters and numbers',
+        client.post_invalid_form(url, 'Username may only contain letters, numbers, ',
                 username=invalid_username, email=email, password=password, retype_password=password)
 
     # Test existing username (case INsensitive!)

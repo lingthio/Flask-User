@@ -4,6 +4,7 @@
     :author: Ling Thio (ling.thio@gmail.com)
     :license: Simplified BSD License, see LICENSE.txt for more details."""
 
+import string
 from flask import current_app
 from flask.ext.login import current_user
 from flask.ext.wtf import Form
@@ -36,11 +37,13 @@ def password_validator(form, field):
 def username_validator(form, field):
     """ Username must cont at least 3 alphanumeric characters long"""
     username = field.data
-    username_length=len(username)
-    if username_length < 3:
+    if len(username) < 3:
         raise ValidationError(_('Username must be at least 3 characters long'))
-    if not username.isalnum():
-        raise ValidationError(_('Username may only contain letters and numbers'))
+    valid_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._'
+    chars = list(username)
+    for char in chars:
+        if char not in valid_chars:
+            raise ValidationError(_("Username may only contain letters, numbers, '-', '.' and '_'."))
 
 def unique_username_validator(form, field):
     """ Username must be unique"""

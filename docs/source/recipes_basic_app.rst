@@ -38,6 +38,9 @@ If you receive an SendEmailError message,
 or if the Registration form does not respond quickly
 then you may have specified incorrect SMTP settings.
 
+If you receive a 'AssertionError: No sender address has been set' error, you may
+be using an old version of Flask-Mail which uses DEFAULT_MAIL_SENDER instead of MAIL_DEFAULT_SENDER.
+
 If you receive a SQLAlchemy error message, delete the basic_app.sqlite file and restart the app.
 You may be using an old DB schema in that file.
 

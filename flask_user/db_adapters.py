@@ -10,18 +10,17 @@ from flask_login import current_user
 class DBAdapter(object):
     """ This object is used to shield Flask-User from ORM specific functions.
         It's used as the base class for ORM specific adapters like SQLAlchemyAdapter."""
-    def __init__(self, db, UserClass, RoleClass=None, ProfileClass=None, EmailClass=None):
+    def __init__(self, db, UserClass, UserProfileClass=None, EmailClass=None):
         self.db = db
         self.UserClass = UserClass          # email, password, etc.
-        self.ProfileClass = ProfileClass    # For Additional registration fields
-        self.RoleClass = RoleClass          # For role based authorization
+        self.UserProfileClass = UserProfileClass    # For Additional registration fields
         self.EmailClass = EmailClass        # For multiple emails per user
 
 
 class SQLAlchemyAdapter(DBAdapter):
     """ This object is used to shield Flask-User from SQLAlchemy specific functions."""
-    def __init__(self, db, UserClass, RoleClass=None, ProfileClass=None, EmailClass=None):
-        super(SQLAlchemyAdapter, self).__init__(db, UserClass, RoleClass, ProfileClass, EmailClass)
+    def __init__(self, db, UserClass, UserProfileClass=None, EmailClass=None):
+        super(SQLAlchemyAdapter, self).__init__(db, UserClass, UserProfileClass, EmailClass)
 
     def find_object(self, ObjectClass, **kwargs):
         """ Find object of class 'ObjectClass' by specified '**kwargs' -- case sensitive!! """
@@ -57,7 +56,6 @@ class SQLAlchemyAdapter(DBAdapter):
         """ Add an object of class 'ObjectClass' with fields and values specified in '**kwargs'. """
         object=ObjectClass(**kwargs)
         self.db.session.add(object)
-        self.db.session.commit()
         return object
 
     def update_object(self, object, **kwargs):
@@ -67,9 +65,11 @@ class SQLAlchemyAdapter(DBAdapter):
                 setattr(object, key, value)
             else:
                 raise KeyError("Object '%s' has no field '%s'." % (type(object), key))
-        self.db.session.commit()
 
     def delete_object(self, object):
         """ Delete object 'object'. """
         self.db.session.delete(object)
+        self.db.session.commit()
+
+    def commit(self):
         self.db.session.commit()
