@@ -47,6 +47,7 @@ and that the code resides in ~/dev/example::
     recipes_minimal_app
     recipes_basic_app
     recipes_roles_required_app
+    recipes_custom_apps
     recipes_misc
 
 See :doc:`customization` and :doc:`api` for more information.
