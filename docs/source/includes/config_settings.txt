@@ -9,7 +9,7 @@
     USER_PASSWORD_HASH_MODE        = 'passlib'   # Set to 'Flask-Security' for
                                                  # Flask-Security compatible hashing
 
-    USER_PASSWORD_SALT             = SECRET_KEY  # Only needed for
+    USER_PASSWORD_SALT = SECURITY_PASSWORD_SALT  # Only needed for
                                                  # Flask-Security compatible hashing
 
     USER_REQUIRE_INVITATION        = False       # Registration requires invitation

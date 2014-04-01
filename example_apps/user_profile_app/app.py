@@ -19,7 +19,7 @@ class MyRegisterForm(RegisterForm):
     first_name = StringField('First name', validators=[
         validators.Required('First name is required')])
     last_name = StringField('Last name', validators=[
-        validators.Required('First name is required')])
+        validators.Required('Last name is required')])
 
 def create_app(test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
@@ -65,7 +65,7 @@ def create_app(test_config=None):                   # For automated tests
         email = db.Column(db.String(255), nullable=False, default='')
         password = db.Column(db.String(255), nullable=False, default='')
         # Relationships
-        user_profile = db.relationship('UserProfile', uselist=False)
+        user_profile = db.relationship('UserProfile', uselist=False, foreign_keys=[user_profile_id])
         roles = db.relationship('Role', secondary=user_roles,
                 backref=db.backref('users', lazy='dynamic'))
     app.User = User

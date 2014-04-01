@@ -10,8 +10,8 @@ from wtforms import StringField
 # Use a Class-based config to avoid needing a 2nd file
 class ConfigClass(object):
     # Configure Flask
-    SECRET_KEY = 'THIS IS AN INSECURE SECRET'                         # Change this for production!!!
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///custom_register_app.sqlite'  # Use Sqlite file db
+    SECRET_KEY = 'THIS IS AN INSECURE SECRET'                       # Change this for production!!!
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///register_form_app.sqlite'  # Use Sqlite file db
     CSRF_ENABLED = True
 
 
@@ -19,7 +19,7 @@ class MyRegisterForm(RegisterForm):
     first_name = StringField('First name', validators=[
         validators.Required('First name is required')])
     last_name = StringField('Last name', validators=[
-        validators.Required('First name is required')])
+        validators.Required('Last name is required')])
 
 def create_app(test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above

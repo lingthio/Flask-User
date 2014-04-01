@@ -63,9 +63,9 @@ Documentation
 
     design_goals
     installation
-    base_templates
     recipes
     authorization
+    base_templates
     customization
     internationalization
     notification
