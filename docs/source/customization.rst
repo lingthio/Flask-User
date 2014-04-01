@@ -185,7 +185,7 @@ When a new user submits the Register form, Flask-User examines the field names o
 form and the User model. For each matching field name, the form field value
 will be stored in the corresponding User field.
 
-`See Github repository; example_apps/custom_register_app <https://github.com/lingthio/Flask-User/tree/master/example_apps/custom_register_app>`_
+`See Github repository; example_apps/register_form_app <https://github.com/lingthio/Flask-User/tree/master/example_apps/register_form_app>`_
 
 **Extra registration fields in UserProfile model**
 
