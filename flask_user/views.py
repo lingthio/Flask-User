@@ -290,7 +290,7 @@ def register():
 
         # Prepare one-time system message
         if user_manager.enable_confirm_email:
-            flash(_('A confirmation email has been sent to %(email)s. Open that email and follow the instructions to complete your registration.', email=email_address), 'success')
+            flash(_('A confirmation email has been sent to %(email)s with instructions to complete your registration.', email=email_address), 'success')
         else:
             flash(_('You have registered successfully. Please sign in.'), 'success')
 
