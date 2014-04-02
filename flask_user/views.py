@@ -50,7 +50,11 @@ def confirm_email(token):
     # Prepare one-time system message
     flash(_('Your email has been confirmed. Please sign in.'), 'success')
 
-    return redirect(user_manager.login_url)
+    # Retrieve 'next' query parameter
+    next = request.args.get('next', '/')
+
+    # Redirect to the login page with the specified 'next' query parameter
+    return redirect(user_manager.login_url+'?next='+next)
 
 
 @login_required
