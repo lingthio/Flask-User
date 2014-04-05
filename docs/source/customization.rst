@@ -75,11 +75,12 @@ Let's assume that:
 
 * The Python packages dir is: ``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/``
 * The Flask-User dir is: ``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/flask_user/``
-* Your app directory is: ``~/path/to/YOURAPP/``
+* Your app directory is: ``~/path/to/YOURAPP/YOURAPP``
+  (your application directory typically contains the 'static' and 'templates' sub-directories).
 
 The built-in Email template files can be copied like so::
 
-    cd ~/path/to/YOURAPP
+    cd ~/path/to/YOURAPP/YOURAPP
     mkdir -p templates/flask_user/emails
     cp ~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/flask_user/templates/flask_user/emails/* templates/flask_user/emails/.
 
@@ -209,6 +210,8 @@ a UserProfile record and set the ``User.user_profile`` field::
         user_profile_id = db.Column(db.Integer, db.ForeignKey('user_profile.id'), nullable=True, default=None)
         user_profile = db.relationship('UserProfile', uselist=False, foreign_keys=[user_profile_id])
 
+We must tell Flask-User that we want to create User and UserProfile objects::
+
     # Use User and UserProfile objects
     db_adapter = SQLAlchemyAdapter(db, UserClass=User, UserProfileClass=UserProfile)
 
@@ -228,11 +231,13 @@ Fortunately, we can define multiple relationship fields to the same relationship
         password = db.Column(db.String(255), nullable=False, default='')
         # User to Member relationship
         member_id = db.Column(db.Integer, db.ForeignKey('member.id'), nullable=True, default=None)
+        # Your app may want to use 'member'
         member = db.relationship('Member', uselist=False, foreign_keys=[member_id])
+        # Flask-User will use 'user_profile'
         user_profile = db.relationship('Member', uselist=False, foreign_keys=[member_id])
 
     # Use User and UserProfile objects
-    db_adapter = SQLAlchemyAdapter(db, UserClass=User, UserProfileClass=UserProfile)
+    db_adapter = SQLAlchemyAdapter(db, UserClass=User, UserProfileClass=Member)
 
 `See Github repository; example_apps/user_profile_app <https://github.com/lingthio/Flask-User/tree/master/example_apps/user_profile_app>`_
 
@@ -300,11 +305,12 @@ Let's assume that:
 
 * The Python packages dir is: ``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/``
 * The Flask-User dir is: ``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/flask_user/``
-* Your app directory is: ``~/path/to/YOURAPP/``
+* Your app directory is: ``~/path/to/YOURAPP/YOURAPP``
+  (your application directory typically contains the 'static' and 'templates' sub-directories).
 
 Forms can be customized by copying the form template files like so::
 
-    cd ~/path/to/YOURAPP
+    cd ~/path/to/YOURAPP/YOURAPP
     mkdir -p templates/flask_user
     cp ~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/flask_user/templates/flask_user/*.html templates/flask_user/.
 
@@ -331,7 +337,7 @@ Password and Username Validators
 --------------------------------
 Flask-User comes standard
 with a password validator (at least 6 chars, 1 upper case letter, 1 lower case letter, 1 digit) and
-with a username validator (at least 3 alphanumeric characters).
+with a username validator (at least 3 characters in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._").
 
 Custom validators can be specified by setting an attribute on the Flask-User's UserManager object::
 

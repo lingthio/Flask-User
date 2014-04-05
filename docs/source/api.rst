@@ -47,6 +47,9 @@ can be easily added.
         def delete_object(self, object):
             """ Delete object 'object'. """
 
+        def commit(self):
+            """ Commit an Add, Update or Delete. """
+
 Template variables
 ------------------
 The following template variables are available for use in email and form templates:
