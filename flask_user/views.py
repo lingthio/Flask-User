@@ -365,7 +365,7 @@ def unauthenticated():
 
     # Redirect to USER_UNAUTHENTICATED_URL
     user_manager = current_app.user_manager
-    return redirect(user_manager.unauthenticated_url)
+    return redirect(user_manager.unauthenticated_url+'?next='+url)
 
 def unauthorized():
     """ Prepare a Flash message and redirect to USER_UNAUTHORIZED_URL"""
