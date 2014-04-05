@@ -12,10 +12,10 @@
     <div class="form-group {% if field.errors %}has-error{% endif %}">
         {# Label on left, "New here? Register." on right #}
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-xs-6">
                 <label for="{{ field.id }}" class="control-label">{{ field.label.text }}</label>
             </div>
-            <div class="col-sm-6 text-right">
+            <div class="col-xs-6 text-right">
                 {% if user_manager.enable_register and not user_manager.require_invitation %}
                     <a href="{{ url_for('user.register') }}" tabindex='110'>
                         {%trans%}New here? Register.{%endtrans%}</a>
@@ -35,10 +35,10 @@
     <div class="form-group {% if field.errors %}has-error{% endif %}">
         {# Label on left, "Forgot your Password?" on right #}
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-xs-6">
                 <label for="{{ field.id }}" class="control-label">{{ field.label.text }}</label>
             </div>
-            <div class="col-sm-6 text-right">
+            <div class="col-xs-6 text-right">
                 {% if user_manager.enable_forgot_password %}
                     <a href="{{ url_for('user.forgot_password') }}" tabindex='120'>
                         {%trans%}Forgot your Password?{%endtrans%}</a>

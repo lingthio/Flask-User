@@ -12,10 +12,10 @@
     <div class="form-group {% if field.errors %}has-error{% endif %}">
         {# Label on left, "Already registered? Sign in." on right #}
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-xs-6">
                 <label for="{{ field.id }}" class="control-label">{{ field.label.text }}</label>
             </div>
-            <div class="col-sm-6 text-right">
+            <div class="col-xs-6 text-right">
                 {% if user_manager.enable_register %}
                     <a href="{{ url_for('user.login') }}" tabindex='110'>
                         {%trans%}Already registered? Sign in.{%endtrans%}</a>
