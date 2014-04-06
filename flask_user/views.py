@@ -8,7 +8,7 @@ from datetime import datetime
 from flask import current_app, flash, redirect, render_template, request, url_for
 from flask.ext.login import current_user, login_user, logout_user
 from .decorators import login_required
-from .emails import send_registered_email, send_forgot_password_email
+from .emails import send_confirm_email_email, send_registered_email, send_forgot_password_email
 from . import signals
 from .translations import gettext as _
 
@@ -266,19 +266,25 @@ def register():
 
         db_adapter.commit()
 
-        # Send registered email
+        # Send 'confirm_email' or 'registered' email
         if user_manager.enable_email:
             email_address = form.email.data
-            # Generate confirm email link
-            if user_manager.enable_confirm_email:
-                token = user_manager.generate_token(user.id)
-                confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
-            else:
-                confirm_email_link = None
 
-            # Send registered email
             try:
-                send_registered_email(email_address, user, confirm_email_link)
+                if user_manager.enable_confirm_email:
+                    # Send 'confirm_email' email
+
+                    # Generate confirm email link
+                    token = user_manager.generate_token(user.id)
+                    confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
+
+                    # Send email
+                    send_confirm_email_email(email_address, user, confirm_email_link)
+                else:
+                    if user_manager.send_registered_email:
+                        # Send 'registered' email
+                        send_registered_email(email_address, user)
+
             except Exception as e:
                 # delete newly registered user if send email fails
                 db_adapter.delete_object(user)

@@ -63,12 +63,11 @@ This project would not be possible without the use of the following amazing offe
 * `Flask-Babel <http://babel.pocoo.org/>`_
 * `Flask-Login <https://flask-login.readthedocs.org/en/latest/>`_
 * `Flask-Mail <http://pythonhosted.org/flask-mail/>`_
-* `Flask-SQLAlchemy <http://pythonhosted.org/Flask-SQLAlchemy/>`_
-* `Flask-WTF <https://flask-wtf.readthedocs.org/en/latest/>`_
-* `SQLAlchemy <http://www.sqlalchemy.org/>`_
-* `WTForms <http://wtforms.readthedocs.org/en/latest/>`_
+* `SQLAlchemy <http://www.sqlalchemy.org/>`_ and `Flask-SQLAlchemy <http://pythonhosted.org/Flask-SQLAlchemy/>`_
+* `WTForms <http://wtforms.readthedocs.org/en/latest/>`_ and `Flask-WTF <https://flask-wtf.readthedocs.org/en/latest/>`_
 
-Alternative Packages
---------------------
-`Flask-Security <https://pythonhosted.org/Flask-Security/>`_
+Alternative Flask extensions
+----------------------------
+* `Flask-Login <https://flask-login.readthedocs.org/en/latest/>`_
+* `Flask-Security <https://pythonhosted.org/Flask-Security/>`_
 

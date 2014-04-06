@@ -54,6 +54,7 @@ def set_default_settings(user_manager, app_config):
     um.resend_confirm_email_template = sd('USER_RESEND_CONFIRM_EMAIL_TEMPLATE', 'flask_user/resend_confirm_email.html')
     um.reset_password_template  = sd('USER_RESET_PASSWORD_TEMPLATE',    'flask_user/reset_password.html')
     # Set default email template files
+    um.confirm_email_email_template   = sd('USER_CONFIRM_EMAIL_EMAIL_TEMPLATE',   'flask_user/emails/confirm_email')
     um.forgot_password_email_template = sd('USER_FORGOT_PASSWORD_EMAIL_TEMPLATE', 'flask_user/emails/forgot_password')
     um.registered_email_template      = sd('USER_REGISTERED_EMAIL_TEMPLATE',      'flask_user/emails/registered')
 

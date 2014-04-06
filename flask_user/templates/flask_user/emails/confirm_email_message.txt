@@ -1,0 +1,13 @@
+{% extends "flask_user/emails/base_message.txt" %}
+
+{% block message %}
+Thank you for registering with Flask-User.
+
+{% if user_manager.enable_confirm_email -%}
+Visit the link below to complete your registration:
+{{ confirm_email_link }}
+
+If you did not initiate this registration, you may safely ignore this email.
+
+{%- endif %}
+{% endblock %}
