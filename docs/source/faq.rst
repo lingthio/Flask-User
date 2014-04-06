@@ -6,8 +6,8 @@ F.A.Q.
 | A: Yes you can: `Flask-User Demo <https://flask-user-demo.herokuapp.com/>`_
 
 | **Q: What are the differences between Flask-User and Flask-Security?**
-| A: The main reason why I wrote Flask-User (in 2013) is because I found it difficult to customize
-  Flask-Security messages and functionality and because it didn't offer
+| A: The main reason why I wrote Flask-User was because I found it difficult to customize
+  Flask-Security messages and functionality (in 2013) and because it didn't offer
   Username login, multiple emails per user, and Internationalization.
 
 Flask-Security has been around since at least March 2012
@@ -30,7 +30,8 @@ It exists since December 2013 and contains 661 statements with a 98% test covera
 | - custom password hashes (via custom functions)
 
 | **Q: What databases does Flask-User support?**
-| A: Any database that SQLAlchemy supports.
+| A: Any database that SQLAlchemy supports (via SqlAlchemyAdapter)
+| and other databases (via custom DBAdapters)
 
 Flask-User shields itself from database operations through a DBAdapter.
 It ships with a SQLAlchemyAdapter, but the API is very simple, so other adapters

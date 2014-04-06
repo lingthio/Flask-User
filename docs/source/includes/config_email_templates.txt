@@ -1,6 +1,7 @@
 ::
 
     # Email template files                  # Defaults
+    USER_CONFIRM_EMAIL_EMAIL_TEMPLATES      = 'flask_user/emails/confirm_email'
     USER_FORGOT_PASSWORD_EMAIL_TEMPLATES    = 'flask_user/emails/forgot_password'
     USER_REGISTERED_EMAIL_TEMPLATES         = 'flask_user/emails/registered'
 

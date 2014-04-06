@@ -16,6 +16,13 @@ Flask-User
     :target: https://pypi.python.org/pypi/Flask-User
 
 
+::
+
+    !! News Flash !!
+    v0.4.7 split up the 'registered' email into 'registered' and 'confirm_email'.
+    If you've customized 'templates/flask_user/email/registered_*':
+    rename the 'registered_*' files into 'confirm_email_*'.
+
 Customizable User Account Management for Flask
 ----------------------------------------------
 
@@ -36,7 +43,7 @@ Flask-User aims to provide such a ready-to-use **AND** fully customizable soluti
 * **Role-based Authorization**
 * **Internationalization**
 * **Well documented**
-* Tested on Python 2.6, 2.7 and 3.3
+* Tested on Python 2.6, 2.7, 3.3 and 3.4
 
 Demo
 ----

@@ -86,9 +86,16 @@ The built-in Email template files can be copied like so::
 
 Flask-User currently offers the following email messages::
 
-    registered       # Sent to users after they submitted a registration form
-                     # This also acts as the 'confirm email' message if USER_ENABLE_CONFIRM_EMAIL is True
+    confirm_email    # Sent to users after they submitted a registration form
+                     # - Requires USER_ENABLE_EMAIL = True
+                     # - Requires USER_ENABLE_CONFIRM_EMAIL = True
     forgot_password  # Sent to users after they submitted a forgot password form
+                     # - Requires USER_ENABLE_EMAIL = True
+                     # - Requires USER_ENABLE_FORGOT_PASSWORD = True
+    registered       # Sent to users after they submitted a registration form
+                     # - Requires USER_ENABLE_EMAIL = True
+                     # - Requires USER_ENABLE_CONFIRM_EMAIL = False
+                     # - Requires USER_SEND_REGISTERED_EMAIL = True
 
 Each email type has three email template files.
 The 'registered' email for example has the following files::
@@ -137,10 +144,12 @@ The email template files, along with available template variables listed below:
 * Template variables available in any email template
     * ``user_manager`` - For example: ``{% if user_manager.enable_confirm_email %}``
     * ``user`` - For example: ``{{ user.email }}``
-* templates/flask_user/registered_[subject.txt|message.html|message.txt]
+* templates/flask_user/confirm_email_[subject.txt|message.html|message.txt]
     * ``confirm_email_link`` - For example: ``{{ confirm_email_link }}``
 * templates/flask_user/forgot_password_[subject.txt|message.html|message.txt]
     * ``reset_password_link`` - For example: ``{{ reset_password_link }}``
+* templates/flask_user/registered_[subject.txt|message.html|message.txt]
+    * n/a
 
 If you need other email notifications, please enter a feature request to our Github issue tracker. Thank you.
 
