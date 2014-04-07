@@ -19,7 +19,7 @@ Flask-User
 ::
 
     !! News Flash !!
-    v0.4.7 split up the 'registered' email into 'registered' and 'confirm_email'.
+    v0.4.7: The 'registered' email was split into 'confirm_email' and 'registered' email.
     If you've customized 'templates/flask_user/email/registered_*':
     rename the 'registered_*' files into 'confirm_email_*'.
 
@@ -82,6 +82,15 @@ Feeling generous? `Tip me on Gittip <https://www.gittip.com/lingthio/>`_
 
 Revision History
 ----------------
+* v0.4.7 Added 'confirm_email', 'password_changed' and 'username_changed' emails.
+
+::
+
+    v0.4.7 API changes
+    The 'registered' email was split into 'confirm_email' and 'registered' emails.
+    If you've customized 'templates/flask_user/email/registered_*':
+    rename the 'registered_*' files into 'confirm_email_*'.
+
 * v0.4.6 Added 'next' query parameter to confirm_email link
 * v0.4.5 Save custom Register fields to User or UserProfile
 
