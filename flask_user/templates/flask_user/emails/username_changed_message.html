@@ -1,0 +1,6 @@
+{% extends 'flask_user/emails/base_message.html' %}
+
+{% block message %}
+<p>Your username has been changed.</p>
+<p>If you did not change your username, please <a href="{{ url_for('user.login', _external=True) }}">sign in</a> (using your email address) and change your password.</p>
+{% endblock %}

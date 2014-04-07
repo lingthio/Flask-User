@@ -8,7 +8,7 @@ from datetime import datetime
 from flask import current_app, flash, redirect, render_template, request, url_for
 from flask.ext.login import current_user, login_user, logout_user
 from .decorators import login_required
-from .emails import send_confirm_email_email, send_registered_email, send_forgot_password_email
+from . import emails
 from . import signals
 from .translations import gettext as _
 
@@ -76,6 +76,10 @@ def change_password():
         db_adapter.update_object(current_user, password=hashed_password)
         db_adapter.commit()
 
+        # Send 'password_changed' email
+        if user_manager.enable_email and user_manager.send_password_changed_email:
+            emails.send_password_changed_email(current_user.email, current_user)
+
         # Send password_changed signal
         signals.user_changed_password.send(current_app._get_current_object(), user=current_user)
 
@@ -105,6 +109,10 @@ def change_username():
         # Change username
         db_adapter.update_object(current_user, username=new_username)
         db_adapter.commit()
+
+        # Send 'username_changed' email
+        if user_manager.enable_email and user_manager.send_username_changed_email:
+            emails.send_username_changed_email(current_user.email, current_user)
 
         # Send username_changed signal
         signals.user_changed_username.send(current_app._get_current_object(), user=current_user)
@@ -139,7 +147,7 @@ def forgot_password():
             reset_password_link = url_for('user.reset_password', token=token, _external=True)
 
             # Send forgot password email
-            send_forgot_password_email(email, user, reset_password_link)
+            emails.send_forgot_password_email(email, user, reset_password_link)
 
             # Store token
             if hasattr(user, 'reset_password_token'):
@@ -279,11 +287,11 @@ def register():
                     confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
 
                     # Send email
-                    send_confirm_email_email(email_address, user, confirm_email_link)
+                    emails.send_confirm_email_email(email_address, user, confirm_email_link)
                 else:
                     if user_manager.send_registered_email:
                         # Send 'registered' email
-                        send_registered_email(email_address, user)
+                        emails.send_registered_email(email_address, user)
 
             except Exception as e:
                 # delete newly registered user if send email fails
@@ -353,6 +361,10 @@ def reset_password(token):
         hashed_password = user_manager.hash_password(form.new_password.data)
         db_adapter.update_object(user, password=hashed_password)
         db_adapter.commit()
+
+        # Send 'password_changed' email
+        if user_manager.enable_email and user_manager.send_password_changed_email:
+            emails.send_password_changed_email(user.email, user)
 
         # Prepare one-time system message
         flash(_("Your password has been reset successfully. Please sign in with your new password"), 'success')

@@ -1,4 +1,4 @@
-{% extends "flask_user/emails/base_message.txt" %}
+{% extends 'flask_user/emails/base_message.txt' %}
 
 {% block message %}
 Thank you for registering with Flask-User.

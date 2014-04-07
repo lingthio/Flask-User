@@ -32,7 +32,9 @@ def set_default_settings(user_manager, app_config):
     um.password_salt            = sd('USER_PASSWORD_SALT',              app_config['SECRET_KEY'])
     um.reset_password_expiration= sd('USER_RESET_PASSWORD_EXPIRATION',  2*24*3600)   # 2 days
     um.require_invitation       = sd('USER_REQUIRE_INVITATION',         False)
-    um.send_registered_email    = sd('USER_SEND_REGISTERED_EMAIL',      False)
+    um.send_password_changed_email = sd('USER_SEND_REGISTERED_EMAIL',   True)
+    um.send_registered_email       = sd('USER_SEND_REGISTERED_EMAIL',   True)
+    um.send_username_changed_email = sd('USER_SEND_REGISTERED_EMAIL',   True)
     # Set default URLs
     um.change_password_url      = sd('USER_CHANGE_PASSWORD_URL',        '/user/change-password')
     um.change_username_url      = sd('USER_CHANGE_USERNAME_URL',        '/user/change-username')
@@ -52,11 +54,13 @@ def set_default_settings(user_manager, app_config):
     um.login_template           = sd('USER_LOGIN_TEMPLATE',            'flask_user/login.html')
     um.register_template        = sd('USER_REGISTER_TEMPLATE',         'flask_user/register.html')
     um.resend_confirm_email_template = sd('USER_RESEND_CONFIRM_EMAIL_TEMPLATE', 'flask_user/resend_confirm_email.html')
-    um.reset_password_template  = sd('USER_RESET_PASSWORD_TEMPLATE',    'flask_user/reset_password.html')
+    um.reset_password_template       = sd('USER_RESET_PASSWORD_TEMPLATE',       'flask_user/reset_password.html')
     # Set default email template files
-    um.confirm_email_email_template   = sd('USER_CONFIRM_EMAIL_EMAIL_TEMPLATE',   'flask_user/emails/confirm_email')
-    um.forgot_password_email_template = sd('USER_FORGOT_PASSWORD_EMAIL_TEMPLATE', 'flask_user/emails/forgot_password')
-    um.registered_email_template      = sd('USER_REGISTERED_EMAIL_TEMPLATE',      'flask_user/emails/registered')
+    um.confirm_email_email_template    = sd('USER_CONFIRM_EMAIL_EMAIL_TEMPLATE',    'flask_user/emails/confirm_email')
+    um.forgot_password_email_template  = sd('USER_FORGOT_PASSWORD_EMAIL_TEMPLATE',  'flask_user/emails/forgot_password')
+    um.password_changed_email_template = sd('USER_PASSWORD_CHANGED_EMAIL_TEMPLATE', 'flask_user/emails/password_changed')
+    um.registered_email_template       = sd('USER_REGISTERED_EMAIL_TEMPLATE',       'flask_user/emails/registered')
+    um.username_changed_email_template = sd('USER_USERNAME_CHANGED_EMAIL_TEMPLATE', 'flask_user/emails/username_changed')
 
 def check_settings(user_manager):
     """ Verify config combinations. Produce a helpful error messages for inconsistent combinations."""

@@ -65,21 +65,6 @@ def send_confirm_email_email(email, user, confirm_email_link):
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
 
-def send_registered_email(email, user):
-    # Verify certain conditions
-    user_manager =  current_app.user_manager
-    if not user_manager.enable_email: return
-    if not user_manager.send_registered_email and not user_manager.enable_confirm_email: return
-    assert(email)
-
-    # Render subject, html message and text message
-    subject, html_message, text_message = _render_email(
-            user_manager.registered_email_template,
-            user=user)
-
-    # Send email message using Flask-Mail
-    user_manager.send_email_function(email, subject, html_message, text_message)
-
 def send_forgot_password_email(email, user, reset_password_link):
     # Verify certain conditions
     user_manager =  current_app.user_manager
@@ -95,3 +80,49 @@ def send_forgot_password_email(email, user, reset_password_link):
 
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
+
+def send_password_changed_email(email, user):
+    # Verify certain conditions
+    user_manager =  current_app.user_manager
+    if not user_manager.enable_email: return
+    if not user_manager.send_password_changed_email: return
+    assert(email)
+
+    # Render subject, html message and text message
+    subject, html_message, text_message = _render_email(
+            user_manager.password_changed_email_template,
+            user=user)
+
+    # Send email message using Flask-Mail
+    user_manager.send_email_function(email, subject, html_message, text_message)
+
+def send_registered_email(email, user):
+    # Verify certain conditions
+    user_manager =  current_app.user_manager
+    if not user_manager.enable_email: return
+    if not user_manager.send_registered_email: return
+    assert(email)
+
+    # Render subject, html message and text message
+    subject, html_message, text_message = _render_email(
+            user_manager.registered_email_template,
+            user=user)
+
+    # Send email message using Flask-Mail
+    user_manager.send_email_function(email, subject, html_message, text_message)
+
+def send_username_changed_email(email, user):
+    # Verify certain conditions
+    user_manager =  current_app.user_manager
+    if not user_manager.enable_email: return
+    if not user_manager.send_username_changed_email: return
+    assert(email)
+
+    # Render subject, html message and text message
+    subject, html_message, text_message = _render_email(
+            user_manager.username_changed_email_template,
+            user=user)
+
+    # Send email message using Flask-Mail
+    user_manager.send_email_function(email, subject, html_message, text_message)
+
