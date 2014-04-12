@@ -104,6 +104,10 @@ class UserManager(object):
         """ Initialize app.user_manager."""
         # Bind Flask-USER to app
         app.user_manager = self
+        # Flask seems to also support the current_app.extensions[] list
+        if not hasattr(app, 'extensions'):
+            app.extensions = {}
+        app.extensions['user'] = self
 
         # Set defaults for undefined settings
         settings.set_default_settings(self, app.config)

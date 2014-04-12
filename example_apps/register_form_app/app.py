@@ -69,7 +69,6 @@ def create_app(test_config=None):                   # For automated tests
         # Relationships
         roles = db.relationship('Role', secondary=user_roles,
                 backref=db.backref('users', lazy='dynamic'))
-    app.User = User
 
     # Reset all the database tables
     db.create_all()

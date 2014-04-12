@@ -14,9 +14,9 @@ class ConfigClass(object):
 app = Flask(__name__)
 app.config.from_object(__name__+'.ConfigClass')
 
-# Setup Flask-Babel and Flask-SQLAlchemy
-app.babel = babel = Babel(app)
-app.db = db = SQLAlchemy(app)
+# Initialize Flask extensions
+babel = Babel(app)                              # Initialize Flask-Babel
+db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
 
 @babel.localeselector
 def get_locale():

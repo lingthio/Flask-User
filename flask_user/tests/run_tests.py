@@ -25,9 +25,10 @@ test_config = dict(
 # Create app
 app = tst_app.create_app(test_config)
 app.testing = True           # Propagate exceptions (don't show 500 error page)
+db = app.user_manager.db_adapter.db
 
 # create client
-client = tstutils.TstClient(app.test_client())
+client = tstutils.TstClient(app.test_client(), db)
 
 # Create test case
 class TestFlaskUserForms(unittest.TestCase):

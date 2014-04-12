@@ -20,8 +20,8 @@ class ConfigClass(object):
     MAIL_DEFAULT_SENDER = '"Sender" <noreply@example.com>'
 
     # Configure Flask-User
-    USER_ENABLE_USERNAME         = True             # Register and Login with username
-    USER_ENABLE_CONFIRM_EMAIL    = True             # Require Email confirmation
+    USER_ENABLE_USERNAME         = True
+    USER_ENABLE_CONFIRM_EMAIL    = True
     USER_ENABLE_CHANGE_USERNAME  = True
     USER_ENABLE_CHANGE_PASSWORD  = True
     USER_ENABLE_FORGOT_PASSWORD  = True
@@ -36,15 +36,14 @@ def create_app(test_config=None):                   # For automated tests
     try: app.config.from_object('local_settings')
     except: pass
 
-    # Over-write app config                         # For automated tests
+    # Load optional test_config                     # For automated tests
     if test_config:
-        for key, value in test_config.items():
-            app.config[key] = value
+        app.config.update(test_config)
 
-    # Setup Flask-Mail, Flask-Babel and Flask-SQLAlchemy
-    app.mail = Mail(app)
-    app.babel = babel = Babel(app)
-    app.db = db = SQLAlchemy(app)
+    # Initialize Flask extensions
+    babel = Babel(app)                              # Initialize Flask-Babel
+    db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
+    mail = Mail(app)                                # Initialize Flask-Mail
 
     @babel.localeselector
     def get_locale():
@@ -60,7 +59,6 @@ def create_app(test_config=None):                   # For automated tests
         username = db.Column(db.String(50), nullable=False, unique=True)
         confirmed_at = db.Column(db.DateTime())
         reset_password_token = db.Column(db.String(100), nullable=False, default='')
-    app.User = User
 
     # Create all database tables
     db.create_all()
@@ -102,7 +100,6 @@ def create_app(test_config=None):                   # For automated tests
             """)
 
     return app
-
 
 # Start development web server
 if __name__=='__main__':

@@ -1,20 +1,20 @@
 Flask-User
 ==========
 
-.. image:: https://pypip.in/v/Flask-User/badge.png
-    :target: https://pypi.python.org/pypi/Flask-User
-
 .. image:: https://travis-ci.org/lingthio/Flask-User.png?branch=master
     :target: https://travis-ci.org/lingthio/Flask-User
+
+.. comment .. image:: https://pypip.in/v/Flask-User/badge.png
+.. comment     :target: https://pypi.python.org/pypi/Flask-User
 
 .. comment .. image:: https://coveralls.io/repos/lingthio/Flask-User/badge.png?branch=master
 .. comment     :target: https://coveralls.io/r/lingthio/Flask-User?branch=master
 
-.. image:: https://pypip.in/d/Flask-User/badge.png
-    :target: https://pypi.python.org/pypi/Flask-User
+.. comment .. image:: https://pypip.in/d/Flask-User/badge.png
+.. comment     :target: https://pypi.python.org/pypi/Flask-User
 
-.. image:: https://pypip.in/license/Flask-User/badge.png
-    :target: https://pypi.python.org/pypi/Flask-User
+.. comment .. image:: https://pypip.in/license/Flask-User/badge.png
+.. comment     :target: https://pypi.python.org/pypi/Flask-User
 
 Customizable User Account Management for Flask
 ----------------------------------------------

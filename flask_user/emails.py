@@ -28,20 +28,25 @@ def send_email(recipient, subject, html_message, text_message):
     class SendEmailError(Exception):
         pass
 
+    # Make sure that Flask-Mail has been installed
     try:
         from flask_mail import Message
     except:
-        raise SendEmailError("Flask-Mail is missing. Please install Flask-Mail ('pip install Flask-Mail').")
+        raise SendEmailError("Flask-Mail has not been installed. Use 'pip install Flask-Mail' to install Flask-Mail.")
 
-    # Construct Flash-Mail message
-    message = Message(subject,
-            recipients=[recipient],
-            html = html_message,
-            body = text_message)
+    # Make sure that Flask-Mail has been initialized
+    mail_engine = current_app.extensions.get('mail', None)
+    if not mail_engine:
+        raise SendEmailError('Flask-Mail has not been initialized.')
 
-    # Send email using Flash-Mail
     try:
-        current_app.mail.send(message)
+
+        # Construct Flash-Mail message
+        message = Message(subject,
+                recipients=[recipient],
+                html = html_message,
+                body = text_message)
+        mail_engine.send(message)
 
     # Print helpful error messages on exceptions
     except (socket.gaierror, socket.error) as e:

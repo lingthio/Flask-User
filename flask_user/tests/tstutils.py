@@ -32,8 +32,9 @@ class TstClient(object):
     """
     Utility class for tests
     """
-    def __init__(self, client):
+    def __init__(self, client, db):
         self.client = client
+        self.db = db
 
     def get_valid_page(self, url):
         """

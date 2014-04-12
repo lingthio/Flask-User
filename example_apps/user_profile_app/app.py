@@ -68,7 +68,6 @@ def create_app(test_config=None):                   # For automated tests
         user_profile = db.relationship('UserProfile', uselist=False, foreign_keys=[user_profile_id])
         roles = db.relationship('Role', secondary=user_roles,
                 backref=db.backref('users', lazy='dynamic'))
-    app.User = User
 
     class UserProfile(db.Model):
         id = db.Column(db.Integer, primary_key=True)

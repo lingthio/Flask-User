@@ -70,8 +70,8 @@ def test_init(db):
     um.enable_retype_password = True
 
     hashed_password = um.hash_password('Password1')
-    User = current_app.User
-    
+    User = um.db_adapter.UserClass
+
     # Create user1 with username and email
     user1 = User(username='user1', email='user1@example.com', password=hashed_password, active=True)
     assert user1
@@ -98,11 +98,10 @@ def test_init(db):
 def test_invalid_register_with_username_form(client):
     print("test_invalid_register_with_username_form")
 
-    User = current_app.User
-
     # Choose config
     um =  current_app.user_manager
     um.enable_username = True
+    User = um.db_adapter.UserClass
 
     # Set default values
     url = url_for('user.register')
@@ -143,11 +142,10 @@ def test_invalid_register_with_username_form(client):
 def test_invalid_register_with_email_form(client):
     print("test_invalid_register_with_email_form")
 
-    User = current_app.User
-
     # Choose config
     um =  current_app.user_manager
     um.enable_username = False
+    User = um.db_adapter.UserClass
 
     # Set default values
     url = url_for('user.register')
@@ -182,8 +180,6 @@ def test_invalid_register_with_email_form(client):
 
 def test_invalid_confirm_email_page(client):
     print("test_invalid_confirm_email_page")
-
-    User = current_app.User
 
     # Test Invalid token
     url = url_for('user.confirm_email', token='InvalidToken')
@@ -374,12 +370,14 @@ def test_invalid_reset_password(client):
             new_password = new_password, retype_password='XPassword5')
 
 def test_valid_roles(client):
+    um =  current_app.user_manager
+    User = um.db_adapter.UserClass
+
     # Perform only for roles_required_app
-    user007 = current_app.User.query.filter(current_app.User.username=='user007').first()
+    user007 = User.query.filter(User.username=='user007').first()
     if not user007: return
 
     print("test_valid_roles")
-    um =  current_app.user_manager
     um.enable_username = True
 
     client.login(username='user007', password='Password1')
@@ -389,12 +387,14 @@ def test_valid_roles(client):
     client.logout()
 
 def test_invalid_roles(client):
+    um =  current_app.user_manager
+    User = um.db_adapter.UserClass
+
     # Perform only for roles_required_app
-    user007 = current_app.User.query.filter(current_app.User.username=='user007').first()
+    user007 = User.query.filter(User.username=='user007').first()
     if not user007: return
 
     print("test_invalid_roles")
-    um =  current_app.user_manager
     um.enable_username = True
 
     client.login(username='user1', password='Password1')
@@ -427,7 +427,7 @@ def test_login_without_confirm(client):
             password=password)
 
     # Confirm email manually, but disable account
-    User = current_app.User
+    User = um.db_adapter.UserClass
     user = User.query.filter(User.email==email).first()
     assert(user)
     user.active = False
@@ -457,7 +457,7 @@ def test_cleanup(db):
 # Workaround for py.test coverage issue
 def run_all_tests(client):
     print()
-    test_init(current_app.db)
+    test_init(client.db)
     test_invalid_register_with_username_form(client)
     test_invalid_register_with_email_form(client)
     test_invalid_confirm_email_page(client)
@@ -473,7 +473,7 @@ def run_all_tests(client):
 
     test_login_without_confirm(client)
 
-    test_cleanup(current_app.db)
+    test_cleanup(client.db)
 
 # TODO:
 # Register without confirming email and try to log in

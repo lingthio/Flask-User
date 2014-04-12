@@ -38,7 +38,6 @@ def test_authorization(client):
     um.enable_email = False
     um.enable_confirm_email = False
     um.enable_retype_password = False
-    User = current_app.User
 
     # Test as anonymous user
     client.get_valid_page(url_for('home_page'))
@@ -55,10 +54,11 @@ def test_authorization(client):
     client.get_invalid_page(url_for('special_page'), "You do not have permission to access ")
 
     # Delete userX
+    User = um.db_adapter.UserClass
     user = User.query.filter(User.username=='userX').first()
     assert(user)
-    current_app.db.session.delete(user)
-    current_app.db.session.commit()
+    client.db.session.delete(user)
+    client.db.session.commit()
 
     # Log in as user007 without roles 'special' and 'agent'
     client.login(username='user007', password='Password1')

@@ -37,15 +37,14 @@ def create_app(test_config=None):                   # For automated tests
     try: app.config.from_object('local_settings')
     except: pass
 
-    # Over-write app config                         # For automated tests
+    # Load optional test_config                     # For automated tests
     if test_config:
-        for key, value in test_config.items():
-            app.config[key] = value
+        app.config.update(test_config)
 
-    # Setup Flask-Mail, Flask-Babel and Flask-SQLAlchemy
-    app.mail = Mail(app)
-    app.babel = babel = Babel(app)
-    app.db = db = SQLAlchemy(app)
+    # Initialize Flask extensions
+    babel = Babel(app)                              # Initialize Flask-Babel
+    mail = Mail(app)                                # Initialize Flask-Mail
+    db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
 
     @babel.localeselector
     def get_locale():
@@ -75,7 +74,6 @@ def create_app(test_config=None):                   # For automated tests
         # Relationships
         roles = db.relationship('Role', secondary=user_roles,
                 backref=db.backref('users', lazy='dynamic'))
-    app.User = User
 
     # Reset all the database tables
     db.create_all()

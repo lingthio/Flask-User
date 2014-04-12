@@ -82,6 +82,7 @@ Feeling generous? `Tip me on Gittip <https://www.gittip.com/lingthio/>`_
 
 Revision History
 ----------------
+* v0.4.8 Removed the need for app.mail, app.babel, app.db and app.User
 * v0.4.7 Added 'confirm_email', 'password_changed' and 'username_changed' emails.
 
 ::

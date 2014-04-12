@@ -103,7 +103,7 @@ def check_all_valid_forms(um, client):
     # ENABLE_CHANGE_USERNAME=True must have ENABLE_USERNAME=True.
     if um.enable_change_username and not um.enable_username: return
 
-    check_valid_register_form(um, client, current_app.db)
+    check_valid_register_form(um, client, client.db)
     check_valid_confirm_email_page(um, client)
     check_valid_login_form(um, client)
     check_valid_change_password_form(um, client)
@@ -112,12 +112,12 @@ def check_all_valid_forms(um, client):
     check_valid_forgot_password_form(um, client)
     check_valid_reset_password_page(um, client)
 
-    delete_user1(current_app.db)
+    delete_user1(client.db)
 
 def check_valid_register_form(um, client, db):
     # Using global variable for speed
     global user1
-    User = current_app.User
+    User = um.db_adapter.UserClass
 
     # Define defaults
     username = 'user1'
