@@ -2,7 +2,7 @@ Minimal App
 ===========
 | With only nine additional lines of code, the Minimal App offers the following features:
 | - **Internationalization**
-| - **Registration**, **Login**, **Change password** and **Logout**
+| - **Register with Username**, **Login**, **Change password** and **Logout**
 
 Create minimal_app.py
 ---------------------
@@ -14,7 +14,7 @@ The highlighted lines show Flask-User specific code.
 .. literalinclude:: includes/minimal_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 4, 27-31, 37-38, 55
+   :emphasize-lines: 4, 28-32, 38-39, 57
 
 Run the Minimal App
 -------------------

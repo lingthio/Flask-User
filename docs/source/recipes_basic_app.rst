@@ -3,12 +3,12 @@ Basic App
 =========
 | The Basic App builds on the features of :doc:`recipes_minimal_app`:
 | - **Internationalization**
-| - **Register**, **Login**, **Change password** and **Logout**
+| - **Login**, **Change password** and **Logout**
 |
 | With the addition of a only a few application config settings, it adds:
-| - **Login with Username** and **Change username**
-| - **Email confirmation** and **Forgot password**
-| - **Retype Password** in Register and Change password forms
+| - **Register with Username and Email**, **Change username**
+| - **Email confirmation**, **Forgot password**
+| - A combined Login or Register page
 | - the ``create_app()`` application factory pattern (for automated tests)
 
 Create basic_app.py
@@ -23,7 +23,7 @@ Highlighted code shows what was added to the Minimal App.
 .. literalinclude:: includes/basic_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 3, 14-28, 46, 59-61
+   :emphasize-lines: 3, 14-30, 48, 61-63
 
 Run the Basic App
 -----------------

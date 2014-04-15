@@ -343,19 +343,28 @@ and by editing the copies to your liking.
 
 The following form template files resides in the ``templates`` directory and can be customized::
 
-    base.html                         # root template
+    base.html                          # root template
 
-    flask_user/member_base.html       # extends base.html
-    flask_user/change_password.html   # extends flask_user/member_base.html
-    flask_user/change_username.html   # extends flask_user/member_base.html
+    flask_user/member_base.html        # extends base.html
+    flask_user/change_password.html    # extends flask_user/member_base.html
+    flask_user/change_username.html    # extends flask_user/member_base.html
 
-    flask_user/public_base.html       # extends base.html
-    flask_user/forgot_password.html   # extends flask_user/public_base.html
-    flask_user/login.html             # extends flask_user/public_base.html
-    flask_user/register.html          # extends flask_user/public_base.html
-    flask_user/reset_password.html    # extends flask_user/public_base.html
+    flask_user/public_base.html        # extends base.html
+    flask_user/forgot_password.html    # extends flask_user/public_base.html
+    flask_user/login.html              # extends flask_user/public_base.html
+    flask_user/login_or_register.html  # extends flask_user/public_base.html
+    flask_user/register.html           # extends flask_user/public_base.html
+    flask_user/reset_password.html     # extends flask_user/public_base.html
 
-See also :ref:`customizingforms`.
+If you'd like the Login form and the Register form to appear on one page,
+you can use the following application config settings::
+
+    # Place the Login form and the Register form on one page:
+    USER_LOGIN_TEMPLATE                     = 'flask_user/login_or_register.html'
+    USER_REGISTER_TEMPLATE                  = 'flask_user/login_or_register.html'
+
+
+See also :ref:`customizingformclasses`.
 
 
 Password and Username Validators

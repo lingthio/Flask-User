@@ -7,3 +7,7 @@
     USER_LOGIN_TEMPLATE                     = 'flask_user/login.html'
     USER_REGISTER_TEMPLATE                  = 'flask_user/register.html'
     USER_RESET_PASSWORD_TEMPLATE            = 'flask_user/reset_password.html'
+
+    # Place the Login form and the Register form on one page:
+    USER_LOGIN_TEMPLATE                     = 'flask_user/login_or_register.html'
+    USER_REGISTER_TEMPLATE                  = 'flask_user/login_or_register.html'

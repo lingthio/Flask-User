@@ -1,9 +1,11 @@
 ::
 
     # Email template files                  # Defaults
-    USER_CONFIRM_EMAIL_EMAIL_TEMPLATES      = 'flask_user/emails/confirm_email'
-    USER_FORGOT_PASSWORD_EMAIL_TEMPLATES    = 'flask_user/emails/forgot_password'
-    USER_REGISTERED_EMAIL_TEMPLATES         = 'flask_user/emails/registered'
+    USER_CONFIRM_EMAIL_EMAIL_TEMPLATE       = 'flask_user/emails/confirm_email'
+    USER_FORGOT_PASSWORD_EMAIL_TEMPLATE     = 'flask_user/emails/forgot_password'
+    USER_PASSWORD_CHANGED_EMAIL_TEMPLATE    = 'flask_user/emails/password_changed'
+    USER_REGISTERED_EMAIL_TEMPLATE          = 'flask_user/emails/registered'
+    USER_USERNAME_CHANGED_EMAIL_TEMPLATE    = 'flask_user/emails/username_changed'
 
     # These settings correspond to the start of three template files:
     # SOMETHING_subject.txt   # Email subject

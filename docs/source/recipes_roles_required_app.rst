@@ -3,12 +3,12 @@ Roles Required App
 ==================
 | The Roles Required App builds on the features of :doc:`recipes_basic_app`:
 | - **Internationalization**
-| - **Register**, **Login**, **Change password** and **Logout**
-| - **Login with Username** and **Change username**
-| - **Email confirmation** and **Forgot password**
+| - **Login**, **Change password** and **Logout**
+| - **Register with Username and Email**, **Change username**
+| - **Email confirmation**, **Forgot password**
 | - the ``create_app()`` application factory pattern
 |
-| With a simple ``@roles_required`` function decorator, it adds:
+| And adds the following:
 | - **Role-based Authorization** (v0.3.7 and up)
 |
 | This app requires appropriate SMTP configuration.
@@ -23,9 +23,9 @@ Make sure to adjust the ``MAIL_*`` settings below to the correct SMTP server and
 .. literalinclude:: includes/roles_required_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 6, 54-63, 74-76, 85-92, 128
+   :emphasize-lines: 6, 54-63, 74-76, 85-92, 129
 
-Highlighted code shows what was added from the Basic App.
+Highlighted code shows what was added to the Basic App.
 
 Run the Roles Required App
 --------------------------

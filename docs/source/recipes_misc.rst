@@ -1,6 +1,24 @@
 Miscellaneous
 =============
 
+Login Form and Register Form on one page
+----------------------------------------
+Some websites may prefer to show the login form and the register form on one page.
+
+Flask-User (v0.4.9 and up) ships with a ``login_or_register.html`` form template which requires the following
+application config settings:
+
+* ``USER_LOGIN_TEMPLATE='flask_user/login_or_register.html'``
+* ``USER_REGISTER_TEMPLATE='flask_user/login_or_register.html'``
+
+This should accomplish the following:
+
+* The ``/user/login`` and ``user/register`` URLs will now render ``login_or_register.html''.
+* ``login_or_register.html'' now displays a Login form and a Register form.
+* The Login button will post to ``/user/login``
+* The Register button will post to ``/user/register``
+
+
 Hashing Passwords
 -----------------
 If you want to populate your database with User records with hashed passwords use ``user_manager.hash_password()``:
