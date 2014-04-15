@@ -12,14 +12,14 @@ def set_default_settings(user_manager, app_config):
     # Retrieve obsoleted settings
     # These plural settings have been replaced by singular settings
     obsoleted_enable_emails            = sd('USER_ENABLE_EMAILS',              True)
-    obsoleted_enable_retype_passwords  = sd('USER_ENABLE_RETYPE_PASSWORDS',    False)
-    obsoleted_enable_usernames         = sd('USER_ENABLE_USERNAMES',           False)
+    obsoleted_enable_retype_passwords  = sd('USER_ENABLE_RETYPE_PASSWORDS',    True)
+    obsoleted_enable_usernames         = sd('USER_ENABLE_USERNAMES',           True)
     # Set default features
     um.enable_change_password   = sd('USER_ENABLE_CHANGE_PASSWORD',     True)
-    um.enable_change_username   = sd('USER_ENABLE_CHANGE_USERNAME',     False)
-    um.enable_confirm_email     = sd('USER_ENABLE_CONFIRM_EMAIL',       False)
+    um.enable_change_username   = sd('USER_ENABLE_CHANGE_USERNAME',     True)
     um.enable_email             = sd('USER_ENABLE_EMAIL',               obsoleted_enable_emails)
-    um.enable_forgot_password   = sd('USER_ENABLE_FORGOT_PASSWORD',     False)
+    um.enable_confirm_email     = sd('USER_ENABLE_CONFIRM_EMAIL',       um.enable_email)
+    um.enable_forgot_password   = sd('USER_ENABLE_FORGOT_PASSWORD',     um.enable_email)
     um.enable_register          = sd('USER_ENABLE_REGISTRATION',        True)
     um.enable_retype_password   = sd('USER_ENABLE_RETYPE_PASSWORD',     obsoleted_enable_retype_passwords)
     um.enable_username          = sd('USER_ENABLE_USERNAME',            obsoleted_enable_usernames)
@@ -32,9 +32,9 @@ def set_default_settings(user_manager, app_config):
     um.password_salt            = sd('USER_PASSWORD_SALT',              app_config['SECRET_KEY'])
     um.reset_password_expiration= sd('USER_RESET_PASSWORD_EXPIRATION',  2*24*3600)   # 2 days
     um.require_invitation       = sd('USER_REQUIRE_INVITATION',         False)
-    um.send_password_changed_email = sd('USER_SEND_REGISTERED_EMAIL',   True)
-    um.send_registered_email       = sd('USER_SEND_REGISTERED_EMAIL',   True)
-    um.send_username_changed_email = sd('USER_SEND_REGISTERED_EMAIL',   True)
+    um.send_password_changed_email = sd('USER_SEND_PASSWORD_CHANGED_EMAIL',   um.enable_email)
+    um.send_registered_email       = sd('USER_SEND_REGISTERED_EMAIL',         um.enable_email)
+    um.send_username_changed_email = sd('USER_SEND_USERNAME_CHANGED_EMAIL',   um.enable_email)
     # Set default URLs
     um.change_password_url      = sd('USER_CHANGE_PASSWORD_URL',        '/user/change-password')
     um.change_username_url      = sd('USER_CHANGE_USERNAME_URL',        '/user/change-username')

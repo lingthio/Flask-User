@@ -1,0 +1,61 @@
+{% extends 'flask_user/public_base.html' %}
+
+{% block content %}
+{% from "flask_user/_macros.html" import render_field, render_submit_field %}
+
+<div class="row">
+<div class="col-sm-6">
+
+<h1>{%trans%}Sign in{%endtrans%}</h1>
+
+{# ** Login form ** #}
+<form action="{{ url_for('user.login') }}" method="POST" class="form" role="form">
+    {{ login_form.hidden_tag() }}
+
+    {# Username or Email #}
+    {% set field = login_form.username if user_manager.enable_username else login_form.email %}
+    {{ render_field(field, tabindex=110) }}
+
+    {# Password #}
+    {{ render_field(login_form.password, tabindex=120) }}
+
+    {# Submit button #}
+    {{ render_submit_field(login_form.submit, tabindex=180) }}
+</form>
+    {% if user_manager.enable_forgot_password %}
+        <p>
+            <br/>
+            <a href="{{ url_for('user.forgot_password') }}" tabindex='190'>
+            {%trans%}Forgot your Password?{%endtrans%}</a>
+        </p>
+    {% endif %}
+
+</div>
+<div class="col-sm-6">
+
+<h1>{%trans%}Register{%endtrans%}</h1>
+
+{# ** Register form ** #}
+<form action="{{ url_for('user.register') }}" method="POST" novalidate formnovalidate class="form" role="form">
+    {{ register_form.hidden_tag() }}
+
+    {# Username or Email #}
+    {% set field = register_form.username if user_manager.enable_username else register_form.email %}
+    {{ render_field(field, tabindex=210) }}
+
+    {% if user_manager.enable_email and user_manager.enable_username %}
+        {{ render_field(register_form.email, tabindex=220) }}
+    {% endif %}
+
+    {{ render_field(register_form.password, tabindex=230) }}
+
+    {% if user_manager.enable_retype_password %}
+        {{ render_field(register_form.retype_password, tabindex=240) }}
+    {% endif %}
+
+    {{ render_submit_field(register_form.submit, tabindex=280) }}
+</form>
+
+</div>
+</div>
+{% endblock %}

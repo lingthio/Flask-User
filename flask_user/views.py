@@ -172,20 +172,21 @@ def login():
     user_manager =  current_app.user_manager
 
     # Initialize form
-    form = user_manager.login_form(request.form)
-    form.next.data = request.args.get('next', '/')  # Place ?next query param in next form field
+    login_form = user_manager.login_form(request.form)
+    login_form.next.data = request.args.get('next', '/')  # Place ?next query param in next form field
+    register_form = user_manager.register_form()          # for login_or_register.html
 
     # Process valid POST
-    if request.method=='POST' and form.validate():
+    if request.method=='POST' and login_form.validate():
         # Retrieve User
         if user_manager.enable_username:
             # Find user by username or email address
-            user = user_manager.find_user_by_username(form.username.data)
+            user = user_manager.find_user_by_username(login_form.username.data)
             if not user and user_manager.enable_email:
-                user = user_manager.find_user_by_email(form.username.data)
+                user = user_manager.find_user_by_email(login_form.username.data)
         else:
             # Find user by email address
-            user = user_manager.find_user_by_email(form.email.data)
+            user = user_manager.find_user_by_email(login_form.email.data)
 
         if user:
             if user.active:
@@ -199,7 +200,7 @@ def login():
                 flash(_('You have signed in successfully.'), 'success')
 
                 # Redirect to 'next' URL
-                return redirect(form.next.data)
+                return redirect(login_form.next.data)
             else:
                 if user_manager.enable_confirm_email and not user.confirmed_at:
                     flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email and follow the instructions to activate your account.'), 'error')
@@ -207,7 +208,10 @@ def login():
                     flash(_('Your account has been disabled.'), 'error')
 
     # Process GET or invalid POST
-    return render_template(user_manager.login_template, form=form)
+    return render_template(user_manager.login_template,
+            form=login_form,
+            login_form=login_form,
+            register_form=register_form)
 
 def logout():
     """ Sign the user out."""
@@ -233,10 +237,11 @@ def register():
     db_adapter = user_manager.db_adapter
 
     # Initialize form
-    form = user_manager.register_form(request.form)
+    register_form = user_manager.register_form(request.form)
+    login_form = user_manager.login_form()          # for login_or_register.html
 
     # Process valid POST
-    if request.method=='POST' and form.validate():
+    if request.method=='POST' and register_form.validate():
 
         # Create a User object using Form fields that have a corresponding User field
         User = user_manager.db_adapter.UserClass
@@ -253,10 +258,10 @@ def register():
         user_fields['active'] = not user_manager.enable_confirm_email
 
         # For all form fields
-        for field_name, field_value in form.data.items():
+        for field_name, field_value in register_form.data.items():
             # Hash password field
             if field_name=='password':
-                user_fields['password'] = user_manager.hash_password(form.password.data)
+                user_fields['password'] = user_manager.hash_password(register_form.password.data)
             # Store corresponding Form fields into the User object and/or UserProfile object
             else:
                 if field_name in user_class_fields:
@@ -276,7 +281,7 @@ def register():
 
         # Send 'confirm_email' or 'registered' email
         if user_manager.enable_email:
-            email_address = form.email.data
+            email_address = register_form.email.data
 
             try:
                 if user_manager.enable_confirm_email:
@@ -312,7 +317,10 @@ def register():
         return redirect(url_for('user.login'))
 
     # Process GET or invalid POST
-    return render_template(user_manager.register_template, form=form)
+    return render_template(user_manager.register_template,
+            form=register_form,
+            login_form=login_form,
+            register_form=register_form)
 
 
 # TODO:

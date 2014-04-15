@@ -17,12 +17,12 @@
             </div>
             <div class="col-xs-6 text-right">
                 {% if user_manager.enable_register %}
-                    <a href="{{ url_for('user.login') }}" tabindex='110'>
+                    <a href="{{ url_for('user.login') }}" tabindex='290'>
                         {%trans%}Already registered? Sign in.{%endtrans%}</a>
                 {% endif %}
             </div>
         </div>
-        {{ field(class_='form-control', tabindex=10) }}
+        {{ field(class_='form-control', tabindex=210) }}
         {% if field.errors %}
             {% for e in field.errors %}
                 <p class="help-block">{{ e }}</p>
@@ -31,16 +31,16 @@
     </div>
 
     {% if user_manager.enable_email and user_manager.enable_username %}
-        {{ render_field(form.email, tabindex=20) }}
+        {{ render_field(form.email, tabindex=220) }}
     {% endif %}
 
-    {{ render_field(form.password, tabindex=30) }}
+    {{ render_field(form.password, tabindex=230) }}
 
     {% if user_manager.enable_retype_password %}
-        {{ render_field(form.retype_password, tabindex=40) }}
+        {{ render_field(form.retype_password, tabindex=240) }}
     {% endif %}
 
-    {{ render_submit_field(form.submit, tabindex=90) }}
+    {{ render_submit_field(form.submit, tabindex=280) }}
 </form>
 
 {% endblock %}

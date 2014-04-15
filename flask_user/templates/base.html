@@ -8,7 +8,10 @@
 
     <!-- Bootstrap -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <style>.col-centered { float: none; margin: 0 auto; }</style>
+    <style>
+        .col-centered { float: none; margin: 0 auto; }
+        hr { border-color: #cccccc; }
+    </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -23,11 +26,12 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-8 col-md-7 col-lg-6 col-centered">
-                <h1><a href="/">{% block title %}Flask-User - {% if not user_manager.enable_confirm_email %}Minimal{% else %}Example{% endif %} App{% endblock %}</a></h1>
-                {% if not user_manager.enable_confirm_email %}
-                This Minimal App has no Email confirmation or Forgot password.<br/>
-                See <a href="http://pythonhosted.org//Flask-User/basic_app.html" target="_blank">Basic App</a> for an app with these features enabled.
-                {% endif %}
+                <h1><a href="/">{% block title %}Flask-User - {% if not user_manager.enable_email %}Minimal{% else %}Example{% endif %} App{% endblock %}</a></h1>
+                The <a href="http://pythonhosted.org/Flask-User/recipes_minimal_app.html" target="_blank">Minimal App</a> only prompts for a Username
+                    and disables Email related features.<br/>
+                The <a href="http://pythonhosted.org/Flask-User/recipes_basic_app.html" target="_blank">Basic App</a>
+                    and the  <a href="http://pythonhosted.org/Flask-User/recipes_roles_required_app.html" target="_blank">Roles Required App</a>
+                    prompts for Usernames and Email addresses and enables the 'Confirm Email' and 'Forgot Password' features.
                 <hr>
                 {% block flash_messages %}
                     {%- with messages = get_flashed_messages(with_categories=true) -%}

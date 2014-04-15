@@ -17,12 +17,12 @@
             </div>
             <div class="col-xs-6 text-right">
                 {% if user_manager.enable_register and not user_manager.require_invitation %}
-                    <a href="{{ url_for('user.register') }}" tabindex='110'>
+                    <a href="{{ url_for('user.register') }}" tabindex='190'>
                         {%trans%}New here? Register.{%endtrans%}</a>
                 {% endif %}
             </div>
         </div>
-        {{ field(class_='form-control', tabindex=10) }}
+        {{ field(class_='form-control', tabindex=110) }}
         {% if field.errors %}
             {% for e in field.errors %}
                 <p class="help-block">{{ e }}</p>
@@ -40,12 +40,12 @@
             </div>
             <div class="col-xs-6 text-right">
                 {% if user_manager.enable_forgot_password %}
-                    <a href="{{ url_for('user.forgot_password') }}" tabindex='120'>
+                    <a href="{{ url_for('user.forgot_password') }}" tabindex='195'>
                         {%trans%}Forgot your Password?{%endtrans%}</a>
                 {% endif %}
             </div>
         </div>
-        {{ field(class_='form-control', tabindex=20) }}
+        {{ field(class_='form-control', tabindex=120) }}
         {% if field.errors %}
             {% for e in field.errors %}
                 <p class="help-block">{{ e }}</p>
@@ -54,7 +54,7 @@
     </div>
 
     {# Submit button #}
-    {{ render_submit_field(form.submit, tabindex=90) }}
+    {{ render_submit_field(form.submit, tabindex=180) }}
 </form>
 
 {% endblock %}
