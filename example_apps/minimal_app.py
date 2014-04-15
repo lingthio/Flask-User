@@ -9,6 +9,7 @@ class ConfigClass(object):
     SECRET_KEY = 'THIS IS AN INSECURE SECRET'                 # Change this for production!!!
     SQLALCHEMY_DATABASE_URI = 'sqlite:///minimal_app.sqlite'  # Use Sqlite file db
     CSRF_ENABLED = True
+    USER_ENABLE_EMAIL = False
 
 # Setup Flask and read config from ConfigClass defined above
 app = Flask(__name__)
@@ -27,7 +28,7 @@ def get_locale():
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     active = db.Column(db.Boolean(), nullable=False, default=False)
-    email = db.Column(db.String(255), nullable=False, unique=True)
+    username = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False, default='')
 
 # Create all database tables
@@ -46,7 +47,8 @@ def home_page():
         {% extends "base.html" %}
         {% block content %}
         <h2>{%trans%}Home Page{%endtrans%}</h2>
-        <p><a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
+        <p> <a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a> or
+            <a href="{{ url_for('user.register') }}">{%trans%}Register{%endtrans%}</a></p>
         {% endblock %}
         """)
 
@@ -60,6 +62,8 @@ def profile_page():
             <h2>{%trans%}Profile Page{%endtrans%}</h2>
             <p> {%trans%}Hello{%endtrans%}
                 {{ current_user.username or current_user.email }},</p>
+            <p> <a href="{{ url_for('user.change_username') }}">
+                {%trans%}Change username{%endtrans%}</a></p>
             <p> <a href="{{ url_for('user.change_password') }}">
                 {%trans%}Change password{%endtrans%}</a></p>
             <p> <a href="{{ url_for('user.logout') }}?next={{ url_for('user.login') }}">

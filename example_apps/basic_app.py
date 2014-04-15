@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string, request
+from flask import Flask, redirect, render_template_string, request, url_for
 from flask.ext.babel import Babel
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -26,6 +26,8 @@ class ConfigClass(object):
     USER_ENABLE_CHANGE_PASSWORD  = True
     USER_ENABLE_FORGOT_PASSWORD  = True
     USER_ENABLE_RETYPE_PASSWORD  = True
+    USER_LOGIN_TEMPLATE = 'flask_user/login_or_register.html'
+    USER_REGISTER_TEMPLATE = 'flask_user/login_or_register.html'
 
 def create_app(test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
@@ -54,9 +56,9 @@ def create_app(test_config=None):                   # For automated tests
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
         active = db.Column(db.Boolean(), nullable=False, default=False)
-        email = db.Column(db.String(255), nullable=False, unique=True)
-        password = db.Column(db.String(255), nullable=False, default='')
         username = db.Column(db.String(50), nullable=False, unique=True)
+        password = db.Column(db.String(255), nullable=False, default='')
+        email = db.Column(db.String(255), nullable=False, unique=True)
         confirmed_at = db.Column(db.DateTime())
         reset_password_token = db.Column(db.String(100), nullable=False, default='')
 
@@ -67,18 +69,13 @@ def create_app(test_config=None):                   # For automated tests
     db_adapter = SQLAlchemyAdapter(db,  User)       # Select database adapter
     user_manager = UserManager(db_adapter, app)     # Init Flask-User and bind to app
 
-    # The '/' page is accessible to anyone
+    # Display Login page or Profile page
     @app.route('/')
     def home_page():
         if current_user.is_authenticated():
-            return profile_page()
-        return render_template_string("""
-            {% extends "base.html" %}
-            {% block content %}
-            <h2>{%trans%}Home Page{%endtrans%}</h2>
-            <p><a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
-            {% endblock %}
-            """)
+            return redirect(url_for('profile_page'))
+        else:
+            return redirect(url_for('user.login'))
 
     # The '/profile' page requires a logged-in user
     @app.route('/profile')

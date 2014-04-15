@@ -100,7 +100,8 @@ def create_app(test_config=None):                   # For automated tests
             {% extends "base.html" %}
             {% block content %}
             <h2>{%trans%}Home Page{%endtrans%}</h2>
-            <p><a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
+            <p> <a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a> or
+                <a href="{{ url_for('user.register') }}">{%trans%}Register{%endtrans%}</a></p>
             {% endblock %}
             """)
 
