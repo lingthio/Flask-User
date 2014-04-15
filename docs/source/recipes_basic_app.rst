@@ -20,6 +20,8 @@ Make sure to adjust the ``MAIL_*`` settings below to the correct SMTP server and
 
 Highlighted code shows what was added to the Minimal App.
 
+**!! This recipe requires Flask-User v0.4.9 or up !!** Please upgrade earlier versions.
+
 .. literalinclude:: includes/basic_app.py
    :language: python
    :linenos:

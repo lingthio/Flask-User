@@ -360,6 +360,7 @@ If you'd like the Login form and the Register form to appear on one page,
 you can use the following application config settings::
 
     # Place the Login form and the Register form on one page:
+    # Only works for Flask-User v0.4.9 and up
     USER_LOGIN_TEMPLATE                     = 'flask_user/login_or_register.html'
     USER_REGISTER_TEMPLATE                  = 'flask_user/login_or_register.html'
 

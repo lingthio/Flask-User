@@ -9,5 +9,6 @@
     USER_RESET_PASSWORD_TEMPLATE            = 'flask_user/reset_password.html'
 
     # Place the Login form and the Register form on one page:
+    # Only works for Flask-User v0.4.9 and up
     USER_LOGIN_TEMPLATE                     = 'flask_user/login_or_register.html'
     USER_REGISTER_TEMPLATE                  = 'flask_user/login_or_register.html'

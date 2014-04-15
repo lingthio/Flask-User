@@ -20,6 +20,8 @@ Create ~/dev/example/roles_required_app.py with the content below.
 
 Make sure to adjust the ``MAIL_*`` settings below to the correct SMTP server and SMTP account settings.
 
+**!! This recipe requires Flask-User v0.4.9 or up !!** Please upgrade earlier versions.
+
 .. literalinclude:: includes/roles_required_app.py
    :language: python
    :linenos:

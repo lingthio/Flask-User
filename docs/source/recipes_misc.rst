@@ -11,10 +11,10 @@ application config settings:
 * ``USER_LOGIN_TEMPLATE='flask_user/login_or_register.html'``
 * ``USER_REGISTER_TEMPLATE='flask_user/login_or_register.html'``
 
-This should accomplish the following:
+This would accomplish the following:
 
-* The ``/user/login`` and ``user/register`` URLs will now render ``login_or_register.html''.
-* ``login_or_register.html'' now displays a Login form and a Register form.
+* The ``/user/login`` and ``user/register`` URLs will now render ``login_or_register.html``.
+* ``login_or_register.html`` now displays a Login form and a Register form.
 * The Login button will post to ``/user/login``
 * The Register button will post to ``/user/register``
 

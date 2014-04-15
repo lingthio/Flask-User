@@ -11,6 +11,8 @@ Create ~/dev/example/minimal_app.py with the content below.
 
 The highlighted lines show Flask-User specific code.
 
+**!! This recipe requires Flask-User v0.4.9 or up !!** Please upgrade earlier versions.
+
 .. literalinclude:: includes/minimal_app.py
    :language: python
    :linenos:
