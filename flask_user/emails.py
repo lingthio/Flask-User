@@ -101,7 +101,7 @@ def send_password_changed_email(email, user):
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
 
-def send_registered_email(email, user):
+def send_registered_email(email, user):    # pragma: no cover
     # Verify certain conditions
     user_manager =  current_app.user_manager
     if not user_manager.enable_email: return
@@ -116,7 +116,7 @@ def send_registered_email(email, user):
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
 
-def send_username_changed_email(email, user):
+def send_username_changed_email(email, user):  # pragma: no cover
     # Verify certain conditions
     user_manager =  current_app.user_manager
     if not user_manager.enable_email: return

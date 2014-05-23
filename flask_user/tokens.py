@@ -30,7 +30,7 @@ class TokenManager(object):
     def decrypt_id(self, encrypted_id):
         """ Decrypts url-safe base64 string to integer ID"""
         # In Python3, encrypted_id is <type 'str'> and needs to be converted to bytes
-        if type(encrypted_id)=='str':   # pragma: no covers
+        if type(encrypted_id)=='str':   # pragma: no cover
             encrypted_id = encrypted_id.encode('ascii')
 
         try:
