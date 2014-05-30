@@ -243,6 +243,13 @@ class RegisterForm(Form):
         # All is well
         return True
 
+class ResendConfirmEmailForm(Form):
+    email = StringField(_('Email'), validators=[
+        validators.Required(_('Email is required')),
+        validators.Email(_('Invalid Email')),
+        ])
+    submit = SubmitField(_('Resend email confirmation email'))
+
 class ResetPasswordForm(Form):
     new_password = PasswordField(_('New Password'), validators=[
         validators.Required(_('New Password is required'))])

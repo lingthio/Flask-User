@@ -376,6 +376,8 @@ with a username validator (at least 3 characters in "abcdefghijklmnopqrstuvwxyzA
 
 Custom validators can be specified by setting an attribute on the Flask-User's UserManager object::
 
+    from wtforms.validators import ValidationError
+
     def my_password_validator(form, field):
         password = field.data
         if len(password) < 8:
@@ -454,14 +456,15 @@ Custom view functions are specified by setting an attribute on the Flask-User's 
 
     # View functions
     user_manager = UserManager(db_adapter,
-            change_password_view_function = my_view_function1,
-            change_username_view_function = my_view_function2,
-            confirm_email_view_function   = my_view_function3,
-            forgot_password_view_function = my_view_function4,
-            login_view_function           = my_view_function5,
-            logout_view_function          = my_view_function6,
-            register_view_function        = my_view_function7,
-            reset_password_view_function  = my_view_function8)
+            change_password_view_function      = my_view_function1,
+            change_username_view_function      = my_view_function2,
+            confirm_email_view_function        = my_view_function3,
+            forgot_password_view_function      = my_view_function4,
+            login_view_function                = my_view_function5,
+            logout_view_function               = my_view_function6,
+            register_view_function             = my_view_function7,
+            resend_confirm_email_view_function = my_view_function8,
+            reset_password_view_function       = my_view_function9)
     user_manager.init_app(app)
 
 URLs

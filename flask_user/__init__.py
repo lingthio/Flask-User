@@ -44,6 +44,7 @@ class UserManager(object):
                 forgot_password_form=forms.ForgotPasswordForm,
                 login_form=forms.LoginForm,
                 register_form=forms.RegisterForm,
+                resend_confirm_email_form=forms.ResendConfirmEmailForm,
                 reset_password_form=forms.ResetPasswordForm,
                 # Validators
                 username_validator=forms.username_validator,
@@ -74,6 +75,7 @@ class UserManager(object):
         self.forgot_password_form = forgot_password_form
         self.login_form = login_form
         self.register_form = register_form
+        self.resend_confirm_email_form = resend_confirm_email_form
         self.reset_password_form = reset_password_form
         # Validators
         self.username_validator = username_validator
@@ -154,7 +156,7 @@ class UserManager(object):
         """ Add URL Routes"""
         if self.enable_confirm_email:
             app.add_url_rule(self.confirm_email_url, 'user.confirm_email', self.confirm_email_view_function)
-            app.add_url_rule(self.resend_confirm_email_url, 'user.resend_confirm_email', self.resend_confirm_email_view_function)
+            app.add_url_rule(self.resend_confirm_email_url, 'user.resend_confirm_email', self.resend_confirm_email_view_function, methods=['GET', 'POST'])
         if self.enable_change_password:
             app.add_url_rule(self.change_password_url, 'user.change_password', self.change_password_view_function, methods=['GET', 'POST'])
         if self.enable_change_username:

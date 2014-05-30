@@ -79,6 +79,7 @@ UserManager()
             forgot_password_form            = forms.ForgotPasswordForm,
             login_form                      = forms.LoginForm,
             register_form                   = forms.RegisterForm,
+            resend_confirm_email_form       = forms.ResendConfirmEmailForm,
             reset_password_form             = forms.ResetPasswordForm,
 
             # Validators
@@ -93,6 +94,7 @@ UserManager()
             login_view_function             = views.login,
             logout_view_function            = views.logout,
             register_view_function          = views.register,
+            resend_confirm_email_view_function = views.resend_confirm_email_view_function,
             reset_password_view_function    = views.reset_password,
             unauthenticated_view_function   = views.unauthenticated,
             unauthorized_view_function      = views.unauthorized,

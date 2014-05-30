@@ -43,7 +43,7 @@ def set_default_settings(user_manager, app_config):
     um.login_url                = sd('USER_LOGIN_URL',                  '/user/sign-in')
     um.logout_url               = sd('USER_LOGOUT_URL',                 '/user/sign-out')
     um.register_url             = sd('USER_REGISTER_URL',               '/user/register')
-    um.resend_confirm_email_url = sd('USER_RESEND_CONFIRM_EMAIL_URL',   '/user/resend-confirmation-email')
+    um.resend_confirm_email_url = sd('USER_RESEND_CONFIRM_EMAIL_URL',   '/user/resend-confirm-email')
     um.reset_password_url       = sd('USER_RESET_PASSWORD_URL',         '/user/reset-password/<token>')
     um.unauthenticated_url      = sd('USER_UNAUTHENTICATED_URL',        um.login_url)
     um.unauthorized_url         = sd('USER_UNAUTHORIZED_URL',           '/')

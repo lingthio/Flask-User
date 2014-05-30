@@ -1,21 +1,13 @@
-{% extends 'flask_user/base.html' %}
+{% extends 'flask_user/public_base.html' %}
 
 {% block content %}
 {% from "flask_user/_macros.html" import render_field, render_submit_field %}
-<h1>{%trans%}Register{%endtrans%}</h1>
+<h1>{%trans%}Resend Confirmation Email{%endtrans%}</h1>
 
-<form action="" method="POST" novalidate formnovalidate class="form" role="form">
+<form action="" method="POST" class="form" role="form">
     {{ form.hidden_tag() }}
-    {% if user_manager.enable_username %}
-        {{ render_field(form.username) }}
-    {% endif %}
-    {% if user_manager.enable_email %}
-        {{ render_field(form.email) }}
-    {% endif %}
-    {{ render_field(form.password) }}
-    {% if user_manager.enable_retype_password %}
-        {{ render_field(form.retype_password) }}
-    {% endif %}
-    {{ render_submit_field(form.submit) }}
+    {{ render_field(form.email, tabindex=10) }}
+    {{ render_submit_field(form.submit, tabindex=90) }}
 </form>
 
+{% endblock %}

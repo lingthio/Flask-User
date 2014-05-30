@@ -279,39 +279,10 @@ def register():
 
         db_adapter.commit()
 
-        # Send 'confirm_email' or 'registered' email
-        if user_manager.enable_email:
-            email_address = register_form.email.data
-
-            try:
-                if user_manager.enable_confirm_email:
-                    # Send 'confirm_email' email
-
-                    # Generate confirm email link
-                    token = user_manager.generate_token(user.id)
-                    confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
-
-                    # Send email
-                    emails.send_confirm_email_email(email_address, user, confirm_email_link)
-                else:
-                    if user_manager.send_registered_email:
-                        # Send 'registered' email
-                        emails.send_registered_email(email_address, user)
-
-            except Exception as e:
-                # delete newly registered user if send email fails
-                db_adapter.delete_object(user)
-                db_adapter.commit()
-                raise e
+        send_confirm_email_or_registered_email(user)
 
         # Send user_registered signal
         signals.user_registered.send(current_app._get_current_object(), user=user)
-
-        # Prepare one-time system message
-        if user_manager.enable_confirm_email:
-            flash(_('A confirmation email has been sent to %(email)s with instructions to complete your registration.', email=email_address), 'success')
-        else:
-            flash(_('You have registered successfully. Please sign in.'), 'success')
 
         # Redirect to the login page
         return redirect(url_for('user.login'))
@@ -322,10 +293,66 @@ def register():
             login_form=login_form,
             register_form=register_form)
 
+def send_confirm_email_or_registered_email(user):
+    user_manager =  current_app.user_manager
+    db_adapter = user_manager.db_adapter
+
+    # Send 'confirm_email' or 'registered' email
+    if user_manager.enable_email:
+        email_address = user.email
+
+        try:
+            if user_manager.enable_confirm_email:
+                # Send 'confirm_email' email
+
+                # Generate confirm email link
+                token = user_manager.generate_token(user.id)
+                confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
+
+                # Send email
+                emails.send_confirm_email_email(email_address, user, confirm_email_link)
+            else:
+                if user_manager.send_registered_email:
+                    # Send 'registered' email
+                    emails.send_registered_email(email_address, user)
+
+        except Exception as e:
+            # delete newly registered user if send email fails
+            db_adapter.delete_object(user)
+            db_adapter.commit()
+            raise e
+
+    # Prepare one-time system message
+    if user_manager.enable_confirm_email:
+        flash(_('A confirmation email has been sent to %(email)s with instructions to complete your registration.', email=email_address), 'success')
+    else:
+        flash(_('You have registered successfully. Please sign in.'), 'success')
+
 
 # TODO:
 def resend_confirm_email():
-    pass
+    """Prompt for email and re-send email conformation email."""
+    user_manager =  current_app.user_manager
+    db_adapter = user_manager.db_adapter
+
+    # Initialize form
+    form = user_manager.resend_confirm_email_form(request.form)
+
+    # Process valid POST
+    if request.method=='POST' and form.validate():
+        email = form.email.data
+
+        # Find user by email
+        user = user_manager.find_user_by_email(email)
+        if user:
+            send_confirm_email_or_registered_email(user)
+
+        # Redirect to the login page
+        return redirect(url_for('user.login'))
+
+    # Process GET or invalid POST
+    return render_template(user_manager.resend_confirm_email_template, form=form)
+
 
 def reset_password(token):
     """ Verify the password reset token, Prompt for new password, and set the user's password."""
