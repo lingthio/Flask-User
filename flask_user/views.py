@@ -29,8 +29,6 @@ def confirm_email(token):
         flash(_('Invalid confirmation token.'), 'error')
         return redirect(user_manager.login_url)
 
-    print('confirm id=', object_id)
-
     # Confirm email by setting User.active=True and User.confirmed_at=utcnow()
     if db_adapter.UserEmailClass:
         user_email = user_manager.find_user_email_by_id(object_id)
@@ -495,7 +493,6 @@ def send_confirm_email_or_registered_email(user, user_email):
 
                 # Generate confirm email link
                 object_id = user_email.id if user_email else user.id
-                print('send_confirm: id=', object_id)
                 token = user_manager.generate_token(object_id)
                 confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
 

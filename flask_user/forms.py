@@ -183,15 +183,20 @@ class LoginForm(Form):
         if not super(LoginForm, self).validate():
             return False
 
-        # Find user by username
+        # Find user by username and/or email
         user = None
         user_email = None
         if user_manager.enable_username:
+            # Find user by username
             user = user_manager.find_user_by_username(self.username.data)
 
-        # Find user by email address
-        if not user and user_manager.enable_email:
-            user, user_email = user_manager.find_user_by_email(self.username.data)
+            # Find user by email address (username field)
+            if not user and user_manager.enable_email:
+                user, user_email = user_manager.find_user_by_email(self.username.data)
+
+        else:
+            # Find user by email address (email field)
+            user, user_email = user_manager.find_user_by_email(self.email.data)
 
         # Validate user and password
         if not user or not user_manager.verify_password(self.password.data, user.password):
