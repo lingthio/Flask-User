@@ -29,9 +29,9 @@ Highlighted code shows what was added to the Minimal App.
    :linenos:
    :emphasize-lines: 61-62, 65-72, 79, 104-105
 
-Run the Basic App
------------------
-Run the Basic App with the following command::
+Run the Multi Email App
+-----------------------
+Run the Multi Email App with the following command::
 
     cd ~/dev/example
     python multi_email_app.py
