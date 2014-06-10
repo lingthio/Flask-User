@@ -49,14 +49,14 @@ def unique_username_validator(form, field):
     """ Username must be unique"""
     user_manager =  current_app.user_manager
     if not user_manager.username_is_available(field.data):
-        raise ValidationError(_('This Username is no longer available. Please try another one.'))
+        raise ValidationError(_('This Username is already in use. Please try another one.'))
 
 
 def unique_email_validator(form, field):
     """ Username must be unique"""
     user_manager =  current_app.user_manager
     if not user_manager.email_is_available(field.data):
-        raise ValidationError(_('This Email is no longer available. Please try another one.'))
+        raise ValidationError(_('This Email is already in use. Please try another one.'))
 
 # ***********
 # ** Forms **
@@ -65,8 +65,8 @@ def unique_email_validator(form, field):
 class AddEmailForm(Form):
     email = StringField(_('Email'), validators=[
         validators.Required(_('Email is required')),
-        validators.Email(_('Invalid Email'))
-    ])
+        validators.Email(_('Invalid Email')),
+        unique_email_validator])
     submit = SubmitField(_('Add Email'))
 
 class ChangePasswordForm(Form):
