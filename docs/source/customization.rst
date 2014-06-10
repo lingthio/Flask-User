@@ -287,6 +287,7 @@ Form Classes
 
 Forms can be customized by sub-classing one of the following built-in Form classes::
 
+    flask.ext.user.forms.AddEmailForm
     flask.ext.user.forms.ChangeUsernameForm
     flask.ext.user.forms.ChangePasswordForm
     flask.ext.user.forms.ForgotPasswordForm
@@ -353,6 +354,7 @@ The following form template files resides in the ``templates`` directory and can
     flask_user/forgot_password.html    # extends flask_user/public_base.html
     flask_user/login.html              # extends flask_user/public_base.html
     flask_user/login_or_register.html  # extends flask_user/public_base.html
+    flask_user/manage_emails.html      # extends base.html
     flask_user/register.html           # extends flask_user/public_base.html
     flask_user/reset_password.html     # extends flask_user/public_base.html
 
@@ -459,12 +461,15 @@ Custom view functions are specified by setting an attribute on the Flask-User's 
             change_password_view_function      = my_view_function1,
             change_username_view_function      = my_view_function2,
             confirm_email_view_function        = my_view_function3,
-            forgot_password_view_function      = my_view_function4,
-            login_view_function                = my_view_function5,
-            logout_view_function               = my_view_function6,
-            register_view_function             = my_view_function7,
-            resend_confirm_email_view_function = my_view_function8,
-            reset_password_view_function       = my_view_function9)
+            email_action_view_function         = my_view_function4,
+            forgot_password_view_function      = my_view_function5,
+            login_view_function                = my_view_function6,
+            logout_view_function               = my_view_function7,
+            manage_emails_view_function        = my_view_function8,
+            register_view_function             = my_view_function9,
+            resend_confirm_email_view_function = my_view_function10,
+            reset_password_view_function       = my_view_function11,
+            )
     user_manager.init_app(app)
 
 URLs

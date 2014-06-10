@@ -54,11 +54,26 @@ def send_email(recipient, subject, html_message, text_message):
     except smtplib.SMTPAuthenticationError:
         raise SendEmailError('SMTP Authentication error: Check your MAIL_USERNAME and MAIL_PASSWORD settings.')
 
-def send_confirm_email_email(email, user, confirm_email_link):
+def _get_primary_email(user):
+    user_manager =  current_app.user_manager
+    db_adapter = user_manager.db_adapter
+    if db_adapter.UserEmailClass:
+        user_email = db_adapter.find_object(db_adapter.UserEmailClass,
+                user_id=user.id,
+                is_primary=True)
+        return user_email.email if user_email else None
+    else:
+        return user.email
+
+
+def send_confirm_email_email(user, user_email, confirm_email_link):
     # Verify certain conditions
     user_manager =  current_app.user_manager
     if not user_manager.enable_email: return
     if not user_manager.send_registered_email and not user_manager.enable_confirm_email: return
+
+    # Retrieve email address from User or UserEmail object
+    email = user_email.email if user_email else user.email
     assert(email)
 
     # Render subject, html message and text message
@@ -70,12 +85,15 @@ def send_confirm_email_email(email, user, confirm_email_link):
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
 
-def send_forgot_password_email(email, user, reset_password_link):
+def send_forgot_password_email(user, user_email, reset_password_link):
     # Verify certain conditions
     user_manager =  current_app.user_manager
     if not user_manager.enable_email: return
     assert user_manager.enable_forgot_password
-    assert email
+
+    # Retrieve email address from User or UserEmail object
+    email = user_email.email if user_email else user.email
+    assert(email)
 
     # Render subject, html message and text message
     subject, html_message, text_message = _render_email(
@@ -86,11 +104,14 @@ def send_forgot_password_email(email, user, reset_password_link):
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
 
-def send_password_changed_email(email, user):
+def send_password_changed_email(user):
     # Verify certain conditions
     user_manager =  current_app.user_manager
     if not user_manager.enable_email: return
     if not user_manager.send_password_changed_email: return
+
+    # Retrieve email address from User or UserEmail object
+    email = _get_primary_email(user)
     assert(email)
 
     # Render subject, html message and text message
@@ -101,11 +122,14 @@ def send_password_changed_email(email, user):
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
 
-def send_registered_email(email, user):    # pragma: no cover
+def send_registered_email(user, user_email):    # pragma: no cover
     # Verify certain conditions
     user_manager =  current_app.user_manager
     if not user_manager.enable_email: return
     if not user_manager.send_registered_email: return
+
+    # Retrieve email address from User or UserEmail object
+    email = user_email.email if user_email else user.email
     assert(email)
 
     # Render subject, html message and text message
@@ -116,11 +140,14 @@ def send_registered_email(email, user):    # pragma: no cover
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
 
-def send_username_changed_email(email, user):  # pragma: no cover
+def send_username_changed_email(user):  # pragma: no cover
     # Verify certain conditions
     user_manager =  current_app.user_manager
     if not user_manager.enable_email: return
     if not user_manager.send_username_changed_email: return
+
+    # Retrieve email address from User or UserEmail object
+    email = _get_primary_email(user)
     assert(email)
 
     # Render subject, html message and text message

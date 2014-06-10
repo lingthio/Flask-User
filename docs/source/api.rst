@@ -74,7 +74,7 @@ UserManager()
             app = None,                     # typically from Flask() or None
 
             # Forms
-            change_password_form            = forms.ChangePasswordForm,
+            add_email_form                  = forms.AddEmailForm,
             change_username_form            = forms.ChangeUsernameForm,
             forgot_password_form            = forms.ForgotPasswordForm,
             login_form                      = forms.LoginForm,
@@ -90,12 +90,16 @@ UserManager()
             change_password_view_function   = views.change_password,
             change_username_view_function   = views.change_username,
             confirm_email_view_function     = views.confirm_email,
+            email_action_view_function      = views.email_action,
             forgot_password_view_function   = views.forgot_password,
             login_view_function             = views.login,
             logout_view_function            = views.logout,
+            manage_emails_view_function     = views.manage_emails,
             register_view_function          = views.register,
             resend_confirm_email_view_function = views.resend_confirm_email_view_function,
             reset_password_view_function    = views.reset_password,
+
+            # Special View functions
             unauthenticated_view_function   = views.unauthenticated,
             unauthorized_view_function      = views.unauthorized,
 

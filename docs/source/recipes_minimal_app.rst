@@ -32,4 +32,6 @@ To test Internationalization, set your browser to use 'Dutch' as the preferred l
 If you receive a SQLAlchemy error message, delete the minimal_app.sqlite file and restart the app.
 You may be using an old DB schema in that file.
 
-Up Next: :doc:`recipes_basic_app`
+Up Next
+-------
+:doc:`recipes_basic_app`

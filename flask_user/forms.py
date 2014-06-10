@@ -62,39 +62,12 @@ def unique_email_validator(form, field):
 # ** Forms **
 # ***********
 
-class ChangeUsernameForm(Form):
-    new_username = StringField(_('New Username'), validators=[
-        validators.Required(_('Username is required')),
-        unique_username_validator,
+class AddEmailForm(Form):
+    email = StringField(_('Email'), validators=[
+        validators.Required(_('Email is required')),
+        validators.Email(_('Invalid Email'))
     ])
-    old_password = PasswordField(_('Old Password'), validators=[
-        validators.Required(_('Old Password is required')),
-    ])
-    next = HiddenField()
-    submit = SubmitField(_('Change Username'))
-
-    def validate(self):
-        user_manager =  current_app.user_manager
-
-        # Add custom username validator if needed
-        has_been_added = False
-        for v in self.new_username.validators:
-            if v==user_manager.username_validator:
-                has_been_added = True
-        if not has_been_added:
-            self.new_username.validators.append(user_manager.username_validator)
-
-        # Validate field-validators
-        if not super(ChangeUsernameForm, self).validate():
-            return False
-
-        # Verify current_user and current_password
-        if not current_user or not user_manager.verify_password(self.old_password.data, current_user.password):
-            self.old_password.errors.append(_('Old Password is incorrect'))
-            return False
-
-        # All is well
-        return True
+    submit = SubmitField(_('Add Email'))
 
 class ChangePasswordForm(Form):
     old_password = PasswordField(_('Old Password'), validators=[
@@ -125,6 +98,40 @@ class ChangePasswordForm(Form):
 
         # Validate field-validators
         if not super(ChangePasswordForm, self).validate():
+            return False
+
+        # Verify current_user and current_password
+        if not current_user or not user_manager.verify_password(self.old_password.data, current_user.password):
+            self.old_password.errors.append(_('Old Password is incorrect'))
+            return False
+
+        # All is well
+        return True
+
+class ChangeUsernameForm(Form):
+    new_username = StringField(_('New Username'), validators=[
+        validators.Required(_('Username is required')),
+        unique_username_validator,
+    ])
+    old_password = PasswordField(_('Old Password'), validators=[
+        validators.Required(_('Old Password is required')),
+    ])
+    next = HiddenField()
+    submit = SubmitField(_('Change Username'))
+
+    def validate(self):
+        user_manager =  current_app.user_manager
+
+        # Add custom username validator if needed
+        has_been_added = False
+        for v in self.new_username.validators:
+            if v==user_manager.username_validator:
+                has_been_added = True
+        if not has_been_added:
+            self.new_username.validators.append(user_manager.username_validator)
+
+        # Validate field-validators
+        if not super(ChangeUsernameForm, self).validate():
             return False
 
         # Verify current_user and current_password
@@ -176,14 +183,15 @@ class LoginForm(Form):
         if not super(LoginForm, self).validate():
             return False
 
+        # Find user by username
+        user = None
+        user_email = None
         if user_manager.enable_username:
-            # Find user by username or email address
             user = user_manager.find_user_by_username(self.username.data)
-            if not user and user_manager.enable_email:
-                user = user_manager.find_user_by_email(self.username.data)
-        else:
-            # Find user by email address
-            user = user_manager.find_user_by_email(self.email.data)
+
+        # Find user by email address
+        if not user and user_manager.enable_email:
+            user, user_email = user_manager.find_user_by_email(self.username.data)
 
         # Validate user and password
         if not user or not user_manager.verify_password(self.password.data, user.password):

@@ -40,7 +40,7 @@
                                 {% if category=='error' %}
                                     {% set category='danger' %}
                                 {% endif %}
-                                <div class="alert alert-{{category}}">{{ message }}</div>
+                                <div class="alert alert-{{category}}">{{ message|safe }}</div>
                             {% endfor %}
                         {% endif %}
                     {%- endwith %}

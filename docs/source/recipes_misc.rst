@@ -58,3 +58,7 @@ Here's an example of tracking login_count and last_login_ip:
         user.login_count += 1
         user.last_login_ip = request.remote_addr
         db.session.commit()
+
+Up Next
+-------
+:doc:`customization`

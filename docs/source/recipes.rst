@@ -47,6 +47,8 @@ and that the code resides in ~/dev/example::
     recipes_minimal_app
     recipes_basic_app
     recipes_roles_required_app
+    recipes_multi_email_app
+    recipes_user_profile_app
     recipes_custom_apps
     recipes_misc
 

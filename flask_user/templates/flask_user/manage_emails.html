@@ -1,0 +1,39 @@
+{% extends 'flask_user/member_base.html' %}
+
+{% block content %}
+{% from "flask_user/_macros.html" import render_field, render_submit_field %}
+<h1>{%trans%}Manage Emails{%endtrans%}</h1>
+
+<table class="table">
+<tr><th>Email</th><th>Status</th><th>Actions</th></tr>
+{% for user_email in user_emails %}
+    <tr>
+        <td>{{ user_email.email }}</td>
+        <td>
+            {% if user_email.confirmed_at %}
+                Confirmed
+            {% else %}
+                <a href="{{ url_for('user.email_action', id=user_email.id, action='confirm') }}">Confirm Email</a>
+            {% endif %}
+        </td>
+        <td>
+            {% if user_email.is_primary %}
+                <b>Primary email</b>
+            {% else %}
+                {% if user_email.confirmed_at %}
+                    <a href="{{ url_for('user.email_action', id=user_email.id, action='make-primary') }}">Make primary</a> |
+                {% endif %}
+                <a href="{{ url_for('user.email_action', id=user_email.id, action='delete') }}">Delete</a>
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}
+</table>
+
+<form action="" method="POST" class="form" role="form">
+    {{ form.hidden_tag() }}
+    {{ render_field(form.email) }}
+    {{ render_submit_field(form.submit) }}
+</form>
+
+{% endblock %}

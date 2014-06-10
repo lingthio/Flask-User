@@ -48,4 +48,6 @@ be using an old version of Flask-Mail which uses DEFAULT_MAIL_SENDER instead of 
 If you receive a SQLAlchemy error message, delete the roles_required_app.sqlite file and restart the app.
 You may be using an old DB schema in that file.
 
-Next :doc:`customization`
+Up Next
+-------
+:doc:`recipes_user_profile_app`

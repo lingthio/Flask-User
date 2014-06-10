@@ -29,20 +29,27 @@ def confirm_email(token):
         flash(_('Invalid confirmation token.'), 'error')
         return redirect(user_manager.login_url)
 
+    print('confirm id=', object_id)
+
     # Confirm email by setting User.active=True and User.confirmed_at=utcnow()
-    if not db_adapter.EmailClass:
-        user = user_manager.find_user_by_id(object_id)
-        if user:
-            db_adapter.update_object(user,
-                    active=True,
-                    confirmed_at=datetime.utcnow(),
-                    )
-            db_adapter.commit()
-        else:                                               # pragma: no cover
-            flash(_('Invalid confirmation token.'), 'error')
-            return redirect(user_manager.login_url)
+    if db_adapter.UserEmailClass:
+        user_email = user_manager.find_user_email_by_id(object_id)
+        if user_email:
+            user_email.confirmed_at = datetime.utcnow()
+            user = user_email.user
+        else:
+            user = None
     else:
-        raise NotImplementedError   # TODO:
+        user_email = None
+        user = user_manager.find_user_by_id(object_id)
+        user.confirmed_at = datetime.utcnow()
+
+    if user:
+        user.active = True
+        db_adapter.commit()
+    else:                                               # pragma: no cover
+        flash(_('Invalid confirmation token.'), 'error')
+        return redirect(user_manager.login_url)
 
     # Send email_confirmed signal
     signals.user_confirmed_email.send(current_app._get_current_object(), user=user)
@@ -78,7 +85,7 @@ def change_password():
 
         # Send 'password_changed' email
         if user_manager.enable_email and user_manager.send_password_changed_email:
-            emails.send_password_changed_email(current_user.email, current_user)
+            emails.send_password_changed_email(current_user)
 
         # Send password_changed signal
         signals.user_changed_password.send(current_app._get_current_object(), user=current_user)
@@ -112,7 +119,7 @@ def change_username():
 
         # Send 'username_changed' email
         if user_manager.enable_email and user_manager.send_username_changed_email:
-            emails.send_username_changed_email(current_user.email, current_user)
+            emails.send_username_changed_email(current_user)
 
         # Send username_changed signal
         signals.user_changed_username.send(current_app._get_current_object(), user=current_user)
@@ -126,6 +133,46 @@ def change_username():
     # Process GET or invalid POST
     return render_template(user_manager.change_username_template, form=form)
 
+@login_required
+def email_action(id, action):
+    """ Perform action 'action' on UserEmail object 'id'
+    """
+    user_manager =  current_app.user_manager
+    db_adapter = user_manager.db_adapter
+
+    # Retrieve UserEmail by id
+    user_email = db_adapter.find_object(db_adapter.UserEmailClass, id=id)
+
+    # Users may only change their own UserEmails
+    if not user_email or user_email.user_id != current_user.id:
+        return unauthorized()
+
+    if action=='delete':
+        # Primary UserEmail can not be deleted
+        if user_email.is_primary:
+            return unauthorized()
+        # Delete UserEmail
+        db_adapter.delete_object(user_email)
+        db_adapter.commit()
+
+    elif action=='make-primary':
+        # Disable previously primary emails
+        user_emails = db_adapter.find_object_list(db_adapter.UserEmailClass, user_id=current_user.id)
+        for ue in user_emails:
+            if ue.is_primary:
+                ue.is_primary = False
+        # Enable current primary email
+        user_email.is_primary = True
+        # Commit
+        db_adapter.commit()
+
+    elif action=='confirm':
+        send_confirm_email_or_registered_email(user_email.user, user_email)
+
+    else:
+        return unauthorized()
+
+    return redirect(url_for('user.manage_emails'))
 
 def forgot_password():
     """Prompt for email and send reset password email."""
@@ -140,14 +187,14 @@ def forgot_password():
         email = form.email.data
 
         # Find user by email
-        user = user_manager.find_user_by_email(email)
+        user, user_email = user_manager.find_user_by_email(email)
         if user:
             # Generate reset password link
             token = user_manager.generate_token(user.id)
             reset_password_link = url_for('user.reset_password', token=token, _external=True)
 
             # Send forgot password email
-            emails.send_forgot_password_email(email, user, reset_password_link)
+            emails.send_forgot_password_email(user, user_email, reset_password_link)
 
             # Store token
             if hasattr(user, 'reset_password_token'):
@@ -170,6 +217,7 @@ def forgot_password():
 def login():
     """ Prompt for username/email and password and sign the user in."""
     user_manager =  current_app.user_manager
+    db_adapter = user_manager.db_adapter
 
     # Initialize form
     login_form = user_manager.login_form(request.form)
@@ -179,14 +227,21 @@ def login():
     # Process valid POST
     if request.method=='POST' and login_form.validate():
         # Retrieve User
+        user_email = None
         if user_manager.enable_username:
             # Find user by username or email address
             user = user_manager.find_user_by_username(login_form.username.data)
+            user_email = None
+            if user and db_adapter.UserEmailClass:
+                user_email = db_adapter.find_object(db_adapter.UserEmailClass,
+                        user_id=user.id,
+                        is_primary=True,
+                        )
             if not user and user_manager.enable_email:
-                user = user_manager.find_user_by_email(login_form.username.data)
+                user, user_email = user_manager.find_user_by_email(login_form.username.data)
         else:
             # Find user by email address
-            user = user_manager.find_user_by_email(login_form.email.data)
+            user, user_email = user_manager.find_user_by_email(login_form.email.data)
 
         if user:
             if user.active:
@@ -202,8 +257,9 @@ def login():
                 # Redirect to 'next' URL
                 return redirect(login_form.next.data)
             else:
-                if user_manager.enable_confirm_email and not user.confirmed_at:
-                    flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email and follow the instructions to activate your account.'), 'error')
+                confirmed_at = user_email.confirmed_at if db_adapter.UserEmailClass else user.confirmed_at
+                if user_manager.enable_confirm_email and not confirmed_at:
+                    flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email or <a href="'+url_for('user.resend_confirm_email')+'">Re-send confirmation email</a>.'), 'error')
                 else:
                     flash(_('Your account has been disabled.'), 'error')
 
@@ -231,6 +287,28 @@ def logout():
     return redirect(next)
 
 
+@login_required
+def manage_emails():
+    user_manager =  current_app.user_manager
+    db_adapter = user_manager.db_adapter
+
+    user_emails = db_adapter.find_object_list(db_adapter.UserEmailClass, user_id=current_user.id)
+    form = user_manager.add_email_form()
+
+    # Process valid POST request
+    if request.method=="POST" and form.validate():
+        user_emails = db_adapter.add_object(db_adapter.UserEmailClass,
+                user_id=current_user.id,
+                email=form.email.data)
+        db_adapter.commit()
+        return redirect(url_for('user.manage_emails'))
+
+    # Process GET or invalid POST request
+    return render_template(user_manager.manage_emails_template,
+            user_emails=user_emails,
+            form=form,
+            )
+
 def register():
     """ Display registration form and create new User."""
     user_manager =  current_app.user_manager
@@ -247,6 +325,12 @@ def register():
         User = user_manager.db_adapter.UserClass
         user_class_fields = User.__dict__
         user_fields = {}
+
+        # Create a UserEmail object using Form fields that have a corresponding UserEmail field
+        if user_manager.db_adapter.UserEmailClass:
+            UserEmail = user_manager.db_adapter.UserEmailClass
+            user_email_class_fields = UserEmail.__dict__
+            user_email_fields = {}
 
         # Create a UserProfile object using Form fields that have a corresponding UserProfile field
         if user_manager.db_adapter.UserProfileClass:
@@ -266,6 +350,9 @@ def register():
             else:
                 if field_name in user_class_fields:
                     user_fields[field_name] = field_value
+                if user_manager.db_adapter.UserEmailClass:
+                    if field_name in user_email_class_fields:
+                        user_email_fields[field_name] = field_value
                 if user_manager.db_adapter.UserProfileClass:
                     if field_name in user_profile_class_fields:
                         user_profile_fields[field_name] = field_value
@@ -273,13 +360,22 @@ def register():
         # Add User record using named arguments 'user_fields'
         user = db_adapter.add_object(User, **user_fields)
 
+        # Add UserEmail record using named arguments 'user_email_fields'
+        if user_manager.db_adapter.UserEmailClass:
+            user_email = db_adapter.add_object(UserEmail,
+                    user=user,
+                    is_primary=True,
+                    **user_email_fields)
+        else:
+            user_email = None
+
         # Add UserProfile record using named arguments 'user_profile_fields'
         if user_manager.db_adapter.UserProfileClass:
             user.user_profile = db_adapter.add_object(UserProfile, **user_profile_fields)
 
         db_adapter.commit()
 
-        send_confirm_email_or_registered_email(user)
+        send_confirm_email_or_registered_email(user, user_email)
 
         # Send user_registered signal
         signals.user_registered.send(current_app._get_current_object(), user=user)
@@ -293,43 +389,6 @@ def register():
             login_form=login_form,
             register_form=register_form)
 
-def send_confirm_email_or_registered_email(user):
-    user_manager =  current_app.user_manager
-    db_adapter = user_manager.db_adapter
-
-    # Send 'confirm_email' or 'registered' email
-    if user_manager.enable_email:
-        email_address = user.email
-
-        try:
-            if user_manager.enable_confirm_email:
-                # Send 'confirm_email' email
-
-                # Generate confirm email link
-                token = user_manager.generate_token(user.id)
-                confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
-
-                # Send email
-                emails.send_confirm_email_email(email_address, user, confirm_email_link)
-            else:
-                if user_manager.send_registered_email:
-                    # Send 'registered' email
-                    emails.send_registered_email(email_address, user)
-
-        except Exception as e:
-            # delete newly registered user if send email fails
-            db_adapter.delete_object(user)
-            db_adapter.commit()
-            raise e
-
-    # Prepare one-time system message
-    if user_manager.enable_confirm_email:
-        flash(_('A confirmation email has been sent to %(email)s with instructions to complete your registration.', email=email_address), 'success')
-    else:
-        flash(_('You have registered successfully. Please sign in.'), 'success')
-
-
-# TODO:
 def resend_confirm_email():
     """Prompt for email and re-send email conformation email."""
     user_manager =  current_app.user_manager
@@ -343,9 +402,9 @@ def resend_confirm_email():
         email = form.email.data
 
         # Find user by email
-        user = user_manager.find_user_by_email(email)
+        user, user_email = user_manager.find_user_by_email(email)
         if user:
-            send_confirm_email_or_registered_email(user)
+            send_confirm_email_or_registered_email(user, user_email)
 
         # Redirect to the login page
         return redirect(url_for('user.login'))
@@ -399,7 +458,7 @@ def reset_password(token):
 
         # Send 'password_changed' email
         if user_manager.enable_email and user_manager.send_password_changed_email:
-            emails.send_password_changed_email(user.email, user)
+            emails.send_password_changed_email(user)
 
         # Prepare one-time system message
         flash(_("Your password has been reset successfully. Please sign in with your new password"), 'success')
@@ -409,6 +468,56 @@ def reset_password(token):
 
     # Process GET or invalid POST
     return render_template(user_manager.reset_password_template, form=form)
+
+def _get_email_address(user):
+    user_manager =  current_app.user_manager
+    db_adapter = user_manager.db_adapter
+    if db_adapter.UserEmailClass:
+        user_email = db_adapter.find_object(db_adapter.UserEmailClass,
+                user_id=user.id,
+                is_primary=True,
+                )
+        return user_email.email if user_email else None
+    else:
+        return user.email
+
+def send_confirm_email_or_registered_email(user, user_email):
+    user_manager =  current_app.user_manager
+    db_adapter = user_manager.db_adapter
+
+    # Send 'confirm_email' or 'registered' email
+    if user_manager.enable_email:
+        email_address = user_email.email if user_email else user.email
+
+        try:
+            if user_manager.enable_confirm_email:
+                # Send 'confirm_email' email
+
+                # Generate confirm email link
+                object_id = user_email.id if user_email else user.id
+                print('send_confirm: id=', object_id)
+                token = user_manager.generate_token(object_id)
+                confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
+
+                # Send email
+                emails.send_confirm_email_email(user, user_email, confirm_email_link)
+            else:
+                if user_manager.send_registered_email:
+                    # Send 'registered' email
+                    emails.send_registered_email(user, user_email)
+
+        except Exception as e:
+            # delete newly registered user if send email fails
+            db_adapter.delete_object(user)
+            db_adapter.commit()
+            raise e
+
+    # Prepare one-time system message
+    if user_manager.enable_confirm_email:
+        flash(_('A confirmation email has been sent to %(email)s with instructions to complete your registration.', email=email_address), 'success')
+    else:
+        flash(_('You have registered successfully. Please sign in.'), 'success')
+
 
 def unauthenticated():
     """ Prepare a Flash message and redirect to USER_UNAUTHENTICATED_URL"""

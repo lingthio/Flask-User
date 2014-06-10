@@ -23,7 +23,7 @@ from flask_login import current_user
 # Enable the following: from flask.ext.user import login_required, roles_required
 from .decorators import *
 
-__version__ = '0.5.0'
+__version__ = '0.5.1'
 
 def _user_loader(user_id):
     """ Flask-Login helper function to load user by user_id"""
@@ -39,6 +39,7 @@ class UserManager(object):
 
     def __init__(self, db_adapter, app=None,
                 # Forms
+                add_email_form=forms.AddEmailForm,
                 change_password_form=forms.ChangePasswordForm,
                 change_username_form=forms.ChangeUsernameForm,
                 forgot_password_form=forms.ForgotPasswordForm,
@@ -53,9 +54,11 @@ class UserManager(object):
                 change_password_view_function=views.change_password,
                 change_username_view_function=views.change_username,
                 confirm_email_view_function=views.confirm_email,
+                email_action_view_function=views.email_action,
                 forgot_password_view_function=views.forgot_password,
                 login_view_function=views.login,
                 logout_view_function=views.logout,
+                manage_emails_view_function=views.manage_emails,
                 register_view_function=views.register,
                 resend_confirm_email_view_function = views.resend_confirm_email,
                 reset_password_view_function = views.reset_password,
@@ -70,6 +73,7 @@ class UserManager(object):
         """ Initialize the UserManager with custom or built-in attributes"""
         self.db_adapter = db_adapter
         # Forms
+        self.add_email_form = add_email_form
         self.change_password_form = change_password_form
         self.change_username_form = change_username_form
         self.forgot_password_form = forgot_password_form
@@ -84,9 +88,11 @@ class UserManager(object):
         self.change_password_view_function = change_password_view_function
         self.change_username_view_function = change_username_view_function
         self.confirm_email_view_function = confirm_email_view_function
+        self.email_action_view_function = email_action_view_function
         self.forgot_password_view_function = forgot_password_view_function
         self.login_view_function = login_view_function
         self.logout_view_function = logout_view_function
+        self.manage_emails_view_function = manage_emails_view_function
         self.register_view_function = register_view_function
         self.resend_confirm_email_view_function = resend_confirm_email_view_function
         self.reset_password_view_function = reset_password_view_function
@@ -154,6 +160,8 @@ class UserManager(object):
 
     def add_url_routes(self, app):
         """ Add URL Routes"""
+        app.add_url_rule(self.login_url,  'user.login',  self.login_view_function,  methods=['GET', 'POST'])
+        app.add_url_rule(self.logout_url, 'user.logout', self.logout_view_function, methods=['GET', 'POST'])
         if self.enable_confirm_email:
             app.add_url_rule(self.confirm_email_url, 'user.confirm_email', self.confirm_email_view_function)
             app.add_url_rule(self.resend_confirm_email_url, 'user.resend_confirm_email', self.resend_confirm_email_view_function, methods=['GET', 'POST'])
@@ -164,10 +172,11 @@ class UserManager(object):
         if self.enable_forgot_password:
             app.add_url_rule(self.forgot_password_url, 'user.forgot_password', self.forgot_password_view_function, methods=['GET', 'POST'])
             app.add_url_rule(self.reset_password_url, 'user.reset_password', self.reset_password_view_function, methods=['GET', 'POST'])
-        app.add_url_rule(self.login_url,  'user.login',  self.login_view_function,  methods=['GET', 'POST'])
-        app.add_url_rule(self.logout_url, 'user.logout', self.logout_view_function, methods=['GET', 'POST'])
         if self.enable_register:
             app.add_url_rule(self.register_url, 'user.register', self.register_view_function, methods=['GET', 'POST'])
+        if self.db_adapter.UserEmailClass:
+            app.add_url_rule(self.email_action_url,  'user.email_action',  self.email_action_view_function)
+            app.add_url_rule(self.manage_emails_url, 'user.manage_emails', self.manage_emails_view_function, methods=['GET', 'POST'])
 
     # Obsoleted function. Replace with hash_password()
     def generate_password_hash(self, password):
@@ -188,16 +197,26 @@ class UserManager(object):
     def find_user_by_id(self, user_id):
         return self.db_adapter.find_object(self.db_adapter.UserClass, id=user_id)
 
+    def find_user_email_by_id(self, user_email_id):
+        return self.db_adapter.find_object(self.db_adapter.UserEmailClass, id=user_email_id)
+
     def find_user_by_username(self, username):
         return self.db_adapter.ifind_object(self.db_adapter.UserClass, username=username)
 
     def find_user_by_email(self, email):
-        return self.db_adapter.ifind_object(self.db_adapter.UserClass, email=email)
+        if self.db_adapter.UserEmailClass:
+            user_email = self.db_adapter.ifind_object(self.db_adapter.UserEmailClass, email=email)
+            user = user_email.user if user_email else None
+        else:
+            user_email = None
+            user = self.db_adapter.ifind_object(self.db_adapter.UserClass, email=email)
+        return (user, user_email)
 
     def email_is_available(self, new_email):
         """ Return True if new_email does not exist.
             Return False otherwise."""
-        return self.find_user_by_email(new_email)==None
+        user, user_email = self.find_user_by_email(new_email)
+        return (user==None)
 
     def username_is_available(self, new_username):
         """ Return True if new_username does not exist or if new_username equals old_username.

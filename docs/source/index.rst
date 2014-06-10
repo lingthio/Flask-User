@@ -16,13 +16,6 @@ Flask-User
 .. comment     :target: https://pypi.python.org/pypi/Flask-User
 
 
-::
-
-    !! News Flash !!
-    v0.4.7: The 'registered' email was split into 'confirm_email' and 'registered' email.
-    If you've customized 'templates/flask_user/email/registered_*':
-    rename the 'registered_*' files into 'confirm_email_*'.
-
 Customizable User Account Management for Flask
 ----------------------------------------------
 
@@ -82,6 +75,8 @@ Feeling generous? `Tip me on Gittip <https://www.gittip.com/lingthio/>`_
 
 Revision History
 ----------------
+* v0.5.1 Support for multiple emails per user.
+* v0.5.0 Added ``resend_confirm_email``.
 * v0.4.9 Added ``login_or_register.html``. Cleaned up example_apps.
 * v0.4.8 Removed the need for app.mail, app.babel, app.db and app.User
 * v0.4.7 Added 'confirm_email', 'password_changed' and 'username_changed' emails.
