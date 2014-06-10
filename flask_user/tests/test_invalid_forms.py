@@ -123,7 +123,7 @@ def test_invalid_register_with_username_form(client):
                 username=invalid_username, email=email, password=password, retype_password=password)
 
     # Test existing username (case INsensitive!)
-    client.post_invalid_form(url, 'This Username is no longer available. Please try another one.',
+    client.post_invalid_form(url, 'This Username is already in use. Please try another one.',
             username='UsEr1', email=email, password=password, retype_password=password)
 
     # Test empty password
@@ -162,7 +162,7 @@ def test_invalid_register_with_email_form(client):
 
     # Test existing email (case INsensitive!)
     # TODO: Debug
-    #client.post_invalid_form(url, 'This Email is no longer available. Please try another one.',
+    #client.post_invalid_form(url, 'This Email is already in use. Please try another one.',
     #        email='UsEr1@ExAmPlE.CoM', password=password, retype_password=password)
 
     # Test empty password
@@ -277,7 +277,7 @@ def test_invalid_change_username_form(client):
             new_username=SHORT_USERNAME, old_password=password)
 
     # Test existing username
-    client.post_invalid_form(url, 'This Username is no longer available. Please try another one.',
+    client.post_invalid_form(url, 'This Username is already in use. Please try another one.',
             new_username='user3', old_password=password)
 
     # Test empty password
