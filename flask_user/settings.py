@@ -9,11 +9,13 @@ def set_default_settings(user_manager, app_config):
     # define short names
     um = user_manager
     sd = app_config.setdefault
+
     # Retrieve obsoleted settings
     # These plural settings have been replaced by singular settings
     obsoleted_enable_emails            = sd('USER_ENABLE_EMAILS',              True)
     obsoleted_enable_retype_passwords  = sd('USER_ENABLE_RETYPE_PASSWORDS',    True)
     obsoleted_enable_usernames         = sd('USER_ENABLE_USERNAMES',           True)
+
     # Set default features
     um.enable_change_password   = sd('USER_ENABLE_CHANGE_PASSWORD',     True)
     um.enable_change_username   = sd('USER_ENABLE_CHANGE_USERNAME',     True)
@@ -24,6 +26,7 @@ def set_default_settings(user_manager, app_config):
     um.enable_retype_password   = sd('USER_ENABLE_RETYPE_PASSWORD',     obsoleted_enable_retype_passwords)
     um.enable_username          = sd('USER_ENABLE_USERNAME',            obsoleted_enable_usernames)
     um.enable_multiple_emails   = sd('USER_ENABLE_MULTIPLE_EMAILS',     False)
+
     # Set default settings
     um.confirm_email_expiration = sd('USER_CONFIRM_EMAIL_EXPIRATION',   2*24*3600)   # 2 days
     um.invite_expiration        = sd('USER_INVITE_EXPIRATION',          90*24*3600)  # 90 days
@@ -35,6 +38,8 @@ def set_default_settings(user_manager, app_config):
     um.send_password_changed_email = sd('USER_SEND_PASSWORD_CHANGED_EMAIL',   um.enable_email)
     um.send_registered_email       = sd('USER_SEND_REGISTERED_EMAIL',         um.enable_email)
     um.send_username_changed_email = sd('USER_SEND_USERNAME_CHANGED_EMAIL',   um.enable_email)
+    um.auto_login               = sd('USER_AUTO_LOGIN',                 True)
+
     # Set default URLs
     um.change_password_url      = sd('USER_CHANGE_PASSWORD_URL',        '/user/change-password')
     um.change_username_url      = sd('USER_CHANGE_USERNAME_URL',        '/user/change-username')

@@ -217,9 +217,16 @@ def login():
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
 
+    next = request.args.get('next', '/')                  # Get the ?next=... query param
+
+    # Immediately redirect already logged in users
+    if user_manager.auto_login:
+        if current_user.is_authenticated():
+            return redirect(next)
+
     # Initialize form
     login_form = user_manager.login_form(request.form)
-    login_form.next.data = request.args.get('next', '/')  # Place ?next query param in next form field
+    login_form.next.data = next                           # set hidden form field 'next'
     register_form = user_manager.register_form()          # for login_or_register.html
 
     # Process valid POST

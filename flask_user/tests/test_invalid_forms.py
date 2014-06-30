@@ -69,6 +69,9 @@ def test_init(db):
     um.enable_email = True
     um.enable_retype_password = True
 
+    # Tests have not been written with auto_login in mind
+    um.auto_login = False
+
     hashed_password = um.hash_password('Password1')
     User = um.db_adapter.UserClass
 
