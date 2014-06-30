@@ -75,6 +75,7 @@ Feeling generous? `Tip me on Gittip <https://www.gittip.com/lingthio/>`_
 
 Revision History
 ----------------
+* v0.5.2 USER_AUTO_LOGIN=True setting to auto-login already logged in users in user.login page.
 * v0.5.1 Support for multiple emails per user.
 * v0.5.0 Added ``resend_confirm_email``.
 * v0.4.9 Added ``login_or_register.html``. Cleaned up example_apps.

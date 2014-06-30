@@ -20,9 +20,16 @@ Create ~/dev/example/multi_email_app.py with the content below.
 
 Make sure to adjust the ``MAIL_*`` settings below to the correct SMTP server and SMTP account settings.
 
-Highlighted code shows what was added to the Minimal App.
+Highlighted code shows what was added to the Basic App.
 
 **!! This recipe requires Flask-User v0.5.1 or up !!** Please upgrade earlier versions.
+
+| In a nut shell:
+| - Define ``User`` model (username, password, etc)
+| - Define ``UserEmail`` model (user_id, email, is_confirmed, is_primary, etc)
+| - Define one-to-many relationship between User and UserEmail
+| - Register User and UserEmail class through ``SQLAlchemyAdapter()``
+| - Visit ``/user/manage-emails`` as an authenticated user.
 
 .. literalinclude:: includes/multi_email_app.py
    :language: python
