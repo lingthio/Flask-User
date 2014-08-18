@@ -26,6 +26,7 @@ def set_default_settings(user_manager, app_config):
     um.enable_retype_password   = sd('USER_ENABLE_RETYPE_PASSWORD',     obsoleted_enable_retype_passwords)
     um.enable_username          = sd('USER_ENABLE_USERNAME',            obsoleted_enable_usernames)
     um.enable_multiple_emails   = sd('USER_ENABLE_MULTIPLE_EMAILS',     False)
+    um.enable_noconfirm_login   = sd('USER_ENABLE_NOCONFIRM_LOGIN',     False)
 
     # Set default settings
     um.confirm_email_expiration = sd('USER_CONFIRM_EMAIL_EXPIRATION',   2*24*3600)   # 2 days

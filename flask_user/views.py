@@ -344,7 +344,7 @@ def register():
             user_profile_fields = {}
 
         # User.active is True if not USER_ENABLE_CONFIRM_EMAIL and False otherwise
-        user_fields['active'] = not user_manager.enable_confirm_email
+        user_fields['active'] = not user_manager.enable_confirm_email or user_manager.enable_noconfirm_login
 
         # For all form fields
         for field_name, field_value in register_form.data.items():
