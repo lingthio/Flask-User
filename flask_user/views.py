@@ -223,7 +223,7 @@ def do_login(user, next_url):
     flash(_('You have signed in successfully.'), 'success')
 
     # Redirect to 'next' URL
-    return redirect(next_url if next_url != "" else user_manager.default_url_after_login)
+    return redirect(next_url if next_url != "" else user_manager.url_after_login)
 
 def login():
     """ Prompt for username/email and password and sign the user in."""
