@@ -55,6 +55,7 @@ def set_default_settings(user_manager, app_config):
     um.reset_password_url       = sd('USER_RESET_PASSWORD_URL',         '/user/reset-password/<token>')
     um.unauthenticated_url      = sd('USER_UNAUTHENTICATED_URL',        um.login_url)
     um.unauthorized_url         = sd('USER_UNAUTHORIZED_URL',           '/')
+    um.default_url_after_login  = sd('DEFAULT_URL_AFTER_LOGING',        '/')
     # Set default template files
     um.change_password_template = sd('USER_CHANGE_PASSWORD_TEMPLATE',  'flask_user/change_password.html')
     um.change_username_template = sd('USER_CHANGE_USERNAME_TEMPLATE',  'flask_user/change_username.html')
