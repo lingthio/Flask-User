@@ -212,6 +212,19 @@ def forgot_password():
     return render_template(user_manager.forgot_password_template, form=form)
 
 
+def do_login(user, next_url):
+    # Use Flask-Login to sign in user
+    login_user(user)
+
+    # Send user_logged_in signal
+    signals.user_logged_in.send(current_app._get_current_object(), user=user)
+
+    # Prepare one-time system message
+    flash(_('You have signed in successfully.'), 'success')
+
+    # Redirect to 'next' URL
+    return redirect(next_url)
+
 def login():
     """ Prompt for username/email and password and sign the user in."""
     user_manager =  current_app.user_manager
@@ -250,17 +263,7 @@ def login():
 
         if user:
             if user.active:
-                # Use Flask-Login to sign in user
-                login_user(user)
-
-                # Send user_logged_in signal
-                signals.user_logged_in.send(current_app._get_current_object(), user=user)
-
-                # Prepare one-time system message
-                flash(_('You have signed in successfully.'), 'success')
-
-                # Redirect to 'next' URL
-                return redirect(login_form.next.data)
+                do_login(user, login_form.next.data)
             else:
                 confirmed_at = user_email.confirmed_at if db_adapter.UserEmailClass else user.confirmed_at
                 if user_manager.enable_confirm_email and not confirmed_at:
@@ -385,8 +388,11 @@ def register():
         # Send user_registered signal
         signals.user_registered.send(current_app._get_current_object(), user=user)
 
-        # Redirect to the login page
-        return redirect(url_for('user.login'))
+        if user.active:
+            do_login(user, login_form.next.data)
+        else:
+            # Redirect to the login page
+            return redirect(url_for('user.login'))
 
     # Process GET or invalid POST
     return render_template(user_manager.register_template,
