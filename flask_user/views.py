@@ -263,7 +263,7 @@ def login():
 
         if user:
             if user.active:
-                do_login(user, login_form.next.data)
+                return do_login(user, login_form.next.data)
             else:
                 confirmed_at = user_email.confirmed_at if db_adapter.UserEmailClass else user.confirmed_at
                 if user_manager.enable_confirm_email and not confirmed_at:
@@ -389,7 +389,7 @@ def register():
         signals.user_registered.send(current_app._get_current_object(), user=user)
 
         if user.active:
-            do_login(user, login_form.next.data)
+            return do_login(user, login_form.next.data)
         else:
             # Redirect to the login page
             return redirect(url_for('user.login'))
