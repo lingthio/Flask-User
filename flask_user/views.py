@@ -12,6 +12,19 @@ from . import emails
 from . import signals
 from .translations import gettext as _
 
+def do_login(user, next_url):
+    # Use Flask-Login to sign in user
+    login_user(user)
+
+    # Send user_logged_in signal
+    signals.user_logged_in.send(current_app._get_current_object(), user=user)
+
+    # Prepare one-time system message
+    flash(_('You have signed in successfully.'), 'success')
+
+    # Redirect to 'next' URL
+    return redirect(next_url if next_url != "" else current_app.user_manager.url_after_login)
+
 def confirm_email(token):
     """ Verify email confirmation token and activate the user account."""
     # Verify token
@@ -53,14 +66,16 @@ def confirm_email(token):
     signals.user_confirmed_email.send(current_app._get_current_object(), user=user)
 
     # Prepare one-time system message
-    flash(_('Your email has been confirmed. Please sign in.'), 'success')
+    flash(_('Your email has been confirmed'), 'success')
 
     # Retrieve 'next' query parameter
     next = request.args.get('next', '/')
 
     # Redirect to the login page with the specified 'next' query parameter
-    return redirect(user_manager.login_url+'?next='+next)
-
+    if user is None or (current_user.is_authenticated() and current_user.id == user.id):
+        return redirect(next)
+    else:
+        return do_login(user, next)
 
 @login_required
 def change_password():
@@ -210,20 +225,6 @@ def forgot_password():
 
     # Process GET or invalid POST
     return render_template(user_manager.forgot_password_template, form=form)
-
-
-def do_login(user, next_url):
-    # Use Flask-Login to sign in user
-    login_user(user)
-
-    # Send user_logged_in signal
-    signals.user_logged_in.send(current_app._get_current_object(), user=user)
-
-    # Prepare one-time system message
-    flash(_('You have signed in successfully.'), 'success')
-
-    # Redirect to 'next' URL
-    return redirect(next_url if next_url != "" else current_app.user_manager.url_after_login)
 
 def login():
     """ Prompt for username/email and password and sign the user in."""
