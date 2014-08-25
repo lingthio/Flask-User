@@ -217,8 +217,10 @@ def forgot_password():
             # Send forgot_password signal
             signals.user_forgot_password.send(current_app._get_current_object(), user=user)
 
-        # Prepare one-time system message
-        flash(_("A reset password email has been sent to '%(email)s'. Open that email and follow the instructions to reset your password.", email=email), 'success')
+            # Prepare one-time system message
+            flash(_("A reset password email has been sent to '%(email)s'. Open that email and follow the instructions to reset your password.", email=email), 'success')
+        else:
+            flash(_("There is no user associated with %(email)s", email=email), 'error')
 
         # Redirect to the login page
         return redirect(url_for('user.login'))
