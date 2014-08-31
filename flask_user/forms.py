@@ -58,6 +58,13 @@ def unique_email_validator(form, field):
     if not user_manager.email_is_available(field.data):
         raise ValidationError(_('This Email is already in use. Please try another one.'))
 
+# Flask-Mail unfortunately doesn't support non-ascii email addresses
+def ascii_email_validator(form, field):
+    try:
+        field.data.encode('ascii')
+    except (UnicodeDecodeError, UnicodeEncodeError):
+        raise ValidationError(_('Please use email address that contains only ascii characters'))
+
 # ***********
 # ** Forms **
 # ***********
@@ -66,7 +73,8 @@ class AddEmailForm(Form):
     email = StringField(_('Email'), validators=[
         validators.Required(_('Email is required')),
         validators.Email(_('Invalid Email')),
-        unique_email_validator])
+        unique_email_validator,
+        ascii_email_validator])
     submit = SubmitField(_('Add Email'))
 
 class ChangePasswordForm(Form):
@@ -146,6 +154,7 @@ class ForgotPasswordForm(Form):
     email = StringField(_('Email'), validators=[
         validators.Required(_('Email is required')),
         validators.Email(_('Invalid Email')),
+        ascii_email_validator
         ])
     submit = SubmitField(_('Send reset password email'))
 
@@ -155,7 +164,8 @@ class LoginForm(Form):
     ])
     email = StringField(_('Email'), validators=[
         validators.Required(_('Email is required')),
-        validators.Email(_('Invalid Email'))
+        validators.Email(_('Invalid Email')),
+        ascii_email_validator
     ])
     password = PasswordField(_('Password'), validators=[
         validators.Required(_('Password is required')),
@@ -219,7 +229,8 @@ class RegisterForm(Form):
     email = StringField(_('Email'), validators=[
         validators.Required(_('Email is required')),
         validators.Email(_('Invalid Email')),
-        unique_email_validator])
+        unique_email_validator,
+        ascii_email_validator])
     password = PasswordField(_('Password'), validators=[
         validators.Required(_('Password is required'))])
     retype_password = PasswordField(_('Retype Password'), validators=[
@@ -260,6 +271,7 @@ class ResendConfirmEmailForm(Form):
     email = StringField(_('Email'), validators=[
         validators.Required(_('Email is required')),
         validators.Email(_('Invalid Email')),
+        ascii_email_validator
         ])
     submit = SubmitField(_('Resend email confirmation email'))
 

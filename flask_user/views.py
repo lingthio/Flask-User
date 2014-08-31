@@ -13,6 +13,19 @@ from . import signals
 from .translations import gettext as _
 from urllib import quote
 
+def do_login(user, next_url):
+    # Use Flask-Login to sign in user
+    login_user(user)
+
+    # Send user_logged_in signal
+    signals.user_logged_in.send(current_app._get_current_object(), user=user)
+
+    # Prepare one-time system message
+    flash(_('You have signed in successfully.'), 'success')
+
+    # Redirect to 'next' URL
+    return redirect(next_url if next_url != "" else current_app.user_manager.url_after_login)
+
 def confirm_email(token):
     """ Verify email confirmation token and activate the user account."""
     # Verify token
@@ -54,14 +67,16 @@ def confirm_email(token):
     signals.user_confirmed_email.send(current_app._get_current_object(), user=user)
 
     # Prepare one-time system message
-    flash(_('Your email has been confirmed. Please sign in.'), 'success')
+    flash(_('Your email has been confirmed'), 'success')
 
     # Retrieve 'next' query parameter
     next = request.args.get('next', '/')
 
     # Redirect to the login page with the specified 'next' query parameter
-    return redirect(user_manager.login_url+'?next='+next)
-
+    if user is None or (current_user.is_authenticated() and current_user.id == user.id):
+        return redirect(next)
+    else:
+        return do_login(user, next)
 
 @login_required
 def change_password():
@@ -203,15 +218,16 @@ def forgot_password():
             # Send forgot_password signal
             signals.user_forgot_password.send(current_app._get_current_object(), user=user)
 
-        # Prepare one-time system message
-        flash(_("A reset password email has been sent to '%(email)s'. Open that email and follow the instructions to reset your password.", email=email), 'success')
+            # Prepare one-time system message
+            flash(_("A reset password email has been sent to '%(email)s'. Open that email and follow the instructions to reset your password.", email=email), 'success')
+        else:
+            flash(_("There is no user associated with %(email)s", email=email), 'error')
 
         # Redirect to the login page
         return redirect(url_for('user.login'))
 
     # Process GET or invalid POST
     return render_template(user_manager.forgot_password_template, form=form)
-
 
 def login():
     """ Prompt for username/email and password and sign the user in."""
@@ -251,17 +267,7 @@ def login():
 
         if user:
             if user.active:
-                # Use Flask-Login to sign in user
-                login_user(user)
-
-                # Send user_logged_in signal
-                signals.user_logged_in.send(current_app._get_current_object(), user=user)
-
-                # Prepare one-time system message
-                flash(_('You have signed in successfully.'), 'success')
-
-                # Redirect to 'next' URL
-                return redirect(login_form.next.data)
+                return do_login(user, login_form.next.data)
             else:
                 confirmed_at = user_email.confirmed_at if db_adapter.UserEmailClass else user.confirmed_at
                 if user_manager.enable_confirm_email and not confirmed_at:
@@ -345,7 +351,7 @@ def register():
             user_profile_fields = {}
 
         # User.active is True if not USER_ENABLE_CONFIRM_EMAIL and False otherwise
-        user_fields['active'] = not user_manager.enable_confirm_email
+        user_fields['active'] = not user_manager.enable_confirm_email or user_manager.enable_noconfirm_login
 
         # For all form fields
         for field_name, field_value in register_form.data.items():
@@ -386,8 +392,11 @@ def register():
         # Send user_registered signal
         signals.user_registered.send(current_app._get_current_object(), user=user)
 
-        # Redirect to the login page
-        return redirect(url_for('user.login'))
+        if user.active:
+            return do_login(user, login_form.next.data)
+        else:
+            # Redirect to the login page
+            return redirect(url_for('user.login'))
 
     # Process GET or invalid POST
     return render_template(user_manager.register_template,
