@@ -11,6 +11,7 @@ from .decorators import login_required
 from . import emails
 from . import signals
 from .translations import gettext as _
+from urllib import quote
 
 def confirm_email(token):
     """ Verify email confirmation token and activate the user account."""
@@ -527,12 +528,15 @@ def send_confirm_email_or_registered_email(user, user_email):
 def unauthenticated():
     """ Prepare a Flash message and redirect to USER_UNAUTHENTICATED_URL"""
     # Prepare Flash message
-    url = request.script_root + request.path
+    url = request.url
     flash(_("You must be signed in to access '%(url)s'.", url=url), 'error')
+
+    # quote the fully qualified url
+    quoted_url = quote(url)
 
     # Redirect to USER_UNAUTHENTICATED_URL
     user_manager = current_app.user_manager
-    return redirect(user_manager.unauthenticated_url+'?next='+url)
+    return redirect(user_manager.unauthenticated_url+'?next='+ quoted_url)
 
 def unauthorized():
     """ Prepare a Flash message and redirect to USER_UNAUTHORIZED_URL"""
