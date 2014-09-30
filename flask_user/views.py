@@ -11,7 +11,13 @@ from .decorators import login_required
 from . import emails
 from . import signals
 from .translations import gettext as _
-from urllib import quote
+import sys
+if (sys.version_info > (3, 0)):
+    # Python 3.x
+    from urllib.parse import quote
+else:
+    # Python 2.x
+    from urllib import quote
 
 def confirm_email(token):
     """ Verify email confirmation token and activate the user account."""
