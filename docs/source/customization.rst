@@ -344,19 +344,20 @@ and by editing the copies to your liking.
 
 The following form template files resides in the ``templates`` directory and can be customized::
 
-    base.html                          # root template
+    base.html                             # root template
 
-    flask_user/member_base.html        # extends base.html
-    flask_user/change_password.html    # extends flask_user/member_base.html
-    flask_user/change_username.html    # extends flask_user/member_base.html
+    flask_user/member_base.html           # extends base.html
+    flask_user/change_password.html       # extends flask_user/member_base.html
+    flask_user/change_username.html       # extends flask_user/member_base.html
+    flask_user/manage_emails.html         # extends flask_user/member_base.html
 
-    flask_user/public_base.html        # extends base.html
-    flask_user/forgot_password.html    # extends flask_user/public_base.html
-    flask_user/login.html              # extends flask_user/public_base.html
-    flask_user/login_or_register.html  # extends flask_user/public_base.html
-    flask_user/manage_emails.html      # extends base.html
-    flask_user/register.html           # extends flask_user/public_base.html
-    flask_user/reset_password.html     # extends flask_user/public_base.html
+    flask_user/public_base.html           # extends base.html
+    flask_user/forgot_password.html       # extends flask_user/public_base.html
+    flask_user/login.html                 # extends flask_user/public_base.html
+    flask_user/login_or_register.html     # extends flask_user/public_base.html
+    flask_user/register.html              # extends flask_user/public_base.html
+    flask_user/resend_confirm_email.html  # extends flask_user/public_base.html
+    flask_user/reset_password.html        # extends flask_user/public_base.html
 
 If you'd like the Login form and the Register form to appear on one page,
 you can use the following application config settings::

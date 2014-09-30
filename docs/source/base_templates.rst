@@ -17,8 +17,10 @@ Public forms are forms that do not require a logged-in user:
 
 * ``templates/flask_user/forgot_password.html``,
 * ``templates/flask_user/login.html``,
-* ``templates/flask_user/register.html``, and
-* ``templates/flask_user/reset_password.html``
+* ``templates/flask_user/login_or_register.html``,
+* ``templates/flask_user/register.html``,
+* ``templates/flask_user/resend_confirm_email.html``, and
+* ``templates/flask_user/reset_password.html``.
 
 Public forms extend the template file ``templates/flask_user/public_base.html``,
 which by default extends the template file ``templates/base.html``.
@@ -33,8 +35,9 @@ create the ``templates/flask_user/public_base.html`` file in your application's
 
 Member forms are forms that require a logged-in user:
 
-* ``templates/flask_user/change_password.html``, and
-* ``templates/flask_user/change_username.html``
+* ``templates/flask_user/change_password.html``,
+* ``templates/flask_user/change_username.html``, and
+* ``templates/flask_user/manage_emails.html``.
 
 Member forms extend the template file ``templates/flask_user/member_base.html``,
 which by default extends the template file ``templates/base.html``.
@@ -49,14 +52,17 @@ create the ``templates/flask_user/member_base.html`` file in your application's
 
 The following template files reside in the ``templates`` directory::
 
-    base.html                         # root template
+    base.html                             # root template
 
-    flask_user/member_base.html       # extends base.html
-    flask_user/change_password.html   # extends flask_user/member_base.html
-    flask_user/change_username.html   # extends flask_user/member_base.html
+    flask_user/member_base.html           # extends base.html
+    flask_user/change_password.html       # extends flask_user/member_base.html
+    flask_user/change_username.html       # extends flask_user/member_base.html
+    flask_user/manage_emails.html         # extends flask_user/member_base.html
 
-    flask_user/public_base.html       # extends base.html
-    flask_user/forgot_password.html   # extends flask_user/public_base.html
-    flask_user/login.html             # extends flask_user/public_base.html
-    flask_user/register.html          # extends flask_user/public_base.html
-    flask_user/reset_password.html    # extends flask_user/public_base.html
+    flask_user/public_base.html           # extends base.html
+    flask_user/forgot_password.html       # extends flask_user/public_base.html
+    flask_user/login.html                 # extends flask_user/public_base.html
+    flask_user/login_or_register.html     # extends flask_user/public_base.html
+    flask_user/register.html              # extends flask_user/public_base.html
+    flask_user/resend_confirm_email.html  # extends flask_user/public_base.html
+    flask_user/reset_password.html        # extends flask_user/public_base.html
