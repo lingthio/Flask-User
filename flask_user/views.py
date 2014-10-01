@@ -38,7 +38,7 @@ def confirm_email(token):
 
     # Confirm email by setting User.active=True and User.confirmed_at=utcnow()
     if db_adapter.UserEmailClass:
-        user_email = user_manager.find_user_email_by_id(object_id)
+        user_email = user_manager.get_user_email_by_id(object_id)
         if user_email:
             user_email.confirmed_at = datetime.utcnow()
             user = user_email.user
@@ -46,7 +46,7 @@ def confirm_email(token):
             user = None
     else:
         user_email = None
-        user = user_manager.find_user_by_id(object_id)
+        user = user_manager.get_user_by_id(object_id)
         user.confirmed_at = datetime.utcnow()
 
     if user:
@@ -146,10 +146,10 @@ def email_action(id, action):
     db_adapter = user_manager.db_adapter
 
     # Retrieve UserEmail by id
-    user_email = db_adapter.find_object(db_adapter.UserEmailClass, id=id)
+    user_email = db_adapter.find_first_object(db_adapter.UserEmailClass, id=id)
 
     # Users may only change their own UserEmails
-    if not user_email or user_email.user_id != current_user.id:
+    if not user_email or user_email.user_id != (int)(current_user.get_id()):
         return unauthorized()
 
     if action=='delete':
@@ -162,7 +162,7 @@ def email_action(id, action):
 
     elif action=='make-primary':
         # Disable previously primary emails
-        user_emails = db_adapter.find_object_list(db_adapter.UserEmailClass, user_id=current_user.id)
+        user_emails = db_adapter.find_all_objects(db_adapter.UserEmailClass, user_id=(int)(current_user.get_id()))
         for ue in user_emails:
             if ue.is_primary:
                 ue.is_primary = False
@@ -195,7 +195,7 @@ def forgot_password():
         user, user_email = user_manager.find_user_by_email(email)
         if user:
             # Generate reset password link
-            token = user_manager.generate_token(user.id)
+            token = user_manager.generate_token((int)(user.get_id()))
             reset_password_link = url_for('user.reset_password', token=token, _external=True)
 
             # Send forgot password email
@@ -245,8 +245,8 @@ def login():
             user = user_manager.find_user_by_username(login_form.username.data)
             user_email = None
             if user and db_adapter.UserEmailClass:
-                user_email = db_adapter.find_object(db_adapter.UserEmailClass,
-                        user_id=user.id,
+                user_email = db_adapter.find_first_object(db_adapter.UserEmailClass,
+                        user_id=(int)(user.get_id()),
                         is_primary=True,
                         )
             if not user and user_manager.enable_email:
@@ -305,13 +305,13 @@ def manage_emails():
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
 
-    user_emails = db_adapter.find_object_list(db_adapter.UserEmailClass, user_id=current_user.id)
+    user_emails = db_adapter.find_all_objects(db_adapter.UserEmailClass, user_id=(int)(current_user.get_id()))
     form = user_manager.add_email_form()
 
     # Process valid POST request
     if request.method=="POST" and form.validate():
         user_emails = db_adapter.add_object(db_adapter.UserEmailClass,
-                user_id=current_user.id,
+                user_id=(int)(current_user.get_id()),
                 email=form.email.data)
         db_adapter.commit()
         return redirect(url_for('user.manage_emails'))
@@ -444,7 +444,7 @@ def reset_password(token):
         flash(_('Your reset password token is invalid.'), 'error')
         return redirect(user_manager.login_url)
 
-    user = user_manager.find_user_by_id(user_id)
+    user = user_manager.get_user_by_id(user_id)
     if user:
         # Avoid re-using old tokens
         if hasattr(user, 'reset_password_token'):
@@ -486,8 +486,8 @@ def _get_email_address(user):
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
     if db_adapter.UserEmailClass:
-        user_email = db_adapter.find_object(db_adapter.UserEmailClass,
-                user_id=user.id,
+        user_email = db_adapter.find_first_object(db_adapter.UserEmailClass,
+                user_id=(int)(user.get_id()),
                 is_primary=True,
                 )
         return user_email.email if user_email else None
@@ -507,7 +507,7 @@ def send_confirm_email_or_registered_email(user, user_email):
                 # Send 'confirm_email' email
 
                 # Generate confirm email link
-                object_id = user_email.id if user_email else user.id
+                object_id = user_email.id if user_email else (int)(user.get_id())
                 token = user_manager.generate_token(object_id)
                 confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
 

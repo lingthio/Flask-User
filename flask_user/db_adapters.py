@@ -22,47 +22,60 @@ class SQLAlchemyAdapter(DBAdapter):
     def __init__(self, db, UserClass, UserProfileClass=None, UserEmailClass=None):
         super(SQLAlchemyAdapter, self).__init__(db, UserClass, UserProfileClass, UserEmailClass)
 
-    def find_object_list(self, ObjectClass, **kwargs):
-        # Prepare base query
+    def get_object(self, ObjectClass, id):
+        """ Retrieve one object specified by the primary key 'pk' """
+        return ObjectClass.query.get(id)
+
+    def find_all_objects(self, ObjectClass, **kwargs):
+        """ Retrieve all objects matching the case sensitive filters in 'kwargs'. """
+
+        # Convert each name/value pair in 'kwargs' into a filter
         query = ObjectClass.query
-        # For all name/value pairs in **kwargs
         for field_name, field_value in kwargs.items():
-            # Retrieve Class attribute from field_name
+
+            # Make sure that ObjectClass has a 'field_name' property
             field = getattr(ObjectClass, field_name, None)
             if not field:
-                raise KeyError("SQLAlchemyAdapter.find_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
-            # Add query filter
+                raise KeyError("SQLAlchemyAdapter.find_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
+
+            # Add a filter to the query
             query = query.filter(field.in_((field_value,)))
+
         # Execute query
         return query.all()
 
 
-    def find_object(self, ObjectClass, **kwargs):
-        """ Find object of class 'ObjectClass' by specified '**kwargs' -- case sensitive!! """
-        # Prepare base query
+    def find_first_object(self, ObjectClass, **kwargs):
+        """ Retrieve the first object matching the case sensitive filters in 'kwargs'. """
+
+        # Convert each name/value pair in 'kwargs' into a filter
         query = ObjectClass.query
-        # For all name/value pairs in **kwargs
         for field_name, field_value in kwargs.items():
-            # Retrieve Class attribute from field_name
+
+            # Make sure that ObjectClass has a 'field_name' property
             field = getattr(ObjectClass, field_name, None)
             if not field:
-                raise KeyError("SQLAlchemyAdapter.find_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
-            # Add query filter
+                raise KeyError("SQLAlchemyAdapter.find_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
+
+            # Add a case sensitive filter to the query
             query = query.filter(field==field_value)  # case sensitive!!
+
         # Execute query
         return query.first()
 
-    def ifind_object(self, ObjectClass, **kwargs):
-        """ Find object of class 'ObjectClass' by specified '**kwargs' -- case INsensitive!! """
-        # Prepare base query
+    def ifind_first_object(self, ObjectClass, **kwargs):
+        """ Retrieve the first object matching the case insensitive filters in 'kwargs'. """
+
+        # Convert each name/value pair in 'kwargs' into a filter
         query = ObjectClass.query
-        # For all name/value pairs in **kwargs
         for field_name, field_value in kwargs.items():
-            # Retrieve Class attribute from field_name
+
+            # Make sure that ObjectClass has a 'field_name' property
             field = getattr(ObjectClass, field_name, None)
             if not field:
-                raise KeyError("SQLAlchemyAdapter.find_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
-            # Add query filter
+                raise KeyError("SQLAlchemyAdapter.find_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
+
+            # Add a case sensitive filter to the query
             query = query.filter(field.ilike(field_value))  # case INsensitive!!
 
         # Execute query

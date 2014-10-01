@@ -32,11 +32,17 @@ can be easily added.
     class SQLAlchemyAdapter(DBAdapter):
         """ This object shields Flask-User from database specific functions. """
 
-        def find_object(self, ObjectClass, **kwargs):
-            """ Case sensitive find object by specified kwargs. """
+        def get_object(self, ObjectClass, pk):
+            """ Retrieve one object specified by the primary key 'pk' """
 
-        def ifind_object(self, ObjectClass, **kwargs):
-            """ Case INsensitive find object by specified kwargs. """
+        def find_all_objects(self, ObjectClass, **kwargs):
+            """ Retrieve all objects matching the case sensitive filters in 'kwargs'. """
+
+        def find_first_object(self, ObjectClass, **kwargs):
+            """ Retrieve the first object matching the case sensitive filters in 'kwargs'. """
+
+        def ifind_first_object(self, ObjectClass, **kwargs):
+            """ Retrieve the first object matching the case insensitive filters in 'kwargs'. """
 
         def add_object(self, ObjectClass, **kwargs):
             """ Add an object with fields and values specified in kwargs. """
@@ -45,7 +51,7 @@ can be easily added.
             """ Update an object with fields and values specified in kwargs. """
 
         def delete_object(self, object):
-            """ Delete object 'object'. """
+            """ Delete an object. """
 
         def commit(self):
             """ Commit an Add, Update or Delete. """

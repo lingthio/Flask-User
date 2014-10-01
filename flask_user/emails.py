@@ -58,8 +58,8 @@ def _get_primary_email(user):
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
     if db_adapter.UserEmailClass:
-        user_email = db_adapter.find_object(db_adapter.UserEmailClass,
-                user_id=user.id,
+        user_email = db_adapter.find_first_object(db_adapter.UserEmailClass,
+                user_id=(int)(user.get_id()),
                 is_primary=True)
         return user_email.email if user_email else None
     else:

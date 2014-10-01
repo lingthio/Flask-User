@@ -27,8 +27,9 @@ __version__ = '0.5.2'
 
 def _user_loader(user_id):
     """ Flask-Login helper function to load user by user_id"""
+    # Note: user_id is a UNICODE string returned by UserMixin.get_id()
     um = current_app.user_manager
-    return um.find_user_by_id(user_id)
+    return um.get_user_by_id(user_id)
 
 def _flask_user_context_processor():
     """ Make 'user_manager' available to Jinja2 templates"""
@@ -194,22 +195,32 @@ class UserManager(object):
     def verify_token(self, token, expiration_in_seconds):
         return self.token_manager.verify_token(token, expiration_in_seconds)
 
-    def find_user_by_id(self, user_id):
-        return self.db_adapter.find_object(self.db_adapter.UserClass, id=user_id)
+    def get_user_by_id(self, user_id):
+        return self.db_adapter.get_object(self.db_adapter.UserClass, user_id)
 
+    # NB: This backward compatibility function may be obsoleted in the future
+    # Use 'get_user_by_id() instead.
+    def find_user_by_id(self, user_id):
+        return self.get_user_by_id(user_id)
+
+    def get_user_email_by_id(self, user_email_id):
+        return self.db_adapter.get_object(self.db_adapter.UserEmailClass, user_email_id)
+
+    # NB: This backward compatibility function may be obsoleted in the future
+    # Use 'get_user_email_by_id() instead.
     def find_user_email_by_id(self, user_email_id):
-        return self.db_adapter.find_object(self.db_adapter.UserEmailClass, id=user_email_id)
+        return self.get_user_email_by_id(user_email_id)
 
     def find_user_by_username(self, username):
-        return self.db_adapter.ifind_object(self.db_adapter.UserClass, username=username)
+        return self.db_adapter.ifind_first_object(self.db_adapter.UserClass, username=username)
 
     def find_user_by_email(self, email):
         if self.db_adapter.UserEmailClass:
-            user_email = self.db_adapter.ifind_object(self.db_adapter.UserEmailClass, email=email)
+            user_email = self.db_adapter.ifind_first_object(self.db_adapter.UserEmailClass, email=email)
             user = user_email.user if user_email else None
         else:
             user_email = None
-            user = self.db_adapter.ifind_object(self.db_adapter.UserClass, email=email)
+            user = self.db_adapter.ifind_first_object(self.db_adapter.UserClass, email=email)
         return (user, user_email)
 
     def email_is_available(self, new_email):
