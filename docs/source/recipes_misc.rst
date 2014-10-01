@@ -53,6 +53,8 @@ Here's an example of tracking login_count and last_login_ip:
 
     # This code has not been tested
 
+    from flask import request
+
     @user_logged_in.connect_via(app)
     def _track_logins(sender, user, **extra):
         user.login_count += 1
