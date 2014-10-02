@@ -28,10 +28,11 @@ class ConfigClass(object):
     USER_ENABLE_RETYPE_PASSWORD  = True
     USER_LOGIN_TEMPLATE = 'flask_user/login_or_register.html'
     USER_REGISTER_TEMPLATE = 'flask_user/login_or_register.html'
-    USER_AFTER_LOGIN_URL = '/profile'
 
+    # Testing
     USER_ENABLE_RETYPE_PASSWORD = False
-    USER_AUTO_LOGIN_AFTER_CONFIRM = False
+    USER_AFTER_LOGIN_ENDPOINT = 'profile_page'
+    USER_AFTER_CONFIRM_ENDPOINT = 'profile_page'
 
 def create_app(test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
@@ -87,7 +88,7 @@ def create_app(test_config=None):                   # For automated tests
                     {%trans%}Sign out{%endtrans%}</a></p>
                 {% else %}
                 <p> <a href="{{ url_for('user.login') }}">
-                    {%trans%}Sign in{%endtrans%}</a></p>
+                    {%trans%}Sign in or Register{%endtrans%}</a></p>
                 {% endif %}
             {% endblock %}
             """)

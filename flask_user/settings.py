@@ -44,7 +44,6 @@ def set_default_settings(user_manager, app_config):
     um.send_username_changed_email = sd('USER_SEND_USERNAME_CHANGED_EMAIL',um.enable_email)
 
     # Set default URLs
-    um.home_url                  = sd('USER_HOME_URL',                   '/')
     um.change_password_url       = sd('USER_CHANGE_PASSWORD_URL',        '/user/change-password')
     um.change_username_url       = sd('USER_CHANGE_USERNAME_URL',        '/user/change-username')
     um.confirm_email_url         = sd('USER_CONFIRM_EMAIL_URL',          '/user/confirm-email/<token>')
@@ -57,14 +56,17 @@ def set_default_settings(user_manager, app_config):
     um.resend_confirm_email_url  = sd('USER_RESEND_CONFIRM_EMAIL_URL',   '/user/resend-confirm-email')
     um.reset_password_url        = sd('USER_RESET_PASSWORD_URL',         '/user/reset-password/<token>')
 
-    um.after_change_password_url = sd('USER_AFTER_CHANGE_PASSWORD_URL',  um.home_url)
-    um.after_change_username_url = sd('USER_AFTER_CHANGE_USERNAME_URL',  um.home_url)
-    um.after_login_url           = sd('USER_AFTER_LOGIN_URL',            um.home_url)
-    um.after_logout_url          = sd('USER_AFTER_LOGOUT_URL',           um.login_url)
-    um.after_register_url        = sd('USER_AFTER_REGISTER_URL',         um.home_url)
-    um.after_confirm_url         = sd('USER_AFTER_CONFIRM_URL',          um.home_url)
-    um.unauthenticated_url       = sd('USER_UNAUTHENTICATED_URL',        um.login_url)
-    um.unauthorized_url          = sd('USER_UNAUTHORIZED_URL',           um.home_url)
+    # Set default ENDPOINTs
+    home_endpoint = ''
+    login_endpoint = 'user.login'
+    um.after_change_password_endpoint = sd('USER_AFTER_CHANGE_PASSWORD_ENDPOINT',  home_endpoint)
+    um.after_change_username_endpoint = sd('USER_AFTER_CHANGE_USERNAME_ENDPOINT',  home_endpoint)
+    um.after_login_endpoint           = sd('USER_AFTER_LOGIN_ENDPOINT',            home_endpoint)
+    um.after_logout_endpoint          = sd('USER_AFTER_LOGOUT_ENDPOINT',           login_endpoint)
+    um.after_register_endpoint        = sd('USER_AFTER_REGISTER_ENDPOINT',         home_endpoint)
+    um.after_confirm_endpoint         = sd('USER_AFTER_CONFIRM_ENDPOINT',          home_endpoint)
+    um.unauthenticated_endpoint       = sd('USER_UNAUTHENTICATED_ENDPOINT',        login_endpoint)
+    um.unauthorized_endpoint          = sd('USER_UNAUTHORIZED_ENDPOINT',           home_endpoint)
 
     # Set default template files
     um.change_password_template = sd('USER_CHANGE_PASSWORD_TEMPLATE',  'flask_user/change_password.html')
@@ -75,12 +77,14 @@ def set_default_settings(user_manager, app_config):
     um.register_template        = sd('USER_REGISTER_TEMPLATE',         'flask_user/register.html')
     um.resend_confirm_email_template = sd('USER_RESEND_CONFIRM_EMAIL_TEMPLATE', 'flask_user/resend_confirm_email.html')
     um.reset_password_template       = sd('USER_RESET_PASSWORD_TEMPLATE',       'flask_user/reset_password.html')
+
     # Set default email template files
     um.confirm_email_email_template    = sd('USER_CONFIRM_EMAIL_EMAIL_TEMPLATE',    'flask_user/emails/confirm_email')
     um.forgot_password_email_template  = sd('USER_FORGOT_PASSWORD_EMAIL_TEMPLATE',  'flask_user/emails/forgot_password')
     um.password_changed_email_template = sd('USER_PASSWORD_CHANGED_EMAIL_TEMPLATE', 'flask_user/emails/password_changed')
     um.registered_email_template       = sd('USER_REGISTERED_EMAIL_TEMPLATE',       'flask_user/emails/registered')
     um.username_changed_email_template = sd('USER_USERNAME_CHANGED_EMAIL_TEMPLATE', 'flask_user/emails/username_changed')
+
 
 def check_settings(user_manager):
     """ Verify config combinations. Produce a helpful error messages for inconsistent combinations."""

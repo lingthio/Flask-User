@@ -161,6 +161,7 @@ class UserManager(object):
 
     def add_url_routes(self, app):
         """ Add URL Routes"""
+        app.add_url_rule('/home',  'user.home',  self.login_view_function,  methods=['GET', 'POST'])
         app.add_url_rule(self.login_url,  'user.login',  self.login_view_function,  methods=['GET', 'POST'])
         app.add_url_rule(self.logout_url, 'user.logout', self.logout_view_function, methods=['GET', 'POST'])
         if self.enable_confirm_email:

@@ -30,11 +30,11 @@ def confirm_email(token):
 
     if has_expired:
         flash(_('Your confirmation token has expired.'), 'error')
-        return redirect(user_manager.login_url)
+        return redirect(url_for('user.login'))
 
     if not is_valid:
         flash(_('Invalid confirmation token.'), 'error')
-        return redirect(user_manager.login_url)
+        return redirect(url_for('user.login'))
 
     # Confirm email by setting User.active=True and User.confirmed_at=utcnow()
     if db_adapter.UserEmailClass:
@@ -54,7 +54,7 @@ def confirm_email(token):
         db_adapter.commit()
     else:                                               # pragma: no cover
         flash(_('Invalid confirmation token.'), 'error')
-        return redirect(user_manager.login_url)
+        return redirect(url_for('user.login'))
 
     # Send email_confirmed signal
     signals.user_confirmed_email.send(current_app._get_current_object(), user=user)
@@ -63,11 +63,11 @@ def confirm_email(token):
     flash(_('Your email has been confirmed.'), 'success')
 
     # Redirect to login page or auto-login if configured
-    next = request.args.get('next', user_manager.after_confirm_url)
+    next = request.args.get('next', _endpoint_url(user_manager.after_confirm_endpoint))
     if user_manager.auto_login_after_confirm:
         return _do_login_user(user, next)  # Auto-login user after confirm
     else:
-        return redirect(user_manager.login_url+'?next='+next)
+        return redirect(url_for('user.login')+'?next='+next)
 
 
 @login_required
@@ -78,7 +78,7 @@ def change_password():
 
     # Initialize form
     form = user_manager.change_password_form(request.form)
-    form.next.data = request.args.get('next', user_manager.after_change_password_url)  # Place ?next query param in next form field
+    form.next.data = request.args.get('next', _endpoint_url(user_manager.after_change_password_endpoint))  # Place ?next query param in next form field
 
     # Process valid POST
     if request.method=='POST' and form.validate():
@@ -113,7 +113,7 @@ def change_username():
 
     # Initialize form
     form = user_manager.change_username_form(request.form)
-    form.next.data = request.args.get('next', user_manager.after_change_username_url)  # Place ?next query param in next form field
+    form.next.data = request.args.get('next', _endpoint_url(user_manager.after_change_username_endpoint))  # Place ?next query param in next form field
 
     # Process valid POST
     if request.method=='POST' and form.validate():
@@ -225,8 +225,8 @@ def login():
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
 
-    next = request.args.get('next', user_manager.after_login_url)
-    reg_next = request.args.get('reg_next', user_manager.after_register_url)
+    next = request.args.get('next', _endpoint_url(user_manager.after_login_endpoint))
+    reg_next = request.args.get('reg_next', _endpoint_url(user_manager.after_register_endpoint))
 
     # Immediately redirect already logged in users
     if current_user.is_authenticated() and user_manager.auto_login_at_login:
@@ -268,7 +268,7 @@ def login():
                     flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email or <a href="'+url_for('user.resend_confirm_email')+'">Re-send confirmation email</a>.'), 'error')
                 else:
                     flash(_('Your account has been disabled.'), 'error')
-                return redirect(user_manager.home_url)
+                return redirect(url_for('user.home'))
 
     # Process GET or invalid POST
     return render_template(user_manager.login_template,
@@ -290,7 +290,7 @@ def logout():
     flash(_('You have signed out successfully.'), 'success')
 
     # Redirect to logout_next endpoint or '/'
-    next = request.args.get('next', user_manager.after_logout_url)  # Get 'next' query param
+    next = request.args.get('next', _endpoint_url(user_manager.after_logout_endpoint))  # Get 'next' query param
     return redirect(next)
 
 
@@ -321,8 +321,8 @@ def register():
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
 
-    next = request.args.get('next', user_manager.after_login_url)
-    reg_next = request.args.get('reg_next', user_manager.after_register_url)
+    next = request.args.get('next', _endpoint_url(user_manager.after_login_endpoint))
+    reg_next = request.args.get('reg_next', _endpoint_url(user_manager.after_register_endpoint))
 
     # Initialize form
     login_form = user_manager.login_form()                      # for login_or_register.html
@@ -399,7 +399,7 @@ def register():
             return redirect(reg_next)
         if user_manager.auto_login_after_register:
             return _do_login_user(user, reg_next)  # Auto-login user after Register
-        return redirect(user_manager.after_register_url)
+        return redirect(_endpoint_url(user_manager.after_register_endpoint))
 
     # Process GET or invalid POST
     return render_template(user_manager.register_template,
@@ -444,11 +444,11 @@ def reset_password(token):
 
     if has_expired:
         flash(_('Your reset password token has expired.'), 'error')
-        return redirect(user_manager.login_url)
+        return redirect(url_for('user.login'))
 
     if not is_valid:
         flash(_('Your reset password token is invalid.'), 'error')
-        return redirect(user_manager.login_url)
+        return redirect(url_for('user.login'))
 
     user = user_manager.get_user_by_id(user_id)
     if user:
@@ -459,7 +459,7 @@ def reset_password(token):
             verified = True
     if not user or not verified:
         flash(_('Your reset password token is invalid.'), 'error')
-        return redirect(user_manager.login_url)
+        return redirect(_endpoint_url(user_manager.login_endpoint))
 
     # Initialize form
     form = user_manager.reset_password_form(request.form)
@@ -548,7 +548,7 @@ def unauthenticated():
 
     # Redirect to USER_UNAUTHENTICATED_URL
     user_manager = current_app.user_manager
-    return redirect(user_manager.unauthenticated_url+'?next='+ quoted_url)
+    return redirect(_endpoint_url(user_manager.unauthenticated_endpoint)+'?next='+ quoted_url)
 
 def unauthorized():
     """ Prepare a Flash message and redirect to USER_UNAUTHORIZED_URL"""
@@ -558,7 +558,7 @@ def unauthorized():
 
     # Redirect to USER_UNAUTHORIZED_URL
     user_manager = current_app.user_manager
-    return redirect(user_manager.unauthorized_url)
+    return redirect(_endpoint_url(user_manager.unauthorized_endpoint))
 
 def _do_login_user(user, next):
     if user and user.is_active:
@@ -575,3 +575,9 @@ def _do_login_user(user, next):
         return redirect(next)
 
     return unauthenticated()
+
+def _endpoint_url(endpoint):
+    url = '/'
+    if endpoint:
+        url = url_for(endpoint)
+    return url
