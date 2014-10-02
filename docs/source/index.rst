@@ -75,7 +75,9 @@ Feeling generous? `Tip me on Gittip <https://www.gittip.com/lingthio/>`_
 
 Revision History
 ----------------
-* v0.5.3 USER_AUTO_LOGIN_* and USER_AFTER_*_ENDPOINT settings
+* v0.5.3 USER_AUTO_LOGIN_* and USER_AFTER_*_ENDPOINT settings.
+  Use User primary key instead of User.id.
+
 * v0.5.2 USER_AUTO_LOGIN=True setting to auto-login already logged in users in user.login page.
 * v0.5.1 Support for multiple emails per user.
 * v0.5.0 Added ``resend_confirm_email``.
