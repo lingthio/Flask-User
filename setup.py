@@ -77,7 +77,7 @@ from setuptools import setup
 
 setup(
     name='Flask-User',
-    version='0.5.2',
+    version='0.5.3',
     url='http://github.com/lingthio/Flask-User',
     license='BSD License',
     author='Ling Thio',
