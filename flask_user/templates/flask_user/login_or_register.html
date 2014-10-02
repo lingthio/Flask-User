@@ -1,7 +1,7 @@
 {% extends 'flask_user/public_base.html' %}
 
 {% block content %}
-{% from "flask_user/_macros.html" import render_field, render_submit_field %}
+{% from "flask_user/_macros.html" import render_field, render_checkbox_field, render_submit_field %}
 
 <div class="row">
 <div class="col-sm-6">
@@ -18,6 +18,9 @@
 
     {# Password #}
     {{ render_field(login_form.password, tabindex=120) }}
+
+    {# Remember me #}
+    {{ render_checkbox_field(login_form.remember_me, tabindex=130) }}
 
     {# Submit button #}
     {{ render_submit_field(login_form.submit, tabindex=180) }}

@@ -1,13 +1,13 @@
 {% extends 'flask_user/public_base.html' %}
 
 {% block content %}
-{% from "flask_user/_macros.html" import render_field, render_submit_field %}
+{% from "flask_user/_macros.html" import render_field, render_checkbox_field, render_submit_field %}
 <h1>{%trans%}Sign in{%endtrans%}</h1>
 
 <form action="" method="POST" class="form" role="form">
     {{ form.hidden_tag() }}
 
-    {# Username or Email #}
+    {# Username or Email field #}
     {% set field = form.username if user_manager.enable_username else form.email %}
     <div class="form-group {% if field.errors %}has-error{% endif %}">
         {# Label on left, "New here? Register." on right #}
@@ -30,7 +30,7 @@
         {% endif %}
     </div>
 
-    {# Password #}
+    {# Password field #}
     {% set field = form.password %}
     <div class="form-group {% if field.errors %}has-error{% endif %}">
         {# Label on left, "Forgot your Password?" on right #}
@@ -52,6 +52,9 @@
             {% endfor %}
         {% endif %}
     </div>
+
+    {# Remember me #}
+    {{ render_checkbox_field(login_form.remember_me, tabindex=130) }}
 
     {# Submit button #}
     {{ render_submit_field(form.submit, tabindex=180) }}

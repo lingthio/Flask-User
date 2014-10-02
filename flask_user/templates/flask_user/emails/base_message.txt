@@ -4,4 +4,4 @@ Dear User,
 {% endblock %}
 
 Sincerely,
-The Flask-User Team
+{{ product_name }}

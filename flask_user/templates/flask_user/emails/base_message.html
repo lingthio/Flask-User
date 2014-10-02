@@ -1,7 +1,8 @@
-<p>Dear User,</p>
+<p>Dear {{ user.email }},</p>
 
 {% block message %}
 {% endblock %}
 
 <p>Sincerely,<br/>
-The Flask-User Team</p>
+{{ product_name }}
+</p>

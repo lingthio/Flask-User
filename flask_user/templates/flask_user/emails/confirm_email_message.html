@@ -1,15 +1,11 @@
 {% extends 'flask_user/emails/base_message.html' %}
 
 {% block message %}
+<p>You will need to confirm your email to start using {{ product_name }}.</p>
 
-<p>Thank you for registering with Flask-User.</p>
+<p>If you initiated this confirmation, please click on the link below:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ confirm_email_link }}">Confirm your email</a>.</p>
 
-{% if user_manager.enable_confirm_email %}
-<p>Visit the link below to complete your registration:</p>
-
-<p><a href="{{ confirm_email_link }}">Confirm your email address</a>.</p>
-
-<p>If you did not initiate this registration, you may safely ignore this email.</p>
-{% endif %}
+<p>If you did not initiate this confirmation, you may safely ignore this email.</p>
 
 {% endblock %}

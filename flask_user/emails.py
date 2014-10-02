@@ -59,7 +59,7 @@ def _get_primary_email(user):
     db_adapter = user_manager.db_adapter
     if db_adapter.UserEmailClass:
         user_email = db_adapter.find_first_object(db_adapter.UserEmailClass,
-                user_id=(int)(user.get_id()),
+                user_id=int(user.get_id()),
                 is_primary=True)
         return user_email.email if user_email else None
     else:
@@ -80,6 +80,7 @@ def send_confirm_email_email(user, user_email, confirm_email_link):
     subject, html_message, text_message = _render_email(
             user_manager.confirm_email_email_template,
             user=user,
+            product_name=user_manager.product_name,
             confirm_email_link=confirm_email_link)
 
     # Send email message using Flask-Mail
@@ -99,6 +100,7 @@ def send_forgot_password_email(user, user_email, reset_password_link):
     subject, html_message, text_message = _render_email(
             user_manager.forgot_password_email_template,
             user=user,
+            product_name=user_manager.product_name,
             reset_password_link=reset_password_link)
 
     # Send email message using Flask-Mail
@@ -117,12 +119,13 @@ def send_password_changed_email(user):
     # Render subject, html message and text message
     subject, html_message, text_message = _render_email(
             user_manager.password_changed_email_template,
-            user=user)
+            user=user,
+            product_name=user_manager.product_name)
 
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
 
-def send_registered_email(user, user_email):    # pragma: no cover
+def send_registered_email(user, user_email, confirm_email_link):    # pragma: no cover
     # Verify certain conditions
     user_manager =  current_app.user_manager
     if not user_manager.enable_email: return
@@ -135,7 +138,9 @@ def send_registered_email(user, user_email):    # pragma: no cover
     # Render subject, html message and text message
     subject, html_message, text_message = _render_email(
             user_manager.registered_email_template,
-            user=user)
+            user=user,
+            product_name=user_manager.product_name,
+            confirm_email_link=confirm_email_link)
 
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
@@ -153,7 +158,8 @@ def send_username_changed_email(user):  # pragma: no cover
     # Render subject, html message and text message
     subject, html_message, text_message = _render_email(
             user_manager.username_changed_email_template,
-            user=user)
+            user=user,
+            product_name=user_manager.product_name)
 
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)

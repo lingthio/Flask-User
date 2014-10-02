@@ -29,17 +29,20 @@ class TokenManager(object):
 
     def decrypt_id(self, encrypted_id):
         """ Decrypts url-safe base64 string to integer ID"""
-        # In Python3, encrypted_id is <type 'str'> and needs to be converted to bytes
-        if type(encrypted_id)=='str':   # pragma: no cover
-            encrypted_id = encrypted_id.encode('ascii')
+        # Convert strings and unicode strings to bytes if needed
+        if hasattr(encrypted_id, 'encode'):
+            encrypted_id = encrypted_id.encode('ascii', 'ignore')
 
         try:
             str3 = encrypted_id + b'=='             # --> base64 string with '=='
+            #print('str3=', str3)
             str2 = base64.urlsafe_b64decode(str3)   # --> encrypted data
+            #print('str2=', str2)
             str1 = self.cipher.decrypt(str2)        # --> 16 byte integer string
+            #print('str1=', str1)
             return int(str1)                        # --> integer id
         except Exception as e:                      # pragma: no cover
-            print('!!!Exception in decrypt_id!!!')
+            print('!!!Exception in decrypt_id!!!:', e)
             return 0
 
     def generate_token(self, id):

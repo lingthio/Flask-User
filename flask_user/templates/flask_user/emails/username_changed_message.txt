@@ -3,7 +3,7 @@
 {% block message %}
 Your username has been changed.
 
-If you did not change your username, please sign in (using your email address) and change your password.
+If you did not initiate this username change, please sign in (using your email address) and change your password.
     {{ url_for('user.login', _external=True) }}
 {% endblock %}
 

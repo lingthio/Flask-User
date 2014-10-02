@@ -163,7 +163,7 @@ class LoginForm(Form):
     password = PasswordField(_('Password'), validators=[
         validators.Required(_('Password is required')),
     ])
-    remember = BooleanField(_('Remember me'))
+    remember_me = BooleanField(_('Remember me'))
 
     submit = SubmitField(_('Sign in'))
 

@@ -20,6 +20,7 @@ class ConfigClass(object):
     MAIL_DEFAULT_SENDER = '"Sender" <noreply@example.com>'
 
     # Configure Flask-User
+    USER_PRODUCT_NAME            = "ProductName"
     USER_ENABLE_USERNAME         = True
     USER_ENABLE_CONFIRM_EMAIL    = True
     USER_ENABLE_CHANGE_USERNAME  = True

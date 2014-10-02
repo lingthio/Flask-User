@@ -6,7 +6,7 @@
 
 from passlib.context import CryptContext
 from flask import Blueprint, current_app
-from flask_login import LoginManager, UserMixin as LoginUserMixin
+from flask_login import LoginManager, UserMixin as LoginUserMixin, make_secure_token
 from flask_user.db_adapters import DBAdapter
 from .db_adapters import SQLAlchemyAdapter
 from . import emails
@@ -24,12 +24,6 @@ from flask_login import current_user
 from .decorators import *
 
 __version__ = '0.5.3'
-
-def _user_loader(user_id):
-    """ Flask-Login helper function to load user by user_id"""
-    # Note: user_id is a UNICODE string returned by UserMixin.get_id()
-    um = current_app.user_manager
-    return um.get_user_by_id(user_id)
 
 def _flask_user_context_processor():
     """ Make 'user_manager' available to Jinja2 templates"""
@@ -100,10 +94,10 @@ class UserManager(object):
         self.unauthenticated_view_function = unauthenticated_view_function
         self.unauthorized_view_function = unauthorized_view_function
         # Misc
-        self.lm = login_manager
+        self.login_manager = login_manager
+        self.token_manager = token_manager
         self.password_crypt_context = password_crypt_context
         self.send_email_function = send_email_function
-        self.token_manager = token_manager
 
         self.app = app
         if app:
@@ -152,12 +146,33 @@ class UserManager(object):
         # Add context processor
         app.context_processor(_flask_user_context_processor)
 
-    def setup_login_manager(self, app):
+        # Prepare for translations
         _ = translations.gettext
-        self.lm.login_view = 'user.login'
-        self.lm.user_loader(_user_loader)
-        #login_manager.token_loader(_token_loader)
-        self.lm.init_app(app)
+
+
+    def setup_login_manager(self, app):
+
+        # Flask-Login calls this function to retrieve a User record by user ID.
+        # Note: user_id is a UNICODE string returned by UserMixin.get_id().
+        # See https://flask-login.readthedocs.org/en/latest/#how-it-works
+        @self.login_manager.user_loader
+        def load_user_by_id(user_unicode_id):
+            user_id = int(user_unicode_id)
+            #print('load_user_by_id: user_id=', user_id)
+            return self.get_user_by_id(user_id)
+
+        # Flask-login calls this function to retrieve a User record by user token.
+        # A token is used to secure the user ID when stored in browser sessions.
+        # See https://flask-login.readthedocs.org/en/latest/#alternative-tokens
+        @self.login_manager.token_loader
+        def load_user_by_token(token):
+            user_id = self.token_manager.decrypt_id(token)
+            #print('load_user_by_token: token=', token, 'user_id=', user_id)
+            return self.get_user_by_id(int(user_id))
+
+        self.login_manager.login_view = 'user.login'
+        self.login_manager.init_app(app)
+
 
     def add_url_routes(self, app):
         """ Add URL Routes"""
@@ -287,3 +302,13 @@ class UserMixin(LoginUserMixin):
 
         # All requirements have been met: return True
         return True
+
+    # Flask-Login is capable of remembering the current user ID in the browser's session.
+    # This function enables the user ID to be encrypted as a token.
+    # See https://flask-login.readthedocs.org/en/latest/#remember-me
+    def get_auth_token(self):
+        token_manager = current_app.user_manager.token_manager
+        user_id = int(self.get_id())
+        token = token_manager.encrypt_id(user_id)
+        #print('get_auth_token: user_id=', user_id, 'token=', token)
+        return token

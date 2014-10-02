@@ -1,1 +1,1 @@
-Flask-User: {% block subject %}{% endblock %}
+{{ product_name }} - {% block subject %}{% endblock %}

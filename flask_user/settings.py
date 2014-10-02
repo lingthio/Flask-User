@@ -16,6 +16,9 @@ def set_default_settings(user_manager, app_config):
     obsoleted_enable_retype_passwords  = sd('USER_ENABLE_RETYPE_PASSWORDS',    True)
     obsoleted_enable_usernames         = sd('USER_ENABLE_USERNAMES',           True)
 
+    # General settings
+    um.product_name             = sd('USER_PRODUCT_NAME', 'Flask-User')
+
     # Set default features
     um.enable_change_password   = sd('USER_ENABLE_CHANGE_PASSWORD',     True)
     um.enable_change_username   = sd('USER_ENABLE_CHANGE_USERNAME',     True)
@@ -59,14 +62,16 @@ def set_default_settings(user_manager, app_config):
     # Set default ENDPOINTs
     home_endpoint = ''
     login_endpoint = 'user.login'
-    um.after_change_password_endpoint = sd('USER_AFTER_CHANGE_PASSWORD_ENDPOINT',  home_endpoint)
-    um.after_change_username_endpoint = sd('USER_AFTER_CHANGE_USERNAME_ENDPOINT',  home_endpoint)
-    um.after_login_endpoint           = sd('USER_AFTER_LOGIN_ENDPOINT',            home_endpoint)
-    um.after_logout_endpoint          = sd('USER_AFTER_LOGOUT_ENDPOINT',           login_endpoint)
-    um.after_register_endpoint        = sd('USER_AFTER_REGISTER_ENDPOINT',         home_endpoint)
-    um.after_confirm_endpoint         = sd('USER_AFTER_CONFIRM_ENDPOINT',          home_endpoint)
-    um.unauthenticated_endpoint       = sd('USER_UNAUTHENTICATED_ENDPOINT',        login_endpoint)
-    um.unauthorized_endpoint          = sd('USER_UNAUTHORIZED_ENDPOINT',           home_endpoint)
+    um.after_change_password_endpoint      = sd('USER_AFTER_CHANGE_PASSWORD_ENDPOINT',      home_endpoint)
+    um.after_change_username_endpoint      = sd('USER_AFTER_CHANGE_USERNAME_ENDPOINT',      home_endpoint)
+    um.after_login_endpoint                = sd('USER_AFTER_LOGIN_ENDPOINT',                home_endpoint)
+    um.after_logout_endpoint               = sd('USER_AFTER_LOGOUT_ENDPOINT',               login_endpoint)
+    um.after_register_endpoint             = sd('USER_AFTER_REGISTER_ENDPOINT',             home_endpoint)
+    um.after_confirm_endpoint              = sd('USER_AFTER_CONFIRM_ENDPOINT',              home_endpoint)
+    um.after_resend_confirm_email_endpoint = sd('USER_AFTER_RESEND_CONFIRM_EMAIL_ENDPOINT', home_endpoint)
+    um.after_forgot_password_endpoint      = sd('USER_AFTER_FORGOT_PASSWORD_ENDPOINT',      home_endpoint)
+    um.unauthenticated_endpoint            = sd('USER_UNAUTHENTICATED_ENDPOINT',            login_endpoint)
+    um.unauthorized_endpoint               = sd('USER_UNAUTHORIZED_ENDPOINT',               home_endpoint)
 
     # Set default template files
     um.change_password_template = sd('USER_CHANGE_PASSWORD_TEMPLATE',  'flask_user/change_password.html')
