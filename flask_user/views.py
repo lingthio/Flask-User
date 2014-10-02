@@ -264,8 +264,8 @@ def login():
             else:
                 confirmed_at = user_email.confirmed_at if user_email else user.confirmed_at
                 if user_manager.enable_confirm_email and not confirmed_at:
-                    # TODO: Use string.format() so that it can be translated
-                    flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email or <a href="'+url_for('user.resend_confirm_email')+'">Re-send confirmation email</a>.'), 'error')
+                    url = url_for('user.resend_confirm_email')
+                    flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email or <a href="%(url)s">Re-send confirmation email</a>.', url=url), 'error')
                 else:
                     flash(_('Your account has been disabled.'), 'error')
                 return redirect(url_for('user.home'))
