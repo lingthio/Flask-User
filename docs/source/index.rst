@@ -83,6 +83,18 @@ Revision History
   * Added USER_AFTER\_..._ENDPOINT settings.
   * Cleaned up email templates.
 
+::
+
+    v0.5.3 API changes
+    The 'confirm_email' emails are now sent only after a resend confirm email request.
+    The 'registered' email is now sent after registration, whether
+    USER_ENABLE_CONFIRM_EMAIL is True or False.
+    
+    (Previously, the 'confirm_email' email was sent after registration
+    and after a resend confirm email request, and the 'registered' email was sent only
+    after registration and when USER_ENABLE_CONFIRM_EMAIL was False)
+
+
 * v0.5.2 Added USER_AUTO_LOGIN setting.
 * v0.5.1 Added Support for multiple emails per user.
 * v0.5.0 Added ``resend_confirm_email``.
