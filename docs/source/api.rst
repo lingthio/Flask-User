@@ -15,6 +15,8 @@ Config Settings
 
 .. include:: includes/config_urls.txt
 
+.. include:: includes/config_endpoints.txt
+
 .. include:: includes/config_email_templates.txt
 
 .. include:: includes/config_form_templates.txt

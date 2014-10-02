@@ -12,13 +12,3 @@
     USER_REGISTER_URL             = '/user/register'
     USER_RESEND_CONFIRM_EMAIL_URL = '/user/resend-confirm-email'    # v0.5.0 and up
     USER_RESET_PASSWORD_URL       = '/user/reset-password/<token>'
-
-    # Unauthenticated users trying to access a view
-    # that has been decorated with @login_required or @roles_required
-    # will be redirected to this URL
-    USER_UNAUTHENTICATED_URL  = USER_LOGIN_URL
-
-    # Unauthorized users trying to access a view
-    # that has been decorated with @roles_required
-    # will be redirected to this URL
-    USER_UNAUTHORIZED_URL     = '/'

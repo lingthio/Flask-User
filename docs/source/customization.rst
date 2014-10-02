@@ -14,6 +14,7 @@ behaviors that can be customized as needed:
 * `Password and Username validators`_
 * `Password hashing`_
 * `URLs`_
+* `Endpoints`_
 * `Email template filenames`_
 * `Form template filenames`_
 * `Token generation`_
@@ -475,9 +476,16 @@ Custom view functions are specified by setting an attribute on the Flask-User's 
 
 URLs
 ----
-Endpoint URLs can be customized through the application's config
+URLs can be customized through the application's config
 
 .. include:: includes/config_urls.txt
+
+
+Endpoints
+---------
+Endpoints can be customized through the application's config
+
+.. include:: includes/config_endpoints.txt
 
 
 Email Template filenames
