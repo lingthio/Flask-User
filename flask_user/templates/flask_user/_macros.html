@@ -17,7 +17,7 @@
     {% if not label %}{% set label=field.label.text %}{% endif %}
     <div class="checkbox">
         <label>
-            {{ field(type='checkbox', **kwargs) }} {{ field.label }}
+            {{ field(type='checkbox', **kwargs) }} {{ label }}
         </label>
     </div>
 {%- endmacro %}
