@@ -60,13 +60,14 @@ def confirm_email(token):
     signals.user_confirmed_email.send(current_app._get_current_object(), user=user)
 
     # Prepare one-time system message
-    flash(_('Your email has been confirmed. Please sign in.'), 'success')
+    flash(_('Your email has been confirmed.'), 'success')
 
-    # Retrieve 'next' query parameter
-    next = request.args.get('next', '/')
-
-    # Redirect to the login page with the specified 'next' query parameter
-    return redirect(user_manager.login_url+'?next='+next)
+    # Redirect to login page or auto-login if configured
+    next = request.args.get('next', user_manager.after_confirm_url)
+    if user_manager.auto_login_after_confirm:
+        return _do_login_user(user, next)  # Auto-login user after confirm
+    else:
+        return redirect(user_manager.login_url+'?next='+next)
 
 
 @login_required
@@ -77,7 +78,7 @@ def change_password():
 
     # Initialize form
     form = user_manager.change_password_form(request.form)
-    form.next.data = request.args.get('next', '/')  # Place ?next query param in next form field
+    form.next.data = request.args.get('next', user_manager.after_change_password_url)  # Place ?next query param in next form field
 
     # Process valid POST
     if request.method=='POST' and form.validate():
@@ -112,7 +113,7 @@ def change_username():
 
     # Initialize form
     form = user_manager.change_username_form(request.form)
-    form.next.data = request.args.get('next', '/')  # Place ?next query param in next form field
+    form.next.data = request.args.get('next', user_manager.after_change_username_url)  # Place ?next query param in next form field
 
     # Process valid POST
     if request.method=='POST' and form.validate():
@@ -224,17 +225,19 @@ def login():
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
 
-    next = request.args.get('next', '/')                  # Get the ?next=... query param
+    next = request.args.get('next', user_manager.after_login_url)
+    reg_next = request.args.get('reg_next', user_manager.after_register_url)
 
     # Immediately redirect already logged in users
-    if user_manager.auto_login:
-        if current_user.is_authenticated():
-            return redirect(next)
+    if current_user.is_authenticated() and user_manager.auto_login_at_login:
+        return redirect(next)
 
     # Initialize form
-    login_form = user_manager.login_form(request.form)
-    login_form.next.data = next                           # set hidden form field 'next'
-    register_form = user_manager.register_form()          # for login_or_register.html
+    login_form = user_manager.login_form(request.form)          # for login.html
+    register_form = user_manager.register_form()                # for login_or_register.html
+    if request.method!='POST':
+        login_form.next.data     = register_form.next.data = next
+        login_form.reg_next.data = register_form.reg_next.data = reg_next
 
     # Process valid POST
     if request.method=='POST' and login_form.validate():
@@ -257,24 +260,15 @@ def login():
 
         if user:
             if user.active:
-                # Use Flask-Login to sign in user
-                login_user(user)
-
-                # Send user_logged_in signal
-                signals.user_logged_in.send(current_app._get_current_object(), user=user)
-
-                # Prepare one-time system message
-                flash(_('You have signed in successfully.'), 'success')
-
-                # Redirect to 'next' URL
-                return redirect(login_form.next.data)
+                return _do_login_user(user, login_form.next.data)  # Login user after Login
             else:
-                confirmed_at = user_email.confirmed_at if db_adapter.UserEmailClass else user.confirmed_at
+                confirmed_at = user_email.confirmed_at if user_email else user.confirmed_at
                 if user_manager.enable_confirm_email and not confirmed_at:
                     # TODO: Use string.format() so that it can be translated
                     flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email or <a href="'+url_for('user.resend_confirm_email')+'">Re-send confirmation email</a>.'), 'error')
                 else:
                     flash(_('Your account has been disabled.'), 'error')
+                return redirect(user_manager.home_url)
 
     # Process GET or invalid POST
     return render_template(user_manager.login_template,
@@ -296,7 +290,7 @@ def logout():
     flash(_('You have signed out successfully.'), 'success')
 
     # Redirect to logout_next endpoint or '/'
-    next = request.args.get('next', '/')  # Get 'next' query param
+    next = request.args.get('next', user_manager.after_logout_url)  # Get 'next' query param
     return redirect(next)
 
 
@@ -327,9 +321,15 @@ def register():
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
 
+    next = request.args.get('next', user_manager.after_login_url)
+    reg_next = request.args.get('reg_next', user_manager.after_register_url)
+
     # Initialize form
-    register_form = user_manager.register_form(request.form)
-    login_form = user_manager.login_form()          # for login_or_register.html
+    login_form = user_manager.login_form()                      # for login_or_register.html
+    register_form = user_manager.register_form(request.form)    # for register.html
+    if request.method!='POST':
+        login_form.next.data    = register_form.next.data = next
+        login_form.reg_next.data = register_form.reg_next.data = reg_next
 
     # Process valid POST
     if request.method=='POST' and register_form.validate():
@@ -393,14 +393,20 @@ def register():
         # Send user_registered signal
         signals.user_registered.send(current_app._get_current_object(), user=user)
 
-        # Redirect to the login page
-        return redirect(url_for('user.login'))
+        # Redirect to login page or auto-login if configured
+        reg_next = register_form.reg_next.data
+        if user_manager.enable_confirm_email:
+            return redirect(reg_next)
+        if user_manager.auto_login_after_register:
+            return _do_login_user(user, reg_next)  # Auto-login user after Register
+        return redirect(user_manager.after_register_url)
 
     # Process GET or invalid POST
     return render_template(user_manager.register_template,
             form=register_form,
             login_form=login_form,
             register_form=register_form)
+
 
 def resend_confirm_email():
     """Prompt for email and re-send email conformation email."""
@@ -528,7 +534,7 @@ def send_confirm_email_or_registered_email(user, user_email):
     if user_manager.enable_confirm_email:
         flash(_('A confirmation email has been sent to %(email)s with instructions to complete your registration.', email=email_address), 'success')
     else:
-        flash(_('You have registered successfully. Please sign in.'), 'success')
+        flash(_('You have registered successfully.'), 'success')
 
 
 def unauthenticated():
@@ -553,3 +559,19 @@ def unauthorized():
     # Redirect to USER_UNAUTHORIZED_URL
     user_manager = current_app.user_manager
     return redirect(user_manager.unauthorized_url)
+
+def _do_login_user(user, next):
+    if user and user.is_active:
+        # Use Flask-Login to sign in user
+        login_user(user)
+
+        # Send user_logged_in signal
+        signals.user_logged_in.send(current_app._get_current_object(), user=user)
+
+        # Prepare one-time system message
+        flash(_('You have signed in successfully.'), 'success')
+
+        # Redirect to 'next' URL
+        return redirect(next)
+
+    return unauthenticated()

@@ -150,6 +150,9 @@ class ForgotPasswordForm(Form):
     submit = SubmitField(_('Send reset password email'))
 
 class LoginForm(Form):
+    next = HiddenField()         # for login.html
+    reg_next = HiddenField()     # for login_or_register.html
+
     username = StringField(_('Username'), validators=[
         validators.Required(_('Username is required')),
     ])
@@ -161,7 +164,7 @@ class LoginForm(Form):
         validators.Required(_('Password is required')),
     ])
     remember = BooleanField(_('Remember me'))
-    next = HiddenField()
+
     submit = SubmitField(_('Sign in'))
 
     def __init__(self, *args, **kwargs):
@@ -213,6 +216,9 @@ class LoginForm(Form):
 class RegisterForm(Form):
     password_validator_added = False
 
+    next = HiddenField()        # for login_or_register.html
+    reg_next = HiddenField()    # for register.html
+
     username = StringField(_('Username'), validators=[
         validators.Required(_('Username is required')),
         unique_username_validator])
@@ -224,6 +230,7 @@ class RegisterForm(Form):
         validators.Required(_('Password is required'))])
     retype_password = PasswordField(_('Retype Password'), validators=[
         validators.EqualTo('password', message=_('Password and Retype Password did not match'))])
+
     submit = SubmitField(_('Register'))
 
     def validate(self):

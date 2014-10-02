@@ -205,6 +205,7 @@ def test_invalid_login_with_username_form(client):
     # Choose config
     um = current_app.user_manager
     um.enable_username = True
+    um.auto_login_at_login = False
 
     # Set default values
     url = url_for('user.login')

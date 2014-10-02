@@ -28,32 +28,44 @@ def set_default_settings(user_manager, app_config):
     um.enable_multiple_emails   = sd('USER_ENABLE_MULTIPLE_EMAILS',     False)
 
     # Set default settings
-    um.confirm_email_expiration = sd('USER_CONFIRM_EMAIL_EXPIRATION',   2*24*3600)   # 2 days
-    um.invite_expiration        = sd('USER_INVITE_EXPIRATION',          90*24*3600)  # 90 days
-    um.password_hash_mode       = sd('USER_PASSWORD_HASH_MODE',         'passlib')
-    um.password_hash            = sd('USER_PASSWORD_HASH',              'bcrypt')
-    um.password_salt            = sd('USER_PASSWORD_SALT',              app_config['SECRET_KEY'])
-    um.reset_password_expiration= sd('USER_RESET_PASSWORD_EXPIRATION',  2*24*3600)   # 2 days
-    um.require_invitation       = sd('USER_REQUIRE_INVITATION',         False)
-    um.send_password_changed_email = sd('USER_SEND_PASSWORD_CHANGED_EMAIL',   um.enable_email)
-    um.send_registered_email       = sd('USER_SEND_REGISTERED_EMAIL',         um.enable_email)
-    um.send_username_changed_email = sd('USER_SEND_USERNAME_CHANGED_EMAIL',   um.enable_email)
-    um.auto_login               = sd('USER_AUTO_LOGIN',                 True)
+    um.auto_login                  = sd('USER_AUTO_LOGIN',                 True)
+    um.auto_login_at_login         = sd('USER_AUTO_LOGIN_AT_LOGIN',        um.auto_login)
+    um.auto_login_after_register   = sd('USER_AUTO_LOGIN_AFTER_REGISTER',  um.auto_login)
+    um.auto_login_after_confirm    = sd('USER_AUTO_LOGIN_AFTER_CONFIRM',   um.auto_login)
+    um.confirm_email_expiration    = sd('USER_CONFIRM_EMAIL_EXPIRATION',   2*24*3600)   # 2 days
+    um.invite_expiration           = sd('USER_INVITE_EXPIRATION',          90*24*3600)  # 90 days
+    um.password_hash_mode          = sd('USER_PASSWORD_HASH_MODE',         'passlib')
+    um.password_hash               = sd('USER_PASSWORD_HASH',              'bcrypt')
+    um.password_salt               = sd('USER_PASSWORD_SALT',              app_config['SECRET_KEY'])
+    um.reset_password_expiration   = sd('USER_RESET_PASSWORD_EXPIRATION',  2*24*3600)   # 2 days
+    um.require_invitation          = sd('USER_REQUIRE_INVITATION',         False)
+    um.send_password_changed_email = sd('USER_SEND_PASSWORD_CHANGED_EMAIL',um.enable_email)
+    um.send_registered_email       = sd('USER_SEND_REGISTERED_EMAIL',      um.enable_email)
+    um.send_username_changed_email = sd('USER_SEND_USERNAME_CHANGED_EMAIL',um.enable_email)
 
     # Set default URLs
-    um.change_password_url      = sd('USER_CHANGE_PASSWORD_URL',        '/user/change-password')
-    um.change_username_url      = sd('USER_CHANGE_USERNAME_URL',        '/user/change-username')
-    um.confirm_email_url        = sd('USER_CONFIRM_EMAIL_URL',          '/user/confirm-email/<token>')
-    um.email_action_url         = sd('USER_EMAIL_ACTION_URL',           '/user/email/<id>/<action>')
-    um.forgot_password_url      = sd('USER_FORGOT_PASSWORD_URL',        '/user/forgot-password')
-    um.login_url                = sd('USER_LOGIN_URL',                  '/user/sign-in')
-    um.logout_url               = sd('USER_LOGOUT_URL',                 '/user/sign-out')
-    um.manage_emails_url        = sd('USER_MANAGE_EMAILS_URL',          '/user/manage-emails')
-    um.register_url             = sd('USER_REGISTER_URL',               '/user/register')
-    um.resend_confirm_email_url = sd('USER_RESEND_CONFIRM_EMAIL_URL',   '/user/resend-confirm-email')
-    um.reset_password_url       = sd('USER_RESET_PASSWORD_URL',         '/user/reset-password/<token>')
-    um.unauthenticated_url      = sd('USER_UNAUTHENTICATED_URL',        um.login_url)
-    um.unauthorized_url         = sd('USER_UNAUTHORIZED_URL',           '/')
+    um.home_url                  = sd('USER_HOME_URL',                   '/')
+    um.change_password_url       = sd('USER_CHANGE_PASSWORD_URL',        '/user/change-password')
+    um.change_username_url       = sd('USER_CHANGE_USERNAME_URL',        '/user/change-username')
+    um.confirm_email_url         = sd('USER_CONFIRM_EMAIL_URL',          '/user/confirm-email/<token>')
+    um.email_action_url          = sd('USER_EMAIL_ACTION_URL',           '/user/email/<id>/<action>')
+    um.forgot_password_url       = sd('USER_FORGOT_PASSWORD_URL',        '/user/forgot-password')
+    um.login_url                 = sd('USER_LOGIN_URL',                  '/user/sign-in')
+    um.logout_url                = sd('USER_LOGOUT_URL',                 '/user/sign-out')
+    um.manage_emails_url         = sd('USER_MANAGE_EMAILS_URL',          '/user/manage-emails')
+    um.register_url              = sd('USER_REGISTER_URL',               '/user/register')
+    um.resend_confirm_email_url  = sd('USER_RESEND_CONFIRM_EMAIL_URL',   '/user/resend-confirm-email')
+    um.reset_password_url        = sd('USER_RESET_PASSWORD_URL',         '/user/reset-password/<token>')
+
+    um.after_change_password_url = sd('USER_AFTER_CHANGE_PASSWORD_URL',  um.home_url)
+    um.after_change_username_url = sd('USER_AFTER_CHANGE_USERNAME_URL',  um.home_url)
+    um.after_login_url           = sd('USER_AFTER_LOGIN_URL',            um.home_url)
+    um.after_logout_url          = sd('USER_AFTER_LOGOUT_URL',           um.login_url)
+    um.after_register_url        = sd('USER_AFTER_REGISTER_URL',         um.home_url)
+    um.after_confirm_url         = sd('USER_AFTER_CONFIRM_URL',          um.home_url)
+    um.unauthenticated_url       = sd('USER_UNAUTHENTICATED_URL',        um.login_url)
+    um.unauthorized_url          = sd('USER_UNAUTHORIZED_URL',           um.home_url)
+
     # Set default template files
     um.change_password_template = sd('USER_CHANGE_PASSWORD_TEMPLATE',  'flask_user/change_password.html')
     um.change_username_template = sd('USER_CHANGE_USERNAME_TEMPLATE',  'flask_user/change_username.html')

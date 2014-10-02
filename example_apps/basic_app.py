@@ -28,6 +28,10 @@ class ConfigClass(object):
     USER_ENABLE_RETYPE_PASSWORD  = True
     USER_LOGIN_TEMPLATE = 'flask_user/login_or_register.html'
     USER_REGISTER_TEMPLATE = 'flask_user/login_or_register.html'
+    USER_AFTER_LOGIN_URL = '/profile'
+
+    USER_ENABLE_RETYPE_PASSWORD = False
+    USER_AUTO_LOGIN_AFTER_CONFIRM = False
 
 def create_app(test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
@@ -72,6 +76,21 @@ def create_app(test_config=None):                   # For automated tests
     # Display Login page or Profile page
     @app.route('/')
     def home_page():
+        return render_template_string("""
+            {% extends "base.html" %}
+            {% block content %}
+                <h2>{%trans%}Home Page{%endtrans%}</h2>
+                {% if current_user.is_authenticated() %}
+                <p> <a href="{{ url_for('profile_page') }}">
+                    {%trans%}Profile Page{%endtrans%}</a></p>
+                <p> <a href="{{ url_for('user.logout') }}">
+                    {%trans%}Sign out{%endtrans%}</a></p>
+                {% else %}
+                <p> <a href="{{ url_for('user.login') }}">
+                    {%trans%}Sign in{%endtrans%}</a></p>
+                {% endif %}
+            {% endblock %}
+            """)
         if current_user.is_authenticated():
             return redirect(url_for('profile_page'))
         else:
@@ -87,11 +106,13 @@ def create_app(test_config=None):                   # For automated tests
                 <h2>{%trans%}Profile Page{%endtrans%}</h2>
                 <p> {%trans%}Hello{%endtrans%}
                     {{ current_user.username or current_user.email }},</p>
+                <p> <a href="{{ url_for('home_page') }}">
+                    {%trans%}Home Page{%endtrans%}</a></p>
                 <p> <a href="{{ url_for('user.change_username') }}">
                     {%trans%}Change username{%endtrans%}</a></p>
                 <p> <a href="{{ url_for('user.change_password') }}">
                     {%trans%}Change password{%endtrans%}</a></p>
-                <p> <a href="{{ url_for('user.logout') }}?next={{ url_for('user.login') }}">
+                <p> <a href="{{ url_for('user.logout') }}">
                     {%trans%}Sign out{%endtrans%}</a></p>
             {% endblock %}
             """)
