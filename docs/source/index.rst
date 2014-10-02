@@ -75,14 +75,19 @@ Feeling generous? `Tip me on Gittip <https://www.gittip.com/lingthio/>`_
 
 Revision History
 ----------------
-* v0.5.3 USER_AUTO_LOGIN_* and USER_AFTER_*_ENDPOINT settings.
-  Use User primary key instead of User.id.
+* v0.5.3
 
-* v0.5.2 USER_AUTO_LOGIN=True setting to auto-login already logged in users in user.login page.
-* v0.5.1 Support for multiple emails per user.
+  * Added remember-me feature.
+  * Added support for a primary key name other than 'id'.
+  * Added USER_AUTO_LOGIN\_... settings.
+  * Added USER_AFTER\_..._ENDPOINT settings.
+  * Cleaned up email templates.
+
+* v0.5.2 Added USER_AUTO_LOGIN setting.
+* v0.5.1 Added Support for multiple emails per user.
 * v0.5.0 Added ``resend_confirm_email``.
 * v0.4.9 Added ``login_or_register.html``. Cleaned up example_apps.
-* v0.4.8 Removed the need for app.mail, app.babel, app.db and app.User
+* v0.4.8 Removed the need for app.mail, app.babel, app.db and app.User properties.
 * v0.4.7 Added 'confirm_email', 'password_changed' and 'username_changed' emails.
 
 ::
