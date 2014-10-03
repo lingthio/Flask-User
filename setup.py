@@ -1,50 +1,60 @@
 """
 
-.. image:: https://travis-ci.org/lingthio/Flask-User.png?branch=master
+.. image:: https://pypip.in/v/Flask-User/badge.png
+    :target: https://pypi.python.org/pypi/Flask-User
+
+.. comment .. image:: https://travis-ci.org/lingthio/Flask-User.png?branch=master
+.. image:: /images/build_passing.png
     :target: https://travis-ci.org/lingthio/Flask-User
 
-.. comment .. image:: https://pypip.in/v/Flask-User/badge.png
-.. comment     :target: https://pypi.python.org/pypi/Flask-User
+.. image:: https://pypip.in/d/Flask-User/badge.png
+    :target: https://pypi.python.org/pypi/Flask-User
+
+.. comment .. image:: https://pypip.in/license/Flask-User/badge.png
+.. image:: /images/BSD_license.png
+    :target: https://pypi.python.org/pypi/Flask-User
 
 .. comment .. image:: https://coveralls.io/repos/lingthio/Flask-User/badge.png?branch=master
 .. comment     :target: https://coveralls.io/r/lingthio/Flask-User?branch=master
 
-.. comment .. image:: https://pypip.in/d/Flask-User/badge.png
-.. comment     :target: https://pypi.python.org/pypi/Flask-User
-
-.. comment .. image:: https://pypip.in/license/Flask-User/badge.png
-.. comment     :target: https://pypi.python.org/pypi/Flask-User
-
 Customizable User Account Management for Flask
 ----------------------------------------------
 
-Many web applications require User Account Management features such as **Register**, **Confirm email**,
-**Login**, **Change username**, **Change password** and **Forgot password**.
+| So you're writing a Flask web application and would like to authenticate your users.
+| You start with a simple **Login** page, but soon enough you need to handle:
 
-Some also require **Role-based Authorization** and **Internationalization**.
+* **Registrations** and **Email Confirmations**
+* **Change Usernames**, **Change Passwords**, and **Forgotten Passwords**
 
-Wouldn't it be nice to have a package that would offer these features **out-of-the-box**
-while **retaining full control over the workflow and presentation** of this process?
+And wouldn't it be nice to also offer:
 
-Flask-User aims to provide such a ready-to-use **AND** fully customizable solution:
-
-* **Reliable**
-* **Secure**
-* **Fully customizable**
-* **Ready to use**
 * **Role-based Authorization**
+* **Remember-me cookies**
+* **Multiple emails per user**
 * **Internationalization**
-* **Well documented**
-* Tested on Python 2.6, 2.7 and 3.3
 
-Demo
-----
-| `Flask-User Demo <https://flask-user-demo.herokuapp.com/>`_
-| (If you're the first visitor in the last hour, this may take a few seconds to load)
+| Flask-User offers these user features (and more) out-of-the-box
+| while also honoring the following developer needs:
+
+* **Reliable** (Code coverage of over 95%)
+* **Secure** (Built on top of widely deployed Flask-Login)
+* **Ready to use** (Through sensible defaults)
+* **Largely configurable** (Through configuration settings)
+* **Fully customizable** (Through customizable functions and email templates)
+* **Well documented**
+* **Tested on Python 2.6, 2.7, 3.3 and 3.4**
 
 Documentation
 -------------
 `Flask-User Documentation <https://pythonhosted.org/Flask-User/>`_
+
+Demo
+----
+`Flask-User Status <https://pythonhosted.org/Flask-User/index.html#status>`_
+
+Demo
+----
+`Flask-User Demo <https://pythonhosted.org/Flask-User/index.html#demo>`_
 
 Revision History
 ----------------

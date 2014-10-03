@@ -19,10 +19,13 @@ Requirements
 - Python 2.6, 2.7, 3.3 or 3.4
 - crypto, passlib and py-bcript
 - Flask 0.10+
-- Flask-Babel
 - Flask-Login 0.2+
 - Flask-Mail or Flask-Sendmail
 - Flask-WTF
+
+Optional requirements for Internationalization:
+
+- Flask-Babel
 
 Optional requirements for SQLAlchemyAdapter:
 
