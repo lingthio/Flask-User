@@ -9,7 +9,9 @@ class ConfigClass(object):
     SECRET_KEY = 'THIS IS AN INSECURE SECRET'                 # Change this for production!!!
     SQLALCHEMY_DATABASE_URI = 'sqlite:///minimal_app.sqlite'  # Use Sqlite file db
     CSRF_ENABLED = True
-    USER_ENABLE_EMAIL = False
+
+    # Configure Flask-User
+    USER_ENABLE_EMAIL = False                   # Disable emails for now
 
 # Setup Flask and read config from ConfigClass defined above
 app = Flask(__name__)

@@ -21,12 +21,11 @@ class ConfigClass(object):
     MAIL_DEFAULT_SENDER = '"Sender" <noreply@example.com>'
 
     # Configure Flask-User
-    USER_ENABLE_USERNAME        = True              # Register and Login with username
-    USER_ENABLE_EMAIL           = True              # Register with email
-    USER_ENABLE_CONFIRM_EMAIL   = True              # Require email confirmation
-    USER_ENABLE_CHANGE_USERNAME = True
-    USER_ENABLE_CHANGE_PASSWORD = True
-    USER_ENABLE_FORGOT_PASSWORD = True
+    USER_PRODUCT_NAME    = "ProductName"            # Used by email templates
+    USER_ENABLE_USERNAME = True                     # Register and Login with username
+    USER_ENABLE_EMAIL    = True                     # Register and Login with email
+    USER_AFTER_LOGIN_ENDPOINT   = 'profile_page'
+    USER_AFTER_CONFIRM_ENDPOINT = 'profile_page'
 
 def create_app(test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
@@ -94,14 +93,18 @@ def create_app(test_config=None):                   # For automated tests
     # The '/' page is accessible to anyone
     @app.route('/')
     def home_page():
-        if current_user.is_authenticated():
-            return profile_page()
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
             <h2>{%trans%}Home Page{%endtrans%}</h2>
-            <p> <a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a> or
-                <a href="{{ url_for('user.register') }}">{%trans%}Register{%endtrans%}</a></p>
+            <p> <a href="{{ url_for('profile_page') }}">{%trans%}Profile Page{%endtrans%}</a> (requires sign-in)</p>
+            <p> <a href="{{ url_for('special_page') }}">{%trans%}Special Page{%endtrans%}</a> (requires username 'user007' with password 'Password1')</p>
+            {% if current_user.is_authenticated() %}
+                <p> <a href="{{ url_for('user.logout') }}">{%trans%}Logout{%endtrans%}</a></p>
+            {% else %}
+                <p> <a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a> or
+                    <a href="{{ url_for('user.register') }}">{%trans%}Register{%endtrans%}</a></p>
+            {% endif %}
             {% endblock %}
             """)
 
@@ -115,6 +118,8 @@ def create_app(test_config=None):                   # For automated tests
             <h2>{%trans%}Profile Page{%endtrans%}</h2>
             <p> {%trans%}Hello{%endtrans%}
                 {{ current_user.username or current_user.email }},</p>
+
+            <p> <a href="{{ url_for('home_page') }}">{%trans%}Home Page{%endtrans%}</a></p>
             <p> <a href="{{ url_for('user.change_username') }}">
                 {%trans%}Change username{%endtrans%}</a></p>
             <p> <a href="{{ url_for('user.change_password') }}">
