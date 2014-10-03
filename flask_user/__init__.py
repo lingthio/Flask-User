@@ -23,7 +23,7 @@ from flask_login import current_user
 # Enable the following: from flask.ext.user import login_required, roles_required
 from .decorators import *
 
-__version__ = '0.5.3'
+__version__ = '0.5.4'
 
 def _flask_user_context_processor():
     """ Make 'user_manager' available to Jinja2 templates"""
