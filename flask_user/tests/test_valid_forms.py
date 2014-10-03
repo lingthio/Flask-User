@@ -120,7 +120,7 @@ def check_valid_register_form(um, client, db):
     User = um.db_adapter.UserClass
 
     # Define defaults
-    username = 'user1'
+    username = 'user2'
     email = username+'@example.com'
     password = 'Password1'
 
@@ -188,7 +188,7 @@ def check_valid_login_form(um, client):
     print("test_valid_login_form")
 
     # Define defaults
-    username = 'user1'
+    username = 'user2'
     email = username+'@example.com'
     password = 'Password1'
 

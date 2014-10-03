@@ -1,5 +1,4 @@
 from flask import Flask, render_template_string, request
-from flask.ext.babel import Babel
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
@@ -9,7 +8,7 @@ from flask.ext.user import roles_required
 class ConfigClass(object):
     # Configure Flask
     SECRET_KEY = 'THIS IS AN INSECURE SECRET'                        # Change this for production!!!
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///roles_required_app.sqlite'  # Use Sqlite file db
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///tst_app.sqlite'  # Use Sqlite file db
     CSRF_ENABLED = True
 
     # Configure Flask-Mail -- Required for Confirm email and Forgot password features
@@ -42,13 +41,8 @@ def create_app(test_config=None):                   # For automated tests
         app.config.update(test_config)
 
     # Initialize Flask extensions
-    babel = Babel(app)                              # Initialize Flask-Babel
     db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
     mail = Mail(app)                                # Initialize Flask-Mail
-
-    @babel.localeselector
-    def get_locale():
-        return request.accept_languages.best_match(['en', 'nl'])
 
     # Define the User-Roles pivot table
     user_roles = db.Table('user_roles',
