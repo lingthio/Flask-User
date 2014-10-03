@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-10-01 17:36-0700\n"
+"POT-Creation-Date: 2014-10-03 10:53-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -150,7 +150,7 @@ msgid "Password and Retype Password did not match"
 msgstr ""
 
 #: flask_user/forms.py:234
-#: flask_user/templates/flask_user/login_or_register.html:36
+#: flask_user/templates/flask_user/login_or_register.html:39
 #: flask_user/templates/flask_user/register.html:5
 msgid "Register"
 msgstr ""
@@ -159,15 +159,15 @@ msgstr ""
 msgid "Resend email confirmation email"
 msgstr ""
 
-#: flask_user/translations.py:66
+#: flask_user/translations.py:82
 msgid "Home Page"
 msgstr ""
 
-#: flask_user/translations.py:67
+#: flask_user/translations.py:83
 msgid "Profile Page"
 msgstr ""
 
-#: flask_user/translations.py:68
+#: flask_user/translations.py:84
 msgid "Special Page"
 msgstr ""
 
@@ -200,9 +200,10 @@ msgid ""
 msgstr ""
 
 #: flask_user/views.py:268
+#, python-format
 msgid ""
 "Your email address has not yet been confirmed. Check your email Inbox and"
-" Spam folders for the confirmation email or <a href=\"\">Re-send "
+" Spam folders for the confirmation email or <a href=\"%(url)s\">Re-send "
 "confirmation email</a>."
 msgstr ""
 
@@ -214,42 +215,42 @@ msgstr ""
 msgid "You have signed out successfully."
 msgstr ""
 
-#: flask_user/views.py:446
+#: flask_user/views.py:455
 msgid "Your reset password token has expired."
 msgstr ""
 
-#: flask_user/views.py:450 flask_user/views.py:461
+#: flask_user/views.py:459 flask_user/views.py:470
 msgid "Your reset password token is invalid."
 msgstr ""
 
-#: flask_user/views.py:483
+#: flask_user/views.py:492
 msgid ""
 "Your password has been reset successfully. Please sign in with your new "
 "password"
 msgstr ""
 
-#: flask_user/views.py:535
+#: flask_user/views.py:517
+#, python-format
+msgid "You must be signed in to access '%(url)s'."
+msgstr ""
+
+#: flask_user/views.py:530
+#, python-format
+msgid "You do not have permission to access '%(url)s'."
+msgstr ""
+
+#: flask_user/views.py:553 flask_user/views.py:574
 #, python-format
 msgid ""
 "A confirmation email has been sent to %(email)s with instructions to "
 "complete your registration."
 msgstr ""
 
-#: flask_user/views.py:537
+#: flask_user/views.py:555
 msgid "You have registered successfully."
 msgstr ""
 
-#: flask_user/views.py:544
-#, python-format
-msgid "You must be signed in to access '%(url)s'."
-msgstr ""
-
-#: flask_user/views.py:557
-#, python-format
-msgid "You do not have permission to access '%(url)s'."
-msgstr ""
-
-#: flask_user/views.py:572
+#: flask_user/views.py:587
 msgid "You have signed in successfully."
 msgstr ""
 
@@ -262,7 +263,7 @@ msgid "New here? Register."
 msgstr ""
 
 #: flask_user/templates/flask_user/login.html:44
-#: flask_user/templates/flask_user/login_or_register.html:29
+#: flask_user/templates/flask_user/login_or_register.html:32
 msgid "Forgot your Password?"
 msgstr ""
 

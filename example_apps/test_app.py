@@ -1,5 +1,5 @@
 from flask import Flask, redirect, render_template_string, request, url_for
-#from flask.ext.babel import Babel
+from flask.ext.babel import Babel
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.user import current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
@@ -44,14 +44,16 @@ def create_app(test_config=None):                   # For automated tests
         app.config.update(test_config)
 
     # Initialize Flask extensions
-    # babel = Babel(app)                              # Initialize Flask-Babel
+    babel = Babel(app)                              # Initialize Flask-Babel
     db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
     mail = Mail(app)                                # Initialize Flask-Mail
 
-    # @babel.localeselector
-    # def get_locale():
-    #     translations = [str(translation) for translation in babel.list_translations()]
-    #     return request.accept_languages.best_match(translations)
+    @babel.localeselector
+    def get_locale():
+        translations = [str(translation) for translation in babel.list_translations()]
+        language = request.accept_languages.best_match(translations)
+        print('translations=',repr(translations), 'language=', repr(language))
+        return language
 
     # Define User model. Make sure to add flask.ext.user UserMixin!!
     class User(db.Model, UserMixin):

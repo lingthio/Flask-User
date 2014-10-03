@@ -124,6 +124,10 @@ class UserManager(object):
                     translations.gettext,
                     translations.ngettext,
                     newstyle=True)
+        else:
+            app.jinja_env.add_extension('jinja2.ext.i18n')
+            app.jinja_env.install_null_translations()
+
 
         # Create password_crypt_context if needed
         if not self.password_crypt_context:

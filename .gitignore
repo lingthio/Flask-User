@@ -42,3 +42,4 @@ example_apps/translations/
 
 # Private files
 example_apps/local_settings.py
+example_apps/translations/
