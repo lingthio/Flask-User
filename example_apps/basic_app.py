@@ -68,7 +68,7 @@ def create_app(test_config=None):                   # For automated tests
     db_adapter = SQLAlchemyAdapter(db,  User)       # Select database adapter
     user_manager = UserManager(db_adapter, app)     # Init Flask-User and bind to app
 
-    # Display Login page or Profile page
+    # The Home page is accessible to anyone
     @app.route('/')
     def home_page():
         return render_template_string("""
@@ -91,7 +91,7 @@ def create_app(test_config=None):                   # For automated tests
         else:
             return redirect(url_for('user.login'))
 
-    # The '/profile' page requires a logged-in user
+# The Profile page requires a logged-in user
     @app.route('/profile')
     @login_required                                 # Use of @login_required decorator
     def profile_page():

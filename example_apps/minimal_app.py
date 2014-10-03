@@ -40,7 +40,7 @@ db.create_all()
 db_adapter = SQLAlchemyAdapter(db,  User)       # Select database adapter
 user_manager = UserManager(db_adapter, app)     # Init Flask-User and bind to app
 
-# The '/' page is accessible to anyone
+# The Home page is accessible to anyone
 @app.route('/')
 def home_page():
     if current_user.is_authenticated():
@@ -54,7 +54,7 @@ def home_page():
         {% endblock %}
         """)
 
-# The '/profile' page requires a logged-in user
+# The Profile page requires a logged-in user
 @app.route('/profile')
 @login_required                                 # Use of @login_required decorator
 def profile_page():

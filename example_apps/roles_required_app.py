@@ -90,7 +90,7 @@ def create_app(test_config=None):                   # For automated tests
         db.session.add(user1)
         db.session.commit()
 
-    # The '/' page is accessible to anyone
+    # The Home page is accessible to anyone
     @app.route('/')
     def home_page():
         return render_template_string("""
@@ -108,7 +108,7 @@ def create_app(test_config=None):                   # For automated tests
             {% endblock %}
             """)
 
-    # The '/profile' page requires a logged-in user
+    # The Profile page requires a logged-in user
     @app.route('/profile')
     @login_required                                 # Use of @login_required decorator
     def profile_page():
@@ -129,7 +129,7 @@ def create_app(test_config=None):                   # For automated tests
             {% endblock %}
             """)
 
-    # The '/special' page requires a user that has the 'special' AND ('sauce' OR 'agent') role.
+    # The Special page requires a user that has the 'special' AND ('sauce' OR 'agent') role.
     @app.route('/special')
     @roles_required('secret', ['sauce', 'agent'])   # Use of @roles_required decorator
     def special_page():
