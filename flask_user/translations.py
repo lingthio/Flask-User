@@ -15,14 +15,14 @@ def get_translations():
         return None
 
     # If context exists and contains a cashed value, return cached value
-    translations = getattr(ctx, 'flask_user_translations', None)
-    if translations:
-        return translations
+    if hasattr(ctx, 'flask_user_translations'):
+        return ctx.flask_user_translations
 
     # If App has not initialized Flask-Babel: return None
     app_has_initalized_flask_babel = 'babel' in current_app.extensions
     if not app_has_initalized_flask_babel:
-        return None
+        ctx.flask_user_translations = None
+        return ctx.flask_user_translations
 
     # Prepare search properties
     import os
@@ -36,17 +36,14 @@ def get_translations():
     app_dir = os.path.join(current_app.root_path, 'translations')
     filename = python_gettext.find(domain, app_dir, languages)
     if filename:
-        translations = support.Translations.load(app_dir, locales, domain=domain)
+        ctx.flask_user_translations = support.Translations.load(app_dir, locales, domain=domain)
 
     # See if translations exists in Flask-User dir
     else:
         flask_user_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'translations')
-        translations = support.Translations.load(flask_user_dir, locales, domain=domain)
+        ctx.flask_user_translations = support.Translations.load(flask_user_dir, locales, domain=domain)
 
-    # Cache result in context
-    ctx.flask_user_translations = translations
-
-    return translations
+    return ctx.flask_user_translations
 
 def gettext(string, **variables):
     """ Translate specified string."""
