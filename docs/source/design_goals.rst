@@ -2,16 +2,6 @@
 Design Goals
 ============
 
-* `Reliable`_
-* `Secure`_
-* `Ready to use`_
-* `Fully Customizable`_
-* `Nice Feature Set`_
-* Well documented
-* Data model agnostic (provide your own User model)
-* Database ORM abstraction (SQLAlchemyAdapter provided)
-* Internationalization Ready
-
 Reliable
 --------
 
@@ -22,45 +12,39 @@ to consistently achieve code coverage of over 95% without fudging.
 Secure
 ------
 
-Passwords are hashed using ``bcrypt`` by default and can be customized to any
-set of hashing algorithms that ``passlib`` supports.
+Passwords are hashed using **bcrypt** by default and can be customized to any
+set of hashing algorithms that **passlib** supports.
+Tokens are encrypted using **AES** and signed using the **itsdangerous** package.
 
-Tokens are encrypted using ``AES`` and signed using the ``itsdangerous`` package.
-
+Fully Customizable
+------------------
+We offer as much customization as possible through the use of configuration settings.
+The remainder is customizable by writing and configuring your own custom functions.
+See :doc:`customization`.
 
 Ready to use
 ------------
 Installing is as easy as: ``pip install flask-user``. See :doc:`installation`.
 
-The :doc:`recipes_minimal_app` requires only eleven lines of additional code.
+Through the use of **sensible defaults**, our fully customizable package
+is also ready-to-use.
+The :doc:`recipes_minimal_app` requires only eleven lines of additional code
+and all the default email templates could be used in production as-is.
 
-Fully Customizable
-------------------
-* Emails
-* Features
-* Field labels
-* Field validators
-* Field validation messages
-* Flash messages
-* Forms
-* Form templates
-* Password and Username validators
-* Password hashing algorithms
-* Token generator
-* URLs
-* View functions
+Great Feature Set
+-----------------
 
-See :doc:`customization`
-
-Nice Feature Set
-----------------
-
-* Register with username or email or both
-* Confirm email, Login, Remember me, Logout
+* Login with username or email or both, Remember me, Logout
+* Register, Confirm email, Resend confirmation email
 * Change username, Change password, Forgot password
 * Secure password hashing and token generation
 * Role-based Authorization -- See :doc:`authorization`
 * Internationalization -- See :doc:`internationalization`
-* Fully customizable -- See :doc:`customization`
 * Event notification -- See :doc:`notification`.
 
+Also
+----
+* Well documented
+* Data model agnostic (provide your own User model)
+* Database ORM abstraction (SQLAlchemyAdapter provided)
+* Internationalization Ready

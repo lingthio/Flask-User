@@ -1,4 +1,4 @@
-Flask-User
+Flask-User |release|
 ==========
 
 .. image:: https://pypip.in/v/Flask-User/badge.png
@@ -24,36 +24,43 @@ Flask-User
 Customizable User Account Management for Flask
 ----------------------------------------------
 
-Many web applications require User Account Management features such as **Register**, **Confirm email**,
-**Login**, **Change username**, **Change password** and **Forgot password**.
+| So you're writing a Flask web application and would like to authenticate your users.
+| You start with a simple **Login** page, but soon enough you need to handle:
 
-Some also require **Role-based Authorization** and **Internationalization**.
+* **Registrations** and **Email Confirmations**
+* **Change Usernames**, **Change Passwords**, and **Forgotten Passwords**
 
-Wouldn't it be nice to have a package that would offer these features **out-of-the-box**
-while retaining **full customization control** over the workflow and presentation of this process?
+And wouldn't it be nice to also offer:
 
-Flask-User aims to provide such a ready-to-use **AND** fully customizable solution:
-
-* **Reliable**
-* **Secure**
-* **Ready to use**
-* **Fully customizable**
 * **Role-based Authorization**
+* **Remember-me cookies**
+* **Multiple emails per user**
 * **Internationalization**
-* **Well documented**
-* Tested on Python 2.6, 2.7, 3.3 and 3.4
 
-Demo
-----
-| `Flask-User Demo <https://flask-user-demo.herokuapp.com/>`_
-| (If you're the first visitor in the last hour, this may take a few seconds to load)
+| Flask-User offers these user features (and more) out-of-the-box
+| while also honoring the following developer needs:
+
+* **Reliable** (Code coverage of over 95%)
+* **Secure** (Built on top of widely deployed Flask-Login)
+* **Ready to use** (Through sensible defaults)
+* **Largely configurable** (Through configuration settings)
+* **Fully customizable** (Through customizable functions and email templates)
+* **Well documented**
+* **Tested on Python 2.6, 2.7, 3.3 and 3.4**
 
 Status
 ------
 
-Though v0.4 is quite stable, it is a Beta release and the API is subject to small changes.
-We appreciate it if you would enter issues and
-enhancement requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
+| Flask-User |release| is quite stable and is used in production environments.
+| It is marked as a Beta release because the API is subject to small changes.
+| We appreciate it if you would enter issues and
+  enhancement requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
+
+Demo
+----
+The `Flask-User Demo <https://flask-user-demo.herokuapp.com/>`_ showcases Flask-User.
+To protect against spam mis-use, all email features have been disabled.
+(If you're the first visitor in the last hour, it may take a few seconds for Heroku to start this service)
 
 Documentation
 -------------
