@@ -55,8 +55,8 @@ See :doc:`customization`
 Nice Feature Set
 ----------------
 
-* Register with username or email,
-* Confirm email, Login, Logout
+* Register with username or email or both
+* Confirm email, Login, Remember me, Logout
 * Change username, Change password, Forgot password
 * Secure password hashing and token generation
 * Role-based Authorization -- See :doc:`authorization`

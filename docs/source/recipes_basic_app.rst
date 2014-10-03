@@ -25,7 +25,7 @@ Highlighted code shows what was added to the Minimal App.
 .. literalinclude:: includes/basic_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 3, 14-30, 48, 61-63
+   :emphasize-lines: 3, 14-29, 47, 60-62
 
 Run the Basic App
 -----------------

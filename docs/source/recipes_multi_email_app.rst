@@ -34,7 +34,7 @@ Highlighted code shows what was added to the Basic App.
 .. literalinclude:: includes/multi_email_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 61-62, 65-72, 79, 104-105
+   :emphasize-lines: 60-61, 64-71, 78, 103-104
 
 Run the Multi Email App
 -----------------------
