@@ -44,10 +44,9 @@ def create_app(test_config=None):                   # For automated tests
         app.config.update(test_config)
 
     # Initialize Flask extensions
-    babel = Babel(app)                              # Initialize Flask-Babel
     db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
     mail = Mail(app)                                # Initialize Flask-Mail
-
+    babel = Babel(app)                              # Initialize Flask-Babel
     @babel.localeselector
     def get_locale():
         translations = [str(translation) for translation in babel.list_translations()]
