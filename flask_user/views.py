@@ -47,7 +47,8 @@ def confirm_email(token):
     else:
         user_email = None
         user = user_manager.get_user_by_id(object_id)
-        user.confirmed_at = datetime.utcnow()
+        if user:
+            user.confirmed_at = datetime.utcnow()
 
     if user:
         user.active = True
