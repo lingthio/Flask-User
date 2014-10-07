@@ -92,22 +92,22 @@ binding a User to one or more Roles.
 
 Here's a SQLAlchemy example::
 
-    # Define the User-Roles pivot table
-    user_roles = db.Table('user_roles',
-        db.Column('id', db.Integer(), primary_key=True),
-        db.Column('user_id', db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE')),
-        db.Column('role_id', db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE')))
+    # Define User model
+    class User(db.Model, UserMixin):
+        id = db.Column(db.Integer, primary_key=True)
+        username = db.Column(db.String(50), nullable=True, unique=True)
+        ...
 
     # Define Role model
     class Role(db.Model):
         id = db.Column(db.Integer(), primary_key=True)
         name = db.Column(db.String(50), unique=True)
 
-    # Define User model
-    class User(db.Model, UserMixin):
-        id = db.Column(db.Integer, primary_key=True)
-        username = db.Column(db.String(50), nullable=True, unique=True)
-        ...
+    # Define UserRoles model
+    class UserRoles(db.Model):
+        id = db.Column(db.Integer(), primary_key=True)
+        user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+        role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
 
     # Create 'user007' user with 'secret' and 'agent' roles
     role1 = Role(name='secret')

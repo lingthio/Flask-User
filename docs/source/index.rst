@@ -87,6 +87,7 @@ Feeling generous? `Tip me on Gittip <https://www.gittip.com/lingthio/>`_
 
 Revision History
 ----------------
+* v0.5.4 Decoupled Flask-User from Flask-Babel and speaklater
 * v0.5.3
 
   * Added remember-me feature.

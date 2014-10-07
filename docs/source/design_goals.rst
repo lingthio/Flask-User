@@ -29,14 +29,14 @@ Installing is as easy as: ``pip install flask-user``. See :doc:`installation`.
 Through the use of **sensible defaults**, our fully customizable package
 is also ready-to-use.
 The :doc:`recipes_minimal_app` requires only eleven lines of additional code
-and all the default email templates could be used in production as-is.
+and all the default web forms and email templates could be used in production as-is.
 
 Great Feature Set
 -----------------
 
 * Login with username or email or both, Remember me, Logout
 * Register, Confirm email, Resend confirmation email
-* Change username, Change password, Forgot password
+* Forgot password, Change username, Change password
 * Secure password hashing and token generation
 * Role-based Authorization -- See :doc:`authorization`
 * Internationalization -- See :doc:`internationalization`
@@ -47,4 +47,3 @@ Also
 * Well documented
 * Data model agnostic (provide your own User model)
 * Database ORM abstraction (SQLAlchemyAdapter provided)
-* Internationalization Ready
