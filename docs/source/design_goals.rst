@@ -45,5 +45,4 @@ Great Feature Set
 Also
 ----
 * Well documented
-* Data model agnostic (provide your own User model)
 * Database ORM abstraction (SQLAlchemyAdapter provided)

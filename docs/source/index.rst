@@ -68,6 +68,7 @@ Documentation
     :maxdepth: 2
 
     design_goals
+    limitations
     installation
     recipes
     authorization

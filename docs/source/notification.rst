@@ -9,19 +9,20 @@ Flask-User defines the following events:
 
 .. include:: includes/signals.txt
 
-Flask-Util makes use of Flask Signals, which in turn makes use of the Blinker signals.
 
 See the http://flask.pocoo.org/docs/signals/
 
-Installing Blinker
+REQUIRED: Installing Blinker
 ------------------
-The ``blinker`` package is required to receive event notifications.
+NB: Flask-User relies on Flask signals, which relies on the 'blinker' package.
+Event notification WILL NOT WORK without first installing the 'blinker' package.
 
 ::
 
     pip install blinker
 
 See http://pythonhosted.org/blinker/
+
 
 Subscribing to Signals
 ----------------------
@@ -39,3 +40,8 @@ An application can receive event notifications by using the event signal's ``con
 | - ``user``  points to the user that is associated with this event.
 
 See the `Subscribing to signals <http://flask.pocoo.org/docs/signals/#subscribing-to-signals>`_
+
+Troubleshooting
+--------
+If the code looks right, but the tracking functions are not called, make sure to check
+to see if the 'blinker' package has been installed using ``pip freeze``.
