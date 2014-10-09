@@ -1,12 +1,52 @@
 Internationalization
 ====================
-Flask-User uses the `Flask-Babel <http://pythonhosted.org/Flask-Babel/>`_ package to
-manage translatable strings. It allows Flask-User to:
+Flask-User allows the developer to translate their user account management forms
+into other languages. This allows us to:
 
 * Customize built-in English text to custom English text
 * Translate built-in English text into another language
 
-Flask-User ships with the built-in English text, and a Dutch translation.
+Flask-User ships with the English text, and a Dutch translation.
+
+
+REQUIRED: Installing Flask-Babel
+--------
+Flask-User relies on the Flask-Babel package to translate the account management forms.
+Without Flask-Babel installed, these forms WILL NOT BE translated.
+
+Install Flask-Babel with
+
+::
+
+    pip install Flask-Babel
+
+
+REQUIRED: Initializing Flask-Babel
+--------
+
+Flask-Babel must be initialized just after the Flask application has been initialized
+and after the application configuration has been read:
+
+::
+
+    from flask.ext.babel import Babel
+
+    ...
+
+    app = Flask(__name__)
+    app.config.from_object('app.config.settings')
+
+    ...
+
+    # Initialize Flask-Babel
+    babel = Babel(app)
+
+    # Use the browser's language preferences to select an available translation
+    @babel.localeselector
+    def get_locale():
+        translations = [str(translation) for translation in babel.list_translations()]
+        return request.accept_languages.best_match(translations)
+
 
 How Flask-Babel works
 ---------------------
@@ -156,4 +196,13 @@ Make sure to prioritize the Spanish language in your browser settings.
 ``.mo`` files are read when your web server starts, so make sure to restart your web server.
 
 Point your browser to your app and your translated messages should appear.
+
+
+Troubleshooting
+--------
+If the code looks right, but the account management forms are not being translated:
+
+* Check to see if the 'Flask-Babel' package has been installed (try using ``pip freeze``).
+* Check to see if the browser has been configured to prefer the language you are testing.
+* Check to see if the 'translations/' directory is in the right place.
 

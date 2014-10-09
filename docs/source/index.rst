@@ -75,7 +75,7 @@ Documentation
     base_templates
     customization
     internationalization
-    notification
+    event_notifications
     faq
     api
 

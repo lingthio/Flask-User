@@ -1,5 +1,5 @@
 ==================
-Event Notification
+Event Notifications
 ==================
 
 Flask Applications that want to be kept informed about certain actions that took place
@@ -27,7 +27,8 @@ See http://pythonhosted.org/blinker/
 Subscribing to Signals
 ----------------------
 
-An application can receive event notifications by using the event signal's ``connect_via()`` decorator::
+AFTER BLINKER HAS BEEN INSTALLED, An application can receive event notifications
+by using the event signal's ``connect_via()`` decorator::
 
     from flask.ext.user.signals import user_logged_in
 
@@ -39,9 +40,9 @@ An application can receive event notifications by using the event signal's ``con
 | - ``sender``  points to the app, and
 | - ``user``  points to the user that is associated with this event.
 
-See the `Subscribing to signals <http://flask.pocoo.org/docs/signals/#subscribing-to-signals>`_
+See `Subscribing to signals <http://flask.pocoo.org/docs/signals/#subscribing-to-signals>`_
 
 Troubleshooting
 --------
 If the code looks right, but the tracking functions are not called, make sure to check
-to see if the 'blinker' package has been installed using ``pip freeze``.
+to see if the 'blinker' package has been installed (try using ``pip freeze``).
