@@ -1,7 +1,7 @@
 ===============
 Multi Email App
 ===============
-| The Multi Email App builds on the features of :doc:`recipes_basic_app`:
+| The Multi Email App builds on the features of :doc:`basic_app`:
 | - **Internationalization**
 | - **Login**, **Change password** and **Logout**
 | - **Register with Username and Email**, **Change username**
@@ -14,7 +14,7 @@ Multi Email App
 | This app requires appropriate SMTP configuration.
 
 Create multi_email_app.py
--------------------
+-------------------------
 
 Create ~/dev/example/multi_email_app.py with the content below.
 

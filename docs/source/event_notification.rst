@@ -1,5 +1,5 @@
 ==================
-Event Notifications
+Event Notification
 ==================
 
 Flask Applications that want to be kept informed about certain actions that took place
@@ -13,7 +13,7 @@ Flask-User defines the following events:
 See the http://flask.pocoo.org/docs/signals/
 
 REQUIRED: Installing Blinker
-------------------
+----------------------------
 NB: Flask-User relies on Flask signals, which relies on the 'blinker' package.
 Event notification WILL NOT WORK without first installing the 'blinker' package.
 
@@ -43,6 +43,6 @@ by using the event signal's ``connect_via()`` decorator::
 See `Subscribing to signals <http://flask.pocoo.org/docs/signals/#subscribing-to-signals>`_
 
 Troubleshooting
---------
+---------------
 If the code looks right, but the tracking functions are not called, make sure to check
 to see if the 'blinker' package has been installed (try using ``pip freeze``).

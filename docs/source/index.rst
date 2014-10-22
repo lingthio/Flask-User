@@ -56,11 +56,25 @@ Status
 | We appreciate it if you would enter issues and
   enhancement requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
 
+
 Demo
 ----
 The `Flask-User Demo <https://flask-user-demo.herokuapp.com/>`_ showcases Flask-User.
 To protect against spam mis-use, all email features have been disabled.
 (If you're the first visitor in the last hour, it may take a few seconds for Heroku to start this service)
+
+
+Contact Information
+-------------------
+Ling Thio - ling.thio [at] gmail.com
+
+Feeling generous? `Tip me on Gittip <https://www.gittip.com/lingthio/>`_
+
+
+Up Next
+-------
+:doc:`installation`
+
 
 Documentation
 -------------
@@ -70,21 +84,18 @@ Documentation
     design_goals
     limitations
     installation
-    recipes
+    basic_app
+    flask_user_starter_app
     authorization
+    roles_required_app
+    recipes
     base_templates
     customization
     internationalization
-    event_notifications
+    event_notification
     faq
     api
 
-
-Contact Information
--------------------
-Ling Thio - ling.thio [at] gmail.com
-
-Feeling generous? `Tip me on Gittip <https://www.gittip.com/lingthio/>`_
 
 Revision History
 ----------------

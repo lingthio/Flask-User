@@ -1,7 +1,7 @@
 ================
 User Profile App
 ================
-| The User Profile App builds on the features of :doc:`recipes_basic_app`:
+| The User Profile App builds on the features of :doc:`basic_app`:
 | - **Internationalization**
 | - **Login**, **Change password** and **Logout**
 | - **Register with Username and Email**, **Change username**

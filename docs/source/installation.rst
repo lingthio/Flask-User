@@ -39,3 +39,7 @@ Optional requirements for Internationalization:
 - Flask-Babel 0.9+
 - speaklater 1.3+
 
+Up Next
+-------
+:doc:`basic_app`
+

@@ -14,7 +14,9 @@ Secure
 
 Passwords are hashed using **bcrypt** by default and can be customized to any
 set of hashing algorithms that **passlib** supports.
-Tokens are encrypted using **AES** and signed using the **itsdangerous** package.
+
+Tokens are encrypted using **AES**, signed using the **itsdangerous** package,
+and expire after a configurable period of time.
 
 Fully Customizable
 ------------------
@@ -28,7 +30,7 @@ Installing is as easy as: ``pip install flask-user``. See :doc:`installation`.
 
 Through the use of **sensible defaults**, our fully customizable package
 is also ready-to-use.
-The :doc:`recipes_minimal_app` requires only eleven lines of additional code
+The :doc:`basic_app` requires only a dozen lines of additional code
 and all the default web forms and email templates could be used in production as-is.
 
 Great Feature Set
@@ -40,7 +42,7 @@ Great Feature Set
 * Secure password hashing and token generation
 * Role-based Authorization -- See :doc:`authorization`
 * Internationalization -- See :doc:`internationalization`
-* Event notification -- See :doc:`notification`.
+* Event notification -- See :doc:`event_notification`
 
 Also
 ----

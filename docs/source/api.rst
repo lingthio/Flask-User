@@ -129,7 +129,7 @@ Typical use:
             register_form=my_register_form,
             register_view_function=my_register_view_function)
 
-Work in progress. See :doc:`recipes_basic_app` for now.
+Work in progress. See :doc:`basic_app` for now.
 
 init_app()
 ~~~~~~~~~~
@@ -146,7 +146,7 @@ typical use::
         db.init_app(app)
         user_manager.init_app(app)
 
-Work in progress. See :doc:`recipes_basic_app` for now.
+Work in progress. See :doc:`basic_app` for now.
 
 hash_password()
 ~~~~~~~~~~~~~~~
