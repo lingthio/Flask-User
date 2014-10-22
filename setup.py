@@ -1,21 +1,15 @@
 """
+Flask-User
+==========
 
 .. image:: https://pypip.in/v/Flask-User/badge.png
     :target: https://pypi.python.org/pypi/Flask-User
 
-.. comment .. image:: https://travis-ci.org/lingthio/Flask-User.png?branch=master
-.. image:: /images/build_passing.png
-    :target: https://travis-ci.org/lingthio/Flask-User
-
 .. image:: https://pypip.in/d/Flask-User/badge.png
     :target: https://pypi.python.org/pypi/Flask-User
 
-.. comment .. image:: https://pypip.in/license/Flask-User/badge.png
-.. image:: /images/BSD_license.png
+.. image:: https://pypip.in/license/Flask-User/badge.png
     :target: https://pypi.python.org/pypi/Flask-User
-
-.. comment .. image:: https://coveralls.io/repos/lingthio/Flask-User/badge.png?branch=master
-.. comment     :target: https://coveralls.io/r/lingthio/Flask-User?branch=master
 
 Customizable User Account Management for Flask
 ----------------------------------------------
@@ -44,17 +38,24 @@ And wouldn't it be nice to also offer:
 * **Well documented**
 * **Tested on Python 2.6, 2.7, 3.3 and 3.4**
 
+Status
+------
+
+| Flask-User v0.5 is quite stable and is used in production environments.
+| It is marked as a Beta release because the API is subject to small changes.
+| We appreciate it if you would enter issues and
+  enhancement requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
+
+
+Demo
+----
+The `Flask-User Demo <https://flask-user-demo.herokuapp.com/>`_ showcases Flask-User.
+To protect against spam mis-use, all email features have been disabled.
+(If you're the first visitor in the last hour, it may take a few seconds for Heroku to start this service)
+
 Documentation
 -------------
 `Flask-User Documentation <https://pythonhosted.org/Flask-User/>`_
-
-Demo
-----
-`Flask-User Status <https://pythonhosted.org/Flask-User/index.html#status>`_
-
-Demo
-----
-`Flask-User Demo <https://pythonhosted.org/Flask-User/index.html#demo>`_
 
 Revision History
 ----------------
@@ -79,7 +80,6 @@ Alternative Flask extensions
 ----------------------------
 * `Flask-Login <https://flask-login.readthedocs.org/en/latest/>`_
 * `Flask-Security <https://pythonhosted.org/Flask-Security/>`_
-
 """
 
 from __future__ import print_function
