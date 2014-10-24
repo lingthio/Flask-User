@@ -284,8 +284,18 @@ class UserMixin(LoginUserMixin):
             Translates to:
                 User has role 'a' AND (role 'b' OR role 'c') AND role 'd'"""
 
+        # Allow developers to attach the Roles to the User or the UserProfile object
+        if hasattr(self, 'roles'):
+            roles = self.roles
+        else:
+            if hasattr(self, 'user_profile') and hasattr(self.user_profile, 'roles'):
+                roles = self.user_profile.roles
+            else:
+                roles = None
+        if not roles: return False
+
         # Translates a list of role objects to a list of role_names
-        user_roles = [role.name for role in self.roles]
+        user_roles = [role.name for role in roles]
 
         # has_role() accepts a list of requirements
         for requirement in requirements:
