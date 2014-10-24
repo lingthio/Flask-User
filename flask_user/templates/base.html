@@ -4,13 +4,17 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Flask-User Example App</title>
+    <title>MyApp</title>
 
     <!-- Bootstrap -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- In-lining styles to avoid needing a separate .css file -->
     <style>
+        hr { border-color: #cccccc; margin: 0; }
+        .no-margins { margin: 0px; }
+        .with-margins { margin: 10px; }
         .col-centered { float: none; margin: 0 auto; }
-        hr { border-color: #cccccc; }
     </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -20,44 +24,62 @@
       <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
     <![endif]-->
   </head>
-  <body>
 
+
+<body>
     {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-8 col-md-7 col-lg-6 col-centered">
-                <h1><a href="/">{% block title %}Flask-User - {% if not user_manager.enable_email %}Minimal{% else %}Example{% endif %} App{% endblock %}</a></h1>
-                The <a href="http://pythonhosted.org/Flask-User/recipes_minimal_app.html" target="_blank">Minimal App</a> only prompts for a Username
-                    and disables Email related features.<br/>
-                The <a href="http://pythonhosted.org/Flask-User/recipes_basic_app.html" target="_blank">Basic App</a>
-                    and the  <a href="http://pythonhosted.org/Flask-User/recipes_roles_required_app.html" target="_blank">Roles Required App</a>
-                    prompts for Usernames and Email addresses and enables the 'Confirm Email' and 'Forgot Password' features.
-                <hr>
-                {% block flash_messages %}
-                    {%- with messages = get_flashed_messages(with_categories=true) -%}
-                        {% if messages %}
-                            {% for category, message in messages %}
-                                {% if category=='error' %}
-                                    {% set category='danger' %}
-                                {% endif %}
-                                <div class="alert alert-{{category}}">{{ message|safe }}</div>
-                            {% endfor %}
-                        {% endif %}
-                    {%- endwith %}
-                {% endblock %}
-
-                {% block content %}
-                {% endblock %}
-                <hr>
-                Copyright 2013 - SolidBuilds.com
-            </div>
+    <div id="header-div" class="clearfix with-margins">
+        <div class="pull-left"><a href="/"><h1 class="no-margins">MyApp</h1></a></div>
+        <div class="pull-right">
+            {% if current_user.is_authenticated() %}
+                <a href="{{ url_for('user.profile') }}">{{ current_user.username }}</a>
+                &nbsp; | &nbsp;
+                <a href="{{ url_for('user.logout') }}">Sign out</a>
+            {% else %}
+                <a href="{{ url_for('user.login') }}">Sign in</a>
+            {% endif %}
         </div>
+    </div>
+    {% block menu %}
+    <div id="menu-div" class="with-margins">
+        <a href="/">Home</a>
+        {% if current_user.is_authenticated() %}
+            &nbsp; | &nbsp; <a href="{{ url_for('user.profile') }}">User profile</a>
+        {% endif %}
+    </div>
+    {% endblock %}
+    <hr class="no-margins"/>
+
+    <div id="main-div" class="with-margins">
+    {# One-time system messages called Flash messages #}
+    {% block flash_messages %}
+        {%- with messages = get_flashed_messages(with_categories=true) -%}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category=='error' %}
+                        {% set category='danger' %}
+                    {% endif %}
+                    <div class="alert alert-{{category}}">{{ message|safe }}</div>
+                {% endfor %}
+            {% endif %}
+        {%- endwith %}
+    {% endblock %}
+
+    {% block main %}{% block content %}{% endblock %}{% endblock %}
+    </div>
+
+    <br/>
+    <hr class="no-margins"/>
+    <div id="footer-div" class="clearfix with-margins">
+        <div class="pull-left">MyApp v1.0</div>
+        <div class="pull-right">&copy; 2014 MyCorp</div>
     </div>
     {% endblock %}
 
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <!-- Bootstrap -->
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   </body>
 </html>

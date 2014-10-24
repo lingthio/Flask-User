@@ -82,7 +82,7 @@ def create_app(test_config=None):                   # For automated tests
     @app.route('/')
     def home_page():
         if current_user.is_authenticated():
-            return profile_page()
+            return user_profile_page()
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
@@ -92,9 +92,9 @@ def create_app(test_config=None):                   # For automated tests
             """)
 
     # The '/profile' page requires a logged-in user
-    @app.route('/profile')
+    @app.route('/user/profile')
     @login_required                                 # Use of @login_required decorator
-    def profile_page():
+    def user_profile_page():
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}

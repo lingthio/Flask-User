@@ -80,7 +80,7 @@ def send_confirm_email_email(user, user_email, confirm_email_link):
     subject, html_message, text_message = _render_email(
             user_manager.confirm_email_email_template,
             user=user,
-            product_name=user_manager.product_name,
+            app_name=user_manager.app_name,
             confirm_email_link=confirm_email_link)
 
     # Send email message using Flask-Mail
@@ -100,7 +100,7 @@ def send_forgot_password_email(user, user_email, reset_password_link):
     subject, html_message, text_message = _render_email(
             user_manager.forgot_password_email_template,
             user=user,
-            product_name=user_manager.product_name,
+            app_name=user_manager.app_name,
             reset_password_link=reset_password_link)
 
     # Send email message using Flask-Mail
@@ -120,7 +120,7 @@ def send_password_changed_email(user):
     subject, html_message, text_message = _render_email(
             user_manager.password_changed_email_template,
             user=user,
-            product_name=user_manager.product_name)
+            app_name=user_manager.app_name)
 
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
@@ -139,7 +139,7 @@ def send_registered_email(user, user_email, confirm_email_link):    # pragma: no
     subject, html_message, text_message = _render_email(
             user_manager.registered_email_template,
             user=user,
-            product_name=user_manager.product_name,
+            app_name=user_manager.app_name,
             confirm_email_link=confirm_email_link)
 
     # Send email message using Flask-Mail
@@ -159,7 +159,7 @@ def send_username_changed_email(user):  # pragma: no cover
     subject, html_message, text_message = _render_email(
             user_manager.username_changed_email_template,
             user=user,
-            product_name=user_manager.product_name)
+            app_name=user_manager.app_name)
 
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)

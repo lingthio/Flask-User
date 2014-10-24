@@ -1,3 +1,4 @@
+import os
 from flask import Flask, redirect, render_template_string, request, url_for
 from flask.ext.babel import Babel
 from flask.ext.mail import Mail
@@ -12,21 +13,21 @@ class ConfigClass(object):
     CSRF_ENABLED = True
 
     # Configure Flask-Mail -- Required for Confirm email and Forgot password features
-    MAIL_SERVER   = 'smtp.gmail.com'
-    MAIL_PORT     = 465
-    MAIL_USE_SSL  = True                            # Some servers use MAIL_USE_TLS=True instead
-    MAIL_USERNAME = 'email@example.com'
-    MAIL_PASSWORD = 'password'
-    MAIL_DEFAULT_SENDER = '"Sender" <noreply@example.com>'
+    MAIL_USERNAME       = os.getenv('MAIL_USERNAME', 'email@example.com')
+    MAIL_PASSWORD       = os.getenv('MAIL_PASSWORD', 'password')
+    MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER', '"Sender" <noreply@example.com>')
+    MAIL_SERVER         = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
+    MAIL_PORT           = int(os.getenv('MAIL_PORT', '465'))
+    MAIL_USE_SSL        = os.getenv('MAIL_USE_SSL', True)
 
     # Configure Flask-User
-    USER_PRODUCT_NAME           = "ProductName"     # Used by email templates
+    USER_APP_NAME               = "AppName"     # Used by email templates
     USER_ENABLE_USERNAME        = True              # Register and Login with username
     USER_ENABLE_EMAIL           = True              # Register and Login with email
     USER_LOGIN_TEMPLATE         = 'flask_user/login_or_register.html'
     USER_REGISTER_TEMPLATE      = 'flask_user/login_or_register.html'
-    USER_AFTER_LOGIN_ENDPOINT   = 'profile_page'
-    USER_AFTER_CONFIRM_ENDPOINT = 'profile_page'
+    USER_AFTER_LOGIN_ENDPOINT   = 'user_profile_page'
+    USER_AFTER_CONFIRM_ENDPOINT = 'user_profile_page'
 
     USER_ENABLE_CONFIRM_EMAIL = False
 
@@ -79,7 +80,7 @@ def create_app(test_config=None):                   # For automated tests
             {% block content %}
                 <h2>{%trans%}Home Page{%endtrans%}</h2>
                 {% if current_user.is_authenticated() %}
-                <p> <a href="{{ url_for('profile_page') }}">
+                <p> <a href="{{ url_for('user_profile_page') }}">
                     {%trans%}Profile Page{%endtrans%}</a></p>
                 <p> <a href="{{ url_for('user.logout') }}">
                     {%trans%}Sign out{%endtrans%}</a></p>
@@ -90,14 +91,14 @@ def create_app(test_config=None):                   # For automated tests
             {% endblock %}
             """)
         if current_user.is_authenticated():
-            return redirect(url_for('profile_page'))
+            return redirect(url_for('user_profile_page'))
         else:
             return redirect(url_for('user.login'))
 
 # The Profile page requires a logged-in user
-    @app.route('/profile')
+    @app.route('/user/profile')
     @login_required                                 # Use of @login_required decorator
-    def profile_page():
+    def user_profile_page():
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}

@@ -59,6 +59,7 @@ class UserManager(object):
                 reset_password_view_function = views.reset_password,
                 unauthenticated_view_function = views.unauthenticated,
                 unauthorized_view_function = views.unauthorized,
+                user_profile_view_function = views.user_profile,
                 # Misc
                 login_manager=LoginManager(),
                 password_crypt_context=None,
@@ -93,6 +94,7 @@ class UserManager(object):
         self.reset_password_view_function = reset_password_view_function
         self.unauthenticated_view_function = unauthenticated_view_function
         self.unauthorized_view_function = unauthorized_view_function
+        self.user_profile_view_function = user_profile_view_function
         # Misc
         self.login_manager = login_manager
         self.token_manager = token_manager
@@ -198,6 +200,7 @@ class UserManager(object):
         if self.db_adapter.UserEmailClass:
             app.add_url_rule(self.email_action_url,  'user.email_action',  self.email_action_view_function)
             app.add_url_rule(self.manage_emails_url, 'user.manage_emails', self.manage_emails_view_function, methods=['GET', 'POST'])
+        app.add_url_rule(self.user_profile_url,  'user.profile',  self.user_profile_view_function,  methods=['GET', 'POST'])
 
     # Obsoleted function. Replace with hash_password()
     def generate_password_hash(self, password):

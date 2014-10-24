@@ -1,1 +1,1 @@
-{{ product_name }} - {% block subject %}{% endblock %}
+{{ app_name }} - {% block subject %}{% endblock %}

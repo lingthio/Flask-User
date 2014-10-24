@@ -1,7 +1,7 @@
 {% extends 'flask_user/emails/base_message.txt' %}
 
 {% block message %}
-Thank you for registering with {{ product_name }}.
+Thank you for registering with {{ app_name }}.
 
 {% if user_manager.enable_confirm_email -%}
 You will need to confirm your email next.

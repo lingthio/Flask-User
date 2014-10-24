@@ -1,7 +1,7 @@
 {% extends 'flask_user/emails/base_message.txt' %}
 
 {% block message %}
-You will need to confirm your email to start using {{ product_name }}.
+You will need to confirm your email to start using {{ app_name }}.
 
 If you initiated this registration, please visit the link below:
     {{ confirm_email_link }}

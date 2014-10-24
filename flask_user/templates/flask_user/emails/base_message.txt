@@ -4,4 +4,4 @@ Dear User,
 {% endblock %}
 
 Sincerely,
-{{ product_name }}
+{{ app_name }}

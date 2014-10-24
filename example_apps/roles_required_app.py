@@ -1,9 +1,9 @@
+import os
 from flask import Flask, render_template_string, request
-from flask.ext.babel import Babel
-from flask.ext.mail import Mail
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.user import current_user, login_required, SQLAlchemyAdapter, UserManager, UserMixin
-from flask.ext.user import roles_required
+from flask_mail import Mail
+from flask_sqlalchemy import SQLAlchemy
+from flask_user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
+from flask_user import roles_required
 
 # Use a Class-based config to avoid needing a 2nd file
 class ConfigClass(object):
@@ -13,19 +13,15 @@ class ConfigClass(object):
     CSRF_ENABLED = True
 
     # Configure Flask-Mail -- Required for Confirm email and Forgot password features
-    MAIL_SERVER   = 'smtp.gmail.com'
-    MAIL_PORT     = 465
-    MAIL_USE_SSL  = True                            # Some servers use MAIL_USE_TLS=True instead
-    MAIL_USERNAME = 'email@example.com'
-    MAIL_PASSWORD = 'password'
-    MAIL_DEFAULT_SENDER = '"Sender" <noreply@example.com>'
+    MAIL_USERNAME       = os.getenv('MAIL_USERNAME', 'email@example.com')
+    MAIL_PASSWORD       = os.getenv('MAIL_PASSWORD', 'password')
+    MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER', '"Sender" <noreply@example.com>')
+    MAIL_SERVER         = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
+    MAIL_PORT           = int(os.getenv('MAIL_PORT', '465'))
+    MAIL_USE_SSL        = os.getenv('MAIL_USE_SSL', True)
 
     # Configure Flask-User
-    USER_PRODUCT_NAME    = "ProductName"            # Used by email templates
-    USER_ENABLE_USERNAME = True                     # Register and Login with username
-    USER_ENABLE_EMAIL    = True                     # Register and Login with email
-    USER_AFTER_LOGIN_ENDPOINT   = 'profile_page'
-    USER_AFTER_CONFIRM_ENDPOINT = 'profile_page'
+    USER_APP_NAME        = "AppName"                # Used by email templates
 
 def create_app(test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
@@ -41,14 +37,8 @@ def create_app(test_config=None):                   # For automated tests
         app.config.update(test_config)
 
     # Initialize Flask extensions
-    babel = Babel(app)                              # Initialize Flask-Babel
     mail = Mail(app)                                # Initialize Flask-Mail
     db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
-
-    @babel.localeselector
-    def get_locale():
-        translations = [str(translation) for translation in babel.list_translations()]
-        return request.accept_languages.best_match(translations)
 
     # Define User model. Make sure to add flask.ext.user UserMixin!!
     class User(db.Model, UserMixin):
@@ -96,47 +86,41 @@ def create_app(test_config=None):                   # For automated tests
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
-            <h2>{%trans%}Home Page{%endtrans%}</h2>
-            <p> <a href="{{ url_for('profile_page') }}">{%trans%}Profile Page{%endtrans%}</a> (requires sign-in)</p>
-            <p> <a href="{{ url_for('special_page') }}">{%trans%}Special Page{%endtrans%}</a> (requires username 'user007' with password 'Password1')</p>
-            {% if current_user.is_authenticated() %}
-                <p> <a href="{{ url_for('user.logout') }}">{%trans%}Logout{%endtrans%}</a></p>
-            {% else %}
-                <p> <a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a> or
-                    <a href="{{ url_for('user.register') }}">{%trans%}Register{%endtrans%}</a></p>
-            {% endif %}
+                <h2>Home page</h2>
+                <p>This page can be accessed by anyone.</p><br/>
+                <p><a href={{ url_for('home_page') }}>Home page</a> (anyone)</p>
+                <p><a href={{ url_for('members_page') }}>Members page</a> (login required)</p>
+                <p><a href={{ url_for('special_page') }}>Special page</a> (login with username 'user007' and password 'Password1')</p>
             {% endblock %}
             """)
 
-    # The Profile page requires a logged-in user
-    @app.route('/profile')
+    # The Members page is only accessible to authenticated users
+    @app.route('/members')
     @login_required                                 # Use of @login_required decorator
-    def profile_page():
+    def members_page():
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
-            <h2>{%trans%}Profile Page{%endtrans%}</h2>
-            <p> {%trans%}Hello{%endtrans%}
-                {{ current_user.username or current_user.email }},</p>
-
-            <p> <a href="{{ url_for('home_page') }}">{%trans%}Home Page{%endtrans%}</a></p>
-            <p> <a href="{{ url_for('user.change_username') }}">
-                {%trans%}Change username{%endtrans%}</a></p>
-            <p> <a href="{{ url_for('user.change_password') }}">
-                {%trans%}Change password{%endtrans%}</a></p>
-            <p> <a href="{{ url_for('user.logout') }}?next={{ url_for('user.login') }}">
-                {%trans%}Sign out{%endtrans%}</a></p>
+                <h2>Members page</h2>
+                <p>This page can only be accessed by authenticated users.</p><br/>
+                <p><a href={{ url_for('home_page') }}>Home page</a> (anyone)</p>
+                <p><a href={{ url_for('members_page') }}>Members page</a> (login required)</p>
+                <p><a href={{ url_for('special_page') }}>Special page</a> (login with username 'user007' and password 'Password1')</p>
             {% endblock %}
             """)
 
-    # The Special page requires a user that has the 'special' AND ('sauce' OR 'agent') role.
+    # The Special page requires a user with 'special' and 'sauce' roles or with 'special' and 'agent' roles.
     @app.route('/special')
     @roles_required('secret', ['sauce', 'agent'])   # Use of @roles_required decorator
     def special_page():
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
-            <h2>{%trans%}Special Page{%endtrans%}</h2>
+                <h2>Special Page</h2>
+                <p>This page can only be accessed by user007.</p><br/>
+                <p><a href={{ url_for('home_page') }}>Home page</a> (anyone)</p>
+                <p><a href={{ url_for('members_page') }}>Members page</a> (login required)</p>
+                <p><a href={{ url_for('special_page') }}>Special page</a> (login with username 'user007' and password 'Password1')</p>
             {% endblock %}
             """)
 

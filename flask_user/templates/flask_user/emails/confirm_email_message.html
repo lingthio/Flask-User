@@ -1,7 +1,7 @@
 {% extends 'flask_user/emails/base_message.html' %}
 
 {% block message %}
-<p>You will need to confirm your email to start using {{ product_name }}.</p>
+<p>You will need to confirm your email to start using {{ app_name }}.</p>
 
 <p>If you initiated this confirmation, please click on the link below:<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ confirm_email_link }}">Confirm your email</a>.</p>

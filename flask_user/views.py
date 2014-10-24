@@ -498,18 +498,6 @@ def reset_password(token):
     # Process GET or invalid POST
     return render_template(user_manager.reset_password_template, form=form)
 
-def _get_email_address(user):
-    user_manager =  current_app.user_manager
-    db_adapter = user_manager.db_adapter
-    if db_adapter.UserEmailClass:
-        user_email = db_adapter.find_first_object(db_adapter.UserEmailClass,
-                user_id=int(user.get_id()),
-                is_primary=True,
-                )
-        return user_email.email if user_email else None
-    else:
-        return user.email
-
 
 def unauthenticated():
     """ Prepare a Flash message and redirect to USER_UNAUTHENTICATED_URL"""
@@ -524,6 +512,7 @@ def unauthenticated():
     user_manager = current_app.user_manager
     return redirect(_endpoint_url(user_manager.unauthenticated_endpoint)+'?next='+ quoted_url)
 
+
 def unauthorized():
     """ Prepare a Flash message and redirect to USER_UNAUTHORIZED_URL"""
     # Prepare Flash message
@@ -533,6 +522,26 @@ def unauthorized():
     # Redirect to USER_UNAUTHORIZED_URL
     user_manager = current_app.user_manager
     return redirect(_endpoint_url(user_manager.unauthorized_endpoint))
+
+
+@login_required
+def user_profile():
+    user_manager = current_app.user_manager
+    return render_template(user_manager.user_profile_template)
+
+
+def _get_email_address(user):
+    user_manager =  current_app.user_manager
+    db_adapter = user_manager.db_adapter
+    if db_adapter.UserEmailClass:
+        user_email = db_adapter.find_first_object(db_adapter.UserEmailClass,
+                user_id=int(user.get_id()),
+                is_primary=True,
+                )
+        return user_email.email if user_email else None
+    else:
+        return user.email
+
 
 def _send_registered_email(user, user_email):
     user_manager =  current_app.user_manager

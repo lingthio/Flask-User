@@ -17,7 +17,7 @@ def set_default_settings(user_manager, app_config):
     obsoleted_enable_usernames         = sd('USER_ENABLE_USERNAMES',           True)
 
     # General settings
-    um.product_name             = sd('USER_PRODUCT_NAME', 'Flask-User')
+    um.app_name                 = sd('USER_APP_NAME', 'AppName')
 
     # Set default features
     um.enable_change_password   = sd('USER_ENABLE_CHANGE_PASSWORD',     True)
@@ -58,6 +58,7 @@ def set_default_settings(user_manager, app_config):
     um.register_url              = sd('USER_REGISTER_URL',               '/user/register')
     um.resend_confirm_email_url  = sd('USER_RESEND_CONFIRM_EMAIL_URL',   '/user/resend-confirm-email')
     um.reset_password_url        = sd('USER_RESET_PASSWORD_URL',         '/user/reset-password/<token>')
+    um.user_profile_url          = sd('USER_PROFILE_URL',                '/user/profile')
 
     # Set default ENDPOINTs
     home_endpoint = ''
@@ -74,14 +75,15 @@ def set_default_settings(user_manager, app_config):
     um.unauthorized_endpoint               = sd('USER_UNAUTHORIZED_ENDPOINT',               home_endpoint)
 
     # Set default template files
-    um.change_password_template = sd('USER_CHANGE_PASSWORD_TEMPLATE',  'flask_user/change_password.html')
-    um.change_username_template = sd('USER_CHANGE_USERNAME_TEMPLATE',  'flask_user/change_username.html')
-    um.forgot_password_template = sd('USER_FORGOT_PASSWORD_TEMPLATE',  'flask_user/forgot_password.html')
-    um.login_template           = sd('USER_LOGIN_TEMPLATE',            'flask_user/login.html')
-    um.manage_emails_template   = sd('USER_MANAGE_EMAILS_TEMPLATE',    'flask_user/manage_emails.html')
-    um.register_template        = sd('USER_REGISTER_TEMPLATE',         'flask_user/register.html')
+    um.change_password_template      = sd('USER_CHANGE_PASSWORD_TEMPLATE',  'flask_user/change_password.html')
+    um.change_username_template      = sd('USER_CHANGE_USERNAME_TEMPLATE',  'flask_user/change_username.html')
+    um.forgot_password_template      = sd('USER_FORGOT_PASSWORD_TEMPLATE',  'flask_user/forgot_password.html')
+    um.login_template                = sd('USER_LOGIN_TEMPLATE',            'flask_user/login.html')
+    um.manage_emails_template        = sd('USER_MANAGE_EMAILS_TEMPLATE',    'flask_user/manage_emails.html')
+    um.register_template             = sd('USER_REGISTER_TEMPLATE',         'flask_user/register.html')
     um.resend_confirm_email_template = sd('USER_RESEND_CONFIRM_EMAIL_TEMPLATE', 'flask_user/resend_confirm_email.html')
-    um.reset_password_template       = sd('USER_RESET_PASSWORD_TEMPLATE',       'flask_user/reset_password.html')
+    um.reset_password_template       = sd('USER_RESET_PASSWORD_TEMPLATE',   'flask_user/reset_password.html')
+    um.user_profile_template         = sd('USER_PROFILE_TEMPLATE',          'flask_user/user_profile.html')
 
     # Set default email template files
     um.confirm_email_email_template    = sd('USER_CONFIRM_EMAIL_EMAIL_TEMPLATE',    'flask_user/emails/confirm_email')

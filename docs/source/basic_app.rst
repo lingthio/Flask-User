@@ -61,7 +61,7 @@ Highlighted lines shows the lines added to a basic Flask application.
 .. literalinclude:: includes/basic_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 4, 33-40, 46-47, 70
+   :emphasize-lines: 5, 34-41, 47-48, 65
 
 
 Run the Basic App
