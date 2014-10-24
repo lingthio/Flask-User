@@ -36,8 +36,9 @@ def docs():
     local('cd ../builds/flask_user/docs && zip -u -r flask_user_docs *')
 
 @task
-def delete_docs():
+def rebuild_docs():
     local('rm -fr ../builds/flask_user/docs')
+    docs()
 
 @task
 def upload_to_pypi():
