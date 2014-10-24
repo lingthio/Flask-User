@@ -1,6 +1,7 @@
 ::
 
     # Settings                       # Default     # Description
+    USER_APP_NAME                    = 'AppName'   # Used by email templates
     USER_CONFIRM_EMAIL_EXPIRATION    = 2*24*3600   # Confirmation expiration in seconds
                                                    # (2*24*3600 represents 2 days)
 

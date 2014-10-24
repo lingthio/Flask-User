@@ -11,3 +11,4 @@
     url_for('user.register')             USER_REGISTER_URL             = '/user/register'
     url_for('user.resend_confirm_email') USER_RESEND_CONFIRM_EMAIL_URL = '/user/resend-confirm-email'   # v0.5.0 and up
     url_for('user.reset_password')       USER_RESET_PASSWORD_URL       = '/user/reset-password/<token>'
+    url_for('user.profile')              USER_PROFILE_URL              = '/user/profile'                # v0.5.5 and up

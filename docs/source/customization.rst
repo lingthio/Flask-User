@@ -351,6 +351,7 @@ The following form template files resides in the ``templates`` directory and can
     flask_user/change_password.html       # extends flask_user/member_base.html
     flask_user/change_username.html       # extends flask_user/member_base.html
     flask_user/manage_emails.html         # extends flask_user/member_base.html
+    flask_user/user_profile.html          # extends flask_user/member_base.html
 
     flask_user/public_base.html           # extends base.html
     flask_user/forgot_password.html       # extends flask_user/public_base.html
