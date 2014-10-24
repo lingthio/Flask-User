@@ -84,6 +84,7 @@ Documentation
     design_goals
     limitations
     installation
+    data_models
     basic_app
     flask_user_starter_app
     authorization
@@ -99,7 +100,7 @@ Documentation
 
 Revision History
 ----------------
-* v0.5.5 Added user_profile view. Cleaned up base template.
+* v0.5.5 Added user_profile view. Cleaned up base template. Support for UserProfile.roles.
 * v0.5.4 Decoupled Flask-User from Flask-Babel and speaklater
 * v0.5.3
 
