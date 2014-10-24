@@ -99,7 +99,8 @@ Documentation
 
 Revision History
 ----------------
-* v0.5.4   Decoupled Flask-User from Flask-Babel and speaklater
+* v0.5.5 Added user_profile view. Cleaned up base template.
+* v0.5.4 Decoupled Flask-User from Flask-Babel and speaklater
 * v0.5.3
 
   * Added remember-me feature.
