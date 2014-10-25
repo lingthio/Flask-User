@@ -2,6 +2,17 @@
 
     # Settings                       # Default     # Description
     USER_APP_NAME                    = 'AppName'   # Used by email templates
+
+    USER_AUTO_LOGIN                  = True
+
+    USER_AUTO_LOGIN_AFTER_CONFIRM    = USER_AUTO_LOGIN
+
+    USER_AUTO_LOGIN_AFTER_REGISTER   = USER_AUTO_LOGIN
+
+    USER_AUTO_LOGIN_AFTER_RESET_PASSWORD = USER_AUTO_LOGIN
+
+    USER_AUTO_LOGIN_AT_LOGIN         = USER_AUTO_LOGIN
+
     USER_CONFIRM_EMAIL_EXPIRATION    = 2*24*3600   # Confirmation expiration in seconds
                                                    # (2*24*3600 represents 2 days)
 
@@ -10,7 +21,7 @@
     USER_PASSWORD_HASH_MODE          = 'passlib'   # Set to 'Flask-Security' for
                                                    # Flask-Security compatible hashing
 
-    USER_PASSWORD_SALT = SECURITY_PASSWORD_SALT    # Only needed for
+    SECURITY_PASSWORD_SALT                         # Only needed for
                                                    # Flask-Security compatible hashing
 
     USER_REQUIRE_INVITATION          = False       # Registration requires invitation

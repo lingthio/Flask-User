@@ -25,15 +25,18 @@ If you'd like to store all user information in one DataModel, use the following:
         username = db.Column(db.String(50), nullable=False, unique=True)
         password = db.Column(db.String(255), nullable=False, default='')
         reset_password_token = db.Column(db.String(100), nullable=False, default='')
-        active = db.Column(db.Boolean(), nullable=False, default=False)
 
         # User Email information
         email = db.Column(db.String(255), nullable=False, unique=True)
         confirmed_at = db.Column(db.DateTime())
 
         # User information
+        is_enabled = db.Column(db.Boolean(), nullable=False, default=False)
         first_name = db.Column(db.String(50), nullable=False, default='')
         last_name = db.Column(db.String(50), nullable=False, default='')
+
+        def is_active(self):
+          return self.is_enabled
 
     # Setup Flask-User
     db_adapter = SQLAlchemyAdapter(db, User)        # Register the User model
@@ -54,9 +57,13 @@ If you'd like to store User Authentication information separate from User inform
         email = db.Column(db.String(255), nullable=False, unique=True)
         confirmed_at = db.Column(db.DateTime())
 
-        # User profile information
+        # User information
+        is_enabled = db.Column(db.Boolean(), nullable=False, default=False)
         first_name = db.Column(db.String(50), nullable=False, default='')
         last_name = db.Column(db.String(50), nullable=False, default='')
+
+        def is_active(self):
+          return self.is_enabled
 
     # Define UserAuth DataModel. Make sure to add flask.ext.user UserMixin!!
     class UserAuth(db.Model, UserMixin):
@@ -67,7 +74,6 @@ If you'd like to store User Authentication information separate from User inform
         username = db.Column(db.String(50), nullable=False, unique=True)
         password = db.Column(db.String(255), nullable=False, default='')
         reset_password_token = db.Column(db.String(100), nullable=False, default='')
-        active = db.Column(db.Boolean(), nullable=False, default=False)
 
         # Relationships
         user = db.relationship('User', uselist=False, foreign_keys=user_id)

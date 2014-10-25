@@ -187,12 +187,15 @@ Extra fields must be defined in the User model::
 
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
-        active = db.Column(db.Boolean(), nullable=False, default=False)
+        is_enabled = db.Column(db.Boolean(), nullable=False, default=False)
         email = db.Column(db.String(255), nullable=False, default='')
         password = db.Column(db.String(255), nullable=False, default='')
         # Extra model fields
         first_name = db.Column(db.String(50), nullable=False, default='')
         last_name  = db.Column(db.String(50), nullable=False, default='')
+
+        def is_active(self):
+          return self.is_enabled
 
     db_adapter = SQLAlchemyAdapter(db, UserClass=User)
 
@@ -216,60 +219,7 @@ will be stored in the corresponding User field.
 
 **Extra registration fields in UserProfile model**
 
-For developers wanting 'separation of concerns', we can instruct
-Flask-User to store extra fields into a separate UserProfile object.
-When creating a new User record, Flask-User will also create
-a UserProfile record and set the ``User.user_profile`` field::
-
-    class UserProfile(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        # Extra model fields
-        first_name = db.Column(db.String(50), nullable=False, default='')
-        last_name = db.Column(db.String(50), nullable=False, default='')
-
-    class User(db.Model, UserMixin):
-        id = db.Column(db.Integer, primary_key=True)
-        active = db.Column(db.Boolean(), nullable=False, default=False)
-        email = db.Column(db.String(255), nullable=False, default='')
-        password = db.Column(db.String(255), nullable=False, default='')
-        # User to UserProfile relationship
-        user_profile_id = db.Column(db.Integer, db.ForeignKey('user_profile.id'), nullable=True, default=None)
-        user_profile = db.relationship('UserProfile', uselist=False, foreign_keys=[user_profile_id])
-
-We must tell Flask-User that we want to create User and UserProfile objects::
-
-    # Use User and UserProfile objects
-    db_adapter = SQLAlchemyAdapter(db, UserClass=User, UserProfileClass=UserProfile)
-
-Note that we can change the name of the model, but that the relationship field name **must** be 'user_profile'.
-Fortunately, we can define multiple relationship fields to the same relationship::
-
-    class Member(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        # Extra model fields
-        first_name = db.Column(db.String(50), nullable=False, default='')
-        last_name = db.Column(db.String(50), nullable=False, default='')
-
-    class User(db.Model, UserMixin):
-        id = db.Column(db.Integer, primary_key=True)
-        active = db.Column(db.Boolean(), nullable=False, default=False)
-        email = db.Column(db.String(255), nullable=False, default='')
-        password = db.Column(db.String(255), nullable=False, default='')
-        # User to Member relationship
-        member_id = db.Column(db.Integer, db.ForeignKey('member.id'), nullable=True, default=None)
-        # Your app may want to use 'member'
-        member = db.relationship('Member', uselist=False, foreign_keys=[member_id])
-        # Flask-User will use 'user_profile'
-        user_profile = db.relationship('Member', uselist=False, foreign_keys=[member_id])
-
-    # Use User and UserProfile objects
-    db_adapter = SQLAlchemyAdapter(db, UserClass=User, UserProfileClass=Member)
-
-`See Github repository; example_apps/user_profile_app <https://github.com/lingthio/Flask-User/tree/master/example_apps/user_profile_app>`_
-
-**In Summary**
-
-* Add extra fields to the User or UserProfile model
+* Add extra fields to the User data model
 * Extend a custom MyRegisterForm class from the built-in flask.ext.user.forms.RegisterForm class.
   See :ref:`customizingformclasses`.
 * Add extra fields to the form **using identical field names**.
@@ -277,8 +227,6 @@ Fortunately, we can define multiple relationship fields to the same relationship
 * Copy the built-in ``templates/flask_user/register.html`` to your application's templates/flask_user directory.
   See :ref:`customizingformtemplates`.
 * Add the extra form fields to register.html
-
-
 
 
 .. _customizingformclasses:

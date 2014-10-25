@@ -119,7 +119,7 @@ Roles are defined by adding rows to the role table with a specific Role.name val
 ::
 
     # Create 'user007' user with 'secret' and 'agent' roles
-    user1 = User(username='user007', email='user007@example.com', active=True,
+    user1 = User(username='user007', email='user007@example.com', is_enabled=True,
                  password=user_manager.hash_password('Password1'))
     role1 = Role(name='secret')
     role2 = Role(name='agent')

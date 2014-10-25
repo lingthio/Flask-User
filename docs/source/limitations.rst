@@ -39,14 +39,13 @@ the remaining field names MUST be named as follows:
 ::
 
   # User model
-  user.active                   # Required
   user.username                 # Required only if USER_ENABLE_USERNAME is True
   user.email                    # Required only if USER_ENABLE_EMAIL is True
   user.confirmed_at             # Required only if USER_ENABLE_CONFIRM_EMAIL is True
   user.password                 # Required
   user.reset_password_token     # Required
   user.roles                    # Required only if @roles_required is used
-  user.user_profile             # Required only if a UserProfileClass is specified
+  user.user_auth                # Required only if a UserAuthClass is specified in DBAdapter()
 
 
 Role model field names
