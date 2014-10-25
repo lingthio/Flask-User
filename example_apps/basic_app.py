@@ -8,12 +8,12 @@ from flask_user import login_required, UserManager, UserMixin, SQLAlchemyAdapter
 # Use a Class-based config to avoid needing a 2nd file
 # os.getenv() enables configuration through OS environment variables
 class ConfigClass(object):
-    # Configure Flask
+    # Flask settings
     SECRET_KEY =              os.getenv('SECRET_KEY',       'THIS IS AN INSECURE SECRET')
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///single_file_app.sqlite')
     CSRF_ENABLED = True
 
-    # Configure Flask-Mail -- Required for Confirm email and Forgot password features
+    # Flask-Mail settings
     MAIL_USERNAME =           os.getenv('MAIL_USERNAME',        'email@example.com')
     MAIL_PASSWORD =           os.getenv('MAIL_PASSWORD',        'password')
     MAIL_DEFAULT_SENDER =     os.getenv('MAIL_DEFAULT_SENDER',  '"MyApp" <noreply@example.com>')
@@ -21,7 +21,7 @@ class ConfigClass(object):
     MAIL_PORT =           int(os.getenv('MAIL_PORT',            '465'))
     MAIL_USE_SSL =        int(os.getenv('MAIL_USE_SSL',         True))
 
-    # Configure Flask-User
+    # Flask-User settings
     USER_APP_NAME        = "AppName"                # Used by email templates
 
 

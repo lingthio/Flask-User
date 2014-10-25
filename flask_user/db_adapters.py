@@ -20,8 +20,8 @@ class DBAdapter(object):
 
         if UserProfileClass:
             # Print deprecation warning
-            print('Warning: The "UserProfileClass" parameter in DBAdapter() will be deprecated in the future. '+
-                  'Use "UserAuthClass" and "UserClass" parameters instead. '+
+            print('Warning: The UserProfileClass parameter in DBAdapter() will be deprecated\n'+
+                  'in the future. Use "UserAuthClass" and "UserClass" parameters instead.\n'+
                   'See http://pythonhosted.org/Flask-User/data_models.html.')
             # Ensure backward compatibility with v0.5 code
             self.UserAuthClass = UserClass

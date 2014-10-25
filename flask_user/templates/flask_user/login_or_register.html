@@ -20,7 +20,9 @@
     {{ render_field(login_form.password, tabindex=120) }}
 
     {# Remember me #}
+    {% if user_manager.enable_remember_me %}
     {{ render_checkbox_field(login_form.remember_me, tabindex=130) }}
+    {% endif %}
 
     {# Submit button #}
     {{ render_submit_field(login_form.submit, tabindex=180) }}
