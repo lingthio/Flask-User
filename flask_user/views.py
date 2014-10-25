@@ -417,6 +417,11 @@ def register():
         # Send user_registered signal
         signals.user_registered.send(current_app._get_current_object(), user=user)
 
+        # Redirect if USER_ENABLE_CONFIRM_EMAIL is set
+        if user_manager.enable_confirm_email:
+            next = request.args.get('next', _endpoint_url(user_manager.after_register_endpoint))
+            return redirect(next)
+
         # Auto-login after register or redirect to login page
         next = request.args.get('next', _endpoint_url(user_manager.after_confirm_endpoint))
         if user_manager.auto_login_after_register:
@@ -626,7 +631,7 @@ def _do_login_user(user, next, remember_me=False):
     # Check if user has a confirmed email address
     user_manager = current_app.user_manager
     if user_manager.enable_email and user_manager.enable_confirm_email \
-            and not current_app.user_manager.enable_login_without_confirm \
+            and not current_app.user_manager.enable_login_without_confirm_email \
             and not user_has_confirmed_email(user):
         url = url_for('user.resend_confirm_email')
         flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email or <a href="%(url)s">Re-send confirmation email</a>.', url=url), 'error')

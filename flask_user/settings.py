@@ -15,6 +15,7 @@ def set_default_settings(user_manager, app_config):
     obsoleted_enable_emails            = sd('USER_ENABLE_EMAILS',              True)
     obsoleted_enable_retype_passwords  = sd('USER_ENABLE_RETYPE_PASSWORDS',    True)
     obsoleted_enable_usernames         = sd('USER_ENABLE_USERNAMES',           True)
+    obsoleted_enable_registration      = sd('USER_ENABLE_REGISTRATION',        True)
 
     # General settings
     um.app_name                     = sd('USER_APP_NAME', 'AppName')
@@ -25,9 +26,9 @@ def set_default_settings(user_manager, app_config):
     um.enable_email                 = sd('USER_ENABLE_EMAIL',                 obsoleted_enable_emails)
     um.enable_confirm_email         = sd('USER_ENABLE_CONFIRM_EMAIL',         um.enable_email)
     um.enable_forgot_password       = sd('USER_ENABLE_FORGOT_PASSWORD',       um.enable_email)
-    um.enable_login_without_confirm = sd('USER_ENABLE_LOGIN_WITHOUT_CONFIRM', False)
+    um.enable_login_without_confirm_email = sd('USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL', False)
     um.enable_multiple_emails       = sd('USER_ENABLE_MULTIPLE_EMAILS',       False)
-    um.enable_register              = sd('USER_ENABLE_REGISTRATION',          True)
+    um.enable_register              = sd('USER_ENABLE_REGISTER',              obsoleted_enable_registration)
     um.enable_remember_me           = sd('USER_ENABLE_REMEMBER_ME',           True)
     um.enable_retype_password       = sd('USER_ENABLE_RETYPE_PASSWORD',       obsoleted_enable_retype_passwords)
     um.enable_username              = sd('USER_ENABLE_USERNAME',              obsoleted_enable_usernames)

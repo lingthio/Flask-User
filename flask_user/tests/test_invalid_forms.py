@@ -408,8 +408,8 @@ def test_invalid_roles(client):
     assert response_has_string(response, 'You do not have permission to access')
     client.logout()
 
-def test_login_without_confirm(client):
-    print("test_login_without_confirm")
+def test_login_without_confirm_email(client):
+    print("test_login_without_confirm_email")
 
     um = current_app.user_manager
     um.enable_username = False
@@ -476,7 +476,7 @@ def run_all_tests(client):
     test_valid_roles(client)
     test_invalid_roles(client)
 
-    test_login_without_confirm(client)
+    test_login_without_confirm_email(client)
 
     test_cleanup(client.db)
 
