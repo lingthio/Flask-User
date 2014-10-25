@@ -5,23 +5,26 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
 from flask_user import roles_required
 
+
 # Use a Class-based config to avoid needing a 2nd file
+# os.getenv() enables configuration through OS environment variables
 class ConfigClass(object):
     # Configure Flask
-    SECRET_KEY = 'THIS IS AN INSECURE SECRET'                        # Change this for production!!!
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///roles_required_app.sqlite'  # Use Sqlite file db
+    SECRET_KEY =              os.getenv('SECRET_KEY',       'THIS IS AN INSECURE SECRET')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///single_file_app.sqlite')
     CSRF_ENABLED = True
 
     # Configure Flask-Mail -- Required for Confirm email and Forgot password features
-    MAIL_USERNAME       = os.getenv('MAIL_USERNAME', 'email@example.com')
-    MAIL_PASSWORD       = os.getenv('MAIL_PASSWORD', 'password')
-    MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER', '"Sender" <noreply@example.com>')
-    MAIL_SERVER         = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
-    MAIL_PORT           = int(os.getenv('MAIL_PORT', '465'))
-    MAIL_USE_SSL        = os.getenv('MAIL_USE_SSL', True)
+    MAIL_USERNAME =           os.getenv('MAIL_USERNAME',        'email@example.com')
+    MAIL_PASSWORD =           os.getenv('MAIL_PASSWORD',        'password')
+    MAIL_DEFAULT_SENDER =     os.getenv('MAIL_DEFAULT_SENDER',  '"MyApp" <noreply@example.com>')
+    MAIL_SERVER =             os.getenv('MAIL_SERVER',          'smtp.gmail.com')
+    MAIL_PORT =           int(os.getenv('MAIL_PORT',            '465'))
+    MAIL_USE_SSL =        int(os.getenv('MAIL_USE_SSL',         True))
 
     # Configure Flask-User
     USER_APP_NAME        = "AppName"                # Used by email templates
+
 
 def create_app(test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
@@ -40,25 +43,37 @@ def create_app(test_config=None):                   # For automated tests
     mail = Mail(app)                                # Initialize Flask-Mail
     db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
 
-    # Define User model. Make sure to add flask.ext.user UserMixin!!
+    # Define the User data model. Make sure to add flask.ext.user UserMixin!!
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
-        active = db.Column(db.Boolean(), nullable=False, default=False)
+
+        # User authentication information
         username = db.Column(db.String(50), nullable=False, unique=True)
+        password = db.Column(db.String(255), nullable=False, server_default='')
+        reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
+
+        # User email information
         email = db.Column(db.String(255), nullable=False, unique=True)
         confirmed_at = db.Column(db.DateTime())
-        password = db.Column(db.String(255), nullable=False, default='')
-        reset_password_token = db.Column(db.String(100), nullable=False, default='')
+
+        # User information
+        active = db.Column(db.Boolean(), nullable=False, server_default='0')
+        first_name = db.Column(db.String(100), nullable=False, server_default='')
+        last_name = db.Column(db.String(100), nullable=False, server_default='')
+
         # Relationships
         roles = db.relationship('Role', secondary='user_roles',
                 backref=db.backref('users', lazy='dynamic'))
 
-    # Define Role model
+        def is_active(self):
+            return self.active
+
+    # Define the Role data model
     class Role(db.Model):
         id = db.Column(db.Integer(), primary_key=True)
         name = db.Column(db.String(50), unique=True)
 
-    # Define UserRoles model
+    # Define the UserRoles data model
     class UserRoles(db.Model):
         id = db.Column(db.Integer(), primary_key=True)
         user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
@@ -125,6 +140,7 @@ def create_app(test_config=None):                   # For automated tests
             """)
 
     return app
+
 
 # Start development web server
 if __name__=='__main__':

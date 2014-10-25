@@ -4,20 +4,26 @@ from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import login_required, UserManager, UserMixin, SQLAlchemyAdapter
 
+
 # Use a Class-based config to avoid needing a 2nd file
+# os.getenv() enables configuration through OS environment variables
 class ConfigClass(object):
     # Configure Flask
-    SECRET_KEY = 'THIS IS AN INSECURE SECRET'                     # Change this for production!!!
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///single_file_app.sqlite'  # Use Sqlite file db
+    SECRET_KEY =              os.getenv('SECRET_KEY',       'THIS IS AN INSECURE SECRET')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///single_file_app.sqlite')
     CSRF_ENABLED = True
 
     # Configure Flask-Mail -- Required for Confirm email and Forgot password features
-    MAIL_USERNAME       = os.getenv('MAIL_USERNAME', 'email@example.com')
-    MAIL_PASSWORD       = os.getenv('MAIL_PASSWORD', 'password')
-    MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER', '"Sender" <noreply@example.com>')
-    MAIL_SERVER         = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
-    MAIL_PORT           = int(os.getenv('MAIL_PORT', '465'))
-    MAIL_USE_SSL        = os.getenv('MAIL_USE_SSL', True)
+    MAIL_USERNAME =           os.getenv('MAIL_USERNAME',        'email@example.com')
+    MAIL_PASSWORD =           os.getenv('MAIL_PASSWORD',        'password')
+    MAIL_DEFAULT_SENDER =     os.getenv('MAIL_DEFAULT_SENDER',  '"MyApp" <noreply@example.com>')
+    MAIL_SERVER =             os.getenv('MAIL_SERVER',          'smtp.gmail.com')
+    MAIL_PORT =           int(os.getenv('MAIL_PORT',            '465'))
+    MAIL_USE_SSL =        int(os.getenv('MAIL_USE_SSL',         True))
+
+    # Configure Flask-User
+    USER_APP_NAME        = "AppName"                # Used by email templates
+
 
 def create_app():
     """ Flask application factory """
@@ -30,15 +36,26 @@ def create_app():
     db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
     mail = Mail(app)                                # Initialize Flask-Mail
 
-    # Define User model. Make sure to add flask.ext.user UserMixin !!!
+    # Define the User data model. Make sure to add flask.ext.user UserMixin !!!
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
-        active = db.Column(db.Boolean(), nullable=False, default=False)
+
+        # User authentication information
         username = db.Column(db.String(50), nullable=False, unique=True)
-        password = db.Column(db.String(255), nullable=False, default='')
+        password = db.Column(db.String(255), nullable=False, server_default='')
+        reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
+
+        # User email information
         email = db.Column(db.String(255), nullable=False, unique=True)
         confirmed_at = db.Column(db.DateTime())
-        reset_password_token = db.Column(db.String(100), nullable=False, default='')
+
+        # User information
+        active = db.Column(db.Boolean(), nullable=False, server_default='0')
+        first_name = db.Column(db.String(100), nullable=False, server_default='')
+        last_name = db.Column(db.String(100), nullable=False, server_default='')
+
+        def is_active(self):
+            return self.active
 
     # Create all database tables
     db.create_all()
@@ -75,6 +92,7 @@ def create_app():
             """)
 
     return app
+
 
 # Start development web server
 if __name__=='__main__':

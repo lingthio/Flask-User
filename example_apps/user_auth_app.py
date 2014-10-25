@@ -43,66 +43,68 @@ def create_app(test_config=None):                   # For automated tests
     mail = Mail(app)                                # Initialize Flask-Mail
     db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
 
-    # Define User model. Make sure to add flask.ext.user UserMixin!!
+    # Define the User data model. Make sure to add flask.ext.user UserMixin!!
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
-        user_profile_id = db.Column(db.Integer(), db.ForeignKey('user_profile.id', ondelete='CASCADE'))
-
-        # User authentication information
-        username = db.Column(db.String(50), nullable=False, unique=True)
-        password = db.Column(db.String(255), nullable=False, server_default='')
-        reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
-        active = db.Column(db.Boolean(), nullable=False, server_default='0')
 
         # User email information
         email = db.Column(db.String(255), nullable=False, unique=True)
         confirmed_at = db.Column(db.DateTime())
 
+        # User information
+        active = db.Column(db.Boolean(), nullable=False, server_default='0')
+        first_name = db.Column(db.String(100), nullable=False, server_default='')
+        last_name = db.Column(db.String(100), nullable=False, server_default='')
+
         # Relationships
-        user_profile = db.relationship('UserProfile', uselist=False, foreign_keys=[user_profile_id])
+        user_auth = db.relationship('UserAuth', uselist=False)
+        roles = db.relationship('Role', secondary='user_roles',
+                backref=db.backref('users', lazy='dynamic'))
 
         def is_active(self):
             return self.active
 
-    class UserProfile(db.Model):
+    # Define the UserAuth data model.
+    class UserAuth(db.Model):
         id = db.Column(db.Integer, primary_key=True)
+        user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
 
-        # User information
-        first_name = db.Column(db.String(50), nullable=False, default='')
-        last_name = db.Column(db.String(50), nullable=False, default='')
+        # User authentication information
+        username = db.Column(db.String(50), nullable=False, unique=True)
+        password = db.Column(db.String(255), nullable=False, server_default='')
+        reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
 
         # Relationships
-        roles = db.relationship('Role', secondary='user_roles',
-                backref=db.backref('users', lazy='dynamic'))
+        user = db.relationship('User', uselist=False)
 
-    # Define Role model
+    # Define the Role data model
     class Role(db.Model):
         id = db.Column(db.Integer(), primary_key=True)
         name = db.Column(db.String(50), unique=True)
 
-    # Define UserRoles model
+    # Define the UserRoles data model
     class UserRoles(db.Model):
         id = db.Column(db.Integer(), primary_key=True)
-        user_profile_id = db.Column(db.Integer(), db.ForeignKey('user_profile.id', ondelete='CASCADE'))
+        user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
         role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
 
     # Reset all the database tables
     db.create_all()
 
     # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db,  User, UserProfileClass=UserProfile)
+    db_adapter = SQLAlchemyAdapter(db,  User, UserAuthClass=UserAuth)
     user_manager = UserManager(db_adapter, app)
 
     # Create 'user007' user with 'secret' and 'agent' roles
-    if not User.query.filter(User.username=='user007').first():
-        user_profile1 = UserProfile(first_name='James', last_name='Bond')
-        db.session.add(user_profile1)
-        user1 = User(user_profile=user_profile1, username='user007',
-                email='user007@example.com', password=user_manager.hash_password('Password1'),
-                active=True)
+    if not UserAuth.query.filter(UserAuth.username=='user007').first():
+        user1 = User(email='user007@example.com', first_name='James', last_name='Bond', active=True)
         db.session.add(user1)
-        user_profile1.roles.append(Role(name='secret'))
-        user_profile1.roles.append(Role(name='agent'))
+        user_auth1 = UserAuth(user=user1, username='user007',
+                password=user_manager.hash_password('Password1')
+                )
+        db.session.add(user_auth1)
+        user1.roles.append(Role(name='secret'))
+        user1.roles.append(Role(name='agent'))
         db.session.commit()
 
     # The Home page is accessible to anyone
