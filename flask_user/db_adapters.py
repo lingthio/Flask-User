@@ -4,23 +4,35 @@
     :author: Ling Thio (ling.thio@gmail.com)
     :license: Simplified BSD License, see LICENSE.txt for more details."""
 
+from __future__ import print_function
 from datetime import datetime
 from flask_login import current_user
 
 class DBAdapter(object):
     """ This object is used to shield Flask-User from ORM specific functions.
         It's used as the base class for ORM specific adapters like SQLAlchemyAdapter."""
-    def __init__(self, db, UserClass, UserProfileClass=None, UserEmailClass=None):
+    def __init__(self, db, UserClass, UserAuthClass=None, UserEmailClass=None, UserProfileClass=None, ):
         self.db = db
-        self.UserClass = UserClass                  # username, password, etc.
-        self.UserProfileClass = UserProfileClass    # For Additional registration fields
+        self.UserClass = UserClass                  # first_name, last_name, etc.
+        self.UserAuthClass = UserAuthClass          # username, password, etc.
         self.UserEmailClass = UserEmailClass        # For multiple emails per user
+        self.UserProfileClass = UserProfileClass    # Distinguish between v0.5 or v0.6 call
+
+        if UserProfileClass:
+            # Print deprecation warning
+            print('Warning: The "UserProfileClass" parameter in DBAdapter() will be deprecated in the future. '+
+                  'Use "UserAuthClass" and "UserClass" parameters instead. '+
+                  'See http://pythonhosted.org/Flask-User/data_models.html.')
+            # Ensure backward compatibility with v0.5 code
+            self.UserAuthClass = UserClass
+            self.UserClass = UserProfileClass
+
 
 
 class SQLAlchemyAdapter(DBAdapter):
     """ This object is used to shield Flask-User from SQLAlchemy specific functions."""
-    def __init__(self, db, UserClass, UserProfileClass=None, UserEmailClass=None):
-        super(SQLAlchemyAdapter, self).__init__(db, UserClass, UserProfileClass, UserEmailClass)
+    def __init__(self, db, UserClass, UserProfileClass=None, UserAuthClass=None, UserEmailClass=None):
+        super(SQLAlchemyAdapter, self).__init__(db, UserClass, UserAuthClass, UserEmailClass, UserProfileClass)
 
     def get_object(self, ObjectClass, id):
         """ Retrieve one object specified by the primary key 'pk' """

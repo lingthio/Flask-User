@@ -23,7 +23,7 @@ from flask_login import current_user
 # Enable the following: from flask.ext.user import login_required, roles_required
 from .decorators import *
 
-__version__ = '0.5.5'
+__version__ = '0.6'
 
 def _flask_user_context_processor():
     """ Make 'user_manager' available to Jinja2 templates"""
@@ -219,11 +219,14 @@ class UserManager(object):
         return self.token_manager.verify_token(token, expiration_in_seconds)
 
     def get_user_by_id(self, user_id):
-        return self.db_adapter.get_object(self.db_adapter.UserClass, user_id)
+        # Handle v0.5 backward compatibility
+        ObjectClass = self.db_adapter.UserAuthClass if self.db_adapter.UserAuthClass and self.db_adapter.UserProfileClass else self.db_adapter.UserClass
+        return self.db_adapter.get_object(ObjectClass, user_id)
 
     # NB: This backward compatibility function may be obsoleted in the future
     # Use 'get_user_by_id() instead.
     def find_user_by_id(self, user_id):
+        print('Warning: find_user_by_id() will be deprecated in the future. User get_user_by_id() instead.')
         return self.get_user_by_id(user_id)
 
     def get_user_email_by_id(self, user_email_id):
@@ -232,18 +235,44 @@ class UserManager(object):
     # NB: This backward compatibility function may be obsoleted in the future
     # Use 'get_user_email_by_id() instead.
     def find_user_email_by_id(self, user_email_id):
+        print('Warning: find_user_email_by_id() will be deprecated in the future. User get_user_email_by_id() instead.')
         return self.get_user_email_by_id(user_email_id)
 
     def find_user_by_username(self, username):
-        return self.db_adapter.ifind_first_object(self.db_adapter.UserClass, username=username)
+        user_auth = None
+
+        # The username field can either be in the UserAuth class or in the User class
+        if self.db_adapter.UserAuthClass and hasattr(self.db_adapter.UserAuthClass, 'username'):
+            user_auth = self.db_adapter.ifind_first_object(self.db_adapter.UserAuthClass, username=username)
+
+            # Handle v0.5 backward compatibility
+            if self.db_adapter.UserProfileClass: return user_auth
+
+            user = user_auth.user if user_auth else None
+        else:
+            user = self.db_adapter.ifind_first_object(self.db_adapter.UserClass, username=username)
+
+        return user
+
 
     def find_user_by_email(self, email):
+        user_email = None
+        user_auth = None
         if self.db_adapter.UserEmailClass:
             user_email = self.db_adapter.ifind_first_object(self.db_adapter.UserEmailClass, email=email)
             user = user_email.user if user_email else None
         else:
-            user_email = None
-            user = self.db_adapter.ifind_first_object(self.db_adapter.UserClass, email=email)
+            # The email field can either be in the UserAuth class or in the User class
+            if self.db_adapter.UserAuthClass and hasattr(self.db_adapter.UserAuthClass, 'email'):
+                user_auth = self.db_adapter.ifind_first_object(self.db_adapter.UserAuthClass, email=email)
+
+                # Handle v0.5 backward compatibility
+                if self.db_adapter.UserProfileClass: return (user_auth, user_email)
+
+                user = user_auth.user if user_auth else None
+            else:
+                user = self.db_adapter.ifind_first_object(self.db_adapter.UserClass, email=email)
+
         return (user, user_email)
 
     def email_is_available(self, new_email):
@@ -256,8 +285,10 @@ class UserManager(object):
         """ Return True if new_username does not exist or if new_username equals old_username.
             Return False otherwise."""
         # Allow user to change username to the current username
-        if current_user.is_authenticated() and new_username == current_user.username:
-            return True
+        if current_user.is_authenticated():
+            current_username = current_user.user_auth.username if self.db_adapter.UserAuthClass and hasattr(current_user, 'user_auth') else current_user.username
+            if new_username == current_username:
+                return True
         # See if new_username is available
         return self.find_user_by_username(new_username)==None
 

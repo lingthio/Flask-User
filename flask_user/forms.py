@@ -101,7 +101,8 @@ class ChangePasswordForm(Form):
             return False
 
         # Verify current_user and current_password
-        if not current_user or not user_manager.verify_password(self.old_password.data, current_user.password):
+        current_password = current_user.user_auth.password if user_manager.db_adapter.UserAuthClass and hasattr(current_user, 'user_auth') else current_user.password
+        if not current_user or not user_manager.verify_password(self.old_password.data, current_password):
             self.old_password.errors.append(_('Old Password is incorrect'))
             return False
 
@@ -135,7 +136,8 @@ class ChangeUsernameForm(Form):
             return False
 
         # Verify current_user and current_password
-        if not current_user or not user_manager.verify_password(self.old_password.data, current_user.password):
+        current_password = current_user.user_auth.password if user_manager.db_adapter.UserAuthClass and hasattr(current_user, 'user_auth') else current_user.password
+        if not current_user or not user_manager.verify_password(self.old_password.data, current_password):
             self.old_password.errors.append(_('Old Password is incorrect'))
             return False
 
@@ -201,17 +203,27 @@ class LoginForm(Form):
             # Find user by email address (email field)
             user, user_email = user_manager.find_user_by_email(self.email.data)
 
-        # Validate user and password
-        if not user or not user_manager.verify_password(self.password.data, user.password):
-            if user_manager.enable_username:
-                self.username.errors.append(_('Incorrect Username and Password'))
+        # Handle successful authentication
+        if user:
+            # Handle v0.5 backward compatibility
+            if user_manager.db_adapter.UserProfileClass:
+                current_password = user.password
             else:
-                self.email.errors.append(_('Incorrect Email and Password'))
-            self.password.errors.append('')
-            return False
+                current_password = user.user_auth.password if user_manager.db_adapter.UserAuthClass else user.password
+            if user_manager.verify_password(self.password.data, current_password):
+                return True                         # Successful authentication
 
-        # All is well
-        return True
+        # Handle unsuccessful authentication
+        if user_manager.enable_username:
+            if user_manager.enable_email:
+                self.username.errors.append(_('Incorrect Username/Email and Password'))
+            else:
+                self.email.errors.append(_('Incorrect Username and Password'))
+        else:
+            self.email.errors.append(_('Incorrect Email and Password'))
+        self.password.errors.append('')
+        return False                                # Unsuccessful authentication
+
 
 class RegisterForm(Form):
     password_validator_added = False

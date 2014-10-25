@@ -87,7 +87,8 @@ def change_password():
         hashed_password = user_manager.hash_password(form.new_password.data)
 
         # Change password
-        db_adapter.update_object(current_user, password=hashed_password)
+        user_auth = current_user.user_auth if db_adapter.UserAuthClass  and hasattr(current_user, 'user_auth') else current_user
+        db_adapter.update_object(user_auth, password=hashed_password)
         db_adapter.commit()
 
         # Send 'password_changed' email
@@ -121,7 +122,8 @@ def change_username():
         new_username = form.new_username.data
 
         # Change username
-        db_adapter.update_object(current_user, username=new_username)
+        user_auth = current_user.user_auth if db_adapter.UserAuthClass and hasattr(current_user, 'user_auth') else current_user
+        db_adapter.update_object(user_auth, username=new_username)
         db_adapter.commit()
 
         # Send 'username_changed' email
@@ -336,46 +338,55 @@ def register():
     if request.method=='POST' and register_form.validate():
 
         # Create a User object using Form fields that have a corresponding User field
-        User = user_manager.db_adapter.UserClass
+        User = db_adapter.UserClass
         user_class_fields = User.__dict__
         user_fields = {}
 
         # Create a UserEmail object using Form fields that have a corresponding UserEmail field
-        if user_manager.db_adapter.UserEmailClass:
-            UserEmail = user_manager.db_adapter.UserEmailClass
+        if db_adapter.UserEmailClass:
+            UserEmail = db_adapter.UserEmailClass
             user_email_class_fields = UserEmail.__dict__
             user_email_fields = {}
 
-        # Create a UserProfile object using Form fields that have a corresponding UserProfile field
-        if user_manager.db_adapter.UserProfileClass:
-            UserProfile = user_manager.db_adapter.UserProfileClass
-            user_profile_class_fields = UserProfile.__dict__
-            user_profile_fields = {}
+        # Create a UserAuth object using Form fields that have a corresponding UserAuth field
+        if db_adapter.UserAuthClass:
+            UserAuth = db_adapter.UserAuthClass
+            user_auth_class_fields = UserAuth.__dict__
+            user_auth_fields = {}
 
         # User.active is True if not USER_ENABLE_CONFIRM_EMAIL and False otherwise
-        user_fields['active'] = not user_manager.enable_confirm_email
+        if db_adapter.UserProfileClass:
+            user_auth_fields['active'] = not user_manager.enable_confirm_email
+        else:
+            user_fields['active'] = not user_manager.enable_confirm_email
 
         # For all form fields
         for field_name, field_value in register_form.data.items():
             # Hash password field
             if field_name=='password':
-                user_fields['password'] = user_manager.hash_password(register_form.password.data)
+                hashed_password = user_manager.hash_password(field_value)
+                if db_adapter.UserAuthClass:
+                    user_auth_fields['password'] = hashed_password
+                else:
+                    user_fields['password'] = hashed_password
             # Store corresponding Form fields into the User object and/or UserProfile object
             else:
                 if field_name in user_class_fields:
                     user_fields[field_name] = field_value
-                if user_manager.db_adapter.UserEmailClass:
+                if db_adapter.UserEmailClass:
                     if field_name in user_email_class_fields:
                         user_email_fields[field_name] = field_value
-                if user_manager.db_adapter.UserProfileClass:
-                    if field_name in user_profile_class_fields:
-                        user_profile_fields[field_name] = field_value
+                if db_adapter.UserAuthClass:
+                    if field_name in user_auth_class_fields:
+                        user_auth_fields[field_name] = field_value
 
         # Add User record using named arguments 'user_fields'
         user = db_adapter.add_object(User, **user_fields)
+        if db_adapter.UserProfileClass:
+            user_profile = user
 
         # Add UserEmail record using named arguments 'user_email_fields'
-        if user_manager.db_adapter.UserEmailClass:
+        if db_adapter.UserEmailClass:
             user_email = db_adapter.add_object(UserEmail,
                     user=user,
                     is_primary=True,
@@ -383,9 +394,13 @@ def register():
         else:
             user_email = None
 
-        # Add UserProfile record using named arguments 'user_profile_fields'
-        if user_manager.db_adapter.UserProfileClass:
-            user.user_profile = db_adapter.add_object(UserProfile, **user_profile_fields)
+        # Add UserAuth record using named arguments 'user_auth_fields'
+        if db_adapter.UserAuthClass:
+            user_auth = db_adapter.add_object(UserAuth, **user_auth_fields)
+            if db_adapter.UserProfileClass:
+                user = user_auth
+            else:
+                user.user_auth = user_auth
 
         db_adapter.commit()
 
@@ -482,7 +497,8 @@ def reset_password(token):
 
         # Change password
         hashed_password = user_manager.hash_password(form.new_password.data)
-        db_adapter.update_object(user, password=hashed_password)
+        user_auth = user.user_auth if db_adapter.UserAuthClass and hasattr(user, 'user_auth') else user
+        db_adapter.update_object(user_auth, password=hashed_password)
         db_adapter.commit()
 
         # Send 'password_changed' email
@@ -585,7 +601,7 @@ def _send_confirm_email(user, user_email):
 
 
 def _do_login_user(user, next, remember_me=False):
-    if user and user.is_active:
+    if user and user.is_active():
         # Use Flask-Login to sign in user
         #print('login_user: remember_me=', remember_me)
         login_user(user, remember=remember_me)

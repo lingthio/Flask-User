@@ -217,7 +217,7 @@ def test_invalid_login_with_username_form(client):
             username='', password=password)
 
     # Test incorrect username
-    client.post_invalid_form(url, 'Incorrect Username and Password',
+    client.post_invalid_form(url, 'Incorrect Username/Email and Password',
             username='Xuser1', password=password)
 
     # Test empty password
@@ -225,7 +225,7 @@ def test_invalid_login_with_username_form(client):
             username=username, password='')
 
     # Test incorrect password
-    client.post_invalid_form(url, 'Incorrect Username and Password',
+    client.post_invalid_form(url, 'Incorrect Username/Email and Password',
             username=username, password='XPassword1')
 
 def test_invalid_login_with_email_form(client):
