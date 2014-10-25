@@ -17,25 +17,27 @@ def set_default_settings(user_manager, app_config):
     obsoleted_enable_usernames         = sd('USER_ENABLE_USERNAMES',           True)
 
     # General settings
-    um.app_name                 = sd('USER_APP_NAME', 'AppName')
+    um.app_name                     = sd('USER_APP_NAME', 'AppName')
 
     # Set default features
-    um.enable_change_password   = sd('USER_ENABLE_CHANGE_PASSWORD',     True)
-    um.enable_change_username   = sd('USER_ENABLE_CHANGE_USERNAME',     True)
-    um.enable_email             = sd('USER_ENABLE_EMAIL',               obsoleted_enable_emails)
-    um.enable_confirm_email     = sd('USER_ENABLE_CONFIRM_EMAIL',       um.enable_email)
-    um.enable_forgot_password   = sd('USER_ENABLE_FORGOT_PASSWORD',     um.enable_email)
-    um.enable_register          = sd('USER_ENABLE_REGISTRATION',        True)
-    um.enable_retype_password   = sd('USER_ENABLE_RETYPE_PASSWORD',     obsoleted_enable_retype_passwords)
-    um.enable_username          = sd('USER_ENABLE_USERNAME',            obsoleted_enable_usernames)
-    um.enable_multiple_emails   = sd('USER_ENABLE_MULTIPLE_EMAILS',     False)
-    um.enable_remember_me       = sd('USER_ENABLE_REMEMBER_ME',         True)
+    um.enable_change_password       = sd('USER_ENABLE_CHANGE_PASSWORD',       True)
+    um.enable_change_username       = sd('USER_ENABLE_CHANGE_USERNAME',       True)
+    um.enable_email                 = sd('USER_ENABLE_EMAIL',                 obsoleted_enable_emails)
+    um.enable_confirm_email         = sd('USER_ENABLE_CONFIRM_EMAIL',         um.enable_email)
+    um.enable_forgot_password       = sd('USER_ENABLE_FORGOT_PASSWORD',       um.enable_email)
+    um.enable_login_without_confirm = sd('USER_ENABLE_LOGIN_WITHOUT_CONFIRM', False)
+    um.enable_multiple_emails       = sd('USER_ENABLE_MULTIPLE_EMAILS',       False)
+    um.enable_register              = sd('USER_ENABLE_REGISTRATION',          True)
+    um.enable_remember_me           = sd('USER_ENABLE_REMEMBER_ME',           True)
+    um.enable_retype_password       = sd('USER_ENABLE_RETYPE_PASSWORD',       obsoleted_enable_retype_passwords)
+    um.enable_username              = sd('USER_ENABLE_USERNAME',              obsoleted_enable_usernames)
 
     # Set default settings
     um.auto_login                  = sd('USER_AUTO_LOGIN',                 True)
-    um.auto_login_at_login         = sd('USER_AUTO_LOGIN_AT_LOGIN',        um.auto_login)
-    um.auto_login_after_register   = sd('USER_AUTO_LOGIN_AFTER_REGISTER',  um.auto_login)
     um.auto_login_after_confirm    = sd('USER_AUTO_LOGIN_AFTER_CONFIRM',   um.auto_login)
+    um.auto_login_after_register   = sd('USER_AUTO_LOGIN_AFTER_REGISTER',  um.auto_login)
+    um.auto_login_after_reset_password   = sd('USER_AUTO_LOGIN_AFTER_RESET_PASSWORD',  um.auto_login)
+    um.auto_login_at_login         = sd('USER_AUTO_LOGIN_AT_LOGIN',        um.auto_login)
     um.confirm_email_expiration    = sd('USER_CONFIRM_EMAIL_EXPIRATION',   2*24*3600)   # 2 days
     um.invite_expiration           = sd('USER_INVITE_EXPIRATION',          90*24*3600)  # 90 days
     um.password_hash_mode          = sd('USER_PASSWORD_HASH_MODE',         'passlib')
@@ -66,12 +68,14 @@ def set_default_settings(user_manager, app_config):
     login_endpoint = 'user.login'
     um.after_change_password_endpoint      = sd('USER_AFTER_CHANGE_PASSWORD_ENDPOINT',      home_endpoint)
     um.after_change_username_endpoint      = sd('USER_AFTER_CHANGE_USERNAME_ENDPOINT',      home_endpoint)
+    um.after_confirm_endpoint              = sd('USER_AFTER_CONFIRM_ENDPOINT',              home_endpoint)
+    um.after_forgot_password_endpoint      = sd('USER_AFTER_FORGOT_PASSWORD_ENDPOINT',      home_endpoint)
     um.after_login_endpoint                = sd('USER_AFTER_LOGIN_ENDPOINT',                home_endpoint)
     um.after_logout_endpoint               = sd('USER_AFTER_LOGOUT_ENDPOINT',               login_endpoint)
     um.after_register_endpoint             = sd('USER_AFTER_REGISTER_ENDPOINT',             home_endpoint)
-    um.after_confirm_endpoint              = sd('USER_AFTER_CONFIRM_ENDPOINT',              home_endpoint)
     um.after_resend_confirm_email_endpoint = sd('USER_AFTER_RESEND_CONFIRM_EMAIL_ENDPOINT', home_endpoint)
-    um.after_forgot_password_endpoint      = sd('USER_AFTER_FORGOT_PASSWORD_ENDPOINT',      home_endpoint)
+    um.after_reset_password_endpoint       = sd('USER_AFTER_RESET_PASSWORD_ENDPOINT',       home_endpoint)
+    um.unconfirmed_endpoint                = sd('USER_UNCONFIRMED_ENDPOINT',                home_endpoint)
     um.unauthenticated_endpoint            = sd('USER_UNAUTHENTICATED_ENDPOINT',            login_endpoint)
     um.unauthorized_endpoint               = sd('USER_UNAUTHORIZED_ENDPOINT',               home_endpoint)
 

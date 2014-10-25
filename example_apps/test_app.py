@@ -1,16 +1,16 @@
 import os
 from flask import Flask, redirect, render_template_string, request, url_for
-from flask.ext.babel import Babel
-from flask.ext.mail import Mail
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.user import current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
+from flask_babel import Babel
+from flask_mail import Mail
+from flask_sqlalchemy import SQLAlchemy
+from flask_user import confirm_required, current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
 
 # Use a Class-based config to avoid needing a 2nd file
 # os.getenv() enables configuration through OS environment variables
 class ConfigClass(object):
     # Flask settings
     SECRET_KEY =              os.getenv('SECRET_KEY',       'THIS IS AN INSECURE SECRET')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///single_file_app.sqlite')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///test_app.sqlite')
     CSRF_ENABLED = True
 
     # Flask-Mail settings
@@ -23,14 +23,8 @@ class ConfigClass(object):
 
     # Flask-User settings
     USER_APP_NAME        = "AppName"                # Used by email templates
-    USER_ENABLE_USERNAME        = True              # Register and Login with username
-    USER_ENABLE_EMAIL           = True              # Register and Login with email
-    USER_LOGIN_TEMPLATE         = 'flask_user/login_or_register.html'
-    USER_REGISTER_TEMPLATE      = 'flask_user/login_or_register.html'
-    USER_AFTER_LOGIN_ENDPOINT   = 'user_profile_page'
-    USER_AFTER_CONFIRM_ENDPOINT = 'user_profile_page'
-
-    USER_ENABLE_CONFIRM_EMAIL = False
+    USER_ENABLE_RETYPE_PASSWORD = False
+    USER_ENABLE_LOGIN_WITHOUT_CONFIRM = True
 
 def create_app(test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
@@ -56,15 +50,26 @@ def create_app(test_config=None):                   # For automated tests
         print('translations=',repr(translations), 'language=', repr(language))
         return language
 
-    # Define User model. Make sure to add flask.ext.user UserMixin!!
+    # Define the User data model. Make sure to add flask.ext.user UserMixin !!!
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
-        active = db.Column(db.Boolean(), nullable=False, default=False)
+
+        # User authentication information
         username = db.Column(db.String(50), nullable=False, unique=True)
-        password = db.Column(db.String(255), nullable=False, default='')
+        password = db.Column(db.String(255), nullable=False, server_default='')
+        reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
+
+        # User email information
         email = db.Column(db.String(255), nullable=False, unique=True)
         confirmed_at = db.Column(db.DateTime())
-        reset_password_token = db.Column(db.String(100), nullable=False, default='')
+
+        # User information
+        is_enabled = db.Column(db.Boolean(), nullable=False, server_default='0')
+        first_name = db.Column(db.String(100), nullable=False, server_default='')
+        last_name = db.Column(db.String(100), nullable=False, server_default='')
+
+        def is_active(self):
+            return self.is_enabled
 
     # Create all database tables
     db.create_all()
@@ -99,6 +104,7 @@ def create_app(test_config=None):                   # For automated tests
 # The Profile page requires a logged-in user
     @app.route('/user/profile')
     @login_required                                 # Use of @login_required decorator
+    @confirm_required
     def user_profile_page():
         return render_template_string("""
             {% extends "base.html" %}

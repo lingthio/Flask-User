@@ -44,25 +44,14 @@ def test_authorization(client):
     client.get_invalid_page(url_for('user_profile_page'), "You must be signed in to access ")
     client.get_invalid_page(url_for('special_page'), "You must be signed in to access ")
 
-    # Register and Log in as user1 without any roles
-    client.post_valid_form(url_for('user.register'),
-            username='userX', password='Password1')
-    client.login(username='userX', password='Password1')
-
+    # Test as regular 'member' user
+    client.login(username='member', password='Password1')
     client.get_valid_page(url_for('home_page'))
     client.get_valid_page(url_for('user_profile_page'))
     client.get_invalid_page(url_for('special_page'), "You do not have permission to access ")
 
-    # Delete userX
-    User = um.db_adapter.UserClass
-    user = User.query.filter(User.username=='userX').first()
-    assert(user)
-    client.db.session.delete(user)
-    client.db.session.commit()
-
-    # Log in as user007 without roles 'special' and 'agent'
+    # Test as special 'user007' user
     client.login(username='user007', password='Password1')
-
     client.get_valid_page(url_for('home_page'))
     client.get_valid_page(url_for('user_profile_page'))
     client.get_valid_page(url_for('special_page'))

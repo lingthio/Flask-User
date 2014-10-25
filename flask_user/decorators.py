@@ -59,3 +59,42 @@ def roles_required(*required_roles):
             return func(*args, **kwargs)
         return decorated_view
     return wrapper
+
+
+def confirm_required(func):
+    """ This decorator ensures that the current user is logged in and has confirmed their email.
+        Calls the unauthorized_view_function() when the user is not logged in."""
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        # User must be authenticated
+        if current_user.is_authenticated():
+            user_manager = current_app.user_manager
+            # If confirm email has been enabled, user must have at least one confirmed email
+            if not user_manager.enable_email\
+                    or not user_manager.enable_confirm_email\
+                    or user_has_confirmed_email(current_user):
+                return func(*args, **kwargs)
+
+        return current_app.user_manager.unconfirmed_view_function()
+
+    return decorated_view
+
+
+def user_has_confirmed_email(user):
+    db_adapter = current_app.user_manager.db_adapter
+
+    # Handle multiple emails per user: Find at least one confirmed email
+    if db_adapter.UserEmailClass:
+        has_confirmed_email = False
+        user_emails = db_adapter.find_all_object(db_adapter.UserEmailClass,
+                db_adapter.UserEmailClass.user_id==current_user.id)
+        for user_email in user_emails:
+            if user_email.confirmed_at:
+                has_confirmed_email = True
+                break
+
+    # Handle single email per user
+    else:
+        has_confirmed_email = True if user.confirmed_at else False
+
+    return has_confirmed_email

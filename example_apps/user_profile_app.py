@@ -52,7 +52,7 @@ def create_app(test_config=None):                   # For automated tests
         username = db.Column(db.String(50), nullable=False, unique=True)
         password = db.Column(db.String(255), nullable=False, server_default='')
         reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
-        active = db.Column(db.Boolean(), nullable=False, server_default='0')
+        is_enabled = db.Column(db.Boolean(), nullable=False, server_default='0')
 
         # User email information
         email = db.Column(db.String(255), nullable=False, unique=True)
@@ -62,7 +62,7 @@ def create_app(test_config=None):                   # For automated tests
         user_profile = db.relationship('UserProfile', uselist=False, foreign_keys=[user_profile_id])
 
         def is_active(self):
-            return self.active
+            return self.is_enabled
 
     class UserProfile(db.Model):
         id = db.Column(db.Integer, primary_key=True)
@@ -99,7 +99,7 @@ def create_app(test_config=None):                   # For automated tests
         db.session.add(user_profile1)
         user1 = User(user_profile=user_profile1, username='user007',
                 email='user007@example.com', password=user_manager.hash_password('Password1'),
-                active=True)
+                is_enabled=True)
         db.session.add(user1)
         user_profile1.roles.append(Role(name='secret'))
         user_profile1.roles.append(Role(name='agent'))

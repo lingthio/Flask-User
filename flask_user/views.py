@@ -6,18 +6,15 @@
 
 from datetime import datetime
 from flask import current_app, flash, redirect, render_template, request, url_for
-from flask.ext.login import current_user, login_user, logout_user
-from .decorators import login_required
-from . import emails
-from . import signals
-from .translations import gettext as _
-import sys
-
-# Handle Python 2.x and Python 3.x
-try:
+from flask_login import current_user, login_user, logout_user
+try: # Handle Python 2.x and Python 3.x
     from urllib.parse import quote      # Python 3.x
 except ImportError:
     from urllib import quote            # Python 2.x
+from .decorators import confirm_required, login_required, user_has_confirmed_email
+from . import emails
+from . import signals
+from .translations import gettext as _
 
 def confirm_email(token):
     """ Verify email confirmation token and activate the user account."""
@@ -51,7 +48,8 @@ def confirm_email(token):
             user.confirmed_at = datetime.utcnow()
 
     if user:
-        user.active = True
+        if hasattr(user, 'active'): user.active = True
+        if hasattr(user, 'is_enabled'): user.is_enabled = True
         db_adapter.commit()
     else:                                               # pragma: no cover
         flash(_('Invalid confirmation token.'), 'error')
@@ -63,15 +61,16 @@ def confirm_email(token):
     # Prepare one-time system message
     flash(_('Your email has been confirmed.'), 'success')
 
-    # Redirect to login page or auto-login if configured
+    # Auto-login after confirm or redirect to login page
     next = request.args.get('next', _endpoint_url(user_manager.after_confirm_endpoint))
     if user_manager.auto_login_after_confirm:
-        return _do_login_user(user, next)  # Auto-login user after confirm
+        return _do_login_user(user, next)                       # auto-login
     else:
-        return redirect(url_for('user.login')+'?next='+next)
+        return redirect(url_for('user.login')+'?next='+next)    # redirect to login page
 
 
 @login_required
+@confirm_required
 def change_password():
     """ Prompt for old password and new password and change the user's password."""
     user_manager =  current_app.user_manager
@@ -108,6 +107,7 @@ def change_password():
     return render_template(user_manager.change_password_template, form=form)
 
 @login_required
+@confirm_required
 def change_username():
     """ Prompt for new username and old password and change the user's username."""
     user_manager =  current_app.user_manager
@@ -143,6 +143,7 @@ def change_username():
     return render_template(user_manager.change_username_template, form=form)
 
 @login_required
+@confirm_required
 def email_action(id, action):
     """ Perform action 'action' on UserEmail object 'id'
     """
@@ -245,33 +246,28 @@ def login():
     # Process valid POST
     if request.method=='POST' and login_form.validate():
         # Retrieve User
+        user = None
         user_email = None
         if user_manager.enable_username:
-            # Find user by username or email address
+            # Find user record by username
             user = user_manager.find_user_by_username(login_form.username.data)
             user_email = None
+            # Find primary user_email record
             if user and db_adapter.UserEmailClass:
                 user_email = db_adapter.find_first_object(db_adapter.UserEmailClass,
                         user_id=int(user.get_id()),
                         is_primary=True,
                         )
+            # Find user record by email (with form.username)
             if not user and user_manager.enable_email:
                 user, user_email = user_manager.find_user_by_email(login_form.username.data)
         else:
-            # Find user by email address
+            # Find user by email (with form.email)
             user, user_email = user_manager.find_user_by_email(login_form.email.data)
 
         if user:
-            if user.active:
-                return _do_login_user(user, login_form.next.data, login_form.remember_me.data)  # Login user after Login
-            else:
-                confirmed_at = user_email.confirmed_at if user_email else user.confirmed_at
-                if user_manager.enable_confirm_email and not confirmed_at:
-                    url = url_for('user.resend_confirm_email')
-                    flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email or <a href="%(url)s">Re-send confirmation email</a>.', url=url), 'error')
-                else:
-                    flash(_('Your account has been disabled.'), 'error')
-                return redirect(url_for('user.home'))
+            # Log user in
+            return _do_login_user(user, login_form.next.data, login_form.remember_me.data)
 
     # Process GET or invalid POST
     return render_template(user_manager.login_template,
@@ -298,6 +294,7 @@ def logout():
 
 
 @login_required
+@confirm_required
 def manage_emails():
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
@@ -331,7 +328,7 @@ def register():
     login_form = user_manager.login_form()                      # for login_or_register.html
     register_form = user_manager.register_form(request.form)    # for register.html
     if request.method!='POST':
-        login_form.next.data    = register_form.next.data = next
+        login_form.next.data     = register_form.next.data     = next
         login_form.reg_next.data = register_form.reg_next.data = reg_next
 
     # Process valid POST
@@ -354,11 +351,13 @@ def register():
             user_auth_class_fields = UserAuth.__dict__
             user_auth_fields = {}
 
-        # User.active is True if not USER_ENABLE_CONFIRM_EMAIL and False otherwise
+        # Enable user account
         if db_adapter.UserProfileClass:
-            user_auth_fields['active'] = not user_manager.enable_confirm_email
+            if hasattr(db_adapter.UserProfileClass, 'active'): user_auth_fields['active'] = True
+            if hasattr(db_adapter.UserProfileClass, 'is_enabled'): user_auth_fields['is_enabled'] = True
         else:
-            user_fields['active'] = not user_manager.enable_confirm_email
+            if hasattr(db_adapter.UserClass, 'active'): user_fields['active'] = True
+            if hasattr(db_adapter.UserClass, 'is_enabled'): user_fields['is_enabled'] = True
 
         # For all form fields
         for field_name, field_value in register_form.data.items():
@@ -418,13 +417,12 @@ def register():
         # Send user_registered signal
         signals.user_registered.send(current_app._get_current_object(), user=user)
 
-        # Redirect to login page or auto-login if configured
-        reg_next = register_form.reg_next.data
-        if user_manager.enable_confirm_email:
-            return redirect(reg_next)
+        # Auto-login after register or redirect to login page
+        next = request.args.get('next', _endpoint_url(user_manager.after_confirm_endpoint))
         if user_manager.auto_login_after_register:
-            return _do_login_user(user, reg_next)  # Auto-login user after Register
-        return redirect(_endpoint_url(user_manager.after_register_endpoint))
+            return _do_login_user(user, reg_next)                     # auto-login
+        else:
+            return redirect(url_for('user.login')+'?next='+reg_next)  # redirect to login page
 
     # Process GET or invalid POST
     return render_template(user_manager.register_template,
@@ -508,15 +506,30 @@ def reset_password(token):
         # Prepare one-time system message
         flash(_("Your password has been reset successfully. Please sign in with your new password"), 'success')
 
-        # Redirect to the login page
-        return redirect(url_for('user.login'))
+        # Auto-login after reset password or redirect to login page
+        next = request.args.get('next', _endpoint_url(user_manager.after_reset_password_endpoint))
+        if user_manager.auto_login_after_reset_password:
+            return _do_login_user(user, next)                       # auto-login
+        else:
+            return redirect(url_for('user.login')+'?next='+next)    # redirect to login page
 
     # Process GET or invalid POST
     return render_template(user_manager.reset_password_template, form=form)
 
 
+def unconfirmed():
+    """ Prepare a Flash message and redirect to USER_UNCONFIRMED_URL"""
+    # Prepare Flash message
+    url = request.script_root + request.path
+    flash(_("You must confirm your email to access '%(url)s'.", url=url), 'error')
+
+    # Redirect to USER_UNCONFIRMED_ENDPOINT
+    user_manager = current_app.user_manager
+    return redirect(_endpoint_url(user_manager.unconfirmed_endpoint))
+
+
 def unauthenticated():
-    """ Prepare a Flash message and redirect to USER_UNAUTHENTICATED_URL"""
+    """ Prepare a Flash message and redirect to USER_UNAUTHENTICATED_ENDPOINT"""
     # Prepare Flash message
     url = request.url
     flash(_("You must be signed in to access '%(url)s'.", url=url), 'error')
@@ -524,23 +537,24 @@ def unauthenticated():
     # quote the fully qualified url
     quoted_url = quote(url)
 
-    # Redirect to USER_UNAUTHENTICATED_URL
+    # Redirect to USER_UNAUTHENTICATED_ENDPOINT
     user_manager = current_app.user_manager
     return redirect(_endpoint_url(user_manager.unauthenticated_endpoint)+'?next='+ quoted_url)
 
 
 def unauthorized():
-    """ Prepare a Flash message and redirect to USER_UNAUTHORIZED_URL"""
+    """ Prepare a Flash message and redirect to USER_UNAUTHORIZED_ENDPOINT"""
     # Prepare Flash message
     url = request.script_root + request.path
     flash(_("You do not have permission to access '%(url)s'.", url=url), 'error')
 
-    # Redirect to USER_UNAUTHORIZED_URL
+    # Redirect to USER_UNAUTHORIZED_ENDPOINT
     user_manager = current_app.user_manager
     return redirect(_endpoint_url(user_manager.unauthorized_endpoint))
 
 
 @login_required
+@confirm_required
 def user_profile():
     user_manager = current_app.user_manager
     return render_template(user_manager.user_profile_template)
@@ -601,21 +615,36 @@ def _send_confirm_email(user, user_email):
 
 
 def _do_login_user(user, next, remember_me=False):
-    if user and user.is_active():
-        # Use Flask-Login to sign in user
-        #print('login_user: remember_me=', remember_me)
-        login_user(user, remember=remember_me)
+    # User must have been authenticated
+    if not user: return unauthenticated()
 
-        # Send user_logged_in signal
-        signals.user_logged_in.send(current_app._get_current_object(), user=user)
+    # Check if user account has been disabled
+    if not user.is_active():
+        flash(_('Your account has not been enabled.'), 'error')
+        return redirect(url_for('user.home'))
 
-        # Prepare one-time system message
-        flash(_('You have signed in successfully.'), 'success')
+    # Check if user has a confirmed email address
+    user_manager = current_app.user_manager
+    if user_manager.enable_email and user_manager.enable_confirm_email \
+            and not current_app.user_manager.enable_login_without_confirm \
+            and not user_has_confirmed_email(user):
+        url = url_for('user.resend_confirm_email')
+        flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email or <a href="%(url)s">Re-send confirmation email</a>.', url=url), 'error')
+        return redirect(url_for('user.home'))
 
-        # Redirect to 'next' URL
-        return redirect(next)
+    # Use Flask-Login to sign in user
+    #print('login_user: remember_me=', remember_me)
+    login_user(user, remember=remember_me)
 
-    return unauthenticated()
+    # Send user_logged_in signal
+    signals.user_logged_in.send(current_app._get_current_object(), user=user)
+
+    # Prepare one-time system message
+    flash(_('You have signed in successfully.'), 'success')
+
+    # Redirect to 'next' URL
+    return redirect(next)
+
 
 def _endpoint_url(endpoint):
     url = '/'
