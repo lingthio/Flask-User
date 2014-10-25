@@ -18,6 +18,12 @@ Flask-User |release|
 .. comment .. image:: https://coveralls.io/repos/lingthio/Flask-User/badge.png?branch=master
 .. comment     :target: https://coveralls.io/r/lingthio/Flask-User?branch=master
 
+::
+
+    Flask-User v0.6 changed the v0.5 concept of a User and a UserProfile class
+    to the v0.6 concept of a UserAuth and a User class.
+
+    See also the Documentation section on Data Models.
 
 
 
@@ -100,6 +106,13 @@ Documentation
 
 Revision History
 ----------------
+* v0.6 Changed User/UserProfile DataModels into UserAuth/User DataModels.
+
+::
+
+  v0.6 Is backwards compatible with v0.5 but UserProfileClass will be deprecated
+  in the future. See the 'Data Models' section in this documentation.
+
 * v0.5.5 Added user_profile view. Cleaned up base template. Support for UserProfile.roles.
 * v0.5.4 Decoupled Flask-User from Flask-Babel and speaklater
 * v0.5.3

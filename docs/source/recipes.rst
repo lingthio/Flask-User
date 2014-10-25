@@ -4,14 +4,66 @@ Recipes
 
 Here we explain the use of Flask-User through code recipes.
 
-.. toctree::
-    :maxdepth: 1
+Login Form and Register Form on one page
+----------------------------------------
+Some websites may prefer to show the login form and the register form on one page.
 
-    basic_app
-    roles_required_app
-    recipes_user_profile_app
-    recipes_multi_email_app
-    recipes_misc
+Flask-User (v0.4.9 and up) ships with a ``login_or_register.html`` form template which requires the following
+application config settings:
 
-See :doc:`customization` and :doc:`api` for more information.
+* ``USER_LOGIN_TEMPLATE='flask_user/login_or_register.html'``
+* ``USER_REGISTER_TEMPLATE='flask_user/login_or_register.html'``
 
+This would accomplish the following:
+
+* The ``/user/login`` and ``user/register`` URLs will now render ``login_or_register.html``.
+* ``login_or_register.html`` now displays a Login form and a Register form.
+* The Login button will post to ``/user/login``
+* The Register button will post to ``/user/register``
+
+
+Hashing Passwords
+-----------------
+If you want to populate your database with User records with hashed passwords use ``user_manager.hash_password()``:
+
+::
+
+    user = User(
+            email='user1@example.com',
+            password=user_manager.hash_password('Password1'),
+            )
+    db.session.add(user)
+    db.session.commit()
+
+You can verify a password with ``user_manager.verify_password()``:
+
+::
+
+    hashed_password = user.password
+    does_match = user_manager.verify_password(password, hashed_password)
+
+Account Tracking
+----------------
+Flask-User deliberately stayed away from implementing account tracking features because:
+
+* What to track is often customer specific
+* Where to store it is often customer specific
+* Custom tracking is easy to implement using signals
+
+Here's an example of tracking login_count and last_login_ip:
+
+::
+
+    # This code has not been tested
+
+    from flask import request
+
+    @user_logged_in.connect_via(app)
+    def _track_logins(sender, user, **extra):
+        user.login_count += 1
+        user.last_login_ip = request.remote_addr
+        db.session.commit()
+
+Up Next
+-------
+:doc:`customization`

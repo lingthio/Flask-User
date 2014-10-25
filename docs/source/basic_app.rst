@@ -2,7 +2,7 @@ Basic App
 =========
 
 The sample code below illustrates the power of using Flask-User with sensible defaults:
-With just a dozen lines of additional code,
+With just a dozen additional code statements,
 a basic Flask application can be transformed to offer the following features:
 
 * Register with username and email
@@ -61,7 +61,7 @@ Highlighted lines shows the lines added to a basic Flask application.
 .. literalinclude:: includes/basic_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 5, 34-41, 47-48, 65
+   :emphasize-lines: 5, 39-58, 63-65, 82
 
 
 Run the Basic App

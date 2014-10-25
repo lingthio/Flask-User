@@ -56,7 +56,7 @@ copyright = u'2013, Ling Thio and contributors'
 # built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = 'v0.5'
+release = 'v0.6'
 # The short X.Y version.
 version = '.'.join(release.split('.')[:2])
 
