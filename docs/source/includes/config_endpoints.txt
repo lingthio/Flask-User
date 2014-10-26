@@ -13,8 +13,8 @@
     USER_AFTER_RESET_PASSWORD_ENDPOINT       = ''              # v0.6 and up
 
     # Users with an unconfirmed email trying to access a view that has been
-    # decorated with @confirm_required will be redirected to this endpoint
-    USER_UNCONFIRMED_ENDPOINT                = 'user.login'    # v0.6 and up
+    # decorated with @confirm_email_required will be redirected to this endpoint
+    USER_UNCONFIRMED_EMAIL_ENDPOINT          = 'user.login'    # v0.6 and up
 
     # Unauthenticated users trying to access a view that has been decorated
     # with @login_required or @roles_required will be redirected to this endpoint

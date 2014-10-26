@@ -8,17 +8,17 @@ would not be complete without also discussing what its limitations are.
 
 
 Python versions
---------
+---------------
 Flask-User has been tested with Python 2.6, 2.7, 3.3 and 3.4
 
 
 Flask versions
---------
+--------------
 Flask-User has been tested with Flask 0.10
 
 
 Supported Databases
---------
+-------------------
 Out-of-the box, Flask-User ships with a SQLAlchemyAdapter, allowing for support of any
 SQL database that SQLAlchemy v0.9 supports, including:
 
@@ -38,12 +38,20 @@ the remaining field names MUST be named as follows:
 
 ::
 
-  # User model
+  # User authentication information
   user.username                 # Required only if USER_ENABLE_USERNAME is True
-  user.email                    # Required only if USER_ENABLE_EMAIL is True
-  user.confirmed_at             # Required only if USER_ENABLE_CONFIRM_EMAIL is True
   user.password                 # Required
   user.reset_password_token     # Required
+
+  # User email information
+  user.email                    # Required only if USER_ENABLE_EMAIL is True
+  user.confirmed_at             # Required only if USER_ENABLE_CONFIRM_EMAIL is True
+
+  # User information
+  is_enabled                    # for v0.6 and up
+  active                        # for v0.5.x and v0.6.x (will be deprecated)
+
+  # Relationships
   user.roles                    # Required only if @roles_required is used
   user.user_auth                # Required only if a UserAuthClass is specified in DBAdapter()
 
@@ -63,6 +71,6 @@ the remaining field names MUST be named as follows:
 Primary keys
 --------
 
-Though the primary key fields of the User and Role models may be named differently than 'id',
-the primary key type MUST be an integer and can not be a compound key.
+Though the primary key fields of the User, UserAuth and Role models may be named differently than 'id',
+the primary key type MUST be an integer and CAN NOT be a compound key.
 

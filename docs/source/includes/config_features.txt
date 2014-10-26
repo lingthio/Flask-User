@@ -14,7 +14,7 @@
 
     USER_ENABLE_LOGIN_WITHOUT_CONFIRM = False  # Allow users to login without a
                                                # confirmed email address
-                                               # Protect views using @confirm_required
+                                               # Protect views using @confirm_email_required
 
     USER_ENABLE_EMAIL              = True      # Register with Email
                                                # Requires USER_ENABLE_REGISTRATION=True
