@@ -41,7 +41,7 @@ And wouldn't it be nice to also offer:
 Status
 ------
 
-| Flask-User v0.5 and v0.6 are quite stable and is used in production environments.
+| Flask-User v0.5 and v0.6 are quite stable and are used in production environments.
 | It is marked as a Beta release because the API is subject to small changes.
 | We appreciate it if you would enter issues and
   enhancement requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
