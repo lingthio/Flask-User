@@ -3,7 +3,7 @@ from flask import Flask, redirect, render_template_string, request, url_for
 from flask_babel import Babel
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
-from flask_user import confirm_required, current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
+from flask_user import confirm_email_required, current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
 
 # Use a Class-based config to avoid needing a 2nd file
 # os.getenv() enables configuration through OS environment variables
@@ -104,7 +104,7 @@ def create_app(test_config=None):                   # For automated tests
 # The Profile page requires a logged-in user
     @app.route('/user/profile')
     @login_required                                 # Use of @login_required decorator
-    @confirm_required
+    @confirm_email_required
     def user_profile_page():
         return render_template_string("""
             {% extends "base.html" %}
