@@ -11,7 +11,7 @@ try: # Handle Python 2.x and Python 3.x
     from urllib.parse import quote      # Python 3.x
 except ImportError:
     from urllib import quote            # Python 2.x
-from .decorators import confirm_required, login_required, user_has_confirmed_email
+from .decorators import confirm_email_required, login_required, user_has_confirmed_email
 from . import emails
 from . import signals
 from .translations import gettext as _
@@ -70,7 +70,7 @@ def confirm_email(token):
 
 
 @login_required
-@confirm_required
+@confirm_email_required
 def change_password():
     """ Prompt for old password and new password and change the user's password."""
     user_manager =  current_app.user_manager
@@ -107,7 +107,7 @@ def change_password():
     return render_template(user_manager.change_password_template, form=form)
 
 @login_required
-@confirm_required
+@confirm_email_required
 def change_username():
     """ Prompt for new username and old password and change the user's username."""
     user_manager =  current_app.user_manager
@@ -143,7 +143,7 @@ def change_username():
     return render_template(user_manager.change_username_template, form=form)
 
 @login_required
-@confirm_required
+@confirm_email_required
 def email_action(id, action):
     """ Perform action 'action' on UserEmail object 'id'
     """
@@ -294,7 +294,7 @@ def logout():
 
 
 @login_required
-@confirm_required
+@confirm_email_required
 def manage_emails():
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
@@ -528,9 +528,9 @@ def unconfirmed():
     url = request.script_root + request.path
     flash(_("You must confirm your email to access '%(url)s'.", url=url), 'error')
 
-    # Redirect to USER_UNCONFIRMED_ENDPOINT
+    # Redirect to USER_UNCONFIRMED_EMAIL_ENDPOINT
     user_manager = current_app.user_manager
-    return redirect(_endpoint_url(user_manager.unconfirmed_endpoint))
+    return redirect(_endpoint_url(user_manager.unconfirmed_email_endpoint))
 
 
 def unauthenticated():
@@ -559,7 +559,7 @@ def unauthorized():
 
 
 @login_required
-@confirm_required
+@confirm_email_required
 def user_profile():
     user_manager = current_app.user_manager
     return render_template(user_manager.user_profile_template)

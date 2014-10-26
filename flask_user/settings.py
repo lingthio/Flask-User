@@ -76,7 +76,7 @@ def set_default_settings(user_manager, app_config):
     um.after_register_endpoint             = sd('USER_AFTER_REGISTER_ENDPOINT',             home_endpoint)
     um.after_resend_confirm_email_endpoint = sd('USER_AFTER_RESEND_CONFIRM_EMAIL_ENDPOINT', home_endpoint)
     um.after_reset_password_endpoint       = sd('USER_AFTER_RESET_PASSWORD_ENDPOINT',       home_endpoint)
-    um.unconfirmed_endpoint                = sd('USER_UNCONFIRMED_ENDPOINT',                home_endpoint)
+    um.unconfirmed_email_endpoint          = sd('USER_UNCONFIRMED_EMAIL_ENDPOINT',          home_endpoint)
     um.unauthenticated_endpoint            = sd('USER_UNAUTHENTICATED_ENDPOINT',            login_endpoint)
     um.unauthorized_endpoint               = sd('USER_UNAUTHORIZED_ENDPOINT',               home_endpoint)
 

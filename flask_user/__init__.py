@@ -57,7 +57,7 @@ class UserManager(object):
                 register_view_function=views.register,
                 resend_confirm_email_view_function = views.resend_confirm_email,
                 reset_password_view_function = views.reset_password,
-                unconfirmed_view_function = views.unconfirmed,
+                unconfirmed_email_view_function = views.unconfirmed,
                 unauthenticated_view_function = views.unauthenticated,
                 unauthorized_view_function = views.unauthorized,
                 user_profile_view_function = views.user_profile,
@@ -93,7 +93,7 @@ class UserManager(object):
         self.register_view_function = register_view_function
         self.resend_confirm_email_view_function = resend_confirm_email_view_function
         self.reset_password_view_function = reset_password_view_function
-        self.unconfirmed_view_function = unconfirmed_view_function
+        self.unconfirmed_email_view_function = unconfirmed_email_view_function
         self.unauthenticated_view_function = unauthenticated_view_function
         self.unauthorized_view_function = unauthorized_view_function
         self.user_profile_view_function = user_profile_view_function

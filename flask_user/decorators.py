@@ -61,7 +61,7 @@ def roles_required(*required_roles):
     return wrapper
 
 
-def confirm_required(func):
+def confirm_email_required(func):
     """ This decorator ensures that the current user is logged in and has confirmed their email.
         Calls the unauthorized_view_function() when the user is not logged in."""
     @wraps(func)
@@ -75,7 +75,7 @@ def confirm_required(func):
                     or user_has_confirmed_email(current_user):
                 return func(*args, **kwargs)
 
-        return current_app.user_manager.unconfirmed_view_function()
+        return current_app.user_manager.unconfirmed_email_view_function()
 
     return decorated_view
 
