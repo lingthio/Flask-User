@@ -24,5 +24,3 @@ script:
 # Upload coverage data to coveralls
 after_success:
   coveralls
-
-
