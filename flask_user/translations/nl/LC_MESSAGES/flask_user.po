@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-10-03 10:53-0700\n"
+"POT-Creation-Date: 2014-10-25 21:19-0700\n"
 "PO-Revision-Date: 2014-06-10 14:17-0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: nl <LL@li.org>\n"
@@ -42,18 +42,18 @@ msgstr "Deze gebruikersnaam is in gebruik. Gaarne een andere naam proberen."
 msgid "This Email is already in use. Please try another one."
 msgstr "Deze E-mail is al in gebruik. Gaarne een andere E-mail proberen."
 
-#: flask_user/forms.py:66 flask_user/forms.py:146 flask_user/forms.py:159
-#: flask_user/forms.py:225 flask_user/forms.py:267
+#: flask_user/forms.py:66 flask_user/forms.py:148 flask_user/forms.py:161
+#: flask_user/forms.py:237 flask_user/forms.py:279
 msgid "Email"
 msgstr "E-mail"
 
-#: flask_user/forms.py:67 flask_user/forms.py:147 flask_user/forms.py:160
-#: flask_user/forms.py:226 flask_user/forms.py:268
+#: flask_user/forms.py:67 flask_user/forms.py:149 flask_user/forms.py:162
+#: flask_user/forms.py:238 flask_user/forms.py:280
 msgid "Email is required"
 msgstr "E-mail is verplicht"
 
-#: flask_user/forms.py:68 flask_user/forms.py:148 flask_user/forms.py:161
-#: flask_user/forms.py:227 flask_user/forms.py:269
+#: flask_user/forms.py:68 flask_user/forms.py:150 flask_user/forms.py:163
+#: flask_user/forms.py:239 flask_user/forms.py:281
 msgid "Invalid Email"
 msgstr "Onjuist E-mail"
 
@@ -61,142 +61,147 @@ msgstr "Onjuist E-mail"
 msgid "Add Email"
 msgstr "E-mail toevoegen"
 
-#: flask_user/forms.py:73 flask_user/forms.py:116
+#: flask_user/forms.py:73 flask_user/forms.py:117
 msgid "Old Password"
 msgstr "Oud Wachtwoord"
 
-#: flask_user/forms.py:74 flask_user/forms.py:117
+#: flask_user/forms.py:74 flask_user/forms.py:118
 msgid "Old Password is required"
 msgstr "Oud Wachtwoord is verplicht"
 
-#: flask_user/forms.py:76 flask_user/forms.py:274
+#: flask_user/forms.py:76 flask_user/forms.py:286
 msgid "New Password"
 msgstr "Nieuw Wachtwoord"
 
-#: flask_user/forms.py:77 flask_user/forms.py:275
+#: flask_user/forms.py:77 flask_user/forms.py:287
 msgid "New Password is required"
 msgstr "Nieuw Wachtwoord is verplicth"
 
-#: flask_user/forms.py:79 flask_user/forms.py:276
+#: flask_user/forms.py:79 flask_user/forms.py:288
 msgid "Retype New Password"
 msgstr "Herhaal Nieuw Wachtwoord"
 
-#: flask_user/forms.py:80 flask_user/forms.py:277
+#: flask_user/forms.py:80 flask_user/forms.py:289
 msgid "New Password and Retype Password did not match"
 msgstr "Nieuw Wachtwoord en Herhaal Wachtwoord komen niet overeen"
 
-#: flask_user/forms.py:83 flask_user/forms.py:279
+#: flask_user/forms.py:83 flask_user/forms.py:291
 #: flask_user/templates/flask_user/change_password.html:5
 msgid "Change Password"
 msgstr "Wachtwoord veranderen"
 
-#: flask_user/forms.py:105 flask_user/forms.py:139
+#: flask_user/forms.py:106 flask_user/forms.py:141
 msgid "Old Password is incorrect"
 msgstr "Oud Wachtwoord is onjuist"
 
-#: flask_user/forms.py:112
+#: flask_user/forms.py:113
 msgid "New Username"
 msgstr "Niuew Gebruikersnaam"
 
-#: flask_user/forms.py:113 flask_user/forms.py:157 flask_user/forms.py:223
+#: flask_user/forms.py:114 flask_user/forms.py:159 flask_user/forms.py:235
 msgid "Username is required"
 msgstr "Gebruikersnaam is verplicht"
 
-#: flask_user/forms.py:120
+#: flask_user/forms.py:121
 #: flask_user/templates/flask_user/change_username.html:5
 msgid "Change Username"
 msgstr "Gebruikersnaam veranderen"
 
-#: flask_user/forms.py:150
+#: flask_user/forms.py:152
 msgid "Send reset password email"
 msgstr "Verstuur Reset Wachtwoord E-mail"
 
-#: flask_user/forms.py:156 flask_user/forms.py:222
+#: flask_user/forms.py:158 flask_user/forms.py:234
 msgid "Username"
 msgstr "Gebruikersnaam"
 
-#: flask_user/forms.py:163 flask_user/forms.py:229
+#: flask_user/forms.py:165 flask_user/forms.py:241
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: flask_user/forms.py:164 flask_user/forms.py:230
+#: flask_user/forms.py:166 flask_user/forms.py:242
 msgid "Password is required"
 msgstr "Wachtwoord is verplicht"
 
-#: flask_user/forms.py:166
+#: flask_user/forms.py:168
 msgid "Remember me"
 msgstr "Herinner mij"
 
-#: flask_user/forms.py:168 flask_user/templates/flask_user/login.html:5
+#: flask_user/forms.py:170 flask_user/templates/flask_user/login.html:5
 #: flask_user/templates/flask_user/login_or_register.html:9
 msgid "Sign in"
 msgstr "Aanmelden"
 
-#: flask_user/forms.py:175
+#: flask_user/forms.py:177
 msgid "Username or Email"
 msgstr "Gebruikersnaam of E-mail"
 
-#: flask_user/forms.py:207
+#: flask_user/forms.py:219
+#, fuzzy
+msgid "Incorrect Username/Email and Password"
+msgstr "Onjuist Gebruikersnaam en Wachtwoord"
+
+#: flask_user/forms.py:221
 msgid "Incorrect Username and Password"
 msgstr "Onjuist Gebruikersnaam en Wachtwoord"
 
-#: flask_user/forms.py:209
+#: flask_user/forms.py:223
 msgid "Incorrect Email and Password"
 msgstr "Onjuist E-mail en Wachtwoord"
 
-#: flask_user/forms.py:231
+#: flask_user/forms.py:243
 msgid "Retype Password"
 msgstr "Herhaal Wachtwoord"
 
-#: flask_user/forms.py:232
+#: flask_user/forms.py:244
 msgid "Password and Retype Password did not match"
 msgstr "Wachtwoord en Herhaal Wachtwoord komen niet overeen"
 
-#: flask_user/forms.py:234
-#: flask_user/templates/flask_user/login_or_register.html:39
+#: flask_user/forms.py:246
+#: flask_user/templates/flask_user/login_or_register.html:41
 #: flask_user/templates/flask_user/register.html:5
 msgid "Register"
 msgstr "Registreren"
 
-#: flask_user/forms.py:271
+#: flask_user/forms.py:283
 msgid "Resend email confirmation email"
 msgstr "Bevestigings e-mail nogmaals versturen"
 
-#: flask_user/translations.py:82
+#: flask_user/translations.py:73
 msgid "Home Page"
 msgstr "Startpagina"
 
-#: flask_user/translations.py:83
+#: flask_user/translations.py:74
 msgid "Profile Page"
 msgstr "Profielpagina"
 
-#: flask_user/translations.py:84
+#: flask_user/translations.py:75
 msgid "Special Page"
 msgstr "Speciale Pagina"
 
-#: flask_user/views.py:32
+#: flask_user/views.py:29
 msgid "Your confirmation token has expired."
 msgstr "Uw bevestigingstoken is verlopen."
 
-#: flask_user/views.py:36 flask_user/views.py:56
+#: flask_user/views.py:33 flask_user/views.py:55
 msgid "Invalid confirmation token."
 msgstr "Onjust bevestigingstoken."
 
-#: flask_user/views.py:63
+#: flask_user/views.py:62
 #, fuzzy
 msgid "Your email has been confirmed."
 msgstr "Uw E-mail is bevestigd. Gaarne aanmelden."
 
-#: flask_user/views.py:100
+#: flask_user/views.py:101
 msgid "Your password has been changed successfully."
 msgstr "Uw Wachtwoord is gewijzigd."
 
-#: flask_user/views.py:134
+#: flask_user/views.py:137
 #, python-format
 msgid "Your username has been changed to '%(username)s'."
 msgstr "Uw gebruikersnaam is gewijzigd tot '%(username)s'."
 
-#: flask_user/views.py:214
+#: flask_user/views.py:218
 #, python-format
 msgid ""
 "A reset password email has been sent to '%(email)s'. Open that email and "
@@ -205,7 +210,59 @@ msgstr ""
 "Een reset wachtwoord E-mail is verstuurd naar '%(email)s'. Open deze "
 "E-mail en volg de instructies om uw wachtwoord opnieuw in the stellen."
 
-#: flask_user/views.py:268
+#: flask_user/views.py:289
+msgid "You have signed out successfully."
+msgstr "U ben met success afgemeld."
+
+#: flask_user/views.py:474
+msgid "Your reset password token has expired."
+msgstr "Your reset wachtwoord token is verlopern."
+
+#: flask_user/views.py:478 flask_user/views.py:489
+msgid "Your reset password token is invalid."
+msgstr "Uw reset wachtwoord token is ongeldig."
+
+#: flask_user/views.py:512
+msgid ""
+"Your password has been reset successfully. Please sign in with your new "
+"password"
+msgstr "Uw wachtwoord is verstelt. Gaarne aanmelden met uw nieuwe wachtwoord."
+
+#: flask_user/views.py:529
+#, fuzzy, python-format
+msgid "You must confirm your email to access '%(url)s'."
+msgstr "Je moet zijn ingelogd om toegang te krijgen to %(url)s."
+
+#: flask_user/views.py:540
+#, python-format
+msgid "You must be signed in to access '%(url)s'."
+msgstr "Je moet zijn ingelogd om toegang te krijgen to %(url)s."
+
+#: flask_user/views.py:554
+#, python-format
+msgid "You do not have permission to access '%(url)s'."
+msgstr "U hebt geen toestemming tot %(url)s."
+
+#: flask_user/views.py:598 flask_user/views.py:619
+#, python-format
+msgid ""
+"A confirmation email has been sent to %(email)s with instructions to "
+"complete your registration."
+msgstr ""
+"Een bevestigings E-mail is verstuurd naar %(email)s met instructies om uw"
+" registratie te voltooien."
+
+#: flask_user/views.py:600
+#, fuzzy
+msgid "You have registered successfully."
+msgstr "U heeft zich met success aangemeld."
+
+#: flask_user/views.py:628
+#, fuzzy
+msgid "Your account has not been enabled."
+msgstr "Uw account is gedeactiveerd."
+
+#: flask_user/views.py:637
 #, fuzzy, python-format
 msgid ""
 "Your email address has not yet been confirmed. Check your email Inbox and"
@@ -216,53 +273,7 @@ msgstr ""
 " de bevestigings E-mail en volg de instructies im je account te "
 "activeren."
 
-#: flask_user/views.py:270
-msgid "Your account has been disabled."
-msgstr "Uw account is gedeactiveerd."
-
-#: flask_user/views.py:290
-msgid "You have signed out successfully."
-msgstr "U ben met success afgemeld."
-
-#: flask_user/views.py:455
-msgid "Your reset password token has expired."
-msgstr "Your reset wachtwoord token is verlopern."
-
-#: flask_user/views.py:459 flask_user/views.py:470
-msgid "Your reset password token is invalid."
-msgstr "Uw reset wachtwoord token is ongeldig."
-
-#: flask_user/views.py:492
-msgid ""
-"Your password has been reset successfully. Please sign in with your new "
-"password"
-msgstr "Uw wachtwoord is verstelt. Gaarne aanmelden met uw nieuwe wachtwoord."
-
-#: flask_user/views.py:517
-#, python-format
-msgid "You must be signed in to access '%(url)s'."
-msgstr "Je moet zijn ingelogd om toegang te krijgen to %(url)s."
-
-#: flask_user/views.py:530
-#, python-format
-msgid "You do not have permission to access '%(url)s'."
-msgstr "U hebt geen toestemming tot %(url)s."
-
-#: flask_user/views.py:553 flask_user/views.py:574
-#, python-format
-msgid ""
-"A confirmation email has been sent to %(email)s with instructions to "
-"complete your registration."
-msgstr ""
-"Een bevestigings E-mail is verstuurd naar %(email)s met instructies om uw"
-" registratie te voltooien."
-
-#: flask_user/views.py:555
-#, fuzzy
-msgid "You have registered successfully."
-msgstr "U heeft zich met success aangemeld."
-
-#: flask_user/views.py:587
+#: flask_user/views.py:648
 msgid "You have signed in successfully."
 msgstr "U heeft zich met success aangemeld."
 
@@ -275,7 +286,7 @@ msgid "New here? Register."
 msgstr "Nieuw hier? Inschrijven."
 
 #: flask_user/templates/flask_user/login.html:44
-#: flask_user/templates/flask_user/login_or_register.html:32
+#: flask_user/templates/flask_user/login_or_register.html:34
 msgid "Forgot your Password?"
 msgstr "Wachtwoord vergeten?"
 
@@ -295,14 +306,25 @@ msgstr "Bevestigings e-mail nogmaals versturen"
 msgid "Reset Password"
 msgstr "Reset Wachtwoord"
 
-#: flask_user/tests/test_authorization.py:73
-#: flask_user/tests/test_authorization.py:76
-#, python-format
-msgid "I have %(count)s apple"
-msgid_plural "I have %(count)s apples"
-msgstr[0] ""
-msgstr[1] ""
+#: flask_user/templates/flask_user/user_profile.html:5
+msgid "User profile"
+msgstr ""
+
+#: flask_user/templates/flask_user/user_profile.html:8
+#, fuzzy
+msgid "Change username"
+msgstr "Gebruikersnaam veranderen"
+
+#: flask_user/templates/flask_user/user_profile.html:11
+#, fuzzy
+msgid "Change password"
+msgstr "Wachtwoord veranderen"
 
 #~ msgid "Already have an account?"
 #~ msgstr "Heeft U zich al ingeschreven?"
+
+#~ msgid "I have %(count)s apple"
+#~ msgid_plural "I have %(count)s apples"
+#~ msgstr[0] ""
+#~ msgstr[1] ""
 
