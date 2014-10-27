@@ -66,7 +66,7 @@ def set_default_settings(user_manager, app_config):
 
     # Set default ENDPOINTs
     home_endpoint = ''
-    login_endpoint = 'user.login'
+    login_endpoint = um.login_endpoint = 'user.login'
     um.after_change_password_endpoint      = sd('USER_AFTER_CHANGE_PASSWORD_ENDPOINT',      home_endpoint)
     um.after_change_username_endpoint      = sd('USER_AFTER_CHANGE_USERNAME_ENDPOINT',      home_endpoint)
     um.after_confirm_endpoint              = sd('USER_AFTER_CONFIRM_ENDPOINT',              home_endpoint)
