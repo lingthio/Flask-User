@@ -61,9 +61,6 @@ def create_app(test_config=None):                   # For automated tests
         roles = db.relationship('Role', secondary='user_roles',
                 backref=db.backref('users', lazy='dynamic'))
 
-        def is_active(self):
-            return self.is_enabled
-
     # Define the UserAuth data model.
     class UserAuth(db.Model):
         id = db.Column(db.Integer, primary_key=True)

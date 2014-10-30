@@ -61,9 +61,6 @@ def create_app(test_config=None):                   # For automated tests
         # Relationships
         user_profile = db.relationship('UserProfile', uselist=False, foreign_keys=[user_profile_id])
 
-        def is_active(self):
-            return self.is_enabled
-
     class UserProfile(db.Model):
         id = db.Column(db.Integer, primary_key=True)
 

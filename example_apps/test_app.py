@@ -68,9 +68,6 @@ def create_app(test_config=None):                   # For automated tests
         first_name = db.Column(db.String(100), nullable=False, server_default='')
         last_name = db.Column(db.String(100), nullable=False, server_default='')
 
-        def is_active(self):
-            return self.is_enabled
-
     # Create all database tables
     db.create_all()
 
