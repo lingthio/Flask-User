@@ -47,10 +47,11 @@ class SQLAlchemyAdapter(DBAdapter):
 
             # Make sure that ObjectClass has a 'field_name' property
             field = getattr(ObjectClass, field_name, None)
-            if not field:
+            if field is None:
                 raise KeyError("SQLAlchemyAdapter.find_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
 
             # Add a filter to the query
+            print(field, repr(field))
             query = query.filter(field.in_((field_value,)))
 
         # Execute query
@@ -66,7 +67,7 @@ class SQLAlchemyAdapter(DBAdapter):
 
             # Make sure that ObjectClass has a 'field_name' property
             field = getattr(ObjectClass, field_name, None)
-            if not field:
+            if field is None:
                 raise KeyError("SQLAlchemyAdapter.find_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
 
             # Add a case sensitive filter to the query
@@ -84,7 +85,7 @@ class SQLAlchemyAdapter(DBAdapter):
 
             # Make sure that ObjectClass has a 'field_name' property
             field = getattr(ObjectClass, field_name, None)
-            if not field:
+            if field is None:
                 raise KeyError("SQLAlchemyAdapter.find_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
 
             # Add a case sensitive filter to the query

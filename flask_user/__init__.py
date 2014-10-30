@@ -298,7 +298,21 @@ class UserManager(object):
 
 class UserMixin(LoginUserMixin):
     """ This class adds methods to the User model class required by Flask-Login and Flask-User."""
-    
+
+    def is_active(self):
+        if hasattr(self, 'active'):
+            return self.active
+        else:
+            return self.is_enabled
+
+
+    def set_active(self, active):
+        if hasattr(self, 'active'):
+            self.active = active
+        else:
+            self.is_enabled = active
+
+
     def has_roles(self, *requirements):
         """ Return True if the user has all of the specified roles. Return False otherwise.
 
@@ -362,3 +376,22 @@ class UserMixin(LoginUserMixin):
         token = token_manager.encrypt_id(user_id)
         #print('get_auth_token: user_id=', user_id, 'token=', token)
         return token
+
+
+    def has_confirmed_email(self):
+        db_adapter = current_app.user_manager.db_adapter
+
+        # Handle multiple emails per user: Find at least one confirmed email
+        if db_adapter.UserEmailClass:
+            has_confirmed_email = False
+            user_emails = db_adapter.find_all_objects(db_adapter.UserEmailClass, user_id=self.id)
+            for user_email in user_emails:
+                if user_email.confirmed_at:
+                    has_confirmed_email = True
+                    break
+
+        # Handle single email per user
+        else:
+            has_confirmed_email = True if self.confirmed_at else False
+
+        return has_confirmed_email

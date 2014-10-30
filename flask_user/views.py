@@ -11,7 +11,7 @@ try: # Handle Python 2.x and Python 3.x
     from urllib.parse import quote      # Python 3.x
 except ImportError:
     from urllib import quote            # Python 2.x
-from .decorators import confirm_email_required, login_required, user_has_confirmed_email
+from .decorators import confirm_email_required, login_required
 from . import emails
 from . import signals
 from .translations import gettext as _
@@ -48,8 +48,7 @@ def confirm_email(token):
             user.confirmed_at = datetime.utcnow()
 
     if user:
-        if hasattr(user, 'active'): user.active = True
-        if hasattr(user, 'is_enabled'): user.is_enabled = True
+        user.set_active(True)
         db_adapter.commit()
     else:                                               # pragma: no cover
         flash(_('Invalid confirmation token.'), 'error')
@@ -353,11 +352,19 @@ def register():
 
         # Enable user account
         if db_adapter.UserProfileClass:
-            if hasattr(db_adapter.UserProfileClass, 'active'): user_auth_fields['active'] = True
-            if hasattr(db_adapter.UserProfileClass, 'is_enabled'): user_auth_fields['is_enabled'] = True
+            if hasattr(db_adapter.UserProfileClass, 'active'):
+                user_auth_fields['active'] = True
+            elif hasattr(db_adapter.UserProfileClass, 'is_enabled'):
+                user_auth_fields['is_enabled'] = True
+            else:
+                user_auth_fields['is_active'] = True
         else:
-            if hasattr(db_adapter.UserClass, 'active'): user_fields['active'] = True
-            if hasattr(db_adapter.UserClass, 'is_enabled'): user_fields['is_enabled'] = True
+            if hasattr(db_adapter.UserClass, 'active'):
+                user_fields['active'] = True
+            elif hasattr(db_adapter.UserClass, 'is_enabled'):
+                user_fields['is_enabled'] = True
+            else:
+                user_fields['is_active'] = True
 
         # For all form fields
         for field_name, field_value in register_form.data.items():
@@ -632,7 +639,7 @@ def _do_login_user(user, next, remember_me=False):
     user_manager = current_app.user_manager
     if user_manager.enable_email and user_manager.enable_confirm_email \
             and not current_app.user_manager.enable_login_without_confirm_email \
-            and not user_has_confirmed_email(user):
+            and not user.has_confirmed_email():
         url = url_for('user.resend_confirm_email')
         flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email or <a href="%(url)s">Re-send confirmation email</a>.', url=url), 'error')
         return redirect(url_for('user.home'))
