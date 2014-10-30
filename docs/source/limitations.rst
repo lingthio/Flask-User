@@ -4,12 +4,79 @@ Limitations
 
 As you will soon experience, a great many things in Flask-User can be customized
 so it can behave exactly the way you want it to behave. But this documentation
-would not be complete without also discussing what its limitations are.
+would not be complete without first discussing what its limitations are.
 
 
-Python versions
----------------
-Flask-User has been tested with Python 2.6, 2.7, 3.3 and 3.4
+Supported Databases
+-------------------
+Out-of-the box, Flask-User ships with a SQLAlchemyAdapter, allowing
+support for many SQL databases including:
+
+* Drizzle
+* Firebird
+* Microsoft SQL Server
+* MySQL
+* Oracle
+* PostgreSQL
+* SQLite
+* Sybase
+
+For a full list see http://docs.sqlalchemy.org/en/rel_0_9/dialects/index.html
+
+Flask-User does abstract DB interactions through a 'DbAdapter' class,
+so support for other databases is possible by writing a DbAdapter extension class.
+
+
+Database table names and column names
+-------------------------------------
+No known restrictions
+
+
+Primary keys
+------------
+The primary key of the User table must be an Integer and may not be a compound key.
+
+
+Data model field names
+----------------------
+Flask-User requires specific field names for the Data models.
+
+Flask-User does NOT enforce this naming convention on the Database column names
+because SQLAlchemy offers a way to specify a Data model field name other than the Database column name:
+
+::
+
+    class User(db.Model, UserMixin)
+
+        # Map Data model field 'email' to Database column 'email_address'
+        email = db.Column('email_address', db.String(100))
+
+        # Map Data model field 'active' to Database column 'is_active'
+        active = db.Column('is_active', db.Boolean())
+
+Required Data model field names:
+
+::
+
+    # User authentication information
+    User.username              or  UserAuth.username
+    User.password              or  UserAuth.password
+    User.reset_password_token  or  UserAuth.reset_password_token
+                                   UserAuth.user_id
+
+    # User email information
+    User.email                 or  UserEmail.email
+    User.confirmed_at          or  UserEmail.confirmed_at
+                                   UserEmail.user_id
+
+    # User information
+    User.active
+
+    # Relationships
+    User.roles                 # only if @roles_required is used
+
+    # Role information
+    Role.name
 
 
 Flask versions
@@ -17,60 +84,8 @@ Flask versions
 Flask-User has been tested with Flask 0.10
 
 
-Supported Databases
--------------------
-Out-of-the box, Flask-User ships with a SQLAlchemyAdapter, allowing for support of any
-SQL database that SQLAlchemy v0.9 supports, including:
+Python versions
+---------------
+Flask-User has been tested with Python 2.6, 2.7, 3.3 and 3.4
 
-Drizzle, Firebird, Microsoft SQL Server, MySQL, Oracle, PostgreSQL, SQLite, Sybase
-
-See http://docs.sqlalchemy.org/en/rel_0_9/dialects/index.html for a full list
-
-Flask-User does abstract DB interactions through a 'DbAdapter' class,
-so support for other databases is possible by writing a DbAdapter extension class.
-
-
-User model field names
---------
-
-Though the User model table name, and the primary key field name can be customized,
-the remaining field names MUST be named as follows:
-
-::
-
-  # User authentication information
-  user.username                 # Required only if USER_ENABLE_USERNAME is True
-  user.password                 # Required
-  user.reset_password_token     # Required
-
-  # User email information
-  user.email                    # Required only if USER_ENABLE_EMAIL is True
-  user.confirmed_at             # Required only if USER_ENABLE_CONFIRM_EMAIL is True
-
-  # User information
-  is_enabled                    # for v0.6 and up
-  active                        # for v0.5.x and v0.6.x (will be deprecated)
-
-  # Relationships
-  user.roles                    # Required only if @roles_required is used
-  user.user_auth                # Required only if a UserAuthClass is specified in DBAdapter()
-
-
-Role model field names
---------
-
-Though the User model table name, and the primary key field name can be customized,
-the remaining field names MUST be named as follows:
-
-::
-
-  # Role model
-  role.name                     # Required if @roles_required is used
-
-
-Primary keys
---------
-
-Though the primary key fields of the User, UserAuth and Role models may be named differently than 'id',
-the primary key type MUST be an integer and CAN NOT be a compound key.
 

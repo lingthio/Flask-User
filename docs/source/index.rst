@@ -20,6 +20,14 @@ Flask-User |release|
 
 ::
 
+    HEADSUP:
+    We're starting to work on Flaks-User 1.0 which will break backwards
+    compatibility with v0.x.
+    Please 'peg' your requirements.txt file to Flask-User==0.6 now
+    to avoid compatibility problems in the future.
+
+::
+
     Flask-User v0.6 changed the v0.5 concept of a User and a UserProfile class
     to the v0.6 concept of a UserAuth and a User class.
 
