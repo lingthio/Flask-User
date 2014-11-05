@@ -9,7 +9,9 @@ Ling Thio <ling.thio@gmail.com>
 
 Contributors
 ------------
-'Markosys' https://github.com/markosys
+- https://github.com/lilac       # Chinese translation
+- https://github.com/cranberyxl  # Bugfix for login_endpoint & macros.label
+- https://github.com/markosys    # Early testing and feedback
 
 
 

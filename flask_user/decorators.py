@@ -78,25 +78,3 @@ def confirm_email_required(func):
         return current_app.user_manager.unconfirmed_email_view_function()
 
     return decorated_view
-
-
-def user_has_confirmed_email(user):
-    db_adapter = current_app.user_manager.db_adapter
-
-    # Handle multiple emails per user: Find at least one confirmed email
-    if db_adapter.UserEmailClass:
-        has_confirmed_email = False
-        print('1')
-        user_emails = db_adapter.find_all_objects(db_adapter.UserEmailClass, user_id=user.id)
-        for user_email in user_emails:
-            print('2')
-            if user_email.confirmed_at:
-                print('3')
-                has_confirmed_email = True
-                break
-
-    # Handle single email per user
-    else:
-        has_confirmed_email = True if user.confirmed_at else False
-
-    return has_confirmed_email

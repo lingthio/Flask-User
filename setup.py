@@ -87,7 +87,7 @@ from setuptools import setup
 
 setup(
     name='Flask-User',
-    version='0.6',
+    version='0.6.1',
     url='http://github.com/lingthio/Flask-User',
     license='BSD License',
     author='Ling Thio',
@@ -116,6 +116,7 @@ setup(
         'Framework :: Flask',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
+        'Natural Language :: Chinese (Simplified)',
         'Natural Language :: Dutch',
         'Natural Language :: English',
         'Operating System :: OS Independent',
