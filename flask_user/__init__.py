@@ -16,6 +16,7 @@ from . import settings
 from . import tokens
 from . import translations
 from . import views
+from .translations import get_translations
 
 # Enable the following: from flask.ext.user import current_user
 from flask_login import current_user
@@ -125,8 +126,8 @@ class UserManager(object):
         # Initialize Translations -- Only if Flask-Babel has been installed
         if hasattr(app.jinja_env, 'install_gettext_callables'):
             app.jinja_env.install_gettext_callables(
-                    translations.gettext,
-                    translations.ngettext,
+                    lambda x: get_translations().ugettext(x),
+                    lambda s, p, n: get_translations().ungettext(s, p, n),
                     newstyle=True)
         else:
             app.jinja_env.add_extension('jinja2.ext.i18n')
