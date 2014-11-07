@@ -225,7 +225,7 @@ def check_valid_change_password_form(um, client):
     client.post_valid_form(url_for('user.change_password'), **kwargs)
 
     # Verify operations
-    assert um.verify_password(new_password, user1.password)
+    assert um.verify_password(new_password, user1)
 
     # Change password back to old password for subsequent tests
     user1.password = old_hashed_password
@@ -295,7 +295,7 @@ def check_valid_reset_password_page(um, client):
     client.post_valid_form(url, **kwargs)
 
     # Verify operations
-    assert um.verify_password(new_password, user1.password)
+    assert um.verify_password(new_password, user1)
 
     # Change password back to old password for subsequent tests
     user1.password = old_hashed_password
