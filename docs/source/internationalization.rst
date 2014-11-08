@@ -6,7 +6,11 @@ into other languages. This allows us to:
 * Customize built-in English text to custom English text
 * Translate built-in English text into another language
 
-Flask-User ships with the English text, and a Dutch translation.
+Flask-User ships with the following languages:
+* English (en)
+* Chinese (Simplified) (zh, v0.6.1 and up)
+* Dutch (nl)
+* French (fr, v0.6.1 and up)
 
 
 REQUIRED: Installing Flask-Babel

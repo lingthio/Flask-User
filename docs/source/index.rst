@@ -114,6 +114,7 @@ Documentation
 
 Revision History
 ----------------
+* v0.6.1 Added Chinese (Simplified) translation.
 * v0.6 Changed User/UserProfile DataModels into UserAuth/User DataModels.
 
 ::
@@ -213,6 +214,12 @@ This project would not be possible without the use of the following amazing offe
 * `Flask-Mail <http://pythonhosted.org/flask-mail/>`_
 * `SQLAlchemy <http://www.sqlalchemy.org/>`_ and `Flask-SQLAlchemy <http://pythonhosted.org/Flask-SQLAlchemy/>`_
 * `WTForms <http://wtforms.readthedocs.org/en/latest/>`_ and `Flask-WTF <https://flask-wtf.readthedocs.org/en/latest/>`_
+
+Contributors
+------------
+- https://github.com/lilac : Chinese translation
+- https://github.com/cranberyxl : Bugfix for login_endpoint & macros.label
+- https://github.com/markosys : Early testing and feedback
 
 Alternative Flask extensions
 ----------------------------
