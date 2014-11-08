@@ -379,8 +379,8 @@ Developers can customize the password hashing in the following ways:
         def hash_password(self, password):
             return self.password
 
-        def verify_password(self, password, hashed_password)
-            return self.hash_password(password)==hashed_password
+        def verify_password(self, password, user)
+            return self.hash_password(password) == self.get_password(user)
 
 **Backward compatibility with Flask-Security**
 

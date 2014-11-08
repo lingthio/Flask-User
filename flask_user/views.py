@@ -85,9 +85,7 @@ def change_password():
         hashed_password = user_manager.hash_password(form.new_password.data)
 
         # Change password
-        user_auth = current_user.user_auth if db_adapter.UserAuthClass  and hasattr(current_user, 'user_auth') else current_user
-        db_adapter.update_object(user_auth, password=hashed_password)
-        db_adapter.commit()
+        user_manager.update_password(current_user, hashed_password)
 
         # Send 'password_changed' email
         if user_manager.enable_email and user_manager.send_password_changed_email:

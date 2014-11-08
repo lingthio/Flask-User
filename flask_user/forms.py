@@ -101,8 +101,7 @@ class ChangePasswordForm(Form):
             return False
 
         # Verify current_user and current_password
-        current_password = current_user.user_auth.password if user_manager.db_adapter.UserAuthClass and hasattr(current_user, 'user_auth') else current_user.password
-        if not current_user or not user_manager.verify_password(self.old_password.data, current_password):
+        if not current_user or not user_manager.verify_password(self.old_password.data, current_user):
             self.old_password.errors.append(_('Old Password is incorrect'))
             return False
 
@@ -136,8 +135,7 @@ class ChangeUsernameForm(Form):
             return False
 
         # Verify current_user and current_password
-        current_password = current_user.user_auth.password if user_manager.db_adapter.UserAuthClass and hasattr(current_user, 'user_auth') else current_user.password
-        if not current_user or not user_manager.verify_password(self.old_password.data, current_password):
+        if not current_user or not user_manager.verify_password(self.old_password.data, current_user):
             self.old_password.errors.append(_('Old Password is incorrect'))
             return False
 
@@ -204,14 +202,8 @@ class LoginForm(Form):
             user, user_email = user_manager.find_user_by_email(self.email.data)
 
         # Handle successful authentication
-        if user:
-            # Handle v0.5 backward compatibility
-            if user_manager.db_adapter.UserProfileClass:
-                current_password = user.password
-            else:
-                current_password = user.user_auth.password if user_manager.db_adapter.UserAuthClass else user.password
-            if user_manager.verify_password(self.password.data, current_password):
-                return True                         # Successful authentication
+        if user and user_manager.verify_password(self.password.data, user):
+            return True                         # Successful authentication
 
         # Handle unsuccessful authentication
         if user_manager.enable_username:

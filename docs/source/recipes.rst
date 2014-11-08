@@ -39,8 +39,7 @@ You can verify a password with ``user_manager.verify_password()``:
 
 ::
 
-    hashed_password = user.password
-    does_match = user_manager.verify_password(password, hashed_password)
+    does_match = user_manager.verify_password(password, user)
 
 Account Tracking
 ----------------

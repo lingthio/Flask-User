@@ -67,6 +67,7 @@ class UserManager(object):
                 password_crypt_context=None,
                 send_email_function = emails.send_email,
                 token_manager=tokens.TokenManager(),
+                legacy_check_password_hash=None
                 ):
         """ Initialize the UserManager with custom or built-in attributes"""
         self.db_adapter = db_adapter
@@ -103,6 +104,7 @@ class UserManager(object):
         self.token_manager = token_manager
         self.password_crypt_context = password_crypt_context
         self.send_email_function = send_email_function
+        self.legacy_check_password_hash = legacy_check_password_hash
 
         self.app = app
         if app:
@@ -212,8 +214,43 @@ class UserManager(object):
     def hash_password(self, password):
         return passwords.hash_password(self, password)
 
-    def verify_password(self, password, hashed_password):
-        return passwords.verify_password(self, password, hashed_password)
+    def get_password(self, user):
+        use_auth_class = True if self.db_adapter.UserAuthClass and hasattr(user, 'user_auth') else False
+        # Handle v0.5 backward compatibility
+        if self.db_adapter.UserProfileClass:
+            hashed_password = user.password
+        else:
+            hashed_password = user.user_auth.password if use_auth_class else user.password
+        return hashed_password
+
+    def update_password(self, user, hashed_password):
+        use_auth_class = True if self.db_adapter.UserAuthClass and hasattr(user, 'user_auth') else False
+
+        if use_auth_class:
+            user.user_auth.password = hashed_password
+        else:
+            user.password = hashed_password
+        self.db_adapter.commit()
+
+    def verify_password(self, password, user):
+        """
+        Make it backward compatible to legacy password hash.
+        In addition, if such password were found, update the user's password field.
+        """
+        verified = False
+        hashed_password = self.get_password(user)
+
+        try:
+            verified = passwords.verify_password(self, password, hashed_password)
+        except ValueError:
+            legacy_check = self.legacy_check_password_hash
+            if legacy_check:
+                verified = legacy_check(hashed_password, password)
+                if verified:
+                    # update the hash
+                    new_hash = self.hash_password(password)
+                    self.update_password(user, new_hash)
+        return verified
 
     def generate_token(self, user_id):
         return self.token_manager.generate_token(user_id)

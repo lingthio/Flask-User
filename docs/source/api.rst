@@ -162,8 +162,8 @@ verify_password()
 ~~~~~~~~~~~~~~~~~
 ::
 
-    user_manager.verify_password(password, hashed_password)
-    # Returns True if 'password' matches 'hashed password'
+    user_manager.verify_password(password, user)
+    # Returns True if 'password' matches the user's 'hashed password'
     # Returns False otherwise.
 
 Signals
