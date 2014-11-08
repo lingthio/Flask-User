@@ -134,9 +134,8 @@ msgid "Username or Email"
 msgstr "用户名或邮箱"
 
 #: flask_user/forms.py:219
-#, fuzzy
 msgid "Incorrect Username/Email and Password"
-msgstr "用户名或密码不正确"
+msgstr "用户名、邮箱或密码不正确"
 
 #: flask_user/forms.py:221
 msgid "Incorrect Username and Password"
@@ -178,7 +177,7 @@ msgstr "特别页"
 
 #: flask_user/views.py:29
 msgid "Your confirmation token has expired."
-msgstr "你的确认码已经过期。"
+msgstr "您的确认码已经过期。"
 
 #: flask_user/views.py:33 flask_user/views.py:55
 msgid "Invalid confirmation token."
@@ -195,14 +194,14 @@ msgstr "密码更改成功。"
 #: flask_user/views.py:137
 #, python-format
 msgid "Your username has been changed to '%(username)s'."
-msgstr "你的用户名已更改为“%(username)s”。"
+msgstr "您的用户名已更改为“%(username)s”。"
 
 #: flask_user/views.py:218
 #, python-format
 msgid ""
 "A reset password email has been sent to '%(email)s'. Open that email and "
 "follow the instructions to reset your password."
-msgstr "一封重置密码邮件已经发送至“%(email)s”。打开那封邮件，按照其指引重置你的密码。"
+msgstr "一封重置密码邮件已经发送至“%(email)s”。打开那封邮件，按照其指引重置您的密码。"
 
 #: flask_user/views.py:289
 msgid "You have signed out successfully."
@@ -210,32 +209,31 @@ msgstr "登出成功。"
 
 #: flask_user/views.py:474
 msgid "Your reset password token has expired."
-msgstr "你的重置密码请求码已过期。"
+msgstr "您的重置密码请求码已过期。"
 
 #: flask_user/views.py:478 flask_user/views.py:489
 msgid "Your reset password token is invalid."
-msgstr "你的重置密码请求码无效。"
+msgstr "您的重置密码请求码无效。"
 
 #: flask_user/views.py:512
 msgid ""
 "Your password has been reset successfully. Please sign in with your new "
 "password"
-msgstr "你的密码已成功重置。请使用新密码登录。"
+msgstr "您的密码已成功重置。请使用新密码登录。"
 
 #: flask_user/views.py:529
-#, fuzzy, python-format
 msgid "You must confirm your email to access '%(url)s'."
-msgstr "你须登录才能访问“%(url)s”。"
+msgstr "您须确认您的邮箱才能访问“%(url)s”。"
 
 #: flask_user/views.py:540
 #, python-format
 msgid "You must be signed in to access '%(url)s'."
-msgstr "你须登录才能访问“%(url)s”。"
+msgstr "您须登录才能访问“%(url)s”。"
 
 #: flask_user/views.py:554
 #, python-format
 msgid "You do not have permission to access '%(url)s'."
-msgstr "你无权限访问“%(url)s”。"
+msgstr "您无权限访问“%(url)s”。"
 
 #: flask_user/views.py:598 flask_user/views.py:619
 #, python-format
@@ -249,9 +247,8 @@ msgid "You have registered successfully."
 msgstr "注册成功。"
 
 #: flask_user/views.py:628
-#, fuzzy
 msgid "Your account has not been enabled."
-msgstr "你的帐户已被禁用。"
+msgstr "您的帐户已被禁用。"
 
 #: flask_user/views.py:637
 #, python-format
@@ -259,7 +256,7 @@ msgid ""
 "Your email address has not yet been confirmed. Check your email Inbox and"
 " Spam folders for the confirmation email or <a href=\"%(url)s\">Re-send "
 "confirmation email</a>."
-msgstr "你的邮箱地址尚未确认。查看你的邮箱收件箱或垃圾箱以找到确认邮件，或者<a href=\"%(url)s\">再次发送确认邮件</a>。"
+msgstr "您的邮箱地址尚未确认。查看您的邮箱收件箱或垃圾箱以找到确认邮件，或者<a href=\"%(url)s\">再次发送确认邮件</a>。"
 
 #: flask_user/views.py:648
 msgid "You have signed in successfully."
