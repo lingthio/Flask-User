@@ -240,7 +240,7 @@ div.seealso {
 }
  
 div.topic {
-    background-color: #eee;
+    background-color: #ffc;
 }
  
 p.admonition-title {

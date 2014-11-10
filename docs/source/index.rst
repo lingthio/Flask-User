@@ -18,28 +18,22 @@ Flask-User |release|
 .. comment .. image:: https://coveralls.io/repos/lingthio/Flask-User/badge.png?branch=master
 .. comment     :target: https://coveralls.io/r/lingthio/Flask-User?branch=master
 
-::
+.. topic:: Help shape our future!
 
-    HEADSUP:
-    We're starting to work on Flaks-User 1.0 which will break backwards
-    compatibility with v0.x.
-    Please 'peg' your requirements.txt file to Flask-User==0.6 now
-    to avoid compatibility problems in the future.
+   **We need your input** to guide us to the next version of Flask-User and beyond.
+   Please take a minute to answer four questions that will inform our development of version 1.0.
 
-::
+   |answer_four_questions|.
 
-    Flask-User v0.6 changed the v0.5 concept of a User and a UserProfile class
-    to the v0.6 concept of a UserAuth and a User class.
+.. |answer_four_questions| raw:: html
 
-    See also the Documentation section on Data Models.
-
-
+   <a href="https://docs.google.com/forms/d/1p01lA9o9amlx4_0JjjOyAzdoM-C4lUVUgV0LUhMumaU/viewform?usp=send_form" target="_blank"><b>Answer four questions</b></a>
 
 Customizable User Account Management for Flask
 ----------------------------------------------
 
 | So you're writing a Flask web application and would like to authenticate your users.
-| You start with a simple **Login** page, but soon enough you need to handle:
+| You start with a simple **Login** page, but soon enough you'll need to handle:
 
 * **Registrations** and **Email Confirmations**
 * **Change Usernames**, **Change Passwords**, and **Forgotten Passwords**
@@ -69,6 +63,14 @@ Status
 | It is marked as a Beta release because the API is subject to small changes.
 | We appreciate it if you would enter issues and
   enhancement requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
+
+
+.. topic:: Headsup
+
+    We're starting to work on Flask-User 1.0 which will break backwards
+    compatibility with v0.5 and v0.6.
+    Please 'peg' your requirements.txt file now to "Flask-User==0.6.1"
+    to avoid compatibility problems in the future.
 
 
 Demo
@@ -114,7 +116,7 @@ Documentation
 
 Revision History
 ----------------
-* v0.6.1 Added Chinese (Simplified) translation.
+* v0.6.1 Added Chinese (Simplified) and French translations`.
 * v0.6 Changed User/UserProfile DataModels into UserAuth/User DataModels.
 
 ::

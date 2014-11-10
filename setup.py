@@ -119,6 +119,7 @@ setup(
         'Natural Language :: Chinese (Simplified)',
         'Natural Language :: Dutch',
         'Natural Language :: English',
+        'Natural Language :: French',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
