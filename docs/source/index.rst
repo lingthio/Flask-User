@@ -22,6 +22,7 @@ Flask-User |release|
 
    **We need your input** to guide us to the next version of Flask-User and beyond.
    Please take a minute to answer four questions that will inform our development of version 1.0.
+   Thank you!
 
    |answer_four_questions|.
 
