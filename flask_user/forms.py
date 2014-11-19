@@ -210,7 +210,7 @@ class LoginForm(Form):
             if user_manager.enable_email:
                 self.username.errors.append(_('Incorrect Username/Email and Password'))
             else:
-                self.email.errors.append(_('Incorrect Username and Password'))
+                self.username.errors.append(_('Incorrect Username and Password'))
         else:
             self.email.errors.append(_('Incorrect Email and Password'))
         self.password.errors.append('')
