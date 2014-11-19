@@ -143,9 +143,9 @@ class ChangeUsernameForm(Form):
         return True
 
 class ForgotPasswordForm(Form):
-    email = StringField(_('Email'), validators=[
-        validators.Required(_('Email is required')),
-        validators.Email(_('Invalid Email')),
+    email = StringField(_('Your email address'), validators=[
+        validators.Required(_('Email address is required')),
+        validators.Email(_('Invalid Email address')),
         ])
     submit = SubmitField(_('Send reset password email'))
 
@@ -268,9 +268,9 @@ class RegisterForm(Form):
         return True
 
 class ResendConfirmEmailForm(Form):
-    email = StringField(_('Email'), validators=[
-        validators.Required(_('Email is required')),
-        validators.Email(_('Invalid Email')),
+    email = StringField(_('Your email address'), validators=[
+        validators.Required(_('Email address is required')),
+        validators.Email(_('Invalid Email address')),
         ])
     submit = SubmitField(_('Resend email confirmation email'))
 
