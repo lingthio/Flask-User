@@ -7,8 +7,11 @@ Flask-User distinguishes between the following groups of user information:
 1. User Authentication information such as username and password
 2. User Email information such as email address and confirmed_at
 3. User information such as first_name and last_name
+4. User Role information
 
-Flask-User allows the developer to store this information in one DataModel or across several DataModels.
+Flask-User allows the developer to store Authentication, Email and User information in one DataModel or across several DataModels.
+
+Flask-User requires User Role information to be stored in a Role DataModel and an UserRole association table.
 
 
 All-in-one User DataModel
@@ -83,6 +86,35 @@ If you'd like to store User Authentication information separate from User inform
     user_manager = UserManager(db_adapter, app)
 
 
+UserEmail DataModel
+-------------------
+Separating User Email information from User information allows for support of multiple emails per user.
+
+It can be applied to both the All-in-one User DataModel and the separated User/UserAuth DataModel
+
+::
+
+    # Define User DataModel. Make sure to add flask.ext.user UserMixin !!!
+    class User(db.Model, UserMixin):
+        id = db.Column(db.Integer, primary_key=True)
+        ...
+        # Relationship
+        user_emails = db.relationship('UserEmail')
+
+    # Define UserEmail DataModel.
+    class UserEmail(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+        # User email information
+        email = db.Column(db.String(255), nullable=False, unique=True)
+        confirmed_at = db.Column(db.DateTime())
+        is_primary = db.Column(db.Boolean(), nullable=False, default=False)
+
+        # Relationship
+        user = db.relationship('User', uselist=False)
+
+
 User Roles DataModel
 --------------------
 
@@ -116,35 +148,6 @@ It can be applied to both the All-in-one User DataModel and the separated User/U
         user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
         role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
 
-
-
-UserEmail DataModel
--------------------
-Separating User Email information from User information allows for support of multiple emails per user.
-
-It can be applied to both the All-in-one User DataModel and the separated User/UserAuth DataModel
-
-::
-
-    # Define User DataModel. Make sure to add flask.ext.user UserMixin !!!
-    class User(db.Model, UserMixin):
-        id = db.Column(db.Integer, primary_key=True)
-        ...
-        # Relationship
-        user_emails = db.relationship('UserEmail')
-
-    # Define UserEmail DataModel.
-    class UserEmail(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-        # User email information
-        email = db.Column(db.String(255), nullable=False, unique=True)
-        confirmed_at = db.Column(db.DateTime())
-        is_primary = db.Column(db.Boolean(), nullable=False, default=False)
-
-        # Relationship
-        user = db.relationship('User', uselist=False)
 
 
 Porting Flask-User v0.5 applications to Flask-User v0.6

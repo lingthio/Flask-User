@@ -26,9 +26,13 @@ For a full list see http://docs.sqlalchemy.org/en/rel_0_9/dialects/index.html
 Flask-User does abstract DB interactions through a 'DbAdapter' class,
 so support for other databases is possible by writing a DbAdapter extension class.
 
+Database table names
+--------------------
+No known restrictions
 
-Database table names and column names
--------------------------------------
+
+Database column names
+---------------------
 No known restrictions
 
 
@@ -39,20 +43,8 @@ The primary key of the User table must be an Integer and may not be a compound k
 
 Data model field names
 ----------------------
-Flask-User requires specific field names for the Data models.
-
-Flask-User does NOT enforce this naming convention on the Database column names
-because SQLAlchemy offers a way to specify a Data model field name other than the Database column name:
-
-::
-
-    class User(db.Model, UserMixin)
-
-        # Map Data model field 'email' to Database column 'email_address'
-        email = db.Column('email_address', db.String(100))
-
-        # Map Data model field 'active' to Database column 'is_active'
-        active = db.Column('is_active', db.Boolean())
+Flask-User requires specific Data model field names, but accepts
+arbitrary names for the Database column names.
 
 Required Data model field names:
 
@@ -77,6 +69,20 @@ Required Data model field names:
 
     # Role information
     Role.name
+
+
+SQLAlchemy offers a way to use specific Data model field names
+with different Database column names:
+
+::
+
+    class User(db.Model, UserMixin)
+
+        # Map Data model field 'email' to Database column 'email_address'
+        email = db.Column('email_address', db.String(100))
+
+        # Map Data model field 'active' to Database column 'is_active'
+        active = db.Column('is_active', db.Boolean())
 
 
 Flask versions
