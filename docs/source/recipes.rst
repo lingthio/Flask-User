@@ -22,6 +22,22 @@ This would accomplish the following:
 * The Register button will post to ``/user/register``
 
 
+After registration hook
+-----------------------
+Some applications require code to execute just after a new user registered for a new account.
+This can be achieved by subscribing to the ``user_registered`` signal as follows:
+
+::
+
+    from flask_user.signals import user_registered
+
+    @user_registered.connect_via(app)
+    def _after_registration_hook(sender, user, **extra):
+        sender.logger.info('user registered')
+
+See also: :doc:`signals`
+
+
 Hashing Passwords
 -----------------
 If you want to populate your database with User records with hashed passwords use ``user_manager.hash_password()``:
@@ -56,6 +72,7 @@ Here's an example of tracking login_count and last_login_ip:
     # This code has not been tested
 
     from flask import request
+    from flask_user.signals import user_logged_in
 
     @user_logged_in.connect_via(app)
     def _track_logins(sender, user, **extra):

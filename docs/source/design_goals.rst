@@ -42,7 +42,7 @@ Great Feature Set
 * Secure password hashing and token generation
 * Role-based Authorization -- See :doc:`authorization`
 * Internationalization -- See :doc:`internationalization`
-* Event notification -- See :doc:`event_notification`
+* Signals (event hooking) -- See :doc:`signals`
 
 Also
 ----

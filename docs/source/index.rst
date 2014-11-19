@@ -18,17 +18,17 @@ Flask-User |release|
 .. comment .. image:: https://coveralls.io/repos/lingthio/Flask-User/badge.png?branch=master
 .. comment     :target: https://coveralls.io/r/lingthio/Flask-User?branch=master
 
-.. topic:: Help shape our future!
+.. topic:: Missing a feature?
 
-   **We need your input** to guide us to the next version of Flask-User and beyond.
-   Please take a minute to answer four questions that will inform our development of version 1.0.
-   Thank you!
+   |Tell_us_about_it|. |Help_shape_flask_user|.
 
-   |answer_four_questions|.
+.. |Tell_us_about_it| raw:: html
 
-.. |answer_four_questions| raw:: html
+   <a href="https://docs.google.com/forms/d/1p01lA9o9amlx4_0JjjOyAzdoM-C4lUVUgV0LUhMumaU/viewform?usp=send_form" target="_blank"><b>Tell us about it</b></a>
 
-   <a href="https://docs.google.com/forms/d/1p01lA9o9amlx4_0JjjOyAzdoM-C4lUVUgV0LUhMumaU/viewform?usp=send_form" target="_blank"><b>Answer four questions</b></a>
+.. |Help_shape_flask_user| raw:: html
+
+   <a href="https://docs.google.com/forms/d/1p01lA9o9amlx4_0JjjOyAzdoM-C4lUVUgV0LUhMumaU/viewform?usp=send_form" target="_blank"><b>Help shape Flask-User</b></a>
 
 Customizable User Account Management for Flask
 ----------------------------------------------
@@ -106,11 +106,11 @@ Documentation
     flask_user_starter_app
     authorization
     roles_required_app
-    recipes
     base_templates
     customization
+    signals
+    recipes
     internationalization
-    event_notification
     faq
     api
 
