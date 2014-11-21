@@ -309,8 +309,3 @@ def delete_user1(db):
     db.session.delete(user1)
     db.session.commit()
     user1 = None
-
-# Workaround for py.test coverage issue
-def run_all_tests(client, db):
-    test_with_username(client, db)
-    test_with_email(client, db)

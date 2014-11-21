@@ -16,7 +16,7 @@ import time
 
 from flask import current_app, url_for
 
-from flask_user.tests.tstutils import response_has_string
+from flask_user.tests.tst_utils import response_has_string
 
 
 
@@ -459,26 +459,6 @@ def test_cleanup(db):
     user3 = None
     user4 = None
 
-# Workaround for py.test coverage issue
-def run_all_tests(client):
-    print()
-    test_init(client.db)
-    test_invalid_register_with_username_form(client)
-    test_invalid_register_with_email_form(client)
-    test_invalid_confirm_email_page(client)
-    test_invalid_login_with_username_form(client)
-    test_invalid_login_with_email_form(client)
-    test_invalid_change_username_form(client)
-    test_invalid_change_password_form(client)
-    test_invalid_forgot_password_form(client)
-    test_invalid_reset_password(client)
-
-    test_valid_roles(client)
-    test_invalid_roles(client)
-
-    test_login_without_confirm_email(client)
-
-    test_cleanup(client.db)
 
 # TODO:
 # Register without confirming email and try to log in

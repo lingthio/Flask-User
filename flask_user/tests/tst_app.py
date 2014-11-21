@@ -144,6 +144,7 @@ def create_app(test_config=None):                   # For automated tests
             {% endblock %}
             """)
 
+    app.db = db
     return app
 
 # Start development web server

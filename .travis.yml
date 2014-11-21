@@ -14,14 +14,8 @@ branches:
 # Install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
   - pip install -r requirements.txt --quiet
-  - pip install coverage --quiet
-  - pip install coveralls --quiet
+  - pip install pytest-coverage
 
-# Run automated tests with coverage
+# Run automated tests
 script:
-  - export PYTHONPATH=. && coverage run --source=flask_user flask_user/tests/run_tests.py
-  - coverage report -m
-
-# Upload coverage data to coveralls
-after_success:
-  coveralls
+  - py.test flask_user/tests/

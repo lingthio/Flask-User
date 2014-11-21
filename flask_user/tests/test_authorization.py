@@ -56,7 +56,3 @@ def test_authorization(client):
     client.get_valid_page(url_for('user_profile_page'))
     client.get_valid_page(url_for('special_page'))
 
-
-# Workaround for py.test coverage issue
-def run_all_tests(client, db):
-    test_authorization(client)
