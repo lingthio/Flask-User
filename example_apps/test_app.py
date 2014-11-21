@@ -47,7 +47,6 @@ def create_app(test_config=None):                   # For automated tests
     def get_locale():
         translations = [str(translation) for translation in babel.list_translations()]
         language = request.accept_languages.best_match(translations)
-        print('translations=',repr(translations), 'language=', repr(language))
         return language
 
     # Define the User data model. Make sure to add flask.ext.user UserMixin !!!

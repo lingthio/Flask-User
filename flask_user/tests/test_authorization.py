@@ -49,10 +49,12 @@ def test_authorization(client):
     client.get_valid_page(url_for('home_page'))
     client.get_valid_page(url_for('user_profile_page'))
     client.get_invalid_page(url_for('special_page'), "You do not have permission to access ")
+    client.logout()
 
     # Test as special 'user007' user
     client.login(username='user007', password='Password1')
     client.get_valid_page(url_for('home_page'))
     client.get_valid_page(url_for('user_profile_page'))
     client.get_valid_page(url_for('special_page'))
+    client.logout()
 

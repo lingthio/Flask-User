@@ -1,9 +1,7 @@
 # .coveragerc to control coverage.py
 
 [run]
-omit=
-  flask_user/tests/*
-  flask_user/tests2/*
+omit=flask_user/tests/*
 
 [report]
 exclude_lines =
@@ -21,6 +19,7 @@ exclude_lines =
     raise SendEmailError
     raise ConfigurationError
     raise KeyError
+    if not ctx:
 
     # Misc
     delattr\(self

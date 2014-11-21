@@ -9,12 +9,12 @@ def runserver():
 @task
 def test():
     # Requires "pip install pytest"
-    local('py.test flask_user/tests/')
+    local('py.test -s flask_user/tests/')
 
 @task
 def coverage():
     # Requires "pip install pytest-coverage"
-    local('py.test --cov flask_user --cov-report term-missing --cov-config flask_user/tests2/.coveragerc flask_user/tests/')
+    local('py.test --cov flask_user --cov-report term-missing --cov-config flask_user/tests/.coveragerc flask_user/tests/')
 
 @task
 def babel():

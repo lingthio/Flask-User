@@ -404,8 +404,7 @@ def test_invalid_roles(client):
 
     client.login(username='user1', password='Password1')
     url = url_for('special_page')
-    response = client.get_valid_page(url)
-    assert response_has_string(response, 'You do not have permission to access')
+    response = client.get_invalid_page(url, 'You do not have permission to access')
     client.logout()
 
 def test_login_without_confirm_email(client):

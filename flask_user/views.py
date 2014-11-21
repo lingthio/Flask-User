@@ -528,7 +528,7 @@ def reset_password(token):
 
 
 def unconfirmed():
-    """ Prepare a Flash message and redirect to USER_UNCONFIRMED_URL"""
+    """ Prepare a Flash message and redirect to USER_UNCONFIRMED_ENDPOINT"""
     # Prepare Flash message
     url = request.script_root + request.path
     flash(_("You must confirm your email to access '%(url)s'.", url=url), 'error')
@@ -568,19 +568,6 @@ def unauthorized():
 def user_profile():
     user_manager = current_app.user_manager
     return render_template(user_manager.user_profile_template)
-
-
-def _get_email_address(user):
-    user_manager =  current_app.user_manager
-    db_adapter = user_manager.db_adapter
-    if db_adapter.UserEmailClass:
-        user_email = db_adapter.find_first_object(db_adapter.UserEmailClass,
-                user_id=int(user.get_id()),
-                is_primary=True,
-                )
-        return user_email.email if user_email else None
-    else:
-        return user.email
 
 
 def _send_registered_email(user, user_email):
