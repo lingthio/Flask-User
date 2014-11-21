@@ -14,7 +14,7 @@ branches:
 # Install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
   - pip install -r requirements.txt --quiet
-  - pip install pytest-coverage
+  - pip install pytest
 
 # Run automated tests
 script:
