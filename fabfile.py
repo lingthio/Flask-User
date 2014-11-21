@@ -9,7 +9,7 @@ def runserver():
 @task
 def test():
     # Requires "pip install pytest"
-    local('py.test -s flask_user/tests/')
+    local('py.test flask_user/tests/')
 
 @task
 def coverage():
