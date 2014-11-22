@@ -440,6 +440,17 @@ def register():
             login_form=login_form,
             register_form=register_form)
 
+def invite():
+    """ Allows users to send invitations to register an account """
+    user_manager = current_app.user_manager
+    db_adapter = user_manager.db_adapter
+
+    form = user_manager.user_invite_form(request.form)
+
+    if request.method =='POST' and form.validate():
+        pass
+
+    return render_template(user_manager.user_invite_email_template, form=form)
 
 def resend_confirm_email():
     """Prompt for email and re-send email conformation email."""
