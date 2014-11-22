@@ -450,7 +450,7 @@ def invite():
     if request.method =='POST' and form.validate():
         pass
 
-    return render_template(user_manager.user_invite_email_template, form=form)
+    return render_template(user_manager.invite_template, form=form)
 
 def resend_confirm_email():
     """Prompt for email and re-send email conformation email."""

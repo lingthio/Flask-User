@@ -65,6 +65,7 @@ def set_default_settings(user_manager, app_config):
     um.reset_password_url        = sd('USER_RESET_PASSWORD_URL',         '/user/reset-password/<token>')
     um.user_profile_url          = sd('USER_PROFILE_URL',                '/user/profile')
     um.invite_url                = sd('USER_INVITE_URL',                 '/user/invite')
+    um.invite_accept_url         = sd('USER_INVITE_ACCEPT_URL',          '/user/accept/<token>')
 
     # Set default ENDPOINTs
     home_endpoint = ''
@@ -95,7 +96,7 @@ def set_default_settings(user_manager, app_config):
     um.reset_password_template       = sd('USER_RESET_PASSWORD_TEMPLATE',   'flask_user/reset_password.html')
     um.user_profile_template         = sd('USER_PROFILE_TEMPLATE',          'flask_user/user_profile.html')
     um.invite_template               = sd('USER_INVITE_TEMPLATE',           'flask_user/user_invite.html')
-    um.invite_accept_template        = sd('USER_INVITE_ACCEPT_TEMPLATE',    'flask_user/user_invite_accept.html')
+    um.invite_accept_template        = sd('USER_INVITE_ACCEPT_TEMPLATE',    'flask_user/register.html')
 
     # Set default email template files
     um.confirm_email_email_template    = sd('USER_CONFIRM_EMAIL_EMAIL_TEMPLATE',    'flask_user/emails/confirm_email')
@@ -103,7 +104,7 @@ def set_default_settings(user_manager, app_config):
     um.password_changed_email_template = sd('USER_PASSWORD_CHANGED_EMAIL_TEMPLATE', 'flask_user/emails/password_changed')
     um.registered_email_template       = sd('USER_REGISTERED_EMAIL_TEMPLATE',       'flask_user/emails/registered')
     um.username_changed_email_template = sd('USER_USERNAME_CHANGED_EMAIL_TEMPLATE', 'flask_user/emails/username_changed')
-    um.invite_email_template           = sd('USER_INVITE_EMAIL_TEMPLATE',           'flask_user/emails/user_invite')
+    um.invite_email_template           = sd('USER_INVITE_EMAIL_TEMPLATE',           'flask_user/emails/invite')
 
 
 def check_settings(user_manager):

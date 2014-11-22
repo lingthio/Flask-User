@@ -164,3 +164,17 @@ def send_username_changed_email(user):  # pragma: no cover
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
 
+def send_invite_email(email):
+    user_manager = current_app.user_manager
+    if not user_manager.enable_email: return
+
+    assert(email)
+
+    # Render subject, html message and text message
+    subject, html_message, text_message = _render_email(
+            user_manager.invite_email_template,
+            user=user,
+            app_name=user_manager.app_name)
+
+    # Send email message using Flask-Mail
+    user_manager.send_email_function(email, subject, html_message, text_message)
