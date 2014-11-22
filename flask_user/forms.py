@@ -299,3 +299,13 @@ class ResetPasswordForm(Form):
             return False
         # All is well
         return True
+
+class UserInviteForm(Form):
+    email = StringField(_('Email'), validators=[
+        validators.Required(_('Email is required')),
+        validators.Email(_('Invalid Email'))])
+
+class UserInviteAcceptForm(RegisterForm):
+    email = StringField(_('Email'), validators=[
+        validators.Required(_('Email is required')),
+        validators.Email(_('Invalid Email'))])
