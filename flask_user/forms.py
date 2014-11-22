@@ -304,3 +304,5 @@ class InviteForm(Form):
     email = StringField(_('Email'), validators=[
         validators.Required(_('Email is required')),
         validators.Email(_('Invalid Email'))])
+    next = HiddenField()
+    submit = SubmitField(_('Invite!'))

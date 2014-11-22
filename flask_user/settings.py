@@ -95,7 +95,7 @@ def set_default_settings(user_manager, app_config):
     um.resend_confirm_email_template = sd('USER_RESEND_CONFIRM_EMAIL_TEMPLATE', 'flask_user/resend_confirm_email.html')
     um.reset_password_template       = sd('USER_RESET_PASSWORD_TEMPLATE',   'flask_user/reset_password.html')
     um.user_profile_template         = sd('USER_PROFILE_TEMPLATE',          'flask_user/user_profile.html')
-    um.invite_template               = sd('USER_INVITE_TEMPLATE',           'flask_user/user_invite.html')
+    um.invite_template               = sd('USER_INVITE_TEMPLATE',           'flask_user/invite.html')
     um.invite_accept_template        = sd('USER_INVITE_ACCEPT_TEMPLATE',    'flask_user/register.html')
 
     # Set default email template files

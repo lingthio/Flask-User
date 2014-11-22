@@ -440,17 +440,67 @@ def register():
             login_form=login_form,
             register_form=register_form)
 
+@login_required
 def invite():
     """ Allows users to send invitations to register an account """
     user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter
 
-    form = user_manager.user_invite_form(request.form)
+    next = request.args.get('next', _endpoint_url(user_manager.after_invite_endpoint))
 
-    if request.method =='POST' and form.validate():
-        pass
+    invite_form = user_manager.invite_form(request.form)
 
-    return render_template(user_manager.invite_template, form=form)
+    if request.method=='POST' and invite_form.validate():
+        email = invite_form.email.data
+
+        User = db_adapter.UserClass
+        user_class_fields = User.__dict__
+        user_fields = {
+            "email": email
+        }
+
+        if hasattr(db_adapter.UserClass, 'active'):
+            user_fields['active'] = False
+        elif hasattr(db_adapter.UserClass, 'is_enabled'):
+            user_fields['is_enabled'] = False
+        else:
+            user_fields['is_active'] = False
+
+        user, user_email = user_manager.find_user_by_email(email)
+        if user:
+            if hasattr(db_adapter.UserClass, 'has_registered') and user.has_registered:
+                flash("User with that email has already registered", "error")
+                return redirect(url_for('user.invite'))
+            db_adapter.update_object(user, **user_fields)
+        else:
+            user = db_adapter.add_object(User, **user_fields)
+        db_adapter.commit()
+
+        token = user_manager.generate_token(user.id)
+        accept_invite_link = url_for('user.register', token=token, _external=True)
+
+        # Store token
+        if hasattr(user, 'reset_password_token'):
+            user.reset_password_token = token
+            db_adapter.commit()
+
+        try:
+            # Send 'invite' email
+            emails.send_invite_email(user, accept_invite_link)
+        except Exception as e:
+            # delete new User object if send  fails
+            db_adapter.delete_object(user)
+            db_adapter.commit()
+            raise e
+
+        signals \
+            .user_sent_invitation \
+            .send(current_app._get_current_object(), user=user)
+
+        flash(_('Invitation has been sent.'), 'success')
+        return redirect(next)
+
+    return render_template(user_manager.invite_template, form=invite_form)
 
 def resend_confirm_email():
     """Prompt for email and re-send email conformation email."""
