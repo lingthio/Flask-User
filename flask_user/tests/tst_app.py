@@ -61,7 +61,7 @@ def create_app(test_config=None):                   # For automated tests
         confirmed_at = db.Column(db.DateTime())
 
         # User information
-        is_enabled = db.Column(db.Boolean(), nullable=False, server_default='0')
+        active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
         first_name = db.Column(db.String(100), nullable=False, server_default='')
         last_name = db.Column(db.String(100), nullable=False, server_default='')
 
@@ -103,14 +103,14 @@ def create_app(test_config=None):                   # For automated tests
 
     # Create regular 'member' user
     if not User.query.filter(User.username=='member').first():
-        user = User(username='member', email='member@example.com', is_enabled=True,
+        user = User(username='member', email='member@example.com', active=True,
                 password=user_manager.hash_password('Password1'))
         db.session.add(user)
         db.session.commit()
 
     # Create 'user007' user with 'secret' and 'agent' roles
     if not User.query.filter(User.username=='user007').first():
-        user1 = User(username='user007', email='user007@example.com', is_enabled=True,
+        user1 = User(username='user007', email='user007@example.com', active=True,
                 password=user_manager.hash_password('Password1'))
         user1.roles.append(Role(name='secret'))
         user1.roles.append(Role(name='agent'))

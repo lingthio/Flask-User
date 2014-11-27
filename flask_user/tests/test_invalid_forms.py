@@ -76,22 +76,22 @@ def test_init(db):
     User = um.db_adapter.UserClass
 
     # Create user1 with username and email
-    user1 = User(username='user1', email='user1@example.com', password=hashed_password, is_enabled=True)
+    user1 = User(username='user1', email='user1@example.com', password=hashed_password, active=True)
     assert user1
     db.session.add(user1)
 
     # Create user1 with email only
-    user2 = User(email='user2@example.com', password=hashed_password, is_enabled=True)
+    user2 = User(email='user2@example.com', password=hashed_password, active=True)
     assert user2
     db.session.add(user2)
 
     # Create user3 with username and email
-    user3 = User(username='user3', email='user3@example.com', password=hashed_password, is_enabled=True)
+    user3 = User(username='user3', email='user3@example.com', password=hashed_password, active=True)
     assert user3
     db.session.add(user3)
 
     # Create user4 with email only
-    user4 = User(email='user4@example.com', password=hashed_password, is_enabled=True)
+    user4 = User(email='user4@example.com', password=hashed_password, active=True)
     assert user4
     db.session.add(user4)
 
@@ -434,7 +434,7 @@ def test_login_without_confirm_email(client):
     User = um.db_adapter.UserClass
     user = User.query.filter(User.email==email).first()
     assert(user)
-    user.is_enabled = False
+    user.active = False
     user.confirmed_at = datetime.utcnow()
 
     # Try logging in into  disabled account
