@@ -232,7 +232,7 @@ class UserManager(object):
             user.password = hashed_password
         self.db_adapter.commit()
 
-    def verify_password(self, password, user):
+    def verify_password(self, user, password):
         """
         Make it backward compatible to legacy password hash.
         In addition, if such password were found, update the user's password field.
