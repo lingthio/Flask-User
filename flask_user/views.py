@@ -328,6 +328,12 @@ def register():
         login_form.next.data     = register_form.next.data     = next
         login_form.reg_next.data = register_form.reg_next.data = reg_next
 
+    token = request.values.get("token")
+    if token and db_adapter.UserInvitationClass:
+        user_invite = db_adapter.UserInvitationClass.query.filter(db_adapter.UserInvitationClass.token==token).first()
+        if user_invite:
+            register_form.email.data = user_invite.email
+
     # Process valid POST
     if request.method=='POST' and register_form.validate():
 
@@ -464,9 +470,9 @@ def invite():
             flash("User with that email has already registered", "error")
             return redirect(url_for('user.invite'))
         else:
-            user_invite = db_adapter.add_object(UserInvitation, **{
+            user_invite = db_adapter.add_object(db_adapter.UserInvitationClass, **{
                 "email": email,
-                "invited_by_user_id": user.id
+                "invited_by_user_id": current_user.id
             })
         db_adapter.commit()
 
@@ -474,8 +480,8 @@ def invite():
         accept_invite_link = url_for('user.register', token=token, _external=True)
 
         # Store token
-        if hasattr(user, 'token'):
-            user.token = token
+        if hasattr(db_adapter.UserInvitationClass, 'token'):
+            user_invite.token = token
             db_adapter.commit()
 
         try:

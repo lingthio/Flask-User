@@ -51,6 +51,7 @@ def create_app(test_config=None):                   # For automated tests
 
     # Define the User data model. Make sure to add flask.ext.user UserMixin !!!
     class User(db.Model, UserMixin):
+        __tablename__ = 'user'
         id = db.Column(db.Integer, primary_key=True)
 
         # User authentication information
@@ -63,16 +64,22 @@ def create_app(test_config=None):                   # For automated tests
         confirmed_at = db.Column(db.DateTime(), nullable=True)
 
         # User information
-        has_registered = db.Column(db.Boolean(), nullable=False, server_default='0')
         is_enabled = db.Column(db.Boolean(), nullable=False, server_default='0')
         first_name = db.Column(db.String(100), nullable=False, server_default='')
         last_name = db.Column(db.String(100), nullable=False, server_default='')
+
+    class UserInvitation(db.Model):
+        __tablename__ = 'user_invite'
+        id = db.Column(db.Integer, primary_key=True)
+        email = db.Column(db.String(255), nullable=False)
+        invited_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+        token = db.Column(db.String(100), nullable=False, server_default='')
 
     # Create all database tables
     db.create_all()
 
     # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db,  User)       # Select database adapter
+    db_adapter = SQLAlchemyAdapter(db, User, UserInvitationClass=UserInvitation)       # Select database adapter
     user_manager = UserManager(db_adapter, app)     # Init Flask-User and bind to app
 
     # The Home page is accessible to anyone
