@@ -131,3 +131,5 @@ def check_settings(user_manager):
         raise ConfigurationError('USER_SEND_REGISTERED_EMAIL=True must have USER_ENABLE_EMAIL=True.')
     if um.require_invitation and not um.enable_invitation:
         raise ConfigurationError('USER_REQUIRE_INVITATION=True must have USER_ENABLE_INVITATION=True.')
+    if um.enable_invitation and not um.db_adapter.UserInvitationClass:
+        raise ConfigurationError('USER_ENABLE_INVITATION=True must pass UserInvitationClass to SQLAlchemyAdapter().')

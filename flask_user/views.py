@@ -461,34 +461,35 @@ def invite():
 
         user, user_email = user_manager.find_user_by_email(email)
         if user:
-            if hasattr(db_adapter.UserClass, 'has_registered') and user.has_registered:
-                flash("User with that email has already registered", "error")
-                return redirect(url_for('user.invite'))
-            db_adapter.update_object(user, **user_fields)
+            flash("User with that email has already registered", "error")
+            return redirect(url_for('user.invite'))
         else:
-            user = db_adapter.add_object(User, **user_fields)
+            user_invite = db_adapter.add_object(UserInvitation, **{
+                "email": email,
+                "invited_by_user_id": user.id
+            })
         db_adapter.commit()
 
-        token = user_manager.generate_token(user.id)
+        token = user_manager.generate_token(user_invite.id)
         accept_invite_link = url_for('user.register', token=token, _external=True)
 
         # Store token
-        if hasattr(user, 'reset_password_token'):
-            user.reset_password_token = token
+        if hasattr(user, 'token'):
+            user.token = token
             db_adapter.commit()
 
         try:
             # Send 'invite' email
-            emails.send_invite_email(user, accept_invite_link)
+            emails.send_invite_email(user_invite, accept_invite_link)
         except Exception as e:
-            # delete new User object if send  fails
-            db_adapter.delete_object(user)
+            # delete new User object if send fails
+            db_adapter.delete_object(user_invite)
             db_adapter.commit()
             raise e
 
         signals \
             .user_sent_invitation \
-            .send(current_app._get_current_object(), user=user)
+            .send(current_app._get_current_object(), user=user_invite)
 
         flash(_('Invitation has been sent.'), 'success')
         return redirect(next)
