@@ -16,7 +16,7 @@ import time
 
 from flask import current_app, url_for
 
-from flask_user.tests.tstutils import response_has_string
+from flask_user.tests.tst_utils import response_has_string
 
 
 
@@ -76,22 +76,22 @@ def test_init(db):
     User = um.db_adapter.UserClass
 
     # Create user1 with username and email
-    user1 = User(username='user1', email='user1@example.com', password=hashed_password, is_enabled=True)
+    user1 = User(username='user1', email='user1@example.com', password=hashed_password, active=True)
     assert user1
     db.session.add(user1)
 
     # Create user1 with email only
-    user2 = User(email='user2@example.com', password=hashed_password, is_enabled=True)
+    user2 = User(email='user2@example.com', password=hashed_password, active=True)
     assert user2
     db.session.add(user2)
 
     # Create user3 with username and email
-    user3 = User(username='user3', email='user3@example.com', password=hashed_password, is_enabled=True)
+    user3 = User(username='user3', email='user3@example.com', password=hashed_password, active=True)
     assert user3
     db.session.add(user3)
 
     # Create user4 with email only
-    user4 = User(email='user4@example.com', password=hashed_password, is_enabled=True)
+    user4 = User(email='user4@example.com', password=hashed_password, active=True)
     assert user4
     db.session.add(user4)
 
@@ -404,8 +404,7 @@ def test_invalid_roles(client):
 
     client.login(username='user1', password='Password1')
     url = url_for('special_page')
-    response = client.get_valid_page(url)
-    assert response_has_string(response, 'You do not have permission to access')
+    response = client.get_invalid_page(url, 'You do not have permission to access')
     client.logout()
 
 def test_login_without_confirm_email(client):
@@ -435,7 +434,7 @@ def test_login_without_confirm_email(client):
     User = um.db_adapter.UserClass
     user = User.query.filter(User.email==email).first()
     assert(user)
-    user.is_enabled = False
+    user.active = False
     user.confirmed_at = datetime.utcnow()
 
     # Try logging in into  disabled account
@@ -459,26 +458,6 @@ def test_cleanup(db):
     user3 = None
     user4 = None
 
-# Workaround for py.test coverage issue
-def run_all_tests(client):
-    print()
-    test_init(client.db)
-    test_invalid_register_with_username_form(client)
-    test_invalid_register_with_email_form(client)
-    test_invalid_confirm_email_page(client)
-    test_invalid_login_with_username_form(client)
-    test_invalid_login_with_email_form(client)
-    test_invalid_change_username_form(client)
-    test_invalid_change_password_form(client)
-    test_invalid_forgot_password_form(client)
-    test_invalid_reset_password(client)
-
-    test_valid_roles(client)
-    test_invalid_roles(client)
-
-    test_login_without_confirm_email(client)
-
-    test_cleanup(client.db)
 
 # TODO:
 # Register without confirming email and try to log in

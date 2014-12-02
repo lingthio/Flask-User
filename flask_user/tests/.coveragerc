@@ -19,6 +19,7 @@ exclude_lines =
     raise SendEmailError
     raise ConfigurationError
     raise KeyError
+    if not ctx:
 
     # Misc
     delattr\(self

@@ -7,7 +7,7 @@ Reliable
 
 We understand that you are looking for an easy yet reliable way to manage your users.
 We've run our code through automated tests from the very beginning and we're proud
-to consistently achieve code coverage of over 95%.
+to consistently achieve code coverage of over 90%.
 
 Secure
 ------

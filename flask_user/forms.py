@@ -64,17 +64,17 @@ def unique_email_validator(form, field):
 
 class AddEmailForm(Form):
     email = StringField(_('Email'), validators=[
-        validators.Required(_('Email is required')),
+        validators.DataRequired(_('Email is required')),
         validators.Email(_('Invalid Email')),
         unique_email_validator])
     submit = SubmitField(_('Add Email'))
 
 class ChangePasswordForm(Form):
     old_password = PasswordField(_('Old Password'), validators=[
-        validators.Required(_('Old Password is required')),
+        validators.DataRequired(_('Old Password is required')),
         ])
     new_password = PasswordField(_('New Password'), validators=[
-        validators.Required(_('New Password is required')),
+        validators.DataRequired(_('New Password is required')),
         ])
     retype_password = PasswordField(_('Retype New Password'), validators=[
         validators.EqualTo('new_password', message=_('New Password and Retype Password did not match'))
@@ -110,11 +110,11 @@ class ChangePasswordForm(Form):
 
 class ChangeUsernameForm(Form):
     new_username = StringField(_('New Username'), validators=[
-        validators.Required(_('Username is required')),
+        validators.DataRequired(_('Username is required')),
         unique_username_validator,
     ])
     old_password = PasswordField(_('Old Password'), validators=[
-        validators.Required(_('Old Password is required')),
+        validators.DataRequired(_('Old Password is required')),
     ])
     next = HiddenField()
     submit = SubmitField(_('Change Username'))
@@ -144,7 +144,7 @@ class ChangeUsernameForm(Form):
 
 class ForgotPasswordForm(Form):
     email = StringField(_('Your email address'), validators=[
-        validators.Required(_('Email address is required')),
+        validators.DataRequired(_('Email address is required')),
         validators.Email(_('Invalid Email address')),
         ])
     submit = SubmitField(_('Send reset password email'))
@@ -154,14 +154,14 @@ class LoginForm(Form):
     reg_next = HiddenField()     # for login_or_register.html
 
     username = StringField(_('Username'), validators=[
-        validators.Required(_('Username is required')),
+        validators.DataRequired(_('Username is required')),
     ])
     email = StringField(_('Email'), validators=[
-        validators.Required(_('Email is required')),
+        validators.DataRequired(_('Email is required')),
         validators.Email(_('Invalid Email'))
     ])
     password = PasswordField(_('Password'), validators=[
-        validators.Required(_('Password is required')),
+        validators.DataRequired(_('Password is required')),
     ])
     remember_me = BooleanField(_('Remember me'))
 
@@ -224,14 +224,14 @@ class RegisterForm(Form):
     reg_next = HiddenField()    # for register.html
 
     username = StringField(_('Username'), validators=[
-        validators.Required(_('Username is required')),
+        validators.DataRequired(_('Username is required')),
         unique_username_validator])
     email = StringField(_('Email'), validators=[
-        validators.Required(_('Email is required')),
+        validators.DataRequired(_('Email is required')),
         validators.Email(_('Invalid Email')),
         unique_email_validator])
     password = PasswordField(_('Password'), validators=[
-        validators.Required(_('Password is required'))])
+        validators.DataRequired(_('Password is required'))])
     retype_password = PasswordField(_('Retype Password'), validators=[
         validators.EqualTo('password', message=_('Password and Retype Password did not match'))])
 
@@ -269,14 +269,14 @@ class RegisterForm(Form):
 
 class ResendConfirmEmailForm(Form):
     email = StringField(_('Your email address'), validators=[
-        validators.Required(_('Email address is required')),
+        validators.DataRequired(_('Email address is required')),
         validators.Email(_('Invalid Email address')),
         ])
     submit = SubmitField(_('Resend email confirmation email'))
 
 class ResetPasswordForm(Form):
     new_password = PasswordField(_('New Password'), validators=[
-        validators.Required(_('New Password is required'))])
+        validators.DataRequired(_('New Password is required'))])
     retype_password = PasswordField(_('Retype New Password'), validators=[
         validators.EqualTo('new_password', message=_('New Password and Retype Password did not match'))])
     next = HiddenField()

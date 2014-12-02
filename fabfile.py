@@ -8,12 +8,13 @@ def runserver():
 
 @task
 def test():
-    local('PYTHONPATH=. python flask_user/tests/run_tests.py')
+    # Requires "pip install pytest"
+    local('py.test flask_user/tests/')
 
 @task
 def coverage():
-    local('PYTHONPATH=. coverage run --source=flask_user flask_user/tests/run_tests.py')
-    local('coverage report -m')
+    # Requires "pip install pytest-coverage"
+    local('py.test --cov flask_user --cov-report term-missing --cov-config flask_user/tests/.coveragerc flask_user/tests/')
 
 @task
 def babel():

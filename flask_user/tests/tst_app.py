@@ -1,9 +1,10 @@
 import os
 from flask import Flask, render_template_string, request
+from flask.ext.babel import Babel
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
-from flask.ext.user import roles_required
+from flask.ext.user import roles_required, confirm_email_required
 
 
 # Use a Class-based config to avoid needing a 2nd file
@@ -43,6 +44,7 @@ def create_app(test_config=None):                   # For automated tests
 
     # Initialize Flask extensions
     db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
+    babel = Babel(app)                              # Initialize Flask-Babel
     mail = Mail(app)                                # Initialize Flask-Mail
 
     # Define the User data model. Make sure to add flask.ext.user UserMixin!!
@@ -59,13 +61,27 @@ def create_app(test_config=None):                   # For automated tests
         confirmed_at = db.Column(db.DateTime())
 
         # User information
-        is_enabled = db.Column(db.Boolean(), nullable=False, server_default='0')
+        active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
         first_name = db.Column(db.String(100), nullable=False, server_default='')
         last_name = db.Column(db.String(100), nullable=False, server_default='')
 
         # Relationships
         roles = db.relationship('Role', secondary='user_roles',
                 backref=db.backref('users', lazy='dynamic'))
+
+    # Define UserEmail DataModel.
+    class UserEmail(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+        # User email information
+        email = db.Column(db.String(255), nullable=True, unique=True)
+        confirmed_at = db.Column(db.DateTime())
+        is_primary = db.Column(db.Boolean(), nullable=False, default=False)
+
+        # Relationship
+        user = db.relationship('User', uselist=False)
+
 
     # Define the Role data model
     class Role(db.Model):
@@ -87,14 +103,14 @@ def create_app(test_config=None):                   # For automated tests
 
     # Create regular 'member' user
     if not User.query.filter(User.username=='member').first():
-        user = User(username='member', email='member@example.com', is_enabled=True,
+        user = User(username='member', email='member@example.com', active=True,
                 password=user_manager.hash_password('Password1'))
         db.session.add(user)
         db.session.commit()
 
     # Create 'user007' user with 'secret' and 'agent' roles
     if not User.query.filter(User.username=='user007').first():
-        user1 = User(username='user007', email='user007@example.com', is_enabled=True,
+        user1 = User(username='user007', email='user007@example.com', active=True,
                 password=user_manager.hash_password('Password1'))
         user1.roles.append(Role(name='secret'))
         user1.roles.append(Role(name='agent'))
@@ -117,6 +133,7 @@ def create_app(test_config=None):                   # For automated tests
     # The '/profile' page requires a logged-in user
     @app.route('/user/profile')
     @login_required                                 # Use of @login_required decorator
+    @confirm_email_required
     def user_profile_page():
         return render_template_string("""
             {% extends "base.html" %}
@@ -143,6 +160,10 @@ def create_app(test_config=None):                   # For automated tests
             <h2>{%trans%}Special Page{%endtrans%}</h2>
             {% endblock %}
             """)
+
+    # For testing only
+    app.db = db
+    app.UserEmailClass = UserEmail
 
     return app
 

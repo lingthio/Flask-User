@@ -19,7 +19,7 @@ def response_has_string(response, string):
 
 # Checks to see if response.data contains the string 'has-error'.
 def response_has_errors(response):
-    return response_has_string(response, 'has-error')
+    return response_has_string(response, 'has-error') or response_has_string(response, 'alert-danger')
 
 # Checks to see if response.data contains no 'has-error' strings
 def response_has_no_errors(response):

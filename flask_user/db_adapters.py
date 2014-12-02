@@ -18,7 +18,7 @@ class DBAdapter(object):
         self.UserEmailClass = UserEmailClass        # For multiple emails per user
         self.UserProfileClass = UserProfileClass    # Distinguish between v0.5 or v0.6 call
 
-        if UserProfileClass:
+        if UserProfileClass:    # pragma: no cover
             # Print deprecation warning
             print('Warning: The UserProfileClass parameter in DBAdapter() will be deprecated\n'+
                   'in the future. Use "UserAuthClass" and "UserClass" parameters instead.\n'+
@@ -51,7 +51,6 @@ class SQLAlchemyAdapter(DBAdapter):
                 raise KeyError("SQLAlchemyAdapter.find_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
 
             # Add a filter to the query
-            print(field, repr(field))
             query = query.filter(field.in_((field_value,)))
 
         # Execute query

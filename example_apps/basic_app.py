@@ -50,12 +50,9 @@ def create_app():
         confirmed_at = db.Column(db.DateTime())
 
         # User information
-        is_enabled = db.Column(db.Boolean(), nullable=False, server_default='0')
+        active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
         first_name = db.Column(db.String(100), nullable=False, server_default='')
         last_name = db.Column(db.String(100), nullable=False, server_default='')
-
-        def is_active(self):
-            return self.is_enabled
 
     # Create all database tables
     db.create_all()

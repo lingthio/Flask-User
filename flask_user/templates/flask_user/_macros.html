@@ -23,10 +23,11 @@
 {%- endmacro %}
  
 {% macro render_radio_field(field) -%}
-    {% for value, label, _ in field.iter_choices() %}
+    {% for value, label, checked in field.iter_choices() %}
         <div class="radio">
             <label>
-                <input type="radio" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">{{ label }}
+                <input type="radio" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}"{% if checked %} checked{% endif %}>
+                {{ label }}
             </label>
         </div>
     {% endfor %}

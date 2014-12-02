@@ -20,7 +20,7 @@ def get_translations():
 
     # If App has not initialized Flask-Babel: return None
     app_has_initalized_flask_babel = 'babel' in current_app.extensions
-    if not app_has_initalized_flask_babel:
+    if not app_has_initalized_flask_babel:  # pragma no cover
         ctx.flask_user_translations = None
         return ctx.flask_user_translations
 
@@ -53,13 +53,13 @@ def gettext(string, **variables):
         return translations.ugettext(string) % variables
     return string % variables
 
-def ngettext(singular, plural, num, **variables):
-    """ Translate a singular/plural string based on the number 'num'."""
-    translations = get_translations()
-    variables.setdefault('num', num)
-    if translations:
-        return translations.ungettext(singular, plural, num) % variables
-    return (singular if num == 1 else plural) % variables
+# def ngettext(singular, plural, num, **variables):
+#     """ Translate a singular/plural string based on the number 'num'."""
+#     translations = get_translations()
+#     variables.setdefault('num', num)
+#     if translations:
+#         return translations.ungettext(singular, plural, num) % variables
+#     return (singular if num == 1 else plural) % variables
 
 def lazy_gettext(string, **variables):
     """ Similar to 'gettext' but the string returned is lazy which means

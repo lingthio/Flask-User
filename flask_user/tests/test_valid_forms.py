@@ -18,8 +18,11 @@ from flask import current_app, url_for
 # **********************
 # ** Global Variables **
 # **********************
+VALID_USERNAME = 'valid1'
+VALID_EMAIL = 'valid1@example.com'
+VALID_PASSWORD = 'Password1'
 # Using global variable for speed
-user1 = None
+valid_user = None
 
 # ********************************
 # ** Automatically called Tests **
@@ -31,36 +34,39 @@ def test_with_email(client):
     """
     Test all forms with all enabled features and enable_username=False
     """
-    print()
+    print('test_with_email()')
 
     um = current_app.user_manager
     um.enable_register = True
-    um.enable_confirm_email = True
     um.enable_username = False
+    um.enable_email = True          # Login with email
+    um.enable_confirm_email = True
     um.enable_change_username = False
     um.enable_change_password = True
     um.enable_forgot_password = True
+    um.enable_multiple_emails = False
+    um.enable_retype_password = True
 
-    um.enable_username = False      # Login with email
     check_all_valid_forms(um, client)
 
 def test_with_username(client):
     """
     Test all forms with all enabled features and enable_username=True
     """
-    print()
+    print('test_with_username()')
 
     # Enable all features
     um = current_app.user_manager
     um.enable_register = True
+    um.enable_username = True       # Login with username
     um.enable_email = False
     um.enable_confirm_email = False
     um.enable_change_username = True
     um.enable_change_password = True
-    um.enable_forgot_password = True
+    um.enable_forgot_password = False
+    um.enable_multiple_emails = False
+    um.enable_retype_password = True
 
-    # Login with username
-    um.enable_username = True       # Login with username
     check_all_valid_forms(um, client)
 
 # *****************************
@@ -80,7 +86,6 @@ def do_test_all_possible_config_combinations(client, db):
       for um.enable_email in (True, False):
         for um.enable_retype_password in (True, False):
           for um.enable_confirm_email in (True, False):
-            print("Config:", um.enable_register, um.enable_email, um.enable_retype_password, um.enable_confirm_email, "...")
             for um.enable_username in (True, False):
               for um.enable_change_password in (True, False):
                 for um.enable_change_username in (True, False):
@@ -104,6 +109,7 @@ def check_all_valid_forms(um, client):
     if um.enable_change_username and not um.enable_username: return
 
     check_valid_register_form(um, client, client.db)
+    check_valid_resend_confirm_email_form(um, client)
     check_valid_confirm_email_page(um, client)
     check_valid_login_form(um, client)
     check_valid_change_password_form(um, client)
@@ -112,56 +118,62 @@ def check_all_valid_forms(um, client):
     check_valid_forgot_password_form(um, client)
     check_valid_reset_password_page(um, client)
 
-    delete_user1(client.db)
+    delete_valid_user(client.db)
 
 def check_valid_register_form(um, client, db):
     # Using global variable for speed
-    global user1
+    global valid_user
     User = um.db_adapter.UserClass
-
-    # Define defaults
-    username = 'user2'
-    email = username+'@example.com'
-    password = 'Password1'
 
     # Build variable argument list depending on config settings
     kwargs = {}
     if um.enable_username:
-        kwargs['username'] = username
+        kwargs['username'] = VALID_USERNAME
     if um.enable_email:
-        kwargs['email'] = email
-    kwargs['password'] = password
+        kwargs['email'] = VALID_EMAIL
+    kwargs['password'] = VALID_PASSWORD
 
     if um.enable_register:
         print("test_valid_register_form")
 
         # Create User by submitting a form
         if um.enable_retype_password:
-            kwargs['retype_password'] = password
+            kwargs['retype_password'] = VALID_PASSWORD
 
         # Submit form and verify that response has no errors
         client.post_valid_form(url_for('user.register'), **kwargs)
 
         if um.enable_username:
-            user1 = User.query.filter(User.username==username).first()
+            valid_user = User.query.filter(User.username==VALID_USERNAME).first()
         else:
-            user1 = User.query.filter(User.email==email).first()
-        assert user1
+            valid_user = User.query.filter(User.email==VALID_EMAIL).first()
+        assert valid_user
 
         # Verify operations
-        assert user1.is_enabled
+        assert valid_user.active
 
     else:
         # Create user record manually
 
         # hash password
-        kwargs['password'] = um.hash_password(password)
+        kwargs['password'] = um.hash_password(VALID_PASSWORD)
 
         # Create User
-        user1 = User(is_enabled=True, confirmed_at=datetime.datetime.utcnow(), **kwargs)
-        db.session.add(user1)
+        valid_user = User(active=True, confirmed_at=datetime.datetime.utcnow(), **kwargs)
+        db.session.add(valid_user)
         db.session.commit()
-        assert user1
+        assert valid_user
+
+def check_valid_resend_confirm_email_form(um, client):
+    # Skip test for certain config combinations
+    if not um.enable_register: return
+    if not um.enable_email: return
+    if not um.enable_confirm_email: return
+
+    print("test_valid_resend_confirm_email_form")
+
+    # Submit form and verify that response has no errors
+    client.post_valid_form(url_for('user.resend_confirm_email'), email=VALID_EMAIL)
 
 def check_valid_confirm_email_page(um, client):
     # Skip test for certain config combinations
@@ -172,30 +184,25 @@ def check_valid_confirm_email_page(um, client):
     print("test_valid_confirm_email_page")
 
     # Generate confirmation token for user 1
-    confirmation_token = um.generate_token(user1.id)
+    confirmation_token = um.generate_token(valid_user.id)
 
     # Retrieve page and verify that response has no errors
     client.get_valid_page(url_for('user.confirm_email', token=confirmation_token))
 
     # Verify operations
-    assert user1.is_enabled
-    assert user1.confirmed_at != None
+    assert valid_user.active
+    assert valid_user.confirmed_at != None
 
 def check_valid_login_form(um, client):
     print("test_valid_login_form")
 
-    # Define defaults
-    username = 'user2'
-    email = username+'@example.com'
-    password = 'Password1'
-
     # Build variable argument list depending on config settings
     kwargs = {}
     if um.enable_username:
-        kwargs['username'] = username
+        kwargs['username'] = VALID_USERNAME
     if um.enable_email:
-        kwargs['email'] = email
-    kwargs['password'] = password
+        kwargs['email'] = VALID_EMAIL
+    kwargs['password'] = VALID_PASSWORD
 
     # Submit form and verify that response has no errors
     client.post_valid_form(url_for('user.login'), **kwargs)
@@ -210,13 +217,12 @@ def check_valid_change_password_form(um, client):
     print("test_valid_change_password_form")
 
     # Define defaults
-    password = 'Password1'
     new_password = 'Password9'
-    old_hashed_password = user1.password
+    old_hashed_password = valid_user.password
 
     # Build variable argument list depending on config settings
     kwargs = {}
-    kwargs['old_password'] = password
+    kwargs['old_password'] = VALID_PASSWORD
     kwargs['new_password'] = new_password
     if um.enable_retype_password:
         kwargs['retype_password'] = new_password
@@ -225,10 +231,10 @@ def check_valid_change_password_form(um, client):
     client.post_valid_form(url_for('user.change_password'), **kwargs)
 
     # Verify operations
-    assert um.verify_password(new_password, user1)
+    assert um.verify_password(new_password, valid_user)
 
     # Change password back to old password for subsequent tests
-    user1.password = old_hashed_password
+    valid_user.password = old_hashed_password
 
 def check_valid_change_username_form(um, client):
     # Skip test for certain config combinations
@@ -236,19 +242,16 @@ def check_valid_change_username_form(um, client):
 
     print("test_valid_change_username_form")
 
-    # Define defaults
-    username = 'user1'
-    password = 'Password1'
     new_username = 'user9'
 
     # Submit form and verify that response has no errors
-    client.post_valid_form(url_for('user.change_username'), new_username=new_username, old_password=password)
+    client.post_valid_form(url_for('user.change_username'), new_username=new_username, old_password=VALID_PASSWORD)
 
     # Verify operations
-    assert user1.username == new_username
+    assert valid_user.username == new_username
 
     # Change username back to old password for subsequent tests
-    user1.username = username
+    valid_user.username = VALID_USERNAME
 
 def check_valid_logout_link(um, client):
     print("test_valid_logout_link")
@@ -262,11 +265,8 @@ def check_valid_forgot_password_form(um, client):
 
     print("test_valid_forgot_password_form")
 
-    # Define defaults
-    email = 'user1@example.com'
-
     # Submit form and verify that response has no errors
-    client.post_valid_form(url_for('user.forgot_password'), email=email)
+    client.post_valid_form(url_for('user.forgot_password'), email=VALID_EMAIL)
 
 def check_valid_reset_password_page(um, client):
     # Skip test for certain config combinations
@@ -276,13 +276,13 @@ def check_valid_reset_password_page(um, client):
     print("test_valid_reset_password_page")
 
     # Simulate a valid forgot password form
-    user1.reset_password_token = um.generate_token(user1.id)
-    token = user1.reset_password_token
+    valid_user.reset_password_token = um.generate_token(valid_user.id)
+    token = valid_user.reset_password_token
 
     # Define defaults
     password = 'Password1'
     new_password = 'Password9'
-    old_hashed_password = user1.password
+    old_hashed_password = valid_user.password
     url = url_for('user.reset_password', token=token)
 
     # Build variable argument list depending on config settings
@@ -295,22 +295,17 @@ def check_valid_reset_password_page(um, client):
     client.post_valid_form(url, **kwargs)
 
     # Verify operations
-    assert um.verify_password(new_password, user1)
+    assert um.verify_password(new_password, valid_user)
 
     # Change password back to old password for subsequent tests
-    user1.password = old_hashed_password
+    valid_user.password = old_hashed_password
 
 
-def delete_user1(db):
+def delete_valid_user(db):
     # Using global variable for speed
-    global user1
+    global valid_user
 
-    # Delete user1
-    db.session.delete(user1)
+    # Delete valid_user
+    db.session.delete(valid_user)
     db.session.commit()
-    user1 = None
-
-# Workaround for py.test coverage issue
-def run_all_tests(client, db):
-    test_with_username(client, db)
-    test_with_email(client, db)
+    valid_user = None
