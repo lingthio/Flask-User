@@ -459,13 +459,6 @@ def invite():
             "email": email
         }
 
-        if hasattr(db_adapter.UserClass, 'active'):
-            user_fields['active'] = False
-        elif hasattr(db_adapter.UserClass, 'is_enabled'):
-            user_fields['is_enabled'] = False
-        else:
-            user_fields['is_active'] = False
-
         user, user_email = user_manager.find_user_by_email(email)
         if user:
             if hasattr(db_adapter.UserClass, 'has_registered') and user.has_registered:
