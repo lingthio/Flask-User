@@ -234,6 +234,7 @@ class RegisterForm(Form):
         validators.DataRequired(_('Password is required'))])
     retype_password = PasswordField(_('Retype Password'), validators=[
         validators.EqualTo('password', message=_('Password and Retype Password did not match'))])
+    invite_token = HiddenField(_('Token'))
 
     submit = SubmitField(_('Register'))
 

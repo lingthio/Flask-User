@@ -330,9 +330,10 @@ def register():
 
     token = request.values.get("token")
     if token and db_adapter.UserInvitationClass:
-        user_invite = db_adapter.UserInvitationClass.query.filter(db_adapter.UserInvitationClass.token==token).first()
+        user_invite = db_adapter.find_first_object(db_adapter.UserInvitationClass, token=token)
         if user_invite:
             register_form.email.data = user_invite.email
+            register_form.invite_token.data = token
 
     # Process valid POST
     if request.method=='POST' and register_form.validate():
@@ -412,6 +413,13 @@ def register():
             else:
                 user.user_auth = user_auth
 
+        user_invite = None
+        if db_adapter.UserInvitationClass:
+            token = register_form.invite_token.data
+            user_invite = db_adapter \
+                            .find_first_object(db_adapter.UserInvitationClass,
+                                               token=token)
+
         db_adapter.commit()
 
         # Send 'registered' email and delete new User object if send fails
@@ -426,7 +434,9 @@ def register():
                 raise e
 
         # Send user_registered signal
-        signals.user_registered.send(current_app._get_current_object(), user=user)
+        signals.user_registered.send(current_app._get_current_object(),
+                                     user=user,
+                                     user_invite=user_invite)
 
         # Redirect if USER_ENABLE_CONFIRM_EMAIL is set
         if user_manager.enable_confirm_email:
@@ -452,7 +462,8 @@ def invite():
     user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter
 
-    next = request.args.get('next', _endpoint_url(user_manager.after_invite_endpoint))
+    next = request.args.get('next',
+                            _endpoint_url(user_manager.after_invite_endpoint))
 
     invite_form = user_manager.invite_form(request.form)
 
@@ -470,14 +481,17 @@ def invite():
             flash("User with that email has already registered", "error")
             return redirect(url_for('user.invite'))
         else:
-            user_invite = db_adapter.add_object(db_adapter.UserInvitationClass, **{
-                "email": email,
-                "invited_by_user_id": current_user.id
-            })
+            user_invite = db_adapter \
+                            .add_object(db_adapter.UserInvitationClass, **{
+                                "email": email,
+                                "invited_by_user_id": current_user.id
+                            })
         db_adapter.commit()
 
         token = user_manager.generate_token(user_invite.id)
-        accept_invite_link = url_for('user.register', token=token, _external=True)
+        accept_invite_link = url_for('user.register',
+                                     token=token,
+                                     _external=True)
 
         # Store token
         if hasattr(db_adapter.UserInvitationClass, 'token'):
@@ -495,7 +509,7 @@ def invite():
 
         signals \
             .user_sent_invitation \
-            .send(current_app._get_current_object(), user=user_invite)
+            .send(current_app._get_current_object(), user_invite=user_invite)
 
         flash(_('Invitation has been sent.'), 'success')
         return redirect(next)

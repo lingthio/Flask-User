@@ -3,7 +3,9 @@ from flask import Flask, redirect, render_template_string, request, url_for
 from flask_babel import Babel
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
-from flask_user import confirm_email_required, current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
+from flask_user import confirm_email_required, current_user, login_required, \
+                        UserManager, UserMixin, SQLAlchemyAdapter
+from flask_user.signals import user_sent_invitation, user_registered
 
 # Use a Class-based config to avoid needing a 2nd file
 # os.getenv() enables configuration through OS environment variables
@@ -72,7 +74,9 @@ def create_app(test_config=None):                   # For automated tests
         __tablename__ = 'user_invite'
         id = db.Column(db.Integer, primary_key=True)
         email = db.Column(db.String(255), nullable=False)
+        # save the user of the invitee
         invited_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+        # token used for registration page to identify user registering
         token = db.Column(db.String(100), nullable=False, server_default='')
 
     # Create all database tables
@@ -81,6 +85,14 @@ def create_app(test_config=None):                   # For automated tests
     # Setup Flask-User
     db_adapter = SQLAlchemyAdapter(db, User, UserInvitationClass=UserInvitation)       # Select database adapter
     user_manager = UserManager(db_adapter, app)     # Init Flask-User and bind to app
+
+    @user_registered.connect_via(app)
+    def after_registered_hook(sender, user, user_invite):
+        sender.logger.info("USER REGISTERED")
+
+    @user_sent_invitation.connect_via(app)
+    def after_invitation_hook(sender, **extra):
+        sender.logger.info("USER SENT INVITATION")
 
     # The Home page is accessible to anyone
     @app.route('/')
