@@ -21,8 +21,10 @@ from flask import current_app, url_for
 VALID_USERNAME = 'valid1'
 VALID_EMAIL = 'valid1@example.com'
 VALID_PASSWORD = 'Password1'
+INVITE_USER_EMAIL = 'valid2@example.com'
 # Using global variable for speed
 valid_user = None
+valid_user_invite = None
 
 # ********************************
 # ** Automatically called Tests **
@@ -81,7 +83,7 @@ def do_test_all_possible_config_combinations(client, db):
     print()
     print("Testing all forms for all possible config combinations")
     um =  current_app.user_manager
-    
+
     for um.enable_register in (True, False):
       for um.enable_email in (True, False):
         for um.enable_retype_password in (True, False):
@@ -90,7 +92,8 @@ def do_test_all_possible_config_combinations(client, db):
               for um.enable_change_password in (True, False):
                 for um.enable_change_username in (True, False):
                   for um.enable_forgot_password in (True, False):
-                    check_all_valid_forms(um, client, db)
+                    for um.enable_invitation in (True, False):
+                        check_all_valid_forms(um, client, db)
 
 # **************************
 # ** Check Form Functions **
@@ -117,8 +120,11 @@ def check_all_valid_forms(um, client):
     check_valid_logout_link(um, client)
     check_valid_forgot_password_form(um, client)
     check_valid_reset_password_page(um, client)
+    check_valid_invite_email(um, client)
+    #check_valid_invite_registration_different_email(um, client)
 
     delete_valid_user(client.db)
+    delete_valid_user_invite(client.db)
 
 def check_valid_register_form(um, client, db):
     # Using global variable for speed
@@ -300,6 +306,17 @@ def check_valid_reset_password_page(um, client):
     # Change password back to old password for subsequent tests
     valid_user.password = old_hashed_password
 
+def check_valid_invite_email(um, client):
+    """ If a valid email is submitted using the invite form,
+    then it should generate the proper email and response """
+    if not um.enable_invitation: return
+    # Submit form and verify that response has no errors
+    global valid_user_invite
+    UserInvite = um.db_adapter.UserInvitationClass
+    client.login(username='member', email='member@example.com', password='Password1')
+    client.post_valid_form(url_for('user.invite'), email=INVITE_USER_EMAIL)
+    valid_user_invite = UserInvite.query.filter(UserInvite.email==INVITE_USER_EMAIL).first()
+    assert valid_user_invite
 
 def delete_valid_user(db):
     # Using global variable for speed
@@ -309,3 +326,10 @@ def delete_valid_user(db):
     db.session.delete(valid_user)
     db.session.commit()
     valid_user = None
+
+def delete_valid_user_invite(db):
+    global valid_user_invite
+
+    db.session.delete(valid_user_invite)
+    db.session.commit()
+    valid_user_invite = None

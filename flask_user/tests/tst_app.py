@@ -1,4 +1,5 @@
 import os
+import datetime
 from flask import Flask, render_template_string, request
 from flask.ext.babel import Babel
 from flask.ext.mail import Mail
@@ -28,6 +29,7 @@ class ConfigClass(object):
     USER_ENABLE_USERNAME        = True
     USER_ENABLE_EMAIL           = True
     USER_ENABLE_CONFIRM_EMAIL   = True
+    USER_ENABLE_INVITATION      = True
 
 def create_app(test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
@@ -82,6 +84,15 @@ def create_app(test_config=None):                   # For automated tests
         # Relationship
         user = db.relationship('User', uselist=False)
 
+    class UserInvitation(db.Model):
+        __tablename__ = 'user_invite'
+        id = db.Column(db.Integer, primary_key=True)
+        email = db.Column(db.String(255), nullable=False)
+        # save the user of the invitee
+        invited_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+        # token used for registration page to identify user registering
+        token = db.Column(db.String(100), nullable=False, server_default='')
+
 
     # Define the Role data model
     class Role(db.Model):
@@ -98,13 +109,13 @@ def create_app(test_config=None):                   # For automated tests
     db.create_all()
 
     # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db,  User)
+    db_adapter = SQLAlchemyAdapter(db,  User, UserInvitationClass=UserInvitation)
     user_manager = UserManager(db_adapter, app)
 
     # Create regular 'member' user
     if not User.query.filter(User.username=='member').first():
         user = User(username='member', email='member@example.com', active=True,
-                password=user_manager.hash_password('Password1'))
+                password=user_manager.hash_password('Password1'), confirmed_at=datetime.datetime.utcnow())
         db.session.add(user)
         db.session.commit()
 
@@ -145,6 +156,8 @@ def create_app(test_config=None):                   # For automated tests
                 {%trans%}Change username{%endtrans%}</a></p>
             <p> <a href="{{ url_for('user.change_password') }}">
                 {%trans%}Change password{%endtrans%}</a></p>
+            <p> <a href="{{ url_for('user.invite') }}">
+                {%trans%}Invite User{%endtrans%}</a></p>
             <p> <a href="{{ url_for('user.logout') }}?next={{ url_for('user.login') }}">
                 {%trans%}Sign out{%endtrans%}</a></p>
             {% endblock %}

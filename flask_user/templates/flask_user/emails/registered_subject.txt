@@ -1,3 +1,3 @@
 {% extends 'flask_user/emails/base_subject.txt' %}
 
-{% block subject %}{% if user_manager.enable_confirm_email %}Confirm your email{% else %}Thank you for registering{% endif %}{% endblock %}
+{% block subject %}{% if user_manager.enable_confirm_email and not user.confirmed_at %}Confirm your email{% else %}Thank you for registering{% endif %}{% endblock %}
