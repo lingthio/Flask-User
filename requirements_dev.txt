@@ -1,0 +1,16 @@
+# non-flask packages
+pytest==2.6.4
+passlib==1.6.2
+py-bcrypt==0.4
+pycrypto==2.6.1
+speaklater==1.3
+
+# Flask
+Flask==0.10.1
+
+# Flask packages
+Flask-Babel==0.9
+Flask-Login==0.2.9
+Flask-Mail==0.9.0
+Flask-SQLAlchemy==1.0
+Flask-WTF==0.9.4
