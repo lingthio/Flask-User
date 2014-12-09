@@ -65,7 +65,6 @@ def set_default_settings(user_manager, app_config):
     um.reset_password_url        = sd('USER_RESET_PASSWORD_URL',         '/user/reset-password/<token>')
     um.user_profile_url          = sd('USER_PROFILE_URL',                '/user/profile')
     um.invite_url                = sd('USER_INVITE_URL',                 '/user/invite')
-    um.invite_accept_url         = sd('USER_INVITE_ACCEPT_URL',          '/user/accept/<token>')
 
     # Set default ENDPOINTs
     home_endpoint = ''
@@ -80,7 +79,6 @@ def set_default_settings(user_manager, app_config):
     um.after_resend_confirm_email_endpoint = sd('USER_AFTER_RESEND_CONFIRM_EMAIL_ENDPOINT', home_endpoint)
     um.after_reset_password_endpoint       = sd('USER_AFTER_RESET_PASSWORD_ENDPOINT',       home_endpoint)
     um.after_invite_endpoint               = sd('USER_INVITE_ENDPOINT',                     home_endpoint)
-    um.after_invite_accept_endpoint        = sd('USER_INVITE_ACCEPT_ENDPOINT',              login_endpoint)
     um.unconfirmed_email_endpoint          = sd('USER_UNCONFIRMED_EMAIL_ENDPOINT',          home_endpoint)
     um.unauthenticated_endpoint            = sd('USER_UNAUTHENTICATED_ENDPOINT',            login_endpoint)
     um.unauthorized_endpoint               = sd('USER_UNAUTHORIZED_ENDPOINT',               home_endpoint)
