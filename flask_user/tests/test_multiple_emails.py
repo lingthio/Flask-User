@@ -69,12 +69,12 @@ def test_multiple_emails(app, db, client):
 
     # Visit manage emails page
     response = client.get_valid_page(url_for('user.manage_emails'))
-    assert response.data.find(EMAIL1) >= 0
+    assert response.data.find(str.encode(EMAIL1)) >= 0
 
     # Add an email
     response = client.post_valid_form(url_for('user.manage_emails'), email=EMAIL2)
-    assert response.data.find(EMAIL1) >= 0
-    assert response.data.find(EMAIL2) >= 0
+    assert response.data.find(str.encode(EMAIL1)) >= 0
+    assert response.data.find(str.encode(EMAIL2)) >= 0
     user_email2 = um.db_adapter.UserEmailClass.query.filter(um.db_adapter.UserEmailClass.email==EMAIL2).first()
     assert user_email2 != None
 
