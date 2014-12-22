@@ -43,6 +43,7 @@ class UserManager(object):
                 register_form=forms.RegisterForm,
                 resend_confirm_email_form=forms.ResendConfirmEmailForm,
                 reset_password_form=forms.ResetPasswordForm,
+                invite_form=forms.InviteForm,
                 # Validators
                 username_validator=forms.username_validator,
                 password_validator=forms.password_validator,
@@ -62,6 +63,7 @@ class UserManager(object):
                 unauthenticated_view_function = views.unauthenticated,
                 unauthorized_view_function = views.unauthorized,
                 user_profile_view_function = views.user_profile,
+                invite_view_function = views.invite,
                 # Misc
                 login_manager=LoginManager(),
                 password_crypt_context=None,
@@ -80,6 +82,7 @@ class UserManager(object):
         self.register_form = register_form
         self.resend_confirm_email_form = resend_confirm_email_form
         self.reset_password_form = reset_password_form
+        self.invite_form = invite_form
         # Validators
         self.username_validator = username_validator
         self.password_validator = password_validator
@@ -99,6 +102,7 @@ class UserManager(object):
         self.unauthenticated_view_function = unauthenticated_view_function
         self.unauthorized_view_function = unauthorized_view_function
         self.user_profile_view_function = user_profile_view_function
+        self.invite_view_function = invite_view_function
         # Misc
         self.login_manager = login_manager
         self.token_manager = token_manager
@@ -206,7 +210,8 @@ class UserManager(object):
             app.add_url_rule(self.email_action_url,  'user.email_action',  self.email_action_view_function)
             app.add_url_rule(self.manage_emails_url, 'user.manage_emails', self.manage_emails_view_function, methods=['GET', 'POST'])
         app.add_url_rule(self.user_profile_url,  'user.profile',  self.user_profile_view_function,  methods=['GET', 'POST'])
-
+        if self.enable_invitation:
+            app.add_url_rule(self.invite_url, 'user.invite', self.invite_view_function, methods=['GET', 'POST'])
     # Obsoleted function. Replace with hash_password()
     def generate_password_hash(self, password):
         return passwords.hash_password(self, password)

@@ -234,6 +234,7 @@ class RegisterForm(Form):
         validators.DataRequired(_('Password is required'))])
     retype_password = PasswordField(_('Retype Password'), validators=[
         validators.EqualTo('password', message=_('Password and Retype Password did not match'))])
+    invite_token = HiddenField(_('Token'))
 
     submit = SubmitField(_('Register'))
 
@@ -299,3 +300,10 @@ class ResetPasswordForm(Form):
             return False
         # All is well
         return True
+
+class InviteForm(Form):
+    email = StringField(_('Email'), validators=[
+        validators.Required(_('Email is required')),
+        validators.Email(_('Invalid Email'))])
+    next = HiddenField()
+    submit = SubmitField(_('Invite!'))

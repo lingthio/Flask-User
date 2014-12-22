@@ -45,6 +45,7 @@ def set_default_settings(user_manager, app_config):
     um.password_hash               = sd('USER_PASSWORD_HASH',              'bcrypt')
     um.password_salt               = sd('USER_PASSWORD_SALT',              app_config['SECRET_KEY'])
     um.reset_password_expiration   = sd('USER_RESET_PASSWORD_EXPIRATION',  2*24*3600)   # 2 days
+    um.enable_invitation           = sd('USER_ENABLE_INVITATION',          False)
     um.require_invitation          = sd('USER_REQUIRE_INVITATION',         False)
     um.send_password_changed_email = sd('USER_SEND_PASSWORD_CHANGED_EMAIL',um.enable_email)
     um.send_registered_email       = sd('USER_SEND_REGISTERED_EMAIL',      um.enable_email)
@@ -63,6 +64,7 @@ def set_default_settings(user_manager, app_config):
     um.resend_confirm_email_url  = sd('USER_RESEND_CONFIRM_EMAIL_URL',   '/user/resend-confirm-email')
     um.reset_password_url        = sd('USER_RESET_PASSWORD_URL',         '/user/reset-password/<token>')
     um.user_profile_url          = sd('USER_PROFILE_URL',                '/user/profile')
+    um.invite_url                = sd('USER_INVITE_URL',                 '/user/invite')
 
     # Set default ENDPOINTs
     home_endpoint = ''
@@ -76,6 +78,7 @@ def set_default_settings(user_manager, app_config):
     um.after_register_endpoint             = sd('USER_AFTER_REGISTER_ENDPOINT',             home_endpoint)
     um.after_resend_confirm_email_endpoint = sd('USER_AFTER_RESEND_CONFIRM_EMAIL_ENDPOINT', home_endpoint)
     um.after_reset_password_endpoint       = sd('USER_AFTER_RESET_PASSWORD_ENDPOINT',       home_endpoint)
+    um.after_invite_endpoint               = sd('USER_INVITE_ENDPOINT',                     home_endpoint)
     um.unconfirmed_email_endpoint          = sd('USER_UNCONFIRMED_EMAIL_ENDPOINT',          home_endpoint)
     um.unauthenticated_endpoint            = sd('USER_UNAUTHENTICATED_ENDPOINT',            login_endpoint)
     um.unauthorized_endpoint               = sd('USER_UNAUTHORIZED_ENDPOINT',               home_endpoint)
@@ -90,6 +93,8 @@ def set_default_settings(user_manager, app_config):
     um.resend_confirm_email_template = sd('USER_RESEND_CONFIRM_EMAIL_TEMPLATE', 'flask_user/resend_confirm_email.html')
     um.reset_password_template       = sd('USER_RESET_PASSWORD_TEMPLATE',   'flask_user/reset_password.html')
     um.user_profile_template         = sd('USER_PROFILE_TEMPLATE',          'flask_user/user_profile.html')
+    um.invite_template               = sd('USER_INVITE_TEMPLATE',           'flask_user/invite.html')
+    um.invite_accept_template        = sd('USER_INVITE_ACCEPT_TEMPLATE',    'flask_user/register.html')
 
     # Set default email template files
     um.confirm_email_email_template    = sd('USER_CONFIRM_EMAIL_EMAIL_TEMPLATE',    'flask_user/emails/confirm_email')
@@ -97,6 +102,7 @@ def set_default_settings(user_manager, app_config):
     um.password_changed_email_template = sd('USER_PASSWORD_CHANGED_EMAIL_TEMPLATE', 'flask_user/emails/password_changed')
     um.registered_email_template       = sd('USER_REGISTERED_EMAIL_TEMPLATE',       'flask_user/emails/registered')
     um.username_changed_email_template = sd('USER_USERNAME_CHANGED_EMAIL_TEMPLATE', 'flask_user/emails/username_changed')
+    um.invite_email_template           = sd('USER_INVITE_EMAIL_TEMPLATE',           'flask_user/emails/invite')
 
 
 def check_settings(user_manager):
@@ -121,3 +127,7 @@ def check_settings(user_manager):
     # USER_SEND_REGISTERED_EMAIL=True must have USER_ENABLE_EMAIL=True
     if um.send_registered_email and not um.enable_email:
         raise ConfigurationError('USER_SEND_REGISTERED_EMAIL=True must have USER_ENABLE_EMAIL=True.')
+    if um.require_invitation and not um.enable_invitation:
+        raise ConfigurationError('USER_REQUIRE_INVITATION=True must have USER_ENABLE_INVITATION=True.')
+    if um.enable_invitation and not um.db_adapter.UserInvitationClass:
+        raise ConfigurationError('USER_ENABLE_INVITATION=True must pass UserInvitationClass to SQLAlchemyAdapter().')

@@ -315,6 +315,7 @@ def manage_emails():
 
 def register():
     """ Display registration form and create new User."""
+
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
 
@@ -324,13 +325,22 @@ def register():
     # Initialize form
     login_form = user_manager.login_form()                      # for login_or_register.html
     register_form = user_manager.register_form(request.form)    # for register.html
+
+    invite_token = request.values.get("token")
+    user_invite = None
+    if invite_token and db_adapter.UserInvitationClass:
+        user_invite = db_adapter.find_first_object(db_adapter.UserInvitationClass, token=invite_token)
+        if user_invite:
+            register_form.invite_token.data = invite_token
+
     if request.method!='POST':
         login_form.next.data     = register_form.next.data     = next
         login_form.reg_next.data = register_form.reg_next.data = reg_next
+        if user_invite:
+            register_form.email.data = user_invite.email
 
     # Process valid POST
     if request.method=='POST' and register_form.validate():
-
         # Create a User object using Form fields that have a corresponding User field
         User = db_adapter.UserClass
         user_class_fields = User.__dict__
@@ -406,13 +416,19 @@ def register():
             else:
                 user.user_auth = user_auth
 
+        require_email_confirmation = True
+        if user_invite:
+            if user_invite.email == register_form.email.data:
+                require_email_confirmation = False
+                db_adapter.update_object(user, confirmed_at=datetime.utcnow())
+
         db_adapter.commit()
 
         # Send 'registered' email and delete new User object if send fails
         if user_manager.send_registered_email:
             try:
                 # Send 'registered' email
-                _send_registered_email(user, user_email)
+                _send_registered_email(user, user_email, require_email_confirmation)
             except Exception as e:
                 # delete new User object if send  fails
                 db_adapter.delete_object(user)
@@ -420,10 +436,12 @@ def register():
                 raise e
 
         # Send user_registered signal
-        signals.user_registered.send(current_app._get_current_object(), user=user)
+        signals.user_registered.send(current_app._get_current_object(),
+                                     user=user,
+                                     user_invite=user_invite)
 
         # Redirect if USER_ENABLE_CONFIRM_EMAIL is set
-        if user_manager.enable_confirm_email:
+        if user_manager.enable_confirm_email and require_email_confirmation:
             next = request.args.get('next', _endpoint_url(user_manager.after_register_endpoint))
             return redirect(next)
 
@@ -440,6 +458,65 @@ def register():
             login_form=login_form,
             register_form=register_form)
 
+@login_required
+def invite():
+    """ Allows users to send invitations to register an account """
+    user_manager = current_app.user_manager
+    db_adapter = user_manager.db_adapter
+
+    next = request.args.get('next',
+                            _endpoint_url(user_manager.after_invite_endpoint))
+
+    invite_form = user_manager.invite_form(request.form)
+
+    if request.method=='POST' and invite_form.validate():
+        email = invite_form.email.data
+
+        User = db_adapter.UserClass
+        user_class_fields = User.__dict__
+        user_fields = {
+            "email": email
+        }
+
+        user, user_email = user_manager.find_user_by_email(email)
+        if user:
+            flash("User with that email has already registered", "error")
+            return redirect(url_for('user.invite'))
+        else:
+            user_invite = db_adapter \
+                            .add_object(db_adapter.UserInvitationClass, **{
+                                "email": email,
+                                "invited_by_user_id": current_user.id
+                            })
+        db_adapter.commit()
+
+        token = user_manager.generate_token(user_invite.id)
+        accept_invite_link = url_for('user.register',
+                                     token=token,
+                                     _external=True)
+
+        # Store token
+        if hasattr(db_adapter.UserInvitationClass, 'token'):
+            user_invite.token = token
+            db_adapter.commit()
+
+        try:
+            # Send 'invite' email
+            emails.send_invite_email(user_invite, accept_invite_link)
+        except Exception as e:
+            # delete new User object if send fails
+            db_adapter.delete_object(user_invite)
+            db_adapter.commit()
+            raise e
+
+        signals \
+            .user_sent_invitation \
+            .send(current_app._get_current_object(), user_invite=user_invite)
+
+        flash(_('Invitation has been sent.'), 'success')
+        return redirect(next)
+
+    return render_template(user_manager.invite_template, form=invite_form)
 
 def resend_confirm_email():
     """Prompt for email and re-send email conformation email."""
@@ -570,7 +647,7 @@ def user_profile():
     return render_template(user_manager.user_profile_template)
 
 
-def _send_registered_email(user, user_email):
+def _send_registered_email(user, user_email, require_email_confirmation=True):
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
 
@@ -585,7 +662,7 @@ def _send_registered_email(user, user_email):
         emails.send_registered_email(user, user_email, confirm_email_link)
 
         # Prepare one-time system message
-        if user_manager.enable_confirm_email:
+        if user_manager.enable_confirm_email and require_email_confirmation:
             email = user_email.email if user_email else user.email
             flash(_('A confirmation email has been sent to %(email)s with instructions to complete your registration.', email=email), 'success')
         else:
