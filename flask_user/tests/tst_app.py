@@ -22,7 +22,7 @@ class ConfigClass(object):
     MAIL_DEFAULT_SENDER =     os.getenv('MAIL_DEFAULT_SENDER',  '"MyApp" <noreply@example.com>')
     MAIL_SERVER =             os.getenv('MAIL_SERVER',          'smtp.gmail.com')
     MAIL_PORT =           int(os.getenv('MAIL_PORT',            '465'))
-    MAIL_USE_SSL =        int(os.getenv('MAIL_USE_SSL',         True))
+    MAIL_USE_SSL =            os.getenv('MAIL_USE_SSL',         True)
 
     # Flask-User settings
     USER_APP_NAME        = "AppName"                # Used by email templates

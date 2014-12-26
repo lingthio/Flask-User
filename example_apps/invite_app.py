@@ -26,6 +26,7 @@ class ConfigClass(object):
     # Flask-User settings
     USER_APP_NAME        = "AppName"                # Used by email templates
     USER_ENABLE_INVITATION = True
+    USER_REQUIRE_INVITATION = True
 
 def create_app(test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
@@ -117,7 +118,7 @@ def create_app(test_config=None):                   # For automated tests
         else:
             return redirect(url_for('user.login'))
 
-# The Profile page requires a logged-in user
+    # The Profile page requires a logged-in user
     @app.route('/user/profiles')
     @login_required                                 # Use of @login_required decorator
     @confirm_email_required
