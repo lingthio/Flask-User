@@ -326,7 +326,14 @@ def register():
     login_form = user_manager.login_form()                      # for login_or_register.html
     register_form = user_manager.register_form(request.form)    # for register.html
 
+    # invite token used to determine validity of registeree
     invite_token = request.values.get("token")
+
+    # require invite without a token should disallow the user from registering
+    if user_manager.require_invitation and not invite_token:
+        flash("Registration is invite only", "error")
+        return redirect(url_for('user.login'))
+
     user_invite = None
     if invite_token and db_adapter.UserInvitationClass:
         user_invite = db_adapter.find_first_object(db_adapter.UserInvitationClass, token=invite_token)
