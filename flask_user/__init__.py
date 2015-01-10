@@ -23,6 +23,8 @@ from flask_login import current_user
 
 # Enable the following: from flask.ext.user import login_required, roles_required
 from .decorators import *
+# Enable the following: from flask.ext.user import user_logged_in
+from .signals import *
 
 __version__ = '0.6.1'
 
