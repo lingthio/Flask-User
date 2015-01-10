@@ -31,7 +31,7 @@ Subscribing to Signals
 AFTER BLINKER HAS BEEN INSTALLED, An application can receive event notifications
 by using the event signal's ``connect_via()`` decorator::
 
-    from flask.ext.user.signals import user_logged_in
+    from flask.ext.user import user_logged_in
 
     @user_logged_in.connect_via(app)
     def _after_login_hook(sender, user, **extra):
