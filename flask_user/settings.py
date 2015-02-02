@@ -52,19 +52,19 @@ def set_default_settings(user_manager, app_config):
     um.send_username_changed_email = sd('USER_SEND_USERNAME_CHANGED_EMAIL',um.enable_email)
 
     # Set default URLs
-    um.change_password_url       = sd('USER_CHANGE_PASSWORD_URL',        '/user/change-password')
-    um.change_username_url       = sd('USER_CHANGE_USERNAME_URL',        '/user/change-username')
-    um.confirm_email_url         = sd('USER_CONFIRM_EMAIL_URL',          '/user/confirm-email/<token>')
-    um.email_action_url          = sd('USER_EMAIL_ACTION_URL',           '/user/email/<id>/<action>')
-    um.forgot_password_url       = sd('USER_FORGOT_PASSWORD_URL',        '/user/forgot-password')
-    um.login_url                 = sd('USER_LOGIN_URL',                  '/user/sign-in')
-    um.logout_url                = sd('USER_LOGOUT_URL',                 '/user/sign-out')
-    um.manage_emails_url         = sd('USER_MANAGE_EMAILS_URL',          '/user/manage-emails')
-    um.register_url              = sd('USER_REGISTER_URL',               '/user/register')
-    um.resend_confirm_email_url  = sd('USER_RESEND_CONFIRM_EMAIL_URL',   '/user/resend-confirm-email')
-    um.reset_password_url        = sd('USER_RESET_PASSWORD_URL',         '/user/reset-password/<token>')
-    um.user_profile_url          = sd('USER_PROFILE_URL',                '/user/profile')
-    um.invite_url                = sd('USER_INVITE_URL',                 '/user/invite')
+    um.change_password_url       = sd('USER_CHANGE_PASSWORD_URL',        '/user/change-password/')
+    um.change_username_url       = sd('USER_CHANGE_USERNAME_URL',        '/user/change-username/')
+    um.confirm_email_url         = sd('USER_CONFIRM_EMAIL_URL',          '/user/confirm-email/<token>/')
+    um.email_action_url          = sd('USER_EMAIL_ACTION_URL',           '/user/email/<id>/<action>/')
+    um.forgot_password_url       = sd('USER_FORGOT_PASSWORD_URL',        '/user/forgot-password/')
+    um.login_url                 = sd('USER_LOGIN_URL',                  '/user/sign-in/')
+    um.logout_url                = sd('USER_LOGOUT_URL',                 '/user/sign-out/')
+    um.manage_emails_url         = sd('USER_MANAGE_EMAILS_URL',          '/user/manage-emails/')
+    um.register_url              = sd('USER_REGISTER_URL',               '/user/register/')
+    um.resend_confirm_email_url  = sd('USER_RESEND_CONFIRM_EMAIL_URL',   '/user/resend-confirm-email/')
+    um.reset_password_url        = sd('USER_RESET_PASSWORD_URL',         '/user/reset-password/<token>/')
+    um.user_profile_url          = sd('USER_PROFILE_URL',                '/user/profile/')
+    um.invite_url                = sd('USER_INVITE_URL',                 '/user/invite/')
 
     # Set default ENDPOINTs
     home_endpoint = ''
