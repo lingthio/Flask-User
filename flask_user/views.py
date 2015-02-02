@@ -518,7 +518,8 @@ def invite():
 
         signals \
             .user_sent_invitation \
-            .send(current_app._get_current_object(), user_invite=user_invite)
+            .send(current_app._get_current_object(), user_invite=user_invite,
+                  form=invite_form)
 
         flash(_('Invitation has been sent.'), 'success')
         return redirect(next)
