@@ -19,6 +19,7 @@ def set_default_settings(user_manager, app_config):
 
     # General settings
     um.app_name                     = sd('USER_APP_NAME', 'AppName')
+    um.app_root_url                 = sd('USER_APP_ROOT_URL', False)
 
     # Set default features
     um.enable_change_password       = sd('USER_ENABLE_CHANGE_PASSWORD',       True)
