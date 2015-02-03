@@ -2,5 +2,11 @@
 
 {% block message %}
 <p>Your username has been changed.</p>
-<p>If you did not initiate this username change, please <a href="{{ url_for('user.login', _external=True) }}">sign in</a> (using your email address) and change your password.</p>
+<p>If you did not initiate this username change, please 
+  {% if app_root_url %}
+    <a href="{{app_root_url}}{{url_for('user.login')}}">
+ {% else %}
+    <a href="{{ url_for('user.login', _external=True) }}">
+ {% endif %}
+sign in</a> (using your email address) and change your password.</p>
 {% endblock %}

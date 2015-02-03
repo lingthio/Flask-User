@@ -199,6 +199,9 @@ def forgot_password():
             # Generate reset password link
             token = user_manager.generate_token(int(user.get_id()))
             reset_password_link = url_for('user.reset_password', token=token, _external=True)
+            if user_manager.app_root_url:
+                reset_password_link = user_manager.app_root_url + url_for(
+                    'user.reset_password', token=token)
 
             # Send forgot password email
             emails.send_forgot_password_email(user, user_email, reset_password_link)
@@ -501,6 +504,9 @@ def invite():
         accept_invite_link = url_for('user.register',
                                      token=token,
                                      _external=True)
+        if user_manager.app_root_url:
+            accept_invite_link = user_manager.app_root_url + url_for(
+                'user.register', token=token)
 
         # Store token
         if hasattr(db_adapter.UserInvitationClass, 'token'):
@@ -654,6 +660,12 @@ def user_profile():
     return render_template(user_manager.user_profile_template)
 
 
+def _confirm_email_link(um, token):
+    if um.app_root_url:
+        return um.app_root_url + url_for('user.confirm_email', token=token)
+    return url_for('user.confirm_email', token=token, _external=True)
+
+
 def _send_registered_email(user, user_email, require_email_confirmation=True):
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
@@ -663,7 +675,7 @@ def _send_registered_email(user, user_email, require_email_confirmation=True):
         # Generate confirm email link
         object_id = user_email.id if user_email else int(user.get_id())
         token = user_manager.generate_token(object_id)
-        confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
+        confirm_email_link = _confirm_email_link(user_manager, token)
 
         # Send email
         emails.send_registered_email(user, user_email, confirm_email_link)
@@ -685,7 +697,7 @@ def _send_confirm_email(user, user_email):
         # Generate confirm email link
         object_id = user_email.id if user_email else int(user.get_id())
         token = user_manager.generate_token(object_id)
-        confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
+        confirm_email_link = _confirm_email_link(user_manager, token)
 
         # Send email
         emails.send_confirm_email_email(user, user_email, confirm_email_link)

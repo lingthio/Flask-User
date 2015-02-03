@@ -120,7 +120,8 @@ def send_password_changed_email(user):
     subject, html_message, text_message = _render_email(
             user_manager.password_changed_email_template,
             user=user,
-            app_name=user_manager.app_name)
+            app_name=user_manager.app_name,
+        app_root_url=user_manager.app_root_url)
 
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
@@ -159,7 +160,8 @@ def send_username_changed_email(user):  # pragma: no cover
     subject, html_message, text_message = _render_email(
             user_manager.username_changed_email_template,
             user=user,
-            app_name=user_manager.app_name)
+            app_name=user_manager.app_name,
+        app_root_url=user_manager.app_root_url)
 
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
