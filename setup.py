@@ -86,8 +86,8 @@ from __future__ import print_function
 from setuptools import setup
 
 setup(
-    name='Flask-User',
-    version='0.6.2',
+    name='Flask-User-06',
+    version='0.6.3',
     url='http://github.com/lingthio/Flask-User',
     license='BSD License',
     author='Ling Thio',

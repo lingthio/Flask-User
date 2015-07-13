@@ -117,6 +117,7 @@ Documentation
 
 Revision History
 ----------------
+* v0.6.3 Fix for Python 3.4 and signals
 * v0.6.2 Added support for invitation-only registrations.
 * v0.6.1 Added Chinese (Simplified) and French translations`.
 * v0.6 Changed User/UserProfile DataModels into UserAuth/User DataModels.
@@ -221,6 +222,7 @@ This project would not be possible without the use of the following amazing offe
 
 Contributors
 ------------
+- https://github.com/neurosnap : Register by invitation only
 - https://github.com/lilac : Chinese translation
 - https://github.com/cranberyxl : Bugfix for login_endpoint & macros.label
 - https://github.com/markosys : Early testing and feedback
