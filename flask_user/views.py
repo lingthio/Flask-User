@@ -702,7 +702,7 @@ def _do_login_user(user, next, remember_me=False):
     # Check if user account has been disabled
     if not user.is_active():
         flash(_('Your account has not been enabled.'), 'error')
-        return redirect(url_for('user.home'))
+        return redirect(url_for('user.login'))
 
     # Check if user has a confirmed email address
     user_manager = current_app.user_manager
@@ -711,7 +711,7 @@ def _do_login_user(user, next, remember_me=False):
             and not user.has_confirmed_email():
         url = url_for('user.resend_confirm_email')
         flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email or <a href="%(url)s">Re-send confirmation email</a>.', url=url), 'error')
-        return redirect(url_for('user.home'))
+        return redirect(url_for('user.login'))
 
     # Use Flask-Login to sign in user
     #print('login_user: remember_me=', remember_me)
