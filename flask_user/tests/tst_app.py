@@ -8,6 +8,70 @@ from flask.ext.user import login_required, SQLAlchemyAdapter, UserManager, UserM
 from flask.ext.user import roles_required, confirm_email_required
 
 
+app = Flask(__name__)
+db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
+
+
+# Define the User data model. Make sure to add flask.ext.user UserMixin!!
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+
+    # User authentication information
+    username = db.Column(db.String(50), nullable=True, unique=True)
+    password = db.Column(db.String(255), nullable=False, server_default='')
+    reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
+
+    # User email information
+    email = db.Column(db.String(255), nullable=True, unique=True)
+    confirmed_at = db.Column(db.DateTime())
+
+    # User information
+    active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
+    first_name = db.Column(db.String(100), nullable=False, server_default='')
+    last_name = db.Column(db.String(100), nullable=False, server_default='')
+
+    # Relationships
+    roles = db.relationship('Role', secondary='user_roles',
+            backref=db.backref('users', lazy='dynamic'))
+
+
+# Define UserEmail DataModel.
+class UserEmail(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    # User email information
+    email = db.Column(db.String(255), nullable=True, unique=True)
+    confirmed_at = db.Column(db.DateTime())
+    is_primary = db.Column(db.Boolean(), nullable=False, default=False)
+
+    # Relationship
+    user = db.relationship('User', uselist=False)
+
+
+class UserInvitation(db.Model):
+    __tablename__ = 'user_invite'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), nullable=False)
+    # save the user of the invitee
+    invited_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    # token used for registration page to identify user registering
+    token = db.Column(db.String(100), nullable=False, server_default='')
+
+
+# Define the Role data model
+class Role(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(50), unique=True)
+
+
+# Define the UserRoles data model
+class UserRoles(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+    role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
+
+
 # Use a Class-based config to avoid needing a 2nd file
 # os.getenv() enables configuration through OS environment variables
 class ConfigClass(object):
@@ -31,9 +95,9 @@ class ConfigClass(object):
     USER_ENABLE_CONFIRM_EMAIL   = True
     USER_ENABLE_INVITATION      = True
 
-def create_app(test_config=None):                   # For automated tests
+
+def init_app(app, test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
-    app = Flask(__name__)
     app.config.from_object(__name__+'.ConfigClass')
 
     # Load local_settings.py if file exists         # For automated tests
@@ -45,65 +109,8 @@ def create_app(test_config=None):                   # For automated tests
         app.config.update(test_config)
 
     # Initialize Flask extensions
-    db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
     babel = Babel(app)                              # Initialize Flask-Babel
     mail = Mail(app)                                # Initialize Flask-Mail
-
-    # Define the User data model. Make sure to add flask.ext.user UserMixin!!
-    class User(db.Model, UserMixin):
-        id = db.Column(db.Integer, primary_key=True)
-
-        # User authentication information
-        username = db.Column(db.String(50), nullable=True, unique=True)
-        password = db.Column(db.String(255), nullable=False, server_default='')
-        reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
-
-        # User email information
-        email = db.Column(db.String(255), nullable=True, unique=True)
-        confirmed_at = db.Column(db.DateTime())
-
-        # User information
-        active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
-        first_name = db.Column(db.String(100), nullable=False, server_default='')
-        last_name = db.Column(db.String(100), nullable=False, server_default='')
-
-        # Relationships
-        roles = db.relationship('Role', secondary='user_roles',
-                backref=db.backref('users', lazy='dynamic'))
-
-    # Define UserEmail DataModel.
-    class UserEmail(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-        # User email information
-        email = db.Column(db.String(255), nullable=True, unique=True)
-        confirmed_at = db.Column(db.DateTime())
-        is_primary = db.Column(db.Boolean(), nullable=False, default=False)
-
-        # Relationship
-        user = db.relationship('User', uselist=False)
-
-    class UserInvitation(db.Model):
-        __tablename__ = 'user_invite'
-        id = db.Column(db.Integer, primary_key=True)
-        email = db.Column(db.String(255), nullable=False)
-        # save the user of the invitee
-        invited_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-        # token used for registration page to identify user registering
-        token = db.Column(db.String(100), nullable=False, server_default='')
-
-
-    # Define the Role data model
-    class Role(db.Model):
-        id = db.Column(db.Integer(), primary_key=True)
-        name = db.Column(db.String(50), unique=True)
-
-    # Define the UserRoles data model
-    class UserRoles(db.Model):
-        id = db.Column(db.Integer(), primary_key=True)
-        user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
-        role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
 
     # Reset all the database tables
     db.create_all()
@@ -179,6 +186,7 @@ def create_app(test_config=None):                   # For automated tests
     app.UserEmailClass = UserEmail
 
     return app
+
 
 # Start development web server
 if __name__=='__main__':

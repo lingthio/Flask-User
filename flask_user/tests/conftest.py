@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from flask_user.tests.tst_app import create_app
+from flask_user.tests.tst_app import app as the_app, init_app
 from flask_user.tests.tst_utils import TstClient
 
 @pytest.fixture(scope='session')
@@ -16,17 +16,17 @@ def app(request):
     )
 
     # Create app with test settings
-    app = create_app(test_config)
+    init_app(the_app, test_config)
 
     # Establish an application context before running the tests.
-    ctx = app.app_context()
+    ctx = the_app.app_context()
     ctx.push()
 
     def teardown():
         ctx.pop()
 
     request.addfinalizer(teardown)
-    return app
+    return the_app
 
 
 @pytest.fixture(scope='session')

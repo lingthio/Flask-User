@@ -357,6 +357,40 @@ class UserMixin(LoginUserMixin):
             self.is_enabled = active
 
 
+    def has_role(self, *specified_role_names):
+        """ Return True if the user has one of the specified roles. Return False otherwise.
+
+            has_roles() accepts a 1 or more role name parameters
+                has_role(role_name1, role_name2, role_name3).
+
+            For example:
+                has_roles('a', 'b')
+            Translates to:
+                User has role 'a' OR role 'b'
+        """
+
+        # Allow developers to attach the Roles to the User or the UserProfile object
+        if hasattr(self, 'roles'):
+            roles = self.roles
+        else:
+            if hasattr(self, 'user_profile') and hasattr(self.user_profile, 'roles'):
+                roles = self.user_profile.roles
+            else:
+                roles = None
+        if not roles: return False
+
+        # Translates a list of role objects to a list of role_names
+        user_role_names = [role.name for role in roles]
+
+        # Return True if one of the role_names matches
+        for role_name in specified_role_names:
+            if role_name in user_role_names:
+                return True
+
+        # Return False if none of the role_names matches
+        return False
+
+
     def has_roles(self, *requirements):
         """ Return True if the user has all of the specified roles. Return False otherwise.
 
@@ -386,7 +420,7 @@ class UserMixin(LoginUserMixin):
         if not roles: return False
 
         # Translates a list of role objects to a list of role_names
-        user_roles = [role.name for role in roles]
+        user_role_names = [role.name for role in roles]
 
         # has_role() accepts a list of requirements
         for requirement in requirements:
@@ -395,7 +429,7 @@ class UserMixin(LoginUserMixin):
                 tuple_of_role_names = requirement
                 authorized = False
                 for role_name in tuple_of_role_names:
-                    if role_name in user_roles:
+                    if role_name in user_role_names:
                         # tuple_of_role_names requirement was met: break out of loop
                         authorized = True
                         break
@@ -405,11 +439,12 @@ class UserMixin(LoginUserMixin):
                 # this is a role_name requirement
                 role_name = requirement
                 # the user must have this role
-                if not role_name in user_roles:
+                if not role_name in user_role_names:
                     return False                    # role_name requirement failed: return False
 
         # All requirements have been met: return True
         return True
+
 
     # Flask-Login is capable of remembering the current user ID in the browser's session.
     # This function enables the user ID to be encrypted as a token.
