@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2014-10-25 21:19-0700\n"
-"PO-Revision-Date: 2015-07-13 18:20+0200\n"
+"PO-Revision-Date: 2015-07-13 18:48+0200\n"
 "Last-Translator: Andriy Tymchenko <silpol@gmail.com>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -55,31 +55,31 @@ msgstr "E-post krävs"
 #: flask_user/forms.py:68 flask_user/forms.py:150 flask_user/forms.py:163
 #: flask_user/forms.py:239 flask_user/forms.py:281
 msgid "Invalid Email"
-msgstr ""
+msgstr "Ogiltig E-post"
 
 #: flask_user/forms.py:70
 msgid "Add Email"
-msgstr ""
+msgstr "Lägg E-post"
 
 #: flask_user/forms.py:73 flask_user/forms.py:117
 msgid "Old Password"
-msgstr ""
+msgstr "Gammalt Lösenord"
 
 #: flask_user/forms.py:74 flask_user/forms.py:118
 msgid "Old Password is required"
-msgstr ""
+msgstr "Gammalt Lösenord krävs"
 
 #: flask_user/forms.py:76 flask_user/forms.py:286
 msgid "New Password"
-msgstr ""
+msgstr "Nytt Lösenord"
 
 #: flask_user/forms.py:77 flask_user/forms.py:287
 msgid "New Password is required"
-msgstr ""
+msgstr "Nytt lösenord krävs"
 
 #: flask_user/forms.py:79 flask_user/forms.py:288
 msgid "Retype New Password"
-msgstr ""
+msgstr "Upprepa nytt lösenord"
 
 #: flask_user/forms.py:80 flask_user/forms.py:289
 msgid "New Password and Retype Password did not match"
@@ -88,7 +88,7 @@ msgstr ""
 #: flask_user/forms.py:83 flask_user/forms.py:291
 #: flask_user/templates/flask_user/change_password.html:5
 msgid "Change Password"
-msgstr ""
+msgstr "Ändra lösenord"
 
 #: flask_user/forms.py:106 flask_user/forms.py:141
 msgid "Old Password is incorrect"
@@ -96,11 +96,11 @@ msgstr ""
 
 #: flask_user/forms.py:113
 msgid "New Username"
-msgstr ""
+msgstr "Nytt Användarnamn"
 
 #: flask_user/forms.py:114 flask_user/forms.py:159 flask_user/forms.py:235
 msgid "Username is required"
-msgstr ""
+msgstr "Användarnamn krävs"
 
 #: flask_user/forms.py:121
 #: flask_user/templates/flask_user/change_username.html:5
@@ -121,11 +121,11 @@ msgstr "Lösenord"
 
 #: flask_user/forms.py:166 flask_user/forms.py:242
 msgid "Password is required"
-msgstr ""
+msgstr "Lösenord krävs"
 
 #: flask_user/forms.py:168
 msgid "Remember me"
-msgstr ""
+msgstr "Kom ihåg mig"
 
 #: flask_user/forms.py:170 flask_user/templates/flask_user/login.html:5
 #: flask_user/templates/flask_user/login_or_register.html:9
@@ -134,23 +134,23 @@ msgstr "Logga in"
 
 #: flask_user/forms.py:177
 msgid "Username or Email"
-msgstr ""
+msgstr "Användarnamn eller e-post"
 
 #: flask_user/forms.py:219
 msgid "Incorrect Username/Email and Password"
-msgstr ""
+msgstr "Felaktig Användarnamn/E-post och Lösenord"
 
 #: flask_user/forms.py:221
 msgid "Incorrect Username and Password"
-msgstr ""
+msgstr "Felaktigt Användarnamn och Lösenord"
 
 #: flask_user/forms.py:223
 msgid "Incorrect Email and Password"
-msgstr ""
+msgstr "Felaktig E-post och Lösenord"
 
 #: flask_user/forms.py:243
 msgid "Retype Password"
-msgstr ""
+msgstr "Upprepa Lösenord"
 
 #: flask_user/forms.py:244
 msgid "Password and Retype Password did not match"
@@ -164,19 +164,19 @@ msgstr ""
 
 #: flask_user/forms.py:283
 msgid "Resend email confirmation email"
-msgstr ""
+msgstr "Skicka e-post e-postbekräftelse"
 
 #: flask_user/translations.py:73
 msgid "Home Page"
-msgstr ""
+msgstr "Hemsida"
 
 #: flask_user/translations.py:74
 msgid "Profile Page"
-msgstr ""
+msgstr "Profilsida"
 
 #: flask_user/translations.py:75
 msgid "Special Page"
-msgstr ""
+msgstr "Speciell Sida"
 
 #: flask_user/views.py:29
 msgid "Your confirmation token has expired."
@@ -248,7 +248,7 @@ msgstr ""
 
 #: flask_user/views.py:600
 msgid "You have registered successfully."
-msgstr ""
+msgstr "Du har registrerat framgångsrikt."
 
 #: flask_user/views.py:628
 msgid "Your account has not been enabled."
@@ -268,7 +268,7 @@ msgstr ""
 
 #: flask_user/templates/flask_user/forgot_password.html:5
 msgid "Forgot Password"
-msgstr ""
+msgstr "Glömt Lösenord"
 
 #: flask_user/templates/flask_user/login.html:21
 msgid "New here? Register."
@@ -297,7 +297,7 @@ msgstr ""
 
 #: flask_user/templates/flask_user/user_profile.html:5
 msgid "User profile"
-msgstr ""
+msgstr "Användarprofil"
 
 #: flask_user/templates/flask_user/user_profile.html:8
 msgid "Change username"
