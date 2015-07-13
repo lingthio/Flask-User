@@ -6,6 +6,7 @@
     USER_PASSWORD_CHANGED_EMAIL_TEMPLATE    = 'flask_user/emails/password_changed'
     USER_REGISTERED_EMAIL_TEMPLATE          = 'flask_user/emails/registered'
     USER_USERNAME_CHANGED_EMAIL_TEMPLATE    = 'flask_user/emails/username_changed'
+    USER_INVITE_EMAIL_TEMPLATE              = 'flask_user/emails/invite'
 
     # These settings correspond to the start of three template files:
     # SOMETHING_subject.txt   # Email subject

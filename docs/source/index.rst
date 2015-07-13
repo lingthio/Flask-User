@@ -117,6 +117,7 @@ Documentation
 
 Revision History
 ----------------
+* v0.6.2 Added support for invitation-only registrations.
 * v0.6.1 Added Chinese (Simplified) and French translations`.
 * v0.6 Changed User/UserProfile DataModels into UserAuth/User DataModels.
 

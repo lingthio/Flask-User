@@ -4,6 +4,8 @@
     USER_CHANGE_PASSWORD_TEMPLATE           = 'flask_user/change_password.html'
     USER_CHANGE_USERNAME_TEMPLATE           = 'flask_user/change_username.html'
     USER_FORGOT_PASSWORD_TEMPLATE           = 'flask_user/forgot_password.html'
+    USER_INVITE_TEMPLATE                    = 'flask_user/invite.html'                  # v0.6.2 and up
+    USER_INVITE_ACCEPT_TEMPLATE             = 'flask_user/register.html'                # v0.6.2 and up
     USER_LOGIN_TEMPLATE                     = 'flask_user/login.html'
     USER_MANAGE_EMAILS_TEMPLATE             = 'flask_user/manage_emails.html'           # v0.5.1 and up
     USER_REGISTER_TEMPLATE                  = 'flask_user/register.html'

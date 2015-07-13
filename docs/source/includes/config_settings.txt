@@ -16,6 +16,10 @@
     USER_CONFIRM_EMAIL_EXPIRATION    = 2*24*3600   # Confirmation expiration in seconds
                                                    # (2*24*3600 represents 2 days)
 
+    USER_INVITE_EXPIRATION           = 90*24*3600  # Invitation expiration in seconds
+                                                   # (90*24*3600 represents 90 days)
+                                                   # v0.6.2 and up
+
     USER_PASSWORD_HASH               = 'bcrypt'    # Any passlib crypt algorithm
 
     USER_PASSWORD_HASH_MODE          = 'passlib'   # Set to 'Flask-Security' for

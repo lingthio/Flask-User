@@ -6,6 +6,7 @@
     USER_CONFIRM_EMAIL_URL        = '/user/confirm-email/<token>'
     USER_EMAIL_ACTION_URL         = '/user/email/<id>/<action>'     # v0.5.1 and up
     USER_FORGOT_PASSWORD_URL      = '/user/forgot-password'
+    USER_INVITE_URL               = '/user/invite'                  # v0.6.2 and up
     USER_LOGIN_URL                = '/user/login'
     USER_LOGOUT_URL               = '/user/logout'
     USER_MANAGE_EMAILS_URL        = '/user/manage-emails'

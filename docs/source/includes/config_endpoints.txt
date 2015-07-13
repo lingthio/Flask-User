@@ -11,6 +11,7 @@
     USER_AFTER_REGISTER_ENDPOINT             = ''              # v0.5.3 and up
     USER_AFTER_RESEND_CONFIRM_EMAIL_ENDPOINT = ''              # v0.5.3 and up
     USER_AFTER_RESET_PASSWORD_ENDPOINT       = ''              # v0.6 and up
+    USER_INVITE_ENDPOINT                     = ''              # v0.6.2 and up
 
     # Users with an unconfirmed email trying to access a view that has been
     # decorated with @confirm_email_required will be redirected to this endpoint
