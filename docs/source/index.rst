@@ -117,7 +117,7 @@ Documentation
 
 Revision History
 ----------------
-* v0.6.3 Fix for Python 3.4 and signals
+* v0.6.3 Fix for Python 3.4 and signals. Added UserMixin.has_role() and @roles_accepted().
 * v0.6.2 Added support for invitation-only registrations.
 * v0.6.1 Added Chinese (Simplified) and French translations`.
 * v0.6 Changed User/UserProfile DataModels into UserAuth/User DataModels.
