@@ -440,7 +440,7 @@ def register():
                 # delete new User object if send  fails
                 db_adapter.delete_object(user)
                 db_adapter.commit()
-                raise e
+                raise
 
         # Send user_registered signal
         signals.user_registered.send(current_app._get_current_object(),
@@ -514,7 +514,7 @@ def invite():
             # delete new User object if send fails
             db_adapter.delete_object(user_invite)
             db_adapter.commit()
-            raise e
+            raise
 
         signals \
             .user_sent_invitation \
