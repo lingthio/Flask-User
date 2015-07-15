@@ -1,34 +1,18 @@
 Flask-User |release|
 ==========
 
-.. image:: https://pypip.in/v/Flask-User/badge.png
+.. image:: https://img.shields.io/pypi/v/Flask-User.svg
     :target: https://pypi.python.org/pypi/Flask-User
 
-.. comment .. image:: https://travis-ci.org/lingthio/Flask-User.png?branch=master
-.. image:: /images/build_passing.png
+.. image:: https://img.shields.io/travis/lingthio/Flask-User.svg
     :target: https://travis-ci.org/lingthio/Flask-User
 
-.. image:: https://pypip.in/d/Flask-User/badge.png
+.. image:: https://img.shields.io/pypi/dm/Flask-User.svg
     :target: https://pypi.python.org/pypi/Flask-User
 
-.. comment .. image:: https://pypip.in/license/Flask-User/badge.png
-.. image:: /images/BSD_license.png
+.. image:: https://img.shields.io/pypi/l/Flask-User.svg
     :target: https://pypi.python.org/pypi/Flask-User
 
-.. comment .. image:: https://coveralls.io/repos/lingthio/Flask-User/badge.png?branch=master
-.. comment     :target: https://coveralls.io/r/lingthio/Flask-User?branch=master
-
-.. topic:: Missing a feature?
-
-   |Tell_us_about_it|. |Help_shape_flask_user|.
-
-.. |Tell_us_about_it| raw:: html
-
-   <a href="https://docs.google.com/forms/d/1p01lA9o9amlx4_0JjjOyAzdoM-C4lUVUgV0LUhMumaU/viewform?usp=send_form" target="_blank"><b>Tell us about it</b></a>
-
-.. |Help_shape_flask_user| raw:: html
-
-   <a href="https://docs.google.com/forms/d/1p01lA9o9amlx4_0JjjOyAzdoM-C4lUVUgV0LUhMumaU/viewform?usp=send_form" target="_blank"><b>Help shape Flask-User</b></a>
 
 Customizable User Account Management for Flask
 ----------------------------------------------
