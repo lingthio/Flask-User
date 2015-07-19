@@ -2,13 +2,16 @@
 Flask-User
 ==========
 
-.. image:: https://pypip.in/v/Flask-User/badge.png
+.. image:: https://img.shields.io/pypi/v/Flask-User.svg
     :target: https://pypi.python.org/pypi/Flask-User
 
-.. image:: https://pypip.in/d/Flask-User/badge.png
+.. image:: https://img.shields.io/travis/lingthio/Flask-User.svg
+    :target: https://travis-ci.org/lingthio/Flask-User
+
+.. image:: https://img.shields.io/pypi/dm/Flask-User.svg
     :target: https://pypi.python.org/pypi/Flask-User
 
-.. image:: https://pypip.in/license/Flask-User/badge.png
+.. image:: https://img.shields.io/pypi/l/Flask-User.svg
     :target: https://pypi.python.org/pypi/Flask-User
 
 Customizable User Account Management for Flask
@@ -111,7 +114,7 @@ setup(
     ],
     test_suite="flask_user.tests.run_tests",
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Flask',
         'Intended Audience :: Developers',
