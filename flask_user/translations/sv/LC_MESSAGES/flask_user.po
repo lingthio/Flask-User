@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2014-10-25 21:19-0700\n"
-"PO-Revision-Date: 2015-07-19 20:55+0200\n"
+"PO-Revision-Date: 2015-07-19 21:06+0200\n"
 "Last-Translator: Andriy Tymchenko <silpol@gmail.com>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -38,30 +38,30 @@ msgstr ""
 
 #: flask_user/forms.py:52
 msgid "This Username is already in use. Please try another one."
-msgstr "Det användarnamnet är redan i användning. Vänligen prova ett annat."
+msgstr "Detta användarnamnet är redan i användning. Vänligen prova ett annat."
 
 #: flask_user/forms.py:59
 msgid "This Email is already in use. Please try another one."
-msgstr "Denna e-post är redan registrerad. Vänligen prova en annan."
+msgstr "Denna e-postadress är redan registrerad. Vänligen prova en annan."
 
 #: flask_user/forms.py:66 flask_user/forms.py:148 flask_user/forms.py:161
 #: flask_user/forms.py:237 flask_user/forms.py:279
 msgid "Email"
-msgstr "E-post address"
+msgstr "E-postadress"
 
 #: flask_user/forms.py:67 flask_user/forms.py:149 flask_user/forms.py:162
 #: flask_user/forms.py:238 flask_user/forms.py:280
 msgid "Email is required"
-msgstr "E-post address obligatorisk"
+msgstr "E-postadress obligatorisk"
 
 #: flask_user/forms.py:68 flask_user/forms.py:150 flask_user/forms.py:163
 #: flask_user/forms.py:239 flask_user/forms.py:281
 msgid "Invalid Email"
-msgstr "Ogiltig e-post address"
+msgstr "Ogiltig e-postadress"
 
 #: flask_user/forms.py:70
 msgid "Add Email"
-msgstr "Lägg till en e-post address"
+msgstr "Lägg till en e-postadress"
 
 #: flask_user/forms.py:73 flask_user/forms.py:117
 msgid "Old Password"
@@ -111,7 +111,7 @@ msgstr "Ändra användarnamnet"
 
 #: flask_user/forms.py:152
 msgid "Send reset password email"
-msgstr "Skicka återställning av lösenord e-posten"
+msgstr "Skicka återställning av lösenord e-postmeddelande"
 
 #: flask_user/forms.py:158 flask_user/forms.py:234
 msgid "Username"
@@ -166,7 +166,7 @@ msgstr "Registrera dig"
 
 #: flask_user/forms.py:283
 msgid "Resend email confirmation email"
-msgstr "Återsänd e-post för bekräftelse av e-postadress"
+msgstr "Återsänd e-postmeddelandet \"bekräftelse av e-postadress\""
 
 #: flask_user/translations.py:73
 msgid "Home Page"
@@ -182,11 +182,11 @@ msgstr "Speciell sida"
 
 #: flask_user/views.py:29
 msgid "Your confirmation token has expired."
-msgstr "Din igenkänningstecken har upphört att gälla."
+msgstr "Ditt igenkänningstecken har upphört att gälla."
 
 #: flask_user/views.py:33 flask_user/views.py:55
 msgid "Invalid confirmation token."
-msgstr "Ogiltig igenkänningstecken."
+msgstr "Ogiltigt igenkänningstecken."
 
 #: flask_user/views.py:62
 msgid "Your email has been confirmed."
@@ -207,8 +207,9 @@ msgid ""
 "A reset password email has been sent to '%(email)s'. Open that email and "
 "follow the instructions to reset your password."
 msgstr ""
-"Ett återställning av lösenord e-post har skickats till '%(email)s'. Öppna e-"
-"postmeddelandet och följ instruktionerna för att återställa ditt lösenord."
+"Ett \"återställning av lösenord\" e-postmeddelande har skickats till "
+"'%(email)s'. Öppna e-postmeddelandet och följ instruktionerna för att "
+"återställa ditt lösenord."
 
 #: flask_user/views.py:289
 msgid "You have signed out successfully."
@@ -216,11 +217,12 @@ msgstr "Din utloggning lyckades. "
 
 #: flask_user/views.py:474
 msgid "Your reset password token has expired."
-msgstr "Ditt igenkänningstecken för återställning lösenordet har löpt ut."
+msgstr ""
+"Ditt igenkänningstecken för återställning lösenordet har blivit gammalt."
 
 #: flask_user/views.py:478 flask_user/views.py:489
 msgid "Your reset password token is invalid."
-msgstr "Dit igenkänningstecken för återställning av lösenordet är ogiltigt."
+msgstr "Ditt igenkänningstecken för återställning av lösenordet är ogiltigt."
 
 #: flask_user/views.py:512
 msgid ""
@@ -231,17 +233,18 @@ msgstr "Ditt lösenord har återställts. Logga nu in med ditt nya lösenord"
 #: flask_user/views.py:529
 #, python-format
 msgid "You must confirm your email to access '%(url)s'."
-msgstr "Du måste bekräfta din e-postadress tillträde till '%(url)s'."
+msgstr ""
+"Du måste bekräfta din e-postadress för att få tillträde till '%(url)s'."
 
 #: flask_user/views.py:540
 #, python-format
 msgid "You must be signed in to access '%(url)s'."
-msgstr "Du måste vara inloggad för att tillträde '%(url)s'."
+msgstr "Du måste vara inloggad för att få tillträde '%(url)s'."
 
 #: flask_user/views.py:554
 #, python-format
 msgid "You do not have permission to access '%(url)s'."
-msgstr "Du har inte behörighet för tillgång till '%(url)s'."
+msgstr "Du har inte tillgång till '%(url)s'."
 
 #: flask_user/views.py:598 flask_user/views.py:619
 #, python-format
@@ -249,12 +252,12 @@ msgid ""
 "A confirmation email has been sent to %(email)s with instructions to "
 "complete your registration."
 msgstr ""
-"En bekräftelsee-post har skickats till %(email)s med instruktioner för att "
-"slutföra din registrering."
+"En bekräftelse-e-post har skickats till %(email)s med instruktioner för hur "
+"du slutför din registrering."
 
 #: flask_user/views.py:600
 msgid "You have registered successfully."
-msgstr "Din har registrering har inte lyckats."
+msgstr "Din registrering har lyckats."
 
 #: flask_user/views.py:628
 msgid "Your account has not been enabled."
@@ -267,9 +270,10 @@ msgid ""
 "Spam folders for the confirmation email or <a href=\"%(url)s\">Re-send "
 "confirmation email</a>."
 msgstr ""
-"Din e-postadress har ännu inte bekräftats. Kontrollera din e-post inkorg och "
-"spam mapp för e-post för bekräftelse av e-post eller <a href=\"%(url)s"
-"\">återsänd e-post för bekräftelse av e-post</a>."
+"Din e-postadress har ännu inte bekräftats. Kontrollera inkorgen och "
+"skräpposten i din e-post för e-postmeddelandet \"bekräftelse av e-post\" "
+"eller <a href=\"%(url)s\">återsänd e-postmeddelandet \"bekräftelse av e-post"
+"\"</a>."
 
 #: flask_user/views.py:648
 msgid "You have signed in successfully."
@@ -298,7 +302,7 @@ msgstr "Redan registrerad? Logga in."
 
 #: flask_user/templates/flask_user/resend_confirm_email.html:5
 msgid "Resend Confirmation Email"
-msgstr "Återsänd bekräftelsee-postet"
+msgstr "Återsänd bekräftelse-e-postmeddelandet"
 
 #: flask_user/templates/flask_user/reset_password.html:5
 msgid "Reset Password"
