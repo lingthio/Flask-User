@@ -5,7 +5,7 @@
     :license: Simplified BSD License, see LICENSE.txt for more details."""
 
 from passlib.context import CryptContext
-from flask import Blueprint, current_app
+from flask import Blueprint, current_app, url_for
 from flask_login import LoginManager, UserMixin as LoginUserMixin, make_secure_token
 from flask_user.db_adapters import DBAdapter
 from .db_adapters import SQLAlchemyAdapter
@@ -16,6 +16,7 @@ from . import settings
 from . import tokens
 from . import translations
 from . import views
+from . import signals
 from .translations import get_translations
 
 # Enable the following: from flask.ext.user import current_user
@@ -26,7 +27,7 @@ from .decorators import *
 # Enable the following: from flask.ext.user import user_logged_in
 from .signals import *
 
-__version__ = '0.6.3'
+__version__ = '0.6.4'
 
 def _flask_user_context_processor():
     """ Make 'user_manager' available to Jinja2 templates"""
@@ -35,7 +36,16 @@ def _flask_user_context_processor():
 class UserManager(object):
     """ This is the Flask-User object that manages the User management process."""
 
-    def __init__(self, db_adapter, app=None,
+    def __init__(self, db_adapter=None, app=None, **kwargs):
+        """ Create the UserManager object """
+        self.db_adapter = db_adapter
+        self.app = app
+
+        if db_adapter is not None and app is not None:
+            self.init_app(app, db_adapter, **kwargs)
+
+
+    def init_app(self, app, db_adapter=None,
                 # Forms
                 add_email_form=forms.AddEmailForm,
                 change_password_form=forms.ChangePasswordForm,
@@ -73,8 +83,10 @@ class UserManager(object):
                 token_manager=tokens.TokenManager(),
                 legacy_check_password_hash=None
                 ):
-        """ Initialize the UserManager with custom or built-in attributes"""
-        self.db_adapter = db_adapter
+        """ Initialize the UserManager object """
+        self.app = app
+        if db_adapter is not None:
+            self.db_adapter = db_adapter
         # Forms
         self.add_email_form = add_email_form
         self.change_password_form = change_password_form
@@ -112,11 +124,6 @@ class UserManager(object):
         self.send_email_function = send_email_function
         self.legacy_check_password_hash = legacy_check_password_hash
 
-        self.app = app
-        if app:
-            self.init_app(app)
-
-    def init_app(self, app):
         """ Initialize app.user_manager."""
         # Bind Flask-USER to app
         app.user_manager = self
@@ -338,6 +345,24 @@ class UserManager(object):
         # See if new_username is available
         return self.find_user_by_username(new_username)==None
 
+    def send_reset_password_email(self, email):
+        # Find user by email
+        user, user_email = self.find_user_by_email(email)
+        if user:
+            # Generate reset password link
+            token = self.generate_token(int(user.get_id()))
+            reset_password_link = url_for('user.reset_password', token=token, _external=True)
+
+            # Send forgot password email
+            emails.send_forgot_password_email(user, user_email, reset_password_link)
+
+            # Store token
+            if hasattr(user, 'reset_password_token'):
+                self.db_adapter.update_object(user, reset_password_token=token)
+                self.db_adapter.commit()
+
+            # Send forgot_password signal
+            signals.user_forgot_password.send(current_app._get_current_object(), user=user)
 
 
 class UserMixin(LoginUserMixin):
