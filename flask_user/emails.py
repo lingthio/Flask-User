@@ -50,7 +50,7 @@ def send_email(recipient, subject, html_message, text_message):
 
     # Print helpful error messages on exceptions
     except (socket.gaierror, socket.error) as e:
-        raise SendEmailError('SMTP Connection error: Check your MAIL_HOSTNAME or MAIL_PORT settings.')
+        raise SendEmailError('SMTP Connection error: Check your MAIL_SERVER and MAIL_PORT settings.')
     except smtplib.SMTPAuthenticationError:
         raise SendEmailError('SMTP Authentication error: Check your MAIL_USERNAME and MAIL_PASSWORD settings.')
 
