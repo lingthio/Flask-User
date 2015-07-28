@@ -33,13 +33,14 @@ And wouldn't it be nice to also offer:
 | Flask-User offers these user features (and more) out-of-the-box
 | while also honoring the following developer needs:
 
+* **Tested on Python 2.6, 2.7, 3.3 and 3.4**
 * **Reliable** (Code coverage of over 95%)
 * **Secure** (Built on top of widely deployed Flask-Login)
 * **Ready to use** (Through sensible defaults)
 * **Largely configurable** (Through configuration settings)
 * **Fully customizable** (Through customizable functions and email templates)
 * **Well documented**
-* **Tested on Python 2.6, 2.7, 3.3 and 3.4**
+* **Translations** (Chinese,  Dutch, English, Finnish, French, Swedish)
 
 Status
 ------
