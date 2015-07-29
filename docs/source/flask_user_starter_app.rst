@@ -13,9 +13,9 @@ It can serve as a great starter app for building your next Flask-User applicatio
 Files of interest:
 
 * app/startup/init_app.py
-* app/users/models.py
+* app/models/user.py
 * app/templates/flask_user/*.html
-* app/templates/user/user_profile_page.html
+* app/templates/users/user_profile_page.html
 
 Up Next
 -------
