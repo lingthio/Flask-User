@@ -180,24 +180,27 @@ def email_action(id, action):
 
     return redirect(url_for('user.manage_emails'))
 
+
 def forgot_password():
     """Prompt for email and send reset password email."""
-    user_manager =  current_app.user_manager
+    user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter
 
     # Initialize form
     form = user_manager.forgot_password_form(request.form)
 
     # Process valid POST
-    if request.method=='POST' and form.validate():
+    if request.method == 'POST' and form.validate():
         email = form.email.data
-        user_manager.send_reset_password_email(email)
+        if user_manager.send_reset_password_email(email):
+            # Prepare one-time system message
+            flash(_("A reset password email has been sent to '%(email)s'. Open that email and follow the instructions to reset your password.", email=email), 'success')
 
-        # Prepare one-time system message
-        flash(_("A reset password email has been sent to '%(email)s'. Open that email and follow the instructions to reset your password.", email=email), 'success')
-
-        # Redirect to the login page
-        return redirect(_endpoint_url(user_manager.after_forgot_password_endpoint))
+            # Redirect to the login page
+            return redirect(_endpoint_url(user_manager.after_forgot_password_endpoint))
+        else:
+            # Prepare one-time system message
+            flash(_("No user with email '%(email)s'.", email=email), 'error')
 
     # Process GET or invalid POST
     return render_template(user_manager.forgot_password_template, form=form)

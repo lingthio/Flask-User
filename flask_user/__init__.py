@@ -29,9 +29,11 @@ from .signals import *
 
 __version__ = '0.6.4'
 
+
 def _flask_user_context_processor():
     """ Make 'user_manager' available to Jinja2 templates"""
     return dict(user_manager=current_app.user_manager)
+
 
 class UserManager(object):
     """ This is the Flask-User object that manages the User management process."""
@@ -43,7 +45,6 @@ class UserManager(object):
 
         if db_adapter is not None and app is not None:
             self.init_app(app, db_adapter, **kwargs)
-
 
     def init_app(self, app, db_adapter=None,
                 # Forms
@@ -148,7 +149,6 @@ class UserManager(object):
             app.jinja_env.add_extension('jinja2.ext.i18n')
             app.jinja_env.install_null_translations()
 
-
         # Create password_crypt_context if needed
         if not self.password_crypt_context:
             self.password_crypt_context = CryptContext(
@@ -173,7 +173,6 @@ class UserManager(object):
         # Prepare for translations
         _ = translations.gettext
 
-
     def setup_login_manager(self, app):
 
         # Flask-Login calls this function to retrieve a User record by user ID.
@@ -197,7 +196,6 @@ class UserManager(object):
         self.login_manager.login_view = 'user.login'
         self.login_manager.init_app(app)
 
-
     def add_url_routes(self, app):
         """ Add URL Routes"""
         app.add_url_rule(self.login_url,  'user.login',  self.login_view_function,  methods=['GET', 'POST'])
@@ -220,6 +218,7 @@ class UserManager(object):
         app.add_url_rule(self.user_profile_url,  'user.profile',  self.user_profile_view_function,  methods=['GET', 'POST'])
         if self.enable_invitation:
             app.add_url_rule(self.invite_url, 'user.invite', self.invite_view_function, methods=['GET', 'POST'])
+
     # Obsoleted function. Replace with hash_password()
     def generate_password_hash(self, password):
         return passwords.hash_password(self, password)
@@ -307,7 +306,6 @@ class UserManager(object):
 
         return user
 
-
     def find_user_by_email(self, email):
         user_email = None
         user_auth = None
@@ -343,7 +341,7 @@ class UserManager(object):
             if new_username == current_username:
                 return True
         # See if new_username is available
-        return self.find_user_by_username(new_username)==None
+        return self.find_user_by_username(new_username) == None
 
     def send_reset_password_email(self, email):
         # Find user by email
@@ -363,6 +361,9 @@ class UserManager(object):
 
             # Send forgot_password signal
             signals.user_forgot_password.send(current_app._get_current_object(), user=user)
+            return True
+        else:
+            return False
 
 
 class UserMixin(LoginUserMixin):
@@ -374,13 +375,11 @@ class UserMixin(LoginUserMixin):
         else:
             return self.is_enabled
 
-
     def set_active(self, active):
         if hasattr(self, 'active'):
             self.active = active
         else:
             self.is_enabled = active
-
 
     def has_role(self, *specified_role_names):
         """ Return True if the user has one of the specified roles. Return False otherwise.
@@ -414,7 +413,6 @@ class UserMixin(LoginUserMixin):
 
         # Return False if none of the role_names matches
         return False
-
 
     def has_roles(self, *requirements):
         """ Return True if the user has all of the specified roles. Return False otherwise.
@@ -470,7 +468,6 @@ class UserMixin(LoginUserMixin):
         # All requirements have been met: return True
         return True
 
-
     # Flask-Login is capable of remembering the current user ID in the browser's session.
     # This function enables the user ID to be encrypted as a token.
     # See https://flask-login.readthedocs.org/en/latest/#remember-me
@@ -480,7 +477,6 @@ class UserMixin(LoginUserMixin):
         token = token_manager.encrypt_id(user_id)
         #print('get_auth_token: user_id=', user_id, 'token=', token)
         return token
-
 
     def has_confirmed_email(self):
         db_adapter = current_app.user_manager.db_adapter
