@@ -416,6 +416,10 @@ def register():
                 require_email_confirmation = False
                 db_adapter.update_object(user, confirmed_at=datetime.utcnow())
 
+        if User.query.session.query(User).count() == 1:
+            admin_role = db_adapter.RoleClass(name='admin')
+            user.roles.append(admin_role)
+
         db_adapter.commit()
 
         # Send 'registered' email and delete new User object if send fails
