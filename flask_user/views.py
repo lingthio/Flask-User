@@ -16,14 +16,15 @@ from . import emails
 from . import signals
 from .translations import gettext as _
 
+
 def confirm_email(token):
     """ Verify email confirmation token and activate the user account."""
     # Verify token
     user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter
     is_valid, has_expired, object_id = user_manager.verify_token(
-            token,
-            user_manager.confirm_email_expiration)
+        token,
+        user_manager.confirm_email_expiration)
 
     if has_expired:
         flash(_('Your confirmation token has expired.'), 'error')
@@ -41,7 +42,7 @@ def confirm_email(token):
             user_email.confirmed_at = datetime.utcnow()
             user = user_email.user
     else:
-        user_email = None
+        # user_email = None
         user = user_manager.get_user_by_id(object_id)
         if user:
             user.confirmed_at = datetime.utcnow()
@@ -64,14 +65,14 @@ def confirm_email(token):
     if user_manager.auto_login_after_confirm:
         return _do_login_user(user, next)                       # auto-login
     else:
-        return redirect(url_for('user.login')+'?next='+next)    # redirect to login page
+        return redirect(url_for('user.login') + '?next=' + next)    # redirect to login page
 
 
 @login_required
 @confirm_email_required
 def change_password():
     """ Prompt for old password and new password and change the user's password."""
-    user_manager =  current_app.user_manager
+    user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter
 
     # Initialize form
@@ -79,7 +80,7 @@ def change_password():
     form.next.data = request.args.get('next', _endpoint_url(user_manager.after_change_password_endpoint))  # Place ?next query param in next form field
 
     # Process valid POST
-    if request.method=='POST' and form.validate():
+    if request.method == 'POST' and form.validate():
         # Hash password
         hashed_password = user_manager.hash_password(form.new_password.data)
 
@@ -106,7 +107,7 @@ def change_password():
 @confirm_email_required
 def change_username():
     """ Prompt for new username and old password and change the user's username."""
-    user_manager =  current_app.user_manager
+    user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter
 
     # Initialize form
@@ -114,7 +115,7 @@ def change_username():
     form.next.data = request.args.get('next', _endpoint_url(user_manager.after_change_username_endpoint))  # Place ?next query param in next form field
 
     # Process valid POST
-    if request.method=='POST' and form.validate():
+    if request.method == 'POST' and form.validate():
         new_username = form.new_username.data
 
         # Change username
@@ -153,7 +154,7 @@ def email_action(id, action):
     if not user_email or user_email.user_id != int(current_user.get_id()):
         return unauthorized()
 
-    if action=='delete':
+    if action == 'delete':
         # Primary UserEmail can not be deleted
         if user_email.is_primary:
             return unauthorized()
@@ -161,7 +162,7 @@ def email_action(id, action):
         db_adapter.delete_object(user_email)
         db_adapter.commit()
 
-    elif action=='make-primary':
+    elif action == 'make-primary':
         # Disable previously primary emails
         user_emails = db_adapter.find_all_objects(db_adapter.UserEmailClass, user_id=int(current_user.get_id()))
         for ue in user_emails:
@@ -172,7 +173,7 @@ def email_action(id, action):
         # Commit
         db_adapter.commit()
 
-    elif action=='confirm':
+    elif action == 'confirm':
         _send_confirm_email(user_email.user, user_email)
 
     else:
@@ -221,25 +222,26 @@ def login():
     # Initialize form
     login_form = user_manager.login_form(request.form)          # for login.html
     register_form = user_manager.register_form()                # for login_or_register.html
-    if request.method!='POST':
-        login_form.next.data     = register_form.next.data = next
+    if request.method != 'POST':
+        login_form.next.data = register_form.next.data = next
         login_form.reg_next.data = register_form.reg_next.data = reg_next
 
     # Process valid POST
-    if request.method=='POST' and login_form.validate():
+    if request.method == 'POST' and login_form.validate():
         # Retrieve User
         user = None
         user_email = None
         if user_manager.enable_username:
             # Find user record by username
             user = user_manager.find_user_by_username(login_form.username.data)
-            user_email = None
+            # user_email = None
             # Find primary user_email record
             if user and db_adapter.UserEmailClass:
-                user_email = db_adapter.find_first_object(db_adapter.UserEmailClass,
-                        user_id=int(user.get_id()),
-                        is_primary=True,
-                        )
+                user_email = db_adapter.find_first_object(
+                    db_adapter.UserEmailClass,
+                    user_id=int(user.get_id()),
+                    is_primary=True,
+                )
             # Find user record by email (with form.username)
             if not user and user_manager.enable_email:
                 user, user_email = user_manager.find_user_by_email(login_form.username.data)
@@ -278,14 +280,14 @@ def logout():
 @login_required
 @confirm_email_required
 def manage_emails():
-    user_manager =  current_app.user_manager
+    user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter
 
     user_emails = db_adapter.find_all_objects(db_adapter.UserEmailClass, user_id=int(current_user.get_id()))
     form = user_manager.add_email_form()
 
     # Process valid POST request
-    if request.method=="POST" and form.validate():
+    if request.method == "POST" and form.validate():
         user_emails = db_adapter.add_object(db_adapter.UserEmailClass,
                 user_id=int(current_user.get_id()),
                 email=form.email.data)
@@ -293,15 +295,16 @@ def manage_emails():
         return redirect(url_for('user.manage_emails'))
 
     # Process GET or invalid POST request
-    return render_template(user_manager.manage_emails_template,
-            user_emails=user_emails,
-            form=form,
-            )
+    return render_template(
+        user_manager.manage_emails_template,
+        user_emails=user_emails,
+        form=form,
+    )
 
 def register():
     """ Display registration form and create new User."""
 
-    user_manager =  current_app.user_manager
+    user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter
 
     next = request.args.get('next', _endpoint_url(user_manager.after_login_endpoint))
@@ -325,14 +328,13 @@ def register():
         if user_invite:
             register_form.invite_token.data = invite_token
 
-    if request.method!='POST':
-        login_form.next.data     = register_form.next.data     = next
+    if request.method != 'POST':
+        login_form.next.data = register_form.next.data = next
         login_form.reg_next.data = register_form.reg_next.data = reg_next
         if user_invite:
             register_form.email.data = user_invite.email
-
     # Process valid POST
-    if request.method=='POST' and register_form.validate():
+    elif request.method == 'POST' and register_form.validate():
         # Create a User object using Form fields that have a corresponding User field
         User = db_adapter.UserClass
         user_class_fields = User.__dict__
@@ -443,12 +445,18 @@ def register():
             return _do_login_user(user, reg_next)                     # auto-login
         else:
             return redirect(url_for('user.login')+'?next='+reg_next)  # redirect to login page
+    else:
+        if current_app.config['DEBUG']:
+            for field, errors in register_form.errors.iteritems():
+                flash(errors[0], 'error')
 
     # Process GET or invalid POST
-    return render_template(user_manager.register_template,
-            form=register_form,
-            login_form=login_form,
-            register_form=register_form)
+    return render_template(
+        user_manager.register_template,
+        form=register_form,
+        login_form=login_form,
+        register_form=register_form
+    )
 
 @login_required
 def invite():
@@ -520,7 +528,7 @@ def resend_confirm_email():
     form = user_manager.resend_confirm_email_form(request.form)
 
     # Process valid POST
-    if request.method=='POST' and form.validate():
+    if request.method == 'POST' and form.validate():
         email = form.email.data
 
         # Find user by email
@@ -545,8 +553,8 @@ def reset_password(token):
         logout_user()
 
     is_valid, has_expired, user_id = user_manager.verify_token(
-            token,
-            user_manager.reset_password_expiration)
+        token,
+        user_manager.reset_password_expiration)
 
     if has_expired:
         flash(_('Your reset password token has expired.'), 'error')
@@ -575,7 +583,7 @@ def reset_password(token):
     form = user_manager.reset_password_form(request.form)
 
     # Process valid POST
-    if request.method=='POST' and form.validate():
+    if request.method == 'POST' and form.validate():
         # Invalidate the token by clearing the stored token
         if hasattr(user, 'reset_password_token'):
             db_adapter.update_object(user, reset_password_token='')
@@ -670,7 +678,7 @@ def _send_registered_email(user, user_email, require_email_confirmation=True):
 
 
 def _send_confirm_email(user, user_email):
-    user_manager =  current_app.user_manager
+    user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter
 
     # Send 'confirm_email' or 'registered' email
@@ -725,5 +733,3 @@ def _endpoint_url(endpoint):
     if endpoint:
         url = url_for(endpoint)
     return url
-
-
