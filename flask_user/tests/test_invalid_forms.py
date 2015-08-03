@@ -186,7 +186,7 @@ def test_invalid_confirm_email_page(client):
 
     # Test Invalid token
     url = url_for('user.confirm_email', token='InvalidToken')
-    client.get_invalid_page(url, 'Invalid confirmation token.')
+    client.get_invalid_page(url, 'Invalid confirmation token')
 
     # Generate valid token
     um = current_app.user_manager
@@ -196,7 +196,7 @@ def test_invalid_confirm_email_page(client):
     # Test Expired token
     um.confirm_email_expiration = 1   # set 1 second expiration
     time.sleep(2)                     # wait for 2 seconds
-    client.get_invalid_page(url, 'Your confirmation token has expired.')
+    client.get_invalid_page(url, 'Your confirmation token has expired')
 
 
 def test_invalid_login_with_username_form(client):
@@ -204,8 +204,8 @@ def test_invalid_login_with_username_form(client):
 
     # Choose config
     um = current_app.user_manager
+    um.enable_email = True
     um.enable_username = True
-    um.auto_login_at_login = False
 
     # Set default values
     url = url_for('user.login')
@@ -217,22 +217,33 @@ def test_invalid_login_with_username_form(client):
             username='', password=password)
 
     # Test incorrect username
-    client.post_invalid_form(url, 'Incorrect Username/Email and Password',
+    um.show_username_email_does_not_exist = False
+    client.post_invalid_form(url, 'Incorrect Username/Email and/or Password',
             username='Xuser1', password=password)
+    um.show_username_email_does_not_exist = True
+    client.post_invalid_form(url, 'Username/Email does not exist',
+            username='Xuser1', password=password)
+    um.show_username_email_does_not_exist = False
 
     # Test empty password
     client.post_invalid_form(url, 'Password is required',
             username=username, password='')
 
     # Test incorrect password
-    client.post_invalid_form(url, 'Incorrect Username/Email and Password',
+    um.show_username_email_does_not_exist = False
+    client.post_invalid_form(url, 'Incorrect Username/Email and/or Password',
             username=username, password='XPassword1')
+    um.show_username_email_does_not_exist = True
+    client.post_invalid_form(url, 'Incorrect Password',
+            username=username, password='XPassword1')
+    um.show_username_email_does_not_exist = False
 
 def test_invalid_login_with_email_form(client):
     print("test_invalid_login_with_email_form")
 
     # Choose config
     um = current_app.user_manager
+    um.enable_email = True
     um.enable_username = False
 
     # Set default values
@@ -245,16 +256,26 @@ def test_invalid_login_with_email_form(client):
             email='', password=password)
 
     # Test incorrect email
-    client.post_invalid_form(url, 'Incorrect Email and Password',
+    um.show_username_email_does_not_exist = False
+    client.post_invalid_form(url, 'Incorrect Email and/or Password',
             email='Xuser2@example.com', password=password)
+    um.show_username_email_does_not_exist = True
+    client.post_invalid_form(url, 'Email does not exist',
+            email='Xuser2@example.com', password=password)
+    um.show_username_email_does_not_exist = False
 
     # Test empty password
     client.post_invalid_form(url, 'Password is required',
             email=email, password='')
 
     # Test incorrect password
-    client.post_invalid_form(url, 'Incorrect Email and Password',
+    um.show_username_email_does_not_exist = False
+    client.post_invalid_form(url, 'Incorrect Email and/or Password',
             email=email, password='XPassword1')
+    um.show_username_email_does_not_exist = True
+    client.post_invalid_form(url, 'Incorrect Password',
+            email=email, password='XPassword1')
+    um.show_username_email_does_not_exist = False
 
 def test_invalid_change_username_form(client):
     print("test_invalid_change_username_form")
@@ -359,14 +380,14 @@ def test_invalid_reset_password(client):
 
     # Test invalid token
     url = url_for('user.reset_password', token='InvalidToken')
-    client.post_invalid_form(url, 'Your reset password token is invalid.',
+    client.post_invalid_form(url, 'Your reset password token is invalid',
             new_password=new_password, retype_password=new_password)
 
     # Expired Token
     url = url_for('user.reset_password', token=token)
     um.reset_password_expiration = 1    # set 1 second expiration
     time.sleep(2)                       # wait for 2 seconds
-    client.post_invalid_form(url, 'Your reset password token has expired.',
+    client.post_invalid_form(url, 'Your reset password token has expired',
             new_password=new_password, retype_password=new_password)
     um.reset_password_expiration = 2*24*3600  # 2 days
 
@@ -426,7 +447,7 @@ def test_login_without_confirm_email(client):
 
     # Try logging in without confirming email
     client.post_invalid_form(url_for('user.login'),
-            'Your email address has not yet been confirmed.',
+            'Your email address has not yet been confirmed',
             email=email,
             password=password)
 
@@ -439,7 +460,7 @@ def test_login_without_confirm_email(client):
 
     # Try logging in into  disabled account
     client.post_invalid_form(url_for('user.login'),
-            'Your account has not been enabled.',
+            'Your account has not been enabled',
             email=email,
             password=password)
 

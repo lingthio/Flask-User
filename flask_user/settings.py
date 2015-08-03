@@ -50,6 +50,7 @@ def set_default_settings(user_manager, app_config):
     um.send_password_changed_email = sd('USER_SEND_PASSWORD_CHANGED_EMAIL',um.enable_email)
     um.send_registered_email       = sd('USER_SEND_REGISTERED_EMAIL',      um.enable_email)
     um.send_username_changed_email = sd('USER_SEND_USERNAME_CHANGED_EMAIL',um.enable_email)
+    um.show_username_email_does_not_exist = sd('USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST', um.enable_register)
 
     # Set default URLs
     um.change_password_url       = sd('USER_CHANGE_PASSWORD_URL',        '/user/change-password')

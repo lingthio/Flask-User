@@ -17,7 +17,7 @@ from .translations import lazy_gettext as _
 # **************************
 
 def password_validator(form, field):
-    """ Password must have one lowercase letter, one uppercase letter and one digit."""
+    """ Password must have one lowercase letter, one uppercase letter and one digit. """
     # Convert string to list of characters
     password = list(field.data)
     password_length = len(password)
@@ -43,7 +43,7 @@ def username_validator(form, field):
     chars = list(username)
     for char in chars:
         if char not in valid_chars:
-            raise ValidationError(_("Username may only contain letters, numbers, '-', '.' and '_'."))
+            raise ValidationError(_("Username may only contain letters, numbers, '-', '.' and '_'"))
 
 def unique_username_validator(form, field):
     """ Username must be unique"""
@@ -206,14 +206,31 @@ class LoginForm(Form):
             return True                         # Successful authentication
 
         # Handle unsuccessful authentication
-        if user_manager.enable_username:
-            if user_manager.enable_email:
-                self.username.errors.append(_('Incorrect Username/Email and Password'))
-            else:
-                self.username.errors.append(_('Incorrect Username and Password'))
+        # Email, Username or Email/Username depending on settings
+        if user_manager.enable_username and user_manager.enable_email:
+            username_or_email_field = self.username
+            username_or_email_text = (_('Username/Email'))
+        elif user_manager.enable_username:
+            username_or_email_field = self.username
+            username_or_email_text = (_('Username'))
         else:
-            self.email.errors.append(_('Incorrect Email and Password'))
-        self.password.errors.append('')
+            username_or_email_field = self.email
+            username_or_email_text = (_('Email'))
+
+        # Show 'username/email does not exist error message
+        if user_manager.show_username_email_does_not_exist:
+            if not user:
+                message = _('%(username_or_email)s does not exist', username_or_email=username_or_email_text)
+                username_or_email_field.errors.append(message)
+            else:
+                self.password.errors.append('Incorrect Password')
+
+        # Hide 'username/email does not exist error message for additional security
+        else:
+            message = _('Incorrect %(username_or_email)s and/or Password', username_or_email=username_or_email_text)
+            username_or_email_field.errors.append(message)
+            self.password.errors.append(message)
+
         return False                                # Unsuccessful authentication
 
 

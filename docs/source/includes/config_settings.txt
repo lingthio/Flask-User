@@ -43,3 +43,7 @@
 
     USER_SEND_USERNAME_CHANGED_EMAIL = True        # Send registered email
                                                    # Requires USER_ENABLE_EMAIL=True
+
+    USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST = USER_ENABLE_REGISTRATION
+                                                   # Show 'Username/Email does not exist' error message
+                                                   # instead of 'Incorrect Username/Email and/or password'
