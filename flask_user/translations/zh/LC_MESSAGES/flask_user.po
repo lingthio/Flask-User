@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  Flask-User\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-08-03 13:16-0700\n"
+"POT-Creation-Date: 2015-08-03 13:40-0700\n"
 "PO-Revision-Date: 2014-11-02 22:26+1000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -85,7 +85,8 @@ msgstr "两次输入的新密码不一致"
 
 #: flask_user/forms.py:83 flask_user/forms.py:301
 #: flask_user/templates/flask_user/change_password.html:5
-msgid "Change Password"
+#: flask_user/templates/flask_user/user_profile.html:11
+msgid "Change password"
 msgstr "更改密码"
 
 #: flask_user/forms.py:105 flask_user/forms.py:139
@@ -102,7 +103,8 @@ msgstr "用户名是必需项"
 
 #: flask_user/forms.py:120
 #: flask_user/templates/flask_user/change_username.html:5
-msgid "Change Username"
+#: flask_user/templates/flask_user/user_profile.html:8
+msgid "Change username"
 msgstr "更改用户名"
 
 #: flask_user/forms.py:146 flask_user/forms.py:289
@@ -329,14 +331,6 @@ msgstr "重置密码"
 msgid "User profile"
 msgstr "账号"
 
-#: flask_user/templates/flask_user/user_profile.html:8
-msgid "Change username"
-msgstr "更改用户名"
-
-#: flask_user/templates/flask_user/user_profile.html:11
-msgid "Change password"
-msgstr "更改密码"
-
 #~ msgid "Incorrect Username and Password"
 #~ msgstr "用户名或密码不正确"
 
@@ -344,8 +338,11 @@ msgstr "更改密码"
 #~ msgstr "邮箱或密码不正确"
 
 #~ msgid ""
-#~ "Your password has been reset "
-#~ "successfully. Please sign in with your"
-#~ " new password"
 #~ msgstr "您的密码已成功重置。请使用新密码登录。"
+
+#~ msgid "Change Password"
+#~ msgstr "更改密码"
+
+#~ msgid "Change Username"
+#~ msgstr "更改用户名"
 

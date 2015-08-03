@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-08-03 13:16-0700\n"
-"PO-Revision-Date: 2015-08-03 13:11-0800\n"
+"POT-Creation-Date: 2015-08-03 13:40-0700\n"
+"PO-Revision-Date: 2015-08-03 13:36-0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: nl <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -86,7 +86,9 @@ msgstr "Nieuw Wachtwoord en Herhaal Wachtwoord komen niet overeen"
 
 #: flask_user/forms.py:83 flask_user/forms.py:301
 #: flask_user/templates/flask_user/change_password.html:5
-msgid "Change Password"
+#: flask_user/templates/flask_user/user_profile.html:11
+#, fuzzy
+msgid "Change password"
 msgstr "Wachtwoord veranderen"
 
 #: flask_user/forms.py:105 flask_user/forms.py:139
@@ -103,7 +105,9 @@ msgstr "Gebruikersnaam is verplicht"
 
 #: flask_user/forms.py:120
 #: flask_user/templates/flask_user/change_username.html:5
-msgid "Change Username"
+#: flask_user/templates/flask_user/user_profile.html:8
+#, fuzzy
+msgid "Change username"
 msgstr "Gebruikersnaam veranderen"
 
 #: flask_user/forms.py:146 flask_user/forms.py:289
@@ -161,7 +165,7 @@ msgstr "%(username_or_email)s bestaat niet"
 #: flask_user/forms.py:230
 #, python-format
 msgid "Incorrect %(username_or_email)s and/or Password"
-msgstr "Onjuist %(username_or_email)s en Wachtwoord"
+msgstr "Onjuist %(username_or_email)s en/of Wachtwoord"
 
 #: flask_user/forms.py:252
 msgid "Retype Password"
@@ -339,16 +343,6 @@ msgstr "Reset Wachtwoord"
 msgid "User profile"
 msgstr "Gebruikersprofiel"
 
-#: flask_user/templates/flask_user/user_profile.html:8
-#, fuzzy
-msgid "Change username"
-msgstr "Gebruikersnaam veranderen"
-
-#: flask_user/templates/flask_user/user_profile.html:11
-#, fuzzy
-msgid "Change password"
-msgstr "Wachtwoord veranderen"
-
 #~ msgid "Already have an account?"
 #~ msgstr "Heeft U zich al ingeschreven?"
 
@@ -360,4 +354,10 @@ msgstr "Wachtwoord veranderen"
 
 #~ msgid ""
 #~ msgstr ""
+
+#~ msgid "Change Password"
+#~ msgstr "Wachtwoord veranderen"
+
+#~ msgid "Change Username"
+#~ msgstr "Gebruikersnaam veranderen"
 

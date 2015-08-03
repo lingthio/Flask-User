@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-08-03 13:16-0700\n"
+"POT-Creation-Date: 2015-08-03 13:40-0700\n"
 "PO-Revision-Date: 2015-07-13 22:24+0200\n"
 "Last-Translator: Andriy Tymchenko <silpol@gmail.com>\n"
 "Language-Team: fi <LL@li.org>\n"
@@ -84,7 +84,8 @@ msgstr ""
 
 #: flask_user/forms.py:83 flask_user/forms.py:301
 #: flask_user/templates/flask_user/change_password.html:5
-msgid "Change Password"
+#: flask_user/templates/flask_user/user_profile.html:11
+msgid "Change password"
 msgstr ""
 
 #: flask_user/forms.py:105 flask_user/forms.py:139
@@ -101,7 +102,8 @@ msgstr ""
 
 #: flask_user/forms.py:120
 #: flask_user/templates/flask_user/change_username.html:5
-msgid "Change Username"
+#: flask_user/templates/flask_user/user_profile.html:8
+msgid "Change username"
 msgstr ""
 
 #: flask_user/forms.py:146 flask_user/forms.py:289
@@ -325,14 +327,6 @@ msgstr ""
 msgid "User profile"
 msgstr ""
 
-#: flask_user/templates/flask_user/user_profile.html:8
-msgid "Change username"
-msgstr ""
-
-#: flask_user/templates/flask_user/user_profile.html:11
-msgid "Change password"
-msgstr ""
-
 #~ msgid "Username may only contain letters, numbers, '-', '.' and '_'."
 #~ msgstr ""
 
@@ -346,8 +340,11 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid ""
-#~ "Your password has been reset "
-#~ "successfully. Please sign in with your"
-#~ " new password"
+#~ msgstr ""
+
+#~ msgid "Change Password"
+#~ msgstr ""
+
+#~ msgid "Change Username"
 #~ msgstr ""
 

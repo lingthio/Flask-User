@@ -80,7 +80,7 @@ class ChangePasswordForm(Form):
         validators.EqualTo('new_password', message=_('New Password and Retype Password did not match'))
         ])
     next = HiddenField()
-    submit = SubmitField(_('Change Password'))
+    submit = SubmitField(_('Change password'))
 
     def validate(self):
         # Use feature config to remove unused form fields
@@ -117,7 +117,7 @@ class ChangeUsernameForm(Form):
         validators.DataRequired(_('Old Password is required')),
     ])
     next = HiddenField()
-    submit = SubmitField(_('Change Username'))
+    submit = SubmitField(_('Change username'))
 
     def validate(self):
         user_manager =  current_app.user_manager
@@ -298,7 +298,7 @@ class ResetPasswordForm(Form):
     retype_password = PasswordField(_('Retype New Password'), validators=[
         validators.EqualTo('new_password', message=_('New Password and Retype Password did not match'))])
     next = HiddenField()
-    submit = SubmitField(_('Change Password'))
+    submit = SubmitField(_('Change password'))
 
     def validate(self):
         # Use feature config to remove unused form fields

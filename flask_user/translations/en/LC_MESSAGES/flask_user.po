@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-08-03 13:16-0700\n"
-"PO-Revision-Date: 2014-10-01 17:36-0700\n"
+"POT-Creation-Date: 2015-08-03 13:40-0700\n"
+"PO-Revision-Date: 2015-08-03 13:37-0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: en <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -85,7 +84,8 @@ msgstr ""
 
 #: flask_user/forms.py:83 flask_user/forms.py:301
 #: flask_user/templates/flask_user/change_password.html:5
-msgid "Change Password"
+#: flask_user/templates/flask_user/user_profile.html:11
+msgid "Change password"
 msgstr ""
 
 #: flask_user/forms.py:105 flask_user/forms.py:139
@@ -102,7 +102,8 @@ msgstr ""
 
 #: flask_user/forms.py:120
 #: flask_user/templates/flask_user/change_username.html:5
-msgid "Change Username"
+#: flask_user/templates/flask_user/user_profile.html:8
+msgid "Change username"
 msgstr ""
 
 #: flask_user/forms.py:146 flask_user/forms.py:289
@@ -322,15 +323,8 @@ msgid "Reset Password"
 msgstr ""
 
 #: flask_user/templates/flask_user/user_profile.html:5
+#, fuzzy
 msgid "User profile"
-msgstr ""
-
-#: flask_user/templates/flask_user/user_profile.html:8
-msgid "Change username"
-msgstr ""
-
-#: flask_user/templates/flask_user/user_profile.html:11
-msgid "Change password"
 msgstr ""
 
 #~ msgid ""
@@ -354,5 +348,11 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "Incorrect Email and Password"
+#~ msgstr ""
+
+#~ msgid "Change Password"
+#~ msgstr ""
+
+#~ msgid "Change Username"
 #~ msgstr ""
 

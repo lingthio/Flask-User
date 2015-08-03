@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-08-03 13:16-0700\n"
-"PO-Revision-Date: 2015-07-19 21:06+0200\n"
+"POT-Creation-Date: 2015-08-03 13:40-0700\n"
+"PO-Revision-Date: 2015-08-03 13:27-0800\n"
 "Last-Translator: Andriy Tymchenko <silpol@gmail.com>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -87,7 +87,8 @@ msgstr "Det nya lösenordet och det upprepade lösenordet överensstämmer inte"
 
 #: flask_user/forms.py:83 flask_user/forms.py:301
 #: flask_user/templates/flask_user/change_password.html:5
-msgid "Change Password"
+#: flask_user/templates/flask_user/user_profile.html:11
+msgid "Change password"
 msgstr "Ändra lösenord"
 
 #: flask_user/forms.py:105 flask_user/forms.py:139
@@ -104,8 +105,9 @@ msgstr "Användarnamn är obligatoriskt"
 
 #: flask_user/forms.py:120
 #: flask_user/templates/flask_user/change_username.html:5
-msgid "Change Username"
-msgstr "Ändra användarnamnet"
+#: flask_user/templates/flask_user/user_profile.html:8
+msgid "Change username"
+msgstr "Ändra användarnamn"
 
 #: flask_user/forms.py:146 flask_user/forms.py:289
 msgid "Your email address"
@@ -161,9 +163,9 @@ msgid "%(username_or_email)s does not exist"
 msgstr ""
 
 #: flask_user/forms.py:230
-#, fuzzy, python-format
+#, python-format
 msgid "Incorrect %(username_or_email)s and/or Password"
-msgstr "Felaktigt användarnamn/e-postadress och lösenord"
+msgstr "Felaktigt %(username_or_email)s och/eller lösenord"
 
 #: flask_user/forms.py:252
 msgid "Retype Password"
@@ -340,14 +342,6 @@ msgstr "Återställ lösenord"
 msgid "User profile"
 msgstr "Användarprofil"
 
-#: flask_user/templates/flask_user/user_profile.html:8
-msgid "Change username"
-msgstr "Ändra användarnamn"
-
-#: flask_user/templates/flask_user/user_profile.html:11
-msgid "Change password"
-msgstr "Ändra lösenord"
-
 #~ msgid "Incorrect Username and Password"
 #~ msgstr "Felaktigt användarnamn och lösenord"
 
@@ -355,8 +349,11 @@ msgstr "Ändra lösenord"
 #~ msgstr "Felaktig e-postadress och lösenord"
 
 #~ msgid ""
-#~ "Your password has been reset "
-#~ "successfully. Please sign in with your"
-#~ " new password"
 #~ msgstr "Ditt lösenord har återställts. Logga nu in med ditt nya lösenord"
+
+#~ msgid "Change Password"
+#~ msgstr "Ändra lösenord"
+
+#~ msgid "Change Username"
+#~ msgstr "Ändra användarnamnet"
 
