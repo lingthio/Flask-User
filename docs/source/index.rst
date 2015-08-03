@@ -102,6 +102,7 @@ Documentation
 
 Revision History
 ----------------
+* v0.6.5 Added USER_SHOW_USERNAME_OR_EMAIL_DOES_NOT_EXIST setting.
 * v0.6.4 Moved custom params from __init__() to init_app(). Added send_reset_password_email().
 * v0.6.3 Fix for Python 3.4 and signals. Added UserMixin.has_role() and @roles_accepted().
 * v0.6.2 Added support for invitation-only registrations.
