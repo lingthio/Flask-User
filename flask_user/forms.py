@@ -149,6 +149,14 @@ class ForgotPasswordForm(Form):
         ])
     submit = SubmitField(_('Send reset password email'))
 
+    def validate_email(form, field):
+        user_manager =  current_app.user_manager
+        if user_manager.show_username_email_does_not_exist:
+            user, user_email = user_manager.find_user_by_email(field.data)
+            if not user:
+                raise ValidationError(_('%(username_or_email)s does not exist', username_or_email=_('Email')))
+
+
 class LoginForm(Form):
     next = HiddenField()         # for login.html
     reg_next = HiddenField()     # for login_or_register.html

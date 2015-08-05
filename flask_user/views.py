@@ -191,7 +191,10 @@ def forgot_password():
     # Process valid POST
     if request.method=='POST' and form.validate():
         email = form.email.data
-        user_manager.send_reset_password_email(email)
+        user, user_email = user_manager.find_user_by_email(email)
+
+        if user:
+            user_manager.send_reset_password_email(email)
 
         # Prepare one-time system message
         flash(_("A reset password email has been sent to '%(email)s'. Open that email and follow the instructions to reset your password.", email=email), 'success')

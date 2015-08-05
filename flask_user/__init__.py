@@ -27,7 +27,7 @@ from .decorators import *
 # Enable the following: from flask.ext.user import user_logged_in
 from .signals import *
 
-__version__ = '0.6.5'
+__version__ = '0.6.6'
 
 def _flask_user_context_processor():
     """ Make 'user_manager' available to Jinja2 templates"""
