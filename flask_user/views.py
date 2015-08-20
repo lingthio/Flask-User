@@ -324,6 +324,9 @@ def register():
         user_invite = db_adapter.find_first_object(db_adapter.UserInvitationClass, token=invite_token)
         if user_invite:
             register_form.invite_token.data = invite_token
+        else:
+            flash("Invalid invitation token", "error")
+            return redirect(url_for('user.login'))
 
     if request.method!='POST':
         login_form.next.data     = register_form.next.data     = next
