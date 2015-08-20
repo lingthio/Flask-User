@@ -32,7 +32,7 @@ Request for Flask Extension Approval
 
     setup.py:
         install_requires=[
-            'passlib', 'py-bcrypt', 'pycrypto',
+            'passlib', 'bcrypt', 'pycrypto',
             'Flask', 'Flask-Babel', 'Flask-Login', 'Flask-Mail',
             'Flask-SQLAlchemy', 'Flask-WTF'],
 
