@@ -109,7 +109,7 @@ msgstr "更改用户名"
 
 #: flask_user/forms.py:146 flask_user/forms.py:297
 msgid "Your email address"
-msgstr ""
+msgstr "您的邮箱地址"
 
 #: flask_user/forms.py:147 flask_user/forms.py:298
 #, fuzzy
@@ -189,7 +189,7 @@ msgstr "再次发送确认邮件"
 
 #: flask_user/forms.py:334
 msgid "Invite!"
-msgstr ""
+msgstr "邀请"
 
 #: flask_user/translations.py:74
 msgid "Home Page"
@@ -237,7 +237,7 @@ msgstr "登出成功。"
 
 #: flask_user/views.py:509
 msgid "Invitation has been sent."
-msgstr ""
+msgstr "邀请邮件已发送。"
 
 #: flask_user/views.py:552
 msgid "Your reset password token has expired."
@@ -300,7 +300,7 @@ msgstr "忘记密码"
 
 #: flask_user/templates/flask_user/invite.html:5
 msgid "Invite User"
-msgstr ""
+msgstr "邀请用户"
 
 #: flask_user/templates/flask_user/login.html:21
 msgid "New here? Register."
@@ -347,5 +347,5 @@ msgstr "账号"
 #~ msgstr "更改用户名"
 
 #~ msgid "Email does not exist"
-#~ msgstr ""
+#~ msgstr "邮箱不存在"
 
