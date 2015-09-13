@@ -138,7 +138,7 @@ def init_app(app, test_config=None):                   # For automated tests
     # The '/' page is accessible to anyone
     @app.route('/')
     def home_page():
-        # if current_user.is_authenticated():
+        # if current_user.is_authenticated:
         #     return user_profile_page()
         return render_template_string("""
             {% extends "base.html" %}
