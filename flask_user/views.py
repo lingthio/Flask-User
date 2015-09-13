@@ -215,7 +215,7 @@ def login():
     reg_next = request.args.get('reg_next', _endpoint_url(user_manager.after_register_endpoint))
 
     # Immediately redirect already logged in users
-    if current_user.is_authenticated() and user_manager.auto_login_at_login:
+    if current_user.is_authenticated and user_manager.auto_login_at_login:
         return redirect(next)
 
     # Initialize form
@@ -544,7 +544,7 @@ def reset_password(token):
     user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter
 
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         logout_user()
 
     is_valid, has_expired, user_id = user_manager.verify_token(

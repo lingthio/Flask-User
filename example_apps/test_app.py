@@ -81,7 +81,7 @@ def create_app(test_config=None):                   # For automated tests
             {% extends "base.html" %}
             {% block content %}
                 <h2>{%trans%}Home Page{%endtrans%}</h2>
-                {% if current_user.is_authenticated() %}
+                {% if current_user.is_authenticated %}
                 <p> <a href="{{ url_for('user_profile_page') }}">
                     {%trans%}Profile Page{%endtrans%}</a></p>
                 <p> <a href="{{ url_for('user.logout') }}">
@@ -92,7 +92,7 @@ def create_app(test_config=None):                   # For automated tests
                 {% endif %}
             {% endblock %}
             """)
-        if current_user.is_authenticated():
+        if current_user.is_authenticated:
             return redirect(url_for('user_profile_page'))
         else:
             return redirect(url_for('user.login'))

@@ -21,7 +21,7 @@ the user is logged in before accessing that particular page:
     def profile_page():
         # render the user profile page
 
-| Flask-User relies on Flask-Login to implement and offer the @login_required decorator along with its underlying current_user.is_authenticated() implementation.
+| Flask-User relies on Flask-Login to implement and offer the @login_required decorator along with its underlying current_user.is_authenticated implementation.
 | See the `Flask-Login Documentation <https://flask-login.readthedocs.org/en/latest/#flask.ext.login.login_required>`_
 
 @roles_required

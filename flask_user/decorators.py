@@ -14,7 +14,7 @@ def login_required(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
         # User must be authenticated
-        if not current_user.is_authenticated():
+        if not current_user.is_authenticated:
             # Redirect to unauthenticated page
             return current_app.user_manager.unauthenticated_view_function()
 
@@ -32,7 +32,7 @@ def roles_accepted(*role_names):
         @wraps(func)
         def decorated_view(*args, **kwargs):
             # User must be logged
-            if not current_user.is_authenticated():
+            if not current_user.is_authenticated:
                 # Redirect to the unauthenticated page
                 return current_app.user_manager.unauthenticated_view_function()
 
@@ -56,7 +56,7 @@ def roles_required(*role_names):
         @wraps(func)
         def decorated_view(*args, **kwargs):
             # User must be logged
-            if not current_user.is_authenticated():
+            if not current_user.is_authenticated:
                 # Redirect to the unauthenticated page
                 return current_app.user_manager.unauthenticated_view_function()
 
@@ -77,7 +77,7 @@ def confirm_email_required(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
         # User must be authenticated
-        if current_user.is_authenticated():
+        if current_user.is_authenticated:
             user_manager = current_app.user_manager
             # If confirm email has been enabled, user must have at least one confirmed email
             if not user_manager.enable_email\

@@ -338,7 +338,7 @@ class UserManager(object):
         """ Return True if new_username does not exist or if new_username equals old_username.
             Return False otherwise."""
         # Allow user to change username to the current username
-        if current_user.is_authenticated():
+        if current_user.is_authenticated:
             current_username = current_user.user_auth.username if self.db_adapter.UserAuthClass and hasattr(current_user, 'user_auth') else current_user.username
             if new_username == current_username:
                 return True
