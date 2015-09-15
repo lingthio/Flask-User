@@ -27,11 +27,19 @@ from .decorators import *
 # Enable the following: from flask.ext.user import user_logged_in
 from .signals import *
 
-__version__ = '0.6.7'
+
+__version__ = '0.6.8'
+
+
+def _call_or_get(function_or_property):
+    return function_or_property() if callable(function_or_property) else function_or_property
+
 
 def _flask_user_context_processor():
     """ Make 'user_manager' available to Jinja2 templates"""
-    return dict(user_manager=current_app.user_manager)
+    return dict(
+        user_manager=current_app.user_manager,
+        call_or_get=_call_or_get)
 
 class UserManager(object):
     """ This is the Flask-User object that manages the User management process."""
@@ -338,7 +346,7 @@ class UserManager(object):
         """ Return True if new_username does not exist or if new_username equals old_username.
             Return False otherwise."""
         # Allow user to change username to the current username
-        if current_user.is_authenticated():
+        if _call_or_get(current_user.is_authenticated):
             current_username = current_user.user_auth.username if self.db_adapter.UserAuthClass and hasattr(current_user, 'user_auth') else current_user.username
             if new_username == current_username:
                 return True

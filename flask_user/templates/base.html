@@ -31,7 +31,7 @@
     <div id="header-div" class="clearfix with-margins">
         <div class="pull-left"><a href="/"><h1 class="no-margins">MyApp</h1></a></div>
         <div class="pull-right">
-            {% if current_user.is_authenticated() %}
+            {% if call_or_get(current_user.is_authenticated) %}
                 <a href="{{ url_for('user.profile') }}">{{ current_user.username }}</a>
                 &nbsp; | &nbsp;
                 <a href="{{ url_for('user.logout') }}">Sign out</a>
@@ -43,7 +43,7 @@
     {% block menu %}
     <div id="menu-div" class="with-margins">
         <a href="/">Home</a>
-        {% if current_user.is_authenticated() %}
+        {% if call_or_get(current_user.is_authenticated) %}
             &nbsp; | &nbsp; <a href="{{ url_for('user.profile') }}">User profile</a>
         {% endif %}
     </div>

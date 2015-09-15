@@ -16,6 +16,11 @@ from . import emails
 from . import signals
 from .translations import gettext as _
 
+
+def _call_or_get(function_or_property):
+    return function_or_property() if callable(function_or_property) else function_or_property
+
+
 def confirm_email(token):
     """ Verify email confirmation token and activate the user account."""
     # Verify token
@@ -215,7 +220,7 @@ def login():
     reg_next = request.args.get('reg_next', _endpoint_url(user_manager.after_register_endpoint))
 
     # Immediately redirect already logged in users
-    if current_user.is_authenticated() and user_manager.auto_login_at_login:
+    if _call_or_get(current_user.is_authenticated) and user_manager.auto_login_at_login:
         return redirect(next)
 
     # Initialize form
@@ -544,7 +549,7 @@ def reset_password(token):
     user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter
 
-    if current_user.is_authenticated():
+    if _call_or_get(current_user.is_authenticated):
         logout_user()
 
     is_valid, has_expired, user_id = user_manager.verify_token(
@@ -696,7 +701,7 @@ def _do_login_user(user, next, remember_me=False):
     if not user: return unauthenticated()
 
     # Check if user account has been disabled
-    if not user.is_active():
+    if not _call_or_get(user.is_active):
         flash(_('Your account has not been enabled.'), 'error')
         return redirect(url_for('user.login'))
 

@@ -8,13 +8,18 @@ from functools import wraps
 from flask import current_app
 from flask.ext.login import current_user
 
+
+def _call_or_get(function_or_property):
+    return function_or_property() if callable(function_or_property) else function_or_property
+
+
 def login_required(func):
     """ This decorator ensures that the current user is logged in before calling the actual view.
         Calls the unauthorized_view_function() when the user is not logged in."""
     @wraps(func)
     def decorated_view(*args, **kwargs):
         # User must be authenticated
-        if not current_user.is_authenticated():
+        if not _call_or_get(current_user.is_authenticated):
             # Redirect to unauthenticated page
             return current_app.user_manager.unauthenticated_view_function()
 
@@ -32,7 +37,7 @@ def roles_accepted(*role_names):
         @wraps(func)
         def decorated_view(*args, **kwargs):
             # User must be logged
-            if not current_user.is_authenticated():
+            if not _call_or_get(current_user.is_authenticated):
                 # Redirect to the unauthenticated page
                 return current_app.user_manager.unauthenticated_view_function()
 
@@ -56,7 +61,7 @@ def roles_required(*role_names):
         @wraps(func)
         def decorated_view(*args, **kwargs):
             # User must be logged
-            if not current_user.is_authenticated():
+            if not _call_or_get(current_user.is_authenticated):
                 # Redirect to the unauthenticated page
                 return current_app.user_manager.unauthenticated_view_function()
 
@@ -77,7 +82,7 @@ def confirm_email_required(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
         # User must be authenticated
-        if current_user.is_authenticated():
+        if _call_or_get(current_user.is_authenticated):
             user_manager = current_app.user_manager
             # If confirm email has been enabled, user must have at least one confirmed email
             if not user_manager.enable_email\

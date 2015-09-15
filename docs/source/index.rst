@@ -53,10 +53,10 @@ Status
 
 .. topic:: Headsup
 
-    We're starting to work on Flask-User 1.0 which will break backwards
-    compatibility with v0.5 and v0.6.
-    Please 'peg' your requirements.txt file now to "Flask-User==0.6.1"
-    to avoid compatibility problems in the future.
+    Flask-Login v0.3.x broke backward compatibility by using *properties*
+    instead of *methods* for current_user.is_authenticated(),
+    is_anonymous() and is_active().
+    Please use Flask-Login v0.2.9 until this issue has been resolved.
 
 
 Demo
@@ -102,6 +102,7 @@ Documentation
 
 Revision History
 ----------------
+* v0.6.8 Added support for Flask-Login v0.3+
 * v0.6.7 Uses Python package bcrypt instead of py-bcrypt.
 * v0.6.6 Forgot password form now honors USER_SHOW_USERNAME_OR_EMAIL_DOES_NOT_EXIST setting.
 * v0.6.5 Added USER_SHOW_USERNAME_OR_EMAIL_DOES_NOT_EXIST setting.
