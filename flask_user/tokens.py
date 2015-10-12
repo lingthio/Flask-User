@@ -27,11 +27,13 @@ class TokenManager(object):
     def encrypt_id(self, id):
         """ Encrypts integer ID to url-safe base64 string."""
         id_length = len(str(id))
-        padded_length = 16 * ((id_length + 15) / 16)
+        padded_length = 16 * ((id_length + 15) // 16)
         str1 = ('%%0%dd' % padded_length) % id          # --> 16*x byte integer string
         str2 = self.cipher.encrypt(str1)                # --> encrypted data
         str3 = base64.urlsafe_b64encode(str2)           # --> URL safe base64 string with '=='
-        return str3.strip('=')                          # --> base64 string without '=='
+        while str3[-1:] == '=' or str3[-1:] == b'=':
+            str3 = str3[0:-1]
+        return str3                                     # --> base64 string without '=='
 
     def decrypt_id(self, encrypted_id):
         """ Decrypts url-safe base64 string to integer ID"""
