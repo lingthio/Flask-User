@@ -210,7 +210,7 @@ class LoginForm(Form):
             user, user_email = user_manager.find_user_by_email(self.email.data)
 
         # Handle successful authentication
-        if user and user_manager.verify_password(self.password.data, user):
+        if user and user.password and user_manager.verify_password(self.password.data, user):
             return True                         # Successful authentication
 
         # Handle unsuccessful authentication
