@@ -716,7 +716,9 @@ def _do_login_user(user, next, remember_me=False):
 
     # Use Flask-Login to sign in user
     #print('login_user: remember_me=', remember_me)
-    login_user(user, remember=remember_me)
+
+    user_auth = user.user_auth if db_adapter.UserAuthClass and hasattr(user, 'user_auth') else user
+    login_user(user_auth, remember=remember_me)
 
     # Send user_logged_in signal
     signals.user_logged_in.send(current_app._get_current_object(), user=user)
