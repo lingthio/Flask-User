@@ -440,8 +440,8 @@ def register():
                                      user=user,
                                      user_invite=user_invite)
 
-        # Redirect if USER_ENABLE_CONFIRM_EMAIL is set
-        if user_manager.enable_confirm_email and require_email_confirmation:
+        # Redirect if USER_ENABLE_CONFIRM_EMAIL is set and they can't login yet
+        if user_manager.enable_confirm_email and require_email_confirmation and not user_manager.enable_login_without_confirm_email:
             return redirect(reg_next)
 
         # Auto-login after register or redirect to login page
