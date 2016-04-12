@@ -442,11 +442,9 @@ def register():
 
         # Redirect if USER_ENABLE_CONFIRM_EMAIL is set
         if user_manager.enable_confirm_email and require_email_confirmation:
-            next = request.args.get('next', _endpoint_url(user_manager.after_register_endpoint))
-            return redirect(next)
+            return redirect(reg_next)
 
         # Auto-login after register or redirect to login page
-        next = request.args.get('next', _endpoint_url(user_manager.after_confirm_endpoint))
         if user_manager.auto_login_after_register:
             return _do_login_user(user, reg_next)                     # auto-login
         else:
