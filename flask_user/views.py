@@ -80,7 +80,8 @@ def change_password():
     db_adapter = user_manager.db_adapter
 
     # Initialize form
-    form = user_manager.change_password_form(request.form)
+    form = user_manager.change_password_form(request.form, user=current_user)
+
     form.next.data = request.args.get('next', _endpoint_url(user_manager.after_change_password_endpoint))  # Place ?next query param in next form field
 
     # Process valid POST
@@ -580,7 +581,7 @@ def reset_password(token):
     user_email.confirmed_at = datetime.utcnow()
 
     # Initialize form
-    form = user_manager.reset_password_form(request.form)
+    form = user_manager.reset_password_form(request.form, user=user)
 
     # Process valid POST
     if request.method=='POST' and form.validate():
@@ -590,9 +591,7 @@ def reset_password(token):
 
         # Change password
         hashed_password = user_manager.hash_password(form.new_password.data)
-        user_auth = user.user_auth if db_adapter.UserAuthClass and hasattr(user, 'user_auth') else user
-        db_adapter.update_object(user_auth, password=hashed_password)
-        db_adapter.commit()
+        user_manager.update_password(user, hashed_password)
 
         # Send 'password_changed' email
         if user_manager.enable_email and user_manager.send_password_changed_email:
@@ -733,5 +732,3 @@ def _endpoint_url(endpoint):
     if endpoint:
         url = url_for(endpoint)
     return url
-
-

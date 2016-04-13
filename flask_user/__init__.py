@@ -236,7 +236,7 @@ class UserManager(object):
         return passwords.hash_password(self, password)
 
     def get_password(self, user):
-        use_auth_class = True if self.db_adapter.UserAuthClass and hasattr(user, 'user_auth') else False
+        use_auth_class = self.db_adapter.UserAuthClass and hasattr(user, 'user_auth')
         # Handle v0.5 backward compatibility
         if self.db_adapter.UserProfileClass:
             hashed_password = user.password
@@ -245,7 +245,7 @@ class UserManager(object):
         return hashed_password
 
     def update_password(self, user, hashed_password):
-        use_auth_class = True if self.db_adapter.UserAuthClass and hasattr(user, 'user_auth') else False
+        use_auth_class = self.db_adapter.UserAuthClass and hasattr(user, 'user_auth')
 
         if use_auth_class:
             user.user_auth.password = hashed_password
@@ -260,6 +260,9 @@ class UserManager(object):
         """
         verified = False
         hashed_password = self.get_password(user)
+
+        if not hashed_password:
+            return False
 
         try:
             verified = passwords.verify_password(self, password, hashed_password)

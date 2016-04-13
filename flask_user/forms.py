@@ -82,6 +82,17 @@ class ChangePasswordForm(Form):
     next = HiddenField()
     submit = SubmitField(_('Change password'))
 
+    def __init__(self, formdata=None, obj=None, prefix='', data=None, meta=None, user=None, **kw):
+        self.user = user
+        return super(ChangePasswordForm, self).__init__(
+            formdata=formdata,
+            obj=obj,
+            prefix=prefix,
+            data=data,
+            meta=meta,
+            **kw
+        )
+
     def validate(self):
         # Use feature config to remove unused form fields
         user_manager =  current_app.user_manager
@@ -210,7 +221,7 @@ class LoginForm(Form):
             user, user_email = user_manager.find_user_by_email(self.email.data)
 
         # Handle successful authentication
-        if user and user.password and user_manager.verify_password(self.password.data, user):
+        if user and user_manager.verify_password(self.password.data, user):
             return True                         # Successful authentication
 
         # Handle unsuccessful authentication
@@ -307,6 +318,17 @@ class ResetPasswordForm(Form):
         validators.EqualTo('new_password', message=_('New Password and Retype Password did not match'))])
     next = HiddenField()
     submit = SubmitField(_('Change password'))
+
+    def __init__(self, formdata=None, obj=None, prefix='', data=None, meta=None, user=None, **kw):
+        self.user = user
+        return super(ResetPasswordForm, self).__init__(
+            formdata=formdata,
+            obj=obj,
+            prefix=prefix,
+            data=data,
+            meta=meta,
+            **kw
+        )
 
     def validate(self):
         # Use feature config to remove unused form fields
