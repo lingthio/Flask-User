@@ -14,19 +14,19 @@ class TokenManager(object):
         """ Create a cypher to encrypt IDs and a signer to sign tokens."""
         # Create cypher to encrypt IDs
         # and ensure >=16 characters
-        precursor = b'0123456789abcdef'
+        precursor = b'0123456789abcdefghijklmnopqrstuv'
         if isinstance(secret, bytes):
             key = secret + precursor
         else:
             key = secret.encode("utf-8") + precursor
-        self.cipher = AES.new(key[0:16])
+        self.cipher = AES.new(key[0:32])
 
         # Create signer to sign tokens
         self.signer = TimestampSigner(secret)
 
     def encrypt_id(self, id):
         """ Encrypts integer ID to url-safe base64 string."""
-        str1 = '%016d' % id                             # --> 16 byte integer string
+        str1 = '%032d' % id                             # --> 32 byte integer string
         str2 = self.cipher.encrypt(str1)                # --> encrypted data
         str3 = base64.urlsafe_b64encode(str2)           # --> URL safe base64 string with '=='
         return str3[0:-2]                               # --> base64 string without '=='
@@ -42,7 +42,7 @@ class TokenManager(object):
             #print('str3=', str3)
             str2 = base64.urlsafe_b64decode(str3)   # --> encrypted data
             #print('str2=', str2)
-            str1 = self.cipher.decrypt(str2)        # --> 16 byte integer string
+            str1 = self.cipher.decrypt(str2)        # --> 32 byte integer string
             #print('str1=', str1)
             return int(str1)                        # --> integer id
         except Exception as e:                      # pragma: no cover
