@@ -6,7 +6,14 @@
 
 from __future__ import print_function
 from datetime import datetime
+from uuid import UUID
 from flask_login import current_user
+from sqlalchemy.exc import StatementError
+
+try:
+    basestring
+except NameError:
+    basestring = str
 
 class DBAdapter(object):
     """ This object is used to shield Flask-User from ORM specific functions.
@@ -37,7 +44,17 @@ class SQLAlchemyAdapter(DBAdapter):
 
     def get_object(self, ObjectClass, id):
         """ Retrieve one object specified by the primary key 'pk' """
-        return ObjectClass.query.get(id)
+        if isinstance(id, basestring) and len(id) == 36 :  # Assume UUID
+            try:
+                id = UUID(id)
+            except ValueError:
+                pass
+        try:
+            return ObjectClass.query.get(id)
+        except (ValueError, StatementError):
+            # user_id type may have changed since the id stored in the session
+            # (for example, the app changed models to use UUIDs instead of ints)
+            return None
 
     def find_all_objects(self, ObjectClass, **kwargs):
         """ Retrieve all objects matching the case sensitive filters in 'kwargs'. """
