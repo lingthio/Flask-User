@@ -33,7 +33,7 @@ and after the application configuration has been read:
 
 ::
 
-    from flask.ext.babel import Babel
+    from flask_babel import Babel
 
     ...
 
@@ -209,4 +209,3 @@ If the code looks right, but the account management forms are not being translat
 * Check to see if the 'Flask-Babel' package has been installed (try using ``pip freeze``).
 * Check to see if the browser has been configured to prefer the language you are testing.
 * Check to see if the 'translations/' directory is in the right place.
-

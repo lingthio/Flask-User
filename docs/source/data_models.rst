@@ -20,7 +20,7 @@ If you'd like to store all user information in one DataModel, use the following:
 
 ::
 
-    # Define User model. Make sure to add flask.ext.user UserMixin !!!
+    # Define User model. Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
 
@@ -68,7 +68,7 @@ If you'd like to store User Authentication information separate from User inform
         def is_active(self):
           return self.is_enabled
 
-    # Define UserAuth DataModel. Make sure to add flask.ext.user UserMixin!!
+    # Define UserAuth DataModel. Make sure to add flask_user UserMixin!!
     class UserAuth(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
         user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
@@ -94,7 +94,7 @@ It can be applied to both the All-in-one User DataModel and the separated User/U
 
 ::
 
-    # Define User DataModel. Make sure to add flask.ext.user UserMixin !!!
+    # Define User DataModel. Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
         ...
@@ -134,7 +134,7 @@ It can be applied to both the All-in-one User DataModel and the separated User/U
 
 ::
 
-    # Define the User DataModel. Make sure to add flask.ext.user UserMixin!!
+    # Define the User DataModel. Make sure to add flask_user UserMixin!!
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
         ...
