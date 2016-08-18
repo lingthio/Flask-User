@@ -231,7 +231,7 @@ class LoginForm(Form):
                 message = _('%(username_or_email)s does not exist', username_or_email=username_or_email_text)
                 username_or_email_field.errors.append(message)
             else:
-                self.password.errors.append('Incorrect Password')
+                self.password.errors.append(_('Incorrect Password'))
 
         # Hide 'username/email does not exist error message for additional security
         else:
