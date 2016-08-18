@@ -23,7 +23,7 @@ Requirements
 - Flask-Mail 0.9+ or Flask-Sendmail
 - Flask-WTF 0.9+
 - passlib 1.6+
-- pycrypto 2.6+
+- pycryptodome 3.4+
 - py-bcript 0.4+        # Recommended for speed, and only if bcrypt is used to hash passwords
 
 When using the included SQLAlchemyAdapter, Flask-User requires:
@@ -42,4 +42,3 @@ Optional requirements for Internationalization:
 Up Next
 -------
 :doc:`basic_app`
-

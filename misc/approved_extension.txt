@@ -32,7 +32,7 @@ Request for Flask Extension Approval
 
     setup.py:
         install_requires=[
-            'passlib', 'bcrypt', 'pycrypto',
+            'passlib', 'bcrypt', 'pycryptodome>=3.4',
             'Flask', 'Flask-Babel', 'Flask-Login', 'Flask-Mail',
             'Flask-SQLAlchemy', 'Flask-WTF'],
 
@@ -55,4 +55,3 @@ Request for Flask Extension Approval
 10. An extension currently has to support Python 2.6 as well as Python 2.7
 
     Flask-Utils runs on Python 2.6, 2.7 and 3.3
-
