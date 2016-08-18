@@ -42,6 +42,15 @@ And wouldn't it be nice to also offer:
 * **Well documented**
 * **Translations** (Chinese,  Dutch, English, Finnish, French, Swedish)
 
+
+.. topic:: Headsup
+
+    Flask-Login v0.3.x broke backward compatibility by using *properties*
+    instead of *methods* for current_user.is_authenticated(),
+    is_anonymous() and is_active().
+    Please upgrade to Flask-User v0.6.8+ if you plan to use Flask-Login v0.3+.
+
+
 Status
 ------
 
@@ -49,14 +58,6 @@ Status
 | It is marked as a Beta release because the API is subject to small changes.
 | We appreciate it if you would enter issues and
   enhancement requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
-
-
-.. topic:: Headsup
-
-    Flask-Login v0.3.x broke backward compatibility by using *properties*
-    instead of *methods* for current_user.is_authenticated(),
-    is_anonymous() and is_active().
-    Please use Flask-Login v0.2.9 until this issue has been resolved.
 
 
 Demo
