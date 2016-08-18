@@ -6,8 +6,8 @@
 
 import string
 from flask import current_app
-from flask.ext.login import current_user
-from flask.ext.wtf import Form
+from flask_login import current_user
+from flask_wtf import Form
 from wtforms import BooleanField, HiddenField, PasswordField, SubmitField, StringField
 from wtforms import validators, ValidationError
 from .translations import lazy_gettext as _

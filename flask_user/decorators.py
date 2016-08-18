@@ -6,7 +6,7 @@
 
 from functools import wraps
 from flask import current_app
-from flask.ext.login import current_user
+from flask_login import current_user
 
 
 def _call_or_get(function_or_property):
