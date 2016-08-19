@@ -5,7 +5,7 @@
     :license: Simplified BSD License, see LICENSE.txt for more details."""
 
 from datetime import datetime
-from flask import current_app, flash, redirect, render_template, request, url_for
+from flask import current_app, flash, redirect, request, url_for
 from flask_login import current_user, login_user, logout_user
 try: # Handle Python 2.x and Python 3.x
     from urllib.parse import quote      # Python 3.x
@@ -19,6 +19,11 @@ from .translations import gettext as _
 
 def _call_or_get(function_or_property):
     return function_or_property() if callable(function_or_property) else function_or_property
+
+
+def render(*args, **kwargs):
+    user_manager = current_app.user_manager
+    return user_manager.render_function(*args, **kwargs)
 
 
 def confirm_email(token):
@@ -105,7 +110,7 @@ def change_password():
         return redirect(form.next.data)
 
     # Process GET or invalid POST
-    return render_template(user_manager.change_password_template, form=form)
+    return render(user_manager.change_password_template, form=form)
 
 @login_required
 @confirm_email_required
@@ -141,7 +146,7 @@ def change_username():
         return redirect(form.next.data)
 
     # Process GET or invalid POST
-    return render_template(user_manager.change_username_template, form=form)
+    return render(user_manager.change_username_template, form=form)
 
 @login_required
 @confirm_email_required
@@ -208,7 +213,7 @@ def forgot_password():
         return redirect(_endpoint_url(user_manager.after_forgot_password_endpoint))
 
     # Process GET or invalid POST
-    return render_template(user_manager.forgot_password_template, form=form)
+    return render(user_manager.forgot_password_template, form=form)
 
 
 def login():
@@ -257,7 +262,7 @@ def login():
             return _do_login_user(user, login_form.next.data, login_form.remember_me.data)
 
     # Process GET or invalid POST
-    return render_template(user_manager.login_template,
+    return render(user_manager.login_template,
             form=login_form,
             login_form=login_form,
             register_form=register_form)
@@ -298,7 +303,7 @@ def manage_emails():
         return redirect(url_for('user.manage_emails'))
 
     # Process GET or invalid POST request
-    return render_template(user_manager.manage_emails_template,
+    return render(user_manager.manage_emails_template,
             user_emails=user_emails,
             form=form,
             )
@@ -453,7 +458,7 @@ def register():
             return redirect(url_for('user.login')+'?next='+reg_next)  # redirect to login page
 
     # Process GET or invalid POST
-    return render_template(user_manager.register_template,
+    return render(user_manager.register_template,
             form=register_form,
             login_form=login_form,
             register_form=register_form)
@@ -517,7 +522,7 @@ def invite():
         flash(_('Invitation has been sent.'), 'success')
         return redirect(next)
 
-    return render_template(user_manager.invite_template, form=invite_form)
+    return render(user_manager.invite_template, form=invite_form)
 
 def resend_confirm_email():
     """Prompt for email and re-send email conformation email."""
@@ -540,7 +545,7 @@ def resend_confirm_email():
         return redirect(_endpoint_url(user_manager.after_resend_confirm_email_endpoint))
 
     # Process GET or invalid POST
-    return render_template(user_manager.resend_confirm_email_template, form=form)
+    return render(user_manager.resend_confirm_email_template, form=form)
 
 
 def reset_password(token):
@@ -609,7 +614,7 @@ def reset_password(token):
             return redirect(url_for('user.login')+'?next='+next)    # redirect to login page
 
     # Process GET or invalid POST
-    return render_template(user_manager.reset_password_template, form=form)
+    return render(user_manager.reset_password_template, form=form)
 
 
 def unconfirmed():
@@ -652,7 +657,7 @@ def unauthorized():
 @confirm_email_required
 def user_profile():
     user_manager = current_app.user_manager
-    return render_template(user_manager.user_profile_template)
+    return render(user_manager.user_profile_template)
 
 
 def _send_registered_email(user, user_email, require_email_confirmation=True):
