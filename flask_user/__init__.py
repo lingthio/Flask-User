@@ -5,7 +5,7 @@
     :license: Simplified BSD License, see LICENSE.txt for more details."""
 
 from passlib.context import CryptContext
-from flask import Blueprint, current_app, url_for
+from flask import Blueprint, current_app, url_for, render_template
 from flask_login import LoginManager, UserMixin as LoginUserMixin, make_secure_token
 from flask_user.db_adapters import DBAdapter
 from .db_adapters import SQLAlchemyAdapter
@@ -68,6 +68,7 @@ class UserManager(object):
                 username_validator=forms.username_validator,
                 password_validator=forms.password_validator,
                 # View functions
+                render_function=render_template,
                 change_password_view_function=views.change_password,
                 change_username_view_function=views.change_username,
                 confirm_email_view_function=views.confirm_email,
@@ -109,6 +110,7 @@ class UserManager(object):
         self.username_validator = username_validator
         self.password_validator = password_validator
         # View functions
+        self.render_function = render_function
         self.change_password_view_function = change_password_view_function
         self.change_username_view_function = change_username_view_function
         self.confirm_email_view_function = confirm_email_view_function
