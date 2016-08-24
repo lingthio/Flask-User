@@ -14,7 +14,7 @@ the user is logged in before accessing that particular page:
 
 ::
 
-    from flask.ext.user import login_required
+    from flask_user import login_required
 
     @login_required
     @route('/profile')
@@ -22,7 +22,7 @@ the user is logged in before accessing that particular page:
         # render the user profile page
 
 | Flask-User relies on Flask-Login to implement and offer the @login_required decorator along with its underlying current_user.is_authenticated() implementation.
-| See the `Flask-Login Documentation <https://flask-login.readthedocs.org/en/latest/#flask.ext.login.login_required>`_
+| See the `Flask-Login Documentation <https://flask-login.readthedocs.org/en/latest/#flask_login.login_required>`_
 
 @roles_required
 ---------------
@@ -31,7 +31,7 @@ the user is logged in and has sufficient role-based access rights that particula
 
 In the example below the current user is required to have the 'admin' role::
 
-    from flask.ext.user import roles_required
+    from flask_user import roles_required
 
     @roles_required('admin')
     @route('/admin/dashboard')
@@ -140,6 +140,3 @@ binding a User to one or more Roles.
 Up Next
 -------
 :doc:`roles_required_app`
-
-
-
