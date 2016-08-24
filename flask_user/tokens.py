@@ -26,7 +26,7 @@ class TokenManager(object):
 
     def encrypt_id(self, id):
         """ Encrypts integer ID to url-safe base64 string."""
-        str1 = '%016d' % id                             # --> 16 byte integer string
+        str1 = b'%016d' % id                            # --> 16 byte integer string
         str2 = self.cipher.encrypt(str1)                # --> encrypted data
         str3 = base64.urlsafe_b64encode(str2)           # --> URL safe base64 string with '=='
         return str3[0:-2]                               # --> base64 string without '=='
