@@ -1,4 +1,4 @@
-""" This file implements Flask-User decorators: @login_required and @roles_required.
+""" This file implements Flask-User decorators: @login_required, @confirm_email_required and @roles_required.
 
     :copyright: (c) 2013 by Ling Thio
     :author: Ling Thio (ling.thio@gmail.com)
@@ -6,11 +6,8 @@
 
 from functools import wraps
 from flask import current_app
-from flask.ext.login import current_user
-
-
-def _call_or_get(function_or_property):
-    return function_or_property() if callable(function_or_property) else function_or_property
+from flask_login import current_user
+from .access import is_authenticated, is_confirmed_email
 
 
 def login_required(func):
@@ -19,7 +16,7 @@ def login_required(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
         # User must be authenticated
-        if not _call_or_get(current_user.is_authenticated):
+        if not is_authenticated():
             # Redirect to unauthenticated page
             return current_app.user_manager.unauthenticated_view_function()
 
@@ -37,7 +34,7 @@ def roles_accepted(*role_names):
         @wraps(func)
         def decorated_view(*args, **kwargs):
             # User must be logged
-            if not _call_or_get(current_user.is_authenticated):
+            if not is_authenticated():
                 # Redirect to the unauthenticated page
                 return current_app.user_manager.unauthenticated_view_function()
 
@@ -61,7 +58,7 @@ def roles_required(*role_names):
         @wraps(func)
         def decorated_view(*args, **kwargs):
             # User must be logged
-            if not _call_or_get(current_user.is_authenticated):
+            if not is_authenticated():
                 # Redirect to the unauthenticated page
                 return current_app.user_manager.unauthenticated_view_function()
 
@@ -82,12 +79,10 @@ def confirm_email_required(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
         # User must be authenticated
-        if _call_or_get(current_user.is_authenticated):
+        if is_authenticated():
             user_manager = current_app.user_manager
             # If confirm email has been enabled, user must have at least one confirmed email
-            if not user_manager.enable_email\
-                    or not user_manager.enable_confirm_email\
-                    or current_user.has_confirmed_email():
+            if is_confirmed_email():
                 return func(*args, **kwargs)
 
         return current_app.user_manager.unconfirmed_email_view_function()
