@@ -5,7 +5,7 @@
     :license: Simplified BSD License, see LICENSE.txt for more details."""
 
 from functools import wraps
-from flask import current_app
+from flask import current_app, request
 from flask.ext.login import current_user
 
 
@@ -28,21 +28,25 @@ def login_required(func):
     return decorated_view
 
 
-def roles_accepted(*role_names):
+def roles_accepted(*role_names, **role_names_per_method):
     """ This decorator ensures that the current user one of the specified roles.
         Calls the unauthorized_view_function() when requirements fail.
         See also: UserMixin.has_role()
+
+        Roles can be specified per view, or for different request methods like 
+        GET, POST.
     """
     def wrapper(func):
         @wraps(func)
         def decorated_view(*args, **kwargs):
+            required_roles = role_names_per_method.get(request.method, role_names)
             # User must be logged
             if not _call_or_get(current_user.is_authenticated):
                 # Redirect to the unauthenticated page
                 return current_app.user_manager.unauthenticated_view_function()
 
             # User must have the required roles
-            if not current_user.has_role(*role_names):
+            if not current_user.has_role(*required_roles):
                 # Redirect to the unauthorized page
                 return current_app.user_manager.unauthorized_view_function()
 
