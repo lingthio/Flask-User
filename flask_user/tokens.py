@@ -26,10 +26,14 @@ class TokenManager(object):
 
     def encrypt_id(self, id):
         """ Encrypts integer ID to url-safe base64 string."""
-        str1 = '%016d' % id                             # --> 16 byte integer string
+        id_length = len(str(id))
+        padded_length = 16 * ((id_length + 15) // 16)
+        str1 = ('%%0%dd' % padded_length) % id          # --> 16*x byte integer string
         str2 = self.cipher.encrypt(str1)                # --> encrypted data
         str3 = base64.urlsafe_b64encode(str2)           # --> URL safe base64 string with '=='
-        return str3[0:-2]                               # --> base64 string without '=='
+        while str3[-1:] == '=' or str3[-1:] == b'=':
+            str3 = str3[0:-1]
+        return str3                                     # --> base64 string without '=='
 
     def decrypt_id(self, encrypted_id):
         """ Decrypts url-safe base64 string to integer ID"""
@@ -38,11 +42,13 @@ class TokenManager(object):
             encrypted_id = encrypted_id.encode('ascii', 'ignore')
 
         try:
+            # we can add as many = as we like,
+            # we need between 0 and 2 depending on plaintext size
             str3 = encrypted_id + b'=='             # --> base64 string with '=='
             #print('str3=', str3)
             str2 = base64.urlsafe_b64decode(str3)   # --> encrypted data
             #print('str2=', str2)
-            str1 = self.cipher.decrypt(str2)        # --> 16 byte integer string
+            str1 = self.cipher.decrypt(str2)        # --> 16*x byte integer string
             #print('str1=', str1)
             return int(str1)                        # --> integer id
         except Exception as e:                      # pragma: no cover
