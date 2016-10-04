@@ -34,6 +34,7 @@ def set_default_settings(user_manager, app_config):
     um.enable_username              = sd('USER_ENABLE_USERNAME',              obsoleted_enable_usernames)
 
     # Set default settings
+    um.auto_enable_user            = sd('USER_AUTO_ENABLE',                True)
     um.auto_login                  = sd('USER_AUTO_LOGIN',                 True)
     um.auto_login_after_confirm    = sd('USER_AUTO_LOGIN_AFTER_CONFIRM',   um.auto_login)
     um.auto_login_after_register   = sd('USER_AUTO_LOGIN_AFTER_REGISTER',  um.auto_login)

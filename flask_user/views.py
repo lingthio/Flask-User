@@ -361,18 +361,18 @@ def register():
         # Enable user account
         if db_adapter.UserProfileClass:
             if hasattr(db_adapter.UserProfileClass, 'active'):
-                user_auth_fields['active'] = True
+                user_auth_fields['active'] = user_manager.auto_enable_user
             elif hasattr(db_adapter.UserProfileClass, 'is_enabled'):
-                user_auth_fields['is_enabled'] = True
+                user_auth_fields['is_enabled'] = user_manager.auto_enable_user
             else:
-                user_auth_fields['is_active'] = True
+                user_auth_fields['is_active'] = user_manager.auto_enable_user
         else:
             if hasattr(db_adapter.UserClass, 'active'):
-                user_fields['active'] = True
+                user_fields['active'] = user_manager.auto_enable_user
             elif hasattr(db_adapter.UserClass, 'is_enabled'):
-                user_fields['is_enabled'] = True
+                user_fields['is_enabled'] = user_manager.auto_enable_user
             else:
-                user_fields['is_active'] = True
+                user_fields['is_active'] = user_manager.auto_enable_user
 
         # For all form fields
         for field_name, field_value in register_form.data.items():
