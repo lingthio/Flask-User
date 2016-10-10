@@ -49,6 +49,7 @@ def test_authorization(client):
     client.get_valid_page(url_for('home_page'))
     client.get_valid_page(url_for('user_profile_page'))
     client.get_invalid_page(url_for('special_page'), "You do not have permission to access ")
+    client.get_valid_page(url_for('no_agents'))
     client.logout()
 
     # Test as special 'user007' user
@@ -56,5 +57,6 @@ def test_authorization(client):
     client.get_valid_page(url_for('home_page'))
     client.get_valid_page(url_for('user_profile_page'))
     client.get_valid_page(url_for('special_page'))
+    client.get_invalid_page(url_for('no_agents'), "You do not have permission to access ")
     client.logout()
 
