@@ -5,7 +5,7 @@ from flask.ext.babel import Babel
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
-from flask.ext.user import roles_required, confirm_email_required
+from flask.ext.user import roles_required, confirm_email_required, roles_not_allowed
 
 
 app = Flask(__name__)
@@ -179,6 +179,16 @@ def init_app(app, test_config=None):                   # For automated tests
             {% endblock %}
             """)
 
+    # The '/no_agents' page requires a user that does NOT have the 'agent' role.
+    @app.route('/no_agents')
+    @roles_not_allowed('agent')   # Use of @roles_not_allowed decorator
+    def no_agents():
+        return render_template_string("""
+            {% extends "base.html" %}
+            {% block content %}
+            <h2>{%trans%}No Agents Page{%endtrans%}</h2>
+            {% endblock %}
+            """)
     # For testing only
     app.db = db
     app.UserEmailClass = UserEmail
