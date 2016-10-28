@@ -107,7 +107,7 @@ setup(
         'bcrypt',
         'pycrypto',
         'Flask',
-        'Flask-Login',
+        'Flask-Login==0.4.0',
         'Flask-Mail',
         'Flask-SQLAlchemy',
         'Flask-WTF',
