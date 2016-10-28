@@ -6,7 +6,7 @@
 
 from passlib.context import CryptContext
 from flask import Blueprint, current_app, url_for
-from flask_login import LoginManager, UserMixin as LoginUserMixin, make_secure_token
+from flask_login import LoginManager, UserMixin as LoginUserMixin
 from flask_user.db_adapters import DBAdapter
 from .db_adapters import SQLAlchemyAdapter
 from . import emails
