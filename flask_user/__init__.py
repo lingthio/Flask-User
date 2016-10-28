@@ -6,7 +6,7 @@
 
 from passlib.context import CryptContext
 from flask import Blueprint, current_app, url_for
-from flask_login import LoginManager, UserMixin as LoginUserMixin, make_secure_token
+from flask_login import LoginManager, UserMixin as LoginUserMixin
 from flask_user.db_adapters import DBAdapter
 from .db_adapters import SQLAlchemyAdapter
 from . import emails
@@ -192,15 +192,6 @@ class UserManager(object):
             user_id = int(user_unicode_id)
             #print('load_user_by_id: user_id=', user_id)
             return self.get_user_by_id(user_id)
-
-        # Flask-login calls this function to retrieve a User record by user token.
-        # A token is used to secure the user ID when stored in browser sessions.
-        # See https://flask-login.readthedocs.org/en/latest/#alternative-tokens
-        @self.login_manager.token_loader
-        def load_user_by_token(token):
-            user_id = self.token_manager.decrypt_id(token)
-            #print('load_user_by_token: token=', token, 'user_id=', user_id)
-            return self.get_user_by_id(int(user_id))
 
         self.login_manager.login_view = 'user.login'
         self.login_manager.init_app(app)
