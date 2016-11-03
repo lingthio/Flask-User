@@ -105,7 +105,7 @@ setup(
     install_requires=[
         'passlib',
         'bcrypt',
-        'pycrypto',
+        'pycryptodome',
         'Flask',
         'Flask-Login',
         'Flask-Mail',
