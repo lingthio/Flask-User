@@ -29,14 +29,7 @@ class TokenManager(object):
         # 16 byte integer
         str1 = '%016d' % id
         # encrypted data
-        try:
-            res = self.cipher.encrypt(str1)
-        except TypeError:
-            res = self.cipher.encrypt(bytes(str1))
-        except:
-            raise
-        finally:
-            str2 = res
+        str2 = self.cipher.encrypt(str1.encode())
         # URL safe base64 string with '=='
         str3 = base64.urlsafe_b64encode(str2)
         # return base64 string without '=='
