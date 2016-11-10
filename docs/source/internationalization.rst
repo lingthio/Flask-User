@@ -39,7 +39,7 @@ and after the application configuration has been read:
 
 ::
 
-    from flask.ext.babel import Babel
+    from flask_babel import Babel
 
     ...
 

@@ -19,12 +19,12 @@ from . import views
 from . import signals
 from .translations import get_translations
 
-# Enable the following: from flask.ext.user import current_user
+# Enable the following: from flask_user import current_user
 from flask_login import current_user
 
-# Enable the following: from flask.ext.user import login_required, roles_required
+# Enable the following: from flask_user import login_required, roles_required
 from .decorators import *
-# Enable the following: from flask.ext.user import user_logged_in
+# Enable the following: from flask_user import user_logged_in
 from .signals import *
 
 

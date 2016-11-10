@@ -52,7 +52,7 @@ def create_app(test_config=None):                   # For automated tests
         print('translations=',repr(translations), 'language=', repr(language))
         return language
 
-    # Define the User data model. Make sure to add flask.ext.user UserMixin !!!
+    # Define the User data model. Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
         __tablename__ = 'user'
         id = db.Column(db.Integer, primary_key=True)

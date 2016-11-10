@@ -36,7 +36,7 @@ def create_app():
     db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
     mail = Mail(app)                                # Initialize Flask-Mail
 
-    # Define the User data model. Make sure to add flask.ext.user UserMixin !!!
+    # Define the User data model. Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
 

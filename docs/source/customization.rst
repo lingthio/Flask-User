@@ -220,7 +220,7 @@ will be stored in the corresponding User field.
 **Extra registration fields in UserProfile model**
 
 * Add extra fields to the User data model
-* Extend a custom MyRegisterForm class from the built-in flask.ext.user.forms.RegisterForm class.
+* Extend a custom MyRegisterForm class from the built-in flask_user.forms.RegisterForm class.
   See :ref:`customizingformclasses`.
 * Add extra fields to the form **using identical field names**.
 * Specify your custom registration form: ``user_manager = UserManager(db_adapter, app, register_form=MyRegisterForm)``
@@ -236,17 +236,17 @@ Form Classes
 
 Forms can be customized by sub-classing one of the following built-in Form classes::
 
-    flask.ext.user.forms.AddEmailForm
-    flask.ext.user.forms.ChangeUsernameForm
-    flask.ext.user.forms.ChangePasswordForm
-    flask.ext.user.forms.ForgotPasswordForm
-    flask.ext.user.forms.LoginForm
-    flask.ext.user.forms.RegisterForm
-    flask.ext.user.forms.ResetPasswordForm
+    flask_user.forms.AddEmailForm
+    flask_user.forms.ChangeUsernameForm
+    flask_user.forms.ChangePasswordForm
+    flask_user.forms.ForgotPasswordForm
+    flask_user.forms.LoginForm
+    flask_user.forms.RegisterForm
+    flask_user.forms.ResetPasswordForm
 
 and specifying the custom form in the call to UserManager()::
 
-    from flask.ext.user.forms import RegisterForm
+    from flask_user.forms import RegisterForm
 
     class MyRegisterForm(RegisterForm):
         first_name = StringField('First name')
