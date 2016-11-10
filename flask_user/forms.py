@@ -6,8 +6,8 @@
 
 import string
 from flask import current_app
-from flask.ext.login import current_user
-from flask.ext.wtf import Form
+from flask_login import current_user
+from flask_wtf import Form
 from wtforms import BooleanField, HiddenField, PasswordField, SubmitField, StringField
 from wtforms import validators, ValidationError
 from .translations import lazy_gettext as _
@@ -17,7 +17,7 @@ from .translations import lazy_gettext as _
 # **************************
 
 def password_validator(form, field):
-    """ Password must have one lowercase letter, one uppercase letter and one digit."""
+    """ Password must have one lowercase letter, one uppercase letter and one digit. """
     # Convert string to list of characters
     password = list(field.data)
     password_length = len(password)
@@ -43,7 +43,7 @@ def username_validator(form, field):
     chars = list(username)
     for char in chars:
         if char not in valid_chars:
-            raise ValidationError(_("Username may only contain letters, numbers, '-', '.' and '_'."))
+            raise ValidationError(_("Username may only contain letters, numbers, '-', '.' and '_'"))
 
 def unique_username_validator(form, field):
     """ Username must be unique"""
@@ -80,7 +80,7 @@ class ChangePasswordForm(Form):
         validators.EqualTo('new_password', message=_('New Password and Retype Password did not match'))
         ])
     next = HiddenField()
-    submit = SubmitField(_('Change Password'))
+    submit = SubmitField(_('Change password'))
 
     def validate(self):
         # Use feature config to remove unused form fields
@@ -117,7 +117,7 @@ class ChangeUsernameForm(Form):
         validators.DataRequired(_('Old Password is required')),
     ])
     next = HiddenField()
-    submit = SubmitField(_('Change Username'))
+    submit = SubmitField(_('Change username'))
 
     def validate(self):
         user_manager =  current_app.user_manager
@@ -148,6 +148,14 @@ class ForgotPasswordForm(Form):
         validators.Email(_('Invalid Email address')),
         ])
     submit = SubmitField(_('Send reset password email'))
+
+    def validate_email(form, field):
+        user_manager =  current_app.user_manager
+        if user_manager.show_username_email_does_not_exist:
+            user, user_email = user_manager.find_user_by_email(field.data)
+            if not user:
+                raise ValidationError(_('%(username_or_email)s does not exist', username_or_email=_('Email')))
+
 
 class LoginForm(Form):
     next = HiddenField()         # for login.html
@@ -202,18 +210,35 @@ class LoginForm(Form):
             user, user_email = user_manager.find_user_by_email(self.email.data)
 
         # Handle successful authentication
-        if user and user_manager.verify_password(self.password.data, user):
+        if user and user.password and user_manager.verify_password(self.password.data, user):
             return True                         # Successful authentication
 
         # Handle unsuccessful authentication
-        if user_manager.enable_username:
-            if user_manager.enable_email:
-                self.username.errors.append(_('Incorrect Username/Email and Password'))
-            else:
-                self.username.errors.append(_('Incorrect Username and Password'))
+        # Email, Username or Email/Username depending on settings
+        if user_manager.enable_username and user_manager.enable_email:
+            username_or_email_field = self.username
+            username_or_email_text = (_('Username/Email'))
+        elif user_manager.enable_username:
+            username_or_email_field = self.username
+            username_or_email_text = (_('Username'))
         else:
-            self.email.errors.append(_('Incorrect Email and Password'))
-        self.password.errors.append('')
+            username_or_email_field = self.email
+            username_or_email_text = (_('Email'))
+
+        # Show 'username/email does not exist error message
+        if user_manager.show_username_email_does_not_exist:
+            if not user:
+                message = _('%(username_or_email)s does not exist', username_or_email=username_or_email_text)
+                username_or_email_field.errors.append(message)
+            else:
+                self.password.errors.append(_('Incorrect Password'))
+
+        # Hide 'username/email does not exist error message for additional security
+        else:
+            message = _('Incorrect %(username_or_email)s and/or Password', username_or_email=username_or_email_text)
+            username_or_email_field.errors.append(message)
+            self.password.errors.append(message)
+
         return False                                # Unsuccessful authentication
 
 
@@ -281,7 +306,7 @@ class ResetPasswordForm(Form):
     retype_password = PasswordField(_('Retype New Password'), validators=[
         validators.EqualTo('new_password', message=_('New Password and Retype Password did not match'))])
     next = HiddenField()
-    submit = SubmitField(_('Change Password'))
+    submit = SubmitField(_('Change password'))
 
     def validate(self):
         # Use feature config to remove unused form fields

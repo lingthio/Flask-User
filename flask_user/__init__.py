@@ -5,8 +5,8 @@
     :license: Simplified BSD License, see LICENSE.txt for more details."""
 
 from passlib.context import CryptContext
-from flask import Blueprint, current_app
-from flask_login import LoginManager, UserMixin as LoginUserMixin, make_secure_token
+from flask import Blueprint, current_app, url_for, render_template
+from flask_login import LoginManager, UserMixin as LoginUserMixin
 from flask_user.db_adapters import DBAdapter
 from .db_adapters import SQLAlchemyAdapter
 from . import emails
@@ -16,26 +16,44 @@ from . import settings
 from . import tokens
 from . import translations
 from . import views
+from . import signals
 from .translations import get_translations
 
-# Enable the following: from flask.ext.user import current_user
+# Enable the following: from flask_user import current_user
 from flask_login import current_user
 
-# Enable the following: from flask.ext.user import login_required, roles_required
+# Enable the following: from flask_user import login_required, roles_required
 from .decorators import *
-# Enable the following: from flask.ext.user import user_logged_in
+# Enable the following: from flask_user import user_logged_in
 from .signals import *
 
-__version__ = '0.6.3'
+
+__version__ = '0.6.9'
+
+
+def _call_or_get(function_or_property):
+    return function_or_property() if callable(function_or_property) else function_or_property
+
 
 def _flask_user_context_processor():
     """ Make 'user_manager' available to Jinja2 templates"""
-    return dict(user_manager=current_app.user_manager)
+    return dict(
+        user_manager=current_app.user_manager,
+        call_or_get=_call_or_get)
 
 class UserManager(object):
     """ This is the Flask-User object that manages the User management process."""
 
-    def __init__(self, db_adapter, app=None,
+    def __init__(self, db_adapter=None, app=None, **kwargs):
+        """ Create the UserManager object """
+        self.db_adapter = db_adapter
+        self.app = app
+
+        if db_adapter is not None and app is not None:
+            self.init_app(app, db_adapter, **kwargs)
+
+
+    def init_app(self, app, db_adapter=None,
                 # Forms
                 add_email_form=forms.AddEmailForm,
                 change_password_form=forms.ChangePasswordForm,
@@ -50,6 +68,7 @@ class UserManager(object):
                 username_validator=forms.username_validator,
                 password_validator=forms.password_validator,
                 # View functions
+                render_function=render_template,
                 change_password_view_function=views.change_password,
                 change_username_view_function=views.change_username,
                 confirm_email_view_function=views.confirm_email,
@@ -73,8 +92,10 @@ class UserManager(object):
                 token_manager=tokens.TokenManager(),
                 legacy_check_password_hash=None
                 ):
-        """ Initialize the UserManager with custom or built-in attributes"""
-        self.db_adapter = db_adapter
+        """ Initialize the UserManager object """
+        self.app = app
+        if db_adapter is not None:
+            self.db_adapter = db_adapter
         # Forms
         self.add_email_form = add_email_form
         self.change_password_form = change_password_form
@@ -89,6 +110,7 @@ class UserManager(object):
         self.username_validator = username_validator
         self.password_validator = password_validator
         # View functions
+        self.render_function = render_function
         self.change_password_view_function = change_password_view_function
         self.change_username_view_function = change_username_view_function
         self.confirm_email_view_function = confirm_email_view_function
@@ -112,11 +134,6 @@ class UserManager(object):
         self.send_email_function = send_email_function
         self.legacy_check_password_hash = legacy_check_password_hash
 
-        self.app = app
-        if app:
-            self.init_app(app)
-
-    def init_app(self, app):
         """ Initialize app.user_manager."""
         # Bind Flask-USER to app
         app.user_manager = self
@@ -177,15 +194,6 @@ class UserManager(object):
             user_id = int(user_unicode_id)
             #print('load_user_by_id: user_id=', user_id)
             return self.get_user_by_id(user_id)
-
-        # Flask-login calls this function to retrieve a User record by user token.
-        # A token is used to secure the user ID when stored in browser sessions.
-        # See https://flask-login.readthedocs.org/en/latest/#alternative-tokens
-        @self.login_manager.token_loader
-        def load_user_by_token(token):
-            user_id = self.token_manager.decrypt_id(token)
-            #print('load_user_by_token: token=', token, 'user_id=', user_id)
-            return self.get_user_by_id(int(user_id))
 
         self.login_manager.login_view = 'user.login'
         self.login_manager.init_app(app)
@@ -331,13 +339,31 @@ class UserManager(object):
         """ Return True if new_username does not exist or if new_username equals old_username.
             Return False otherwise."""
         # Allow user to change username to the current username
-        if current_user.is_authenticated():
+        if _call_or_get(current_user.is_authenticated):
             current_username = current_user.user_auth.username if self.db_adapter.UserAuthClass and hasattr(current_user, 'user_auth') else current_user.username
             if new_username == current_username:
                 return True
         # See if new_username is available
         return self.find_user_by_username(new_username)==None
 
+    def send_reset_password_email(self, email):
+        # Find user by email
+        user, user_email = self.find_user_by_email(email)
+        if user:
+            # Generate reset password link
+            token = self.generate_token(int(user.get_id()))
+            reset_password_link = url_for('user.reset_password', token=token, _external=True)
+
+            # Send forgot password email
+            emails.send_forgot_password_email(user, user_email, reset_password_link)
+
+            # Store token
+            if hasattr(user, 'reset_password_token'):
+                self.db_adapter.update_object(user, reset_password_token=token)
+                self.db_adapter.commit()
+
+            # Send forgot_password signal
+            signals.user_forgot_password.send(current_app._get_current_object(), user=user)
 
 
 class UserMixin(LoginUserMixin):

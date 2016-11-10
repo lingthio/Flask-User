@@ -52,7 +52,7 @@ def create_app(test_config=None):                   # For automated tests
         print('translations=',repr(translations), 'language=', repr(language))
         return language
 
-    # Define the User data model. Make sure to add flask.ext.user UserMixin !!!
+    # Define the User data model. Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
         __tablename__ = 'user'
         id = db.Column(db.Integer, primary_key=True)
@@ -102,7 +102,7 @@ def create_app(test_config=None):                   # For automated tests
             {% extends "base.html" %}
             {% block content %}
                 <h2>{%trans%}Home Pages{%endtrans%}</h2>
-                {% if current_user.is_authenticated() %}
+                {% if call_or_get(current_user.is_authenticated) %}
                 <p> <a href="{{ url_for('user_profile_page') }}">
                     {%trans%}Profile Page{%endtrans%}</a></p>
                 <p> <a href="{{ url_for('user.logout') }}">
@@ -113,7 +113,7 @@ def create_app(test_config=None):                   # For automated tests
                 {% endif %}
             {% endblock %}
             """)
-        if current_user.is_authenticated():
+        if _call_or_get(current_user.is_authenticated):
             return redirect(url_for('user_profile_page'))
         else:
             return redirect(url_for('user.login'))

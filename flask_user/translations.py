@@ -27,7 +27,7 @@ def get_translations():
     # Prepare search properties
     import os
     import gettext as python_gettext
-    from flask.ext.babel import get_locale, support
+    from flask_babel import get_locale, support
     domain = 'flask_user'
     locales = [get_locale()]
     languages = [str(locale) for locale in locales]

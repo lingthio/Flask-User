@@ -5,6 +5,11 @@ from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import confirm_email_required, current_user, login_required, UserManager, UserMixin, SQLAlchemyAdapter
 
+
+def _call_or_get(function_or_property):
+    return function_or_property() if callable(function_or_property) else function_or_property
+
+
 # Use a Class-based config to avoid needing a 2nd file
 # os.getenv() enables configuration through OS environment variables
 class ConfigClass(object):
@@ -49,7 +54,7 @@ def create_app(test_config=None):                   # For automated tests
         language = request.accept_languages.best_match(translations)
         return language
 
-    # Define the User data model. Make sure to add flask.ext.user UserMixin !!!
+    # Define the User data model. Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
 

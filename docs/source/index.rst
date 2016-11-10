@@ -1,34 +1,15 @@
 Flask-User |release|
 ==========
 
-.. image:: https://pypip.in/v/Flask-User/badge.png
+.. image:: https://img.shields.io/pypi/v/Flask-User.svg
     :target: https://pypi.python.org/pypi/Flask-User
 
-.. comment .. image:: https://travis-ci.org/lingthio/Flask-User.png?branch=master
-.. image:: /images/build_passing.png
+.. image:: https://img.shields.io/travis/lingthio/Flask-User.svg
     :target: https://travis-ci.org/lingthio/Flask-User
 
-.. image:: https://pypip.in/d/Flask-User/badge.png
+.. image:: https://img.shields.io/pypi/l/Flask-User.svg
     :target: https://pypi.python.org/pypi/Flask-User
 
-.. comment .. image:: https://pypip.in/license/Flask-User/badge.png
-.. image:: /images/BSD_license.png
-    :target: https://pypi.python.org/pypi/Flask-User
-
-.. comment .. image:: https://coveralls.io/repos/lingthio/Flask-User/badge.png?branch=master
-.. comment     :target: https://coveralls.io/r/lingthio/Flask-User?branch=master
-
-.. topic:: Missing a feature?
-
-   |Tell_us_about_it|. |Help_shape_flask_user|.
-
-.. |Tell_us_about_it| raw:: html
-
-   <a href="https://docs.google.com/forms/d/1p01lA9o9amlx4_0JjjOyAzdoM-C4lUVUgV0LUhMumaU/viewform?usp=send_form" target="_blank"><b>Tell us about it</b></a>
-
-.. |Help_shape_flask_user| raw:: html
-
-   <a href="https://docs.google.com/forms/d/1p01lA9o9amlx4_0JjjOyAzdoM-C4lUVUgV0LUhMumaU/viewform?usp=send_form" target="_blank"><b>Help shape Flask-User</b></a>
 
 Customizable User Account Management for Flask
 ----------------------------------------------
@@ -49,13 +30,23 @@ And wouldn't it be nice to also offer:
 | Flask-User offers these user features (and more) out-of-the-box
 | while also honoring the following developer needs:
 
+* **Tested on Python 2.6, 2.7, 3.3 and 3.4**
 * **Reliable** (Code coverage of over 95%)
 * **Secure** (Built on top of widely deployed Flask-Login)
 * **Ready to use** (Through sensible defaults)
 * **Largely configurable** (Through configuration settings)
 * **Fully customizable** (Through customizable functions and email templates)
 * **Well documented**
-* **Tested on Python 2.6, 2.7, 3.3 and 3.4**
+* **Translations** (Chinese,  Dutch, English, Finnish, French, Swedish)
+
+
+.. topic:: Headsup
+
+    Flask-Login v0.3.x broke backward compatibility by using *properties*
+    instead of *methods* for current_user.is_authenticated(),
+    is_anonymous() and is_active().
+    Please upgrade to Flask-User v0.6.8+ if you plan to use Flask-Login v0.3+.
+
 
 Status
 ------
@@ -64,14 +55,6 @@ Status
 | It is marked as a Beta release because the API is subject to small changes.
 | We appreciate it if you would enter issues and
   enhancement requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
-
-
-.. topic:: Headsup
-
-    We're starting to work on Flask-User 1.0 which will break backwards
-    compatibility with v0.5 and v0.6.
-    Please 'peg' your requirements.txt file now to "Flask-User==0.6.1"
-    to avoid compatibility problems in the future.
 
 
 Demo
@@ -117,6 +100,12 @@ Documentation
 
 Revision History
 ----------------
+* v0.6.9 Added support for Flask-Login v0.4+, German, Persian, Turkish translations
+* v0.6.8 Added support for Flask-Login v0.3+
+* v0.6.7 Uses Python package bcrypt instead of py-bcrypt.
+* v0.6.6 Forgot password form now honors USER_SHOW_USERNAME_OR_EMAIL_DOES_NOT_EXIST setting.
+* v0.6.5 Added USER_SHOW_USERNAME_OR_EMAIL_DOES_NOT_EXIST setting.
+* v0.6.4 Moved custom params from __init__() to init_app(). Added send_reset_password_email().
 * v0.6.3 Fix for Python 3.4 and signals. Added UserMixin.has_role() and @roles_accepted().
 * v0.6.2 Added support for invitation-only registrations.
 * v0.6.1 Added Chinese (Simplified) and French translations`.

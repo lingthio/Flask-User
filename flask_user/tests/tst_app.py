@@ -1,18 +1,18 @@
 import os
 import datetime
 from flask import Flask, render_template_string, request
-from flask.ext.babel import Babel
-from flask.ext.mail import Mail
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
-from flask.ext.user import roles_required, confirm_email_required
+from flask_babel import Babel
+from flask_mail import Mail
+from flask_sqlalchemy import SQLAlchemy
+from flask_user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
+from flask_user import roles_required, confirm_email_required
 
 
 app = Flask(__name__)
 db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
 
 
-# Define the User data model. Make sure to add flask.ext.user UserMixin!!
+# Define the User data model. Make sure to add flask_user UserMixin!!
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
 
@@ -138,8 +138,6 @@ def init_app(app, test_config=None):                   # For automated tests
     # The '/' page is accessible to anyone
     @app.route('/')
     def home_page():
-        # if current_user.is_authenticated():
-        #     return user_profile_page()
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}

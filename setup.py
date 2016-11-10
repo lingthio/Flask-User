@@ -2,13 +2,13 @@
 Flask-User
 ==========
 
-.. image:: https://pypip.in/v/Flask-User/badge.png
+.. image:: https://img.shields.io/pypi/v/Flask-User.svg
     :target: https://pypi.python.org/pypi/Flask-User
 
-.. image:: https://pypip.in/d/Flask-User/badge.png
-    :target: https://pypi.python.org/pypi/Flask-User
+.. image:: https://img.shields.io/travis/lingthio/Flask-User.svg
+    :target: https://travis-ci.org/lingthio/Flask-User
 
-.. image:: https://pypip.in/license/Flask-User/badge.png
+.. image:: https://img.shields.io/pypi/l/Flask-User.svg
     :target: https://pypi.python.org/pypi/Flask-User
 
 Customizable User Account Management for Flask
@@ -87,7 +87,7 @@ from setuptools import setup
 
 setup(
     name='Flask-User',
-    version='0.6.3',
+    version='0.6.8',
     url='http://github.com/lingthio/Flask-User',
     license='BSD License',
     author='Ling Thio',
@@ -101,7 +101,7 @@ setup(
     platforms='any',
     install_requires=[
         'passlib',
-        'py-bcrypt',
+        'bcrypt',
         'pycrypto',
         'Flask',
         'Flask-Login',
@@ -111,7 +111,7 @@ setup(
     ],
     test_suite="flask_user.tests.run_tests",
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Flask',
         'Intended Audience :: Developers',

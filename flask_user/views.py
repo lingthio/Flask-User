@@ -5,7 +5,7 @@
     :license: Simplified BSD License, see LICENSE.txt for more details."""
 
 from datetime import datetime
-from flask import current_app, flash, redirect, render_template, request, url_for
+from flask import current_app, flash, redirect, request, url_for
 from flask_login import current_user, login_user, logout_user
 try: # Handle Python 2.x and Python 3.x
     from urllib.parse import quote      # Python 3.x
@@ -15,6 +15,16 @@ from .decorators import confirm_email_required, login_required
 from . import emails
 from . import signals
 from .translations import gettext as _
+
+
+def _call_or_get(function_or_property):
+    return function_or_property() if callable(function_or_property) else function_or_property
+
+
+def render(*args, **kwargs):
+    user_manager = current_app.user_manager
+    return user_manager.render_function(*args, **kwargs)
+
 
 def confirm_email(token):
     """ Verify email confirmation token and activate the user account."""
@@ -33,14 +43,13 @@ def confirm_email(token):
         flash(_('Invalid confirmation token.'), 'error')
         return redirect(url_for('user.login'))
 
-    # Confirm email by setting User.active=True and User.confirmed_at=utcnow()
+    # Confirm email by setting User.confirmed_at=utcnow() or UserEmail.confirmed_at=utcnow()
+    user = None
     if db_adapter.UserEmailClass:
         user_email = user_manager.get_user_email_by_id(object_id)
         if user_email:
             user_email.confirmed_at = datetime.utcnow()
             user = user_email.user
-        else:
-            user = None
     else:
         user_email = None
         user = user_manager.get_user_by_id(object_id)
@@ -101,7 +110,7 @@ def change_password():
         return redirect(form.next.data)
 
     # Process GET or invalid POST
-    return render_template(user_manager.change_password_template, form=form)
+    return render(user_manager.change_password_template, form=form)
 
 @login_required
 @confirm_email_required
@@ -137,7 +146,7 @@ def change_username():
         return redirect(form.next.data)
 
     # Process GET or invalid POST
-    return render_template(user_manager.change_username_template, form=form)
+    return render(user_manager.change_username_template, form=form)
 
 @login_required
 @confirm_email_required
@@ -192,24 +201,10 @@ def forgot_password():
     # Process valid POST
     if request.method=='POST' and form.validate():
         email = form.email.data
-
-        # Find user by email
         user, user_email = user_manager.find_user_by_email(email)
+
         if user:
-            # Generate reset password link
-            token = user_manager.generate_token(int(user.get_id()))
-            reset_password_link = url_for('user.reset_password', token=token, _external=True)
-
-            # Send forgot password email
-            emails.send_forgot_password_email(user, user_email, reset_password_link)
-
-            # Store token
-            if hasattr(user, 'reset_password_token'):
-                db_adapter.update_object(user, reset_password_token=token)
-                db_adapter.commit()
-
-            # Send forgot_password signal
-            signals.user_forgot_password.send(current_app._get_current_object(), user=user)
+            user_manager.send_reset_password_email(email)
 
         # Prepare one-time system message
         flash(_("A reset password email has been sent to '%(email)s'. Open that email and follow the instructions to reset your password.", email=email), 'success')
@@ -218,7 +213,7 @@ def forgot_password():
         return redirect(_endpoint_url(user_manager.after_forgot_password_endpoint))
 
     # Process GET or invalid POST
-    return render_template(user_manager.forgot_password_template, form=form)
+    return render(user_manager.forgot_password_template, form=form)
 
 
 def login():
@@ -230,7 +225,7 @@ def login():
     reg_next = request.args.get('reg_next', _endpoint_url(user_manager.after_register_endpoint))
 
     # Immediately redirect already logged in users
-    if current_user.is_authenticated() and user_manager.auto_login_at_login:
+    if _call_or_get(current_user.is_authenticated) and user_manager.auto_login_at_login:
         return redirect(next)
 
     # Initialize form
@@ -267,7 +262,7 @@ def login():
             return _do_login_user(user, login_form.next.data, login_form.remember_me.data)
 
     # Process GET or invalid POST
-    return render_template(user_manager.login_template,
+    return render(user_manager.login_template,
             form=login_form,
             login_form=login_form,
             register_form=register_form)
@@ -308,7 +303,7 @@ def manage_emails():
         return redirect(url_for('user.manage_emails'))
 
     # Process GET or invalid POST request
-    return render_template(user_manager.manage_emails_template,
+    return render(user_manager.manage_emails_template,
             user_emails=user_emails,
             form=form,
             )
@@ -339,6 +334,9 @@ def register():
         user_invite = db_adapter.find_first_object(db_adapter.UserInvitationClass, token=invite_token)
         if user_invite:
             register_form.invite_token.data = invite_token
+        else:
+            flash("Invalid invitation token", "error")
+            return redirect(url_for('user.login'))
 
     if request.method!='POST':
         login_form.next.data     = register_form.next.data     = next
@@ -460,7 +458,7 @@ def register():
             return redirect(url_for('user.login')+'?next='+reg_next)  # redirect to login page
 
     # Process GET or invalid POST
-    return render_template(user_manager.register_template,
+    return render(user_manager.register_template,
             form=register_form,
             login_form=login_form,
             register_form=register_form)
@@ -524,7 +522,7 @@ def invite():
         flash(_('Invitation has been sent.'), 'success')
         return redirect(next)
 
-    return render_template(user_manager.invite_template, form=invite_form)
+    return render(user_manager.invite_template, form=invite_form)
 
 def resend_confirm_email():
     """Prompt for email and re-send email conformation email."""
@@ -547,7 +545,7 @@ def resend_confirm_email():
         return redirect(_endpoint_url(user_manager.after_resend_confirm_email_endpoint))
 
     # Process GET or invalid POST
-    return render_template(user_manager.resend_confirm_email_template, form=form)
+    return render(user_manager.resend_confirm_email_template, form=form)
 
 
 def reset_password(token):
@@ -555,6 +553,9 @@ def reset_password(token):
     # Verify token
     user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter
+
+    if _call_or_get(current_user.is_authenticated):
+        logout_user()
 
     is_valid, has_expired, user_id = user_manager.verify_token(
             token,
@@ -579,6 +580,10 @@ def reset_password(token):
         flash(_('Your reset password token is invalid.'), 'error')
         return redirect(_endpoint_url(user_manager.login_endpoint))
 
+    # Mark email as confirmed
+    user_email = emails.get_primary_user_email(user)
+    user_email.confirmed_at = datetime.utcnow()
+
     # Initialize form
     form = user_manager.reset_password_form(request.form)
 
@@ -599,7 +604,7 @@ def reset_password(token):
             emails.send_password_changed_email(user)
 
         # Prepare one-time system message
-        flash(_("Your password has been reset successfully. Please sign in with your new password"), 'success')
+        flash(_("Your password has been reset successfully."), 'success')
 
         # Auto-login after reset password or redirect to login page
         next = request.args.get('next', _endpoint_url(user_manager.after_reset_password_endpoint))
@@ -609,7 +614,7 @@ def reset_password(token):
             return redirect(url_for('user.login')+'?next='+next)    # redirect to login page
 
     # Process GET or invalid POST
-    return render_template(user_manager.reset_password_template, form=form)
+    return render(user_manager.reset_password_template, form=form)
 
 
 def unconfirmed():
@@ -652,7 +657,7 @@ def unauthorized():
 @confirm_email_required
 def user_profile():
     user_manager = current_app.user_manager
-    return render_template(user_manager.user_profile_template)
+    return render(user_manager.user_profile_template)
 
 
 def _send_registered_email(user, user_email, require_email_confirmation=True):
@@ -701,7 +706,7 @@ def _do_login_user(user, next, remember_me=False):
     if not user: return unauthenticated()
 
     # Check if user account has been disabled
-    if not user.is_active():
+    if not _call_or_get(user.is_active):
         flash(_('Your account has not been enabled.'), 'error')
         return redirect(url_for('user.login'))
 
@@ -733,3 +738,5 @@ def _endpoint_url(endpoint):
     if endpoint:
         url = url_for(endpoint)
     return url
+
+

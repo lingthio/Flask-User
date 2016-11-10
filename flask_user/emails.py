@@ -50,20 +50,20 @@ def send_email(recipient, subject, html_message, text_message):
 
     # Print helpful error messages on exceptions
     except (socket.gaierror, socket.error) as e:
-        raise SendEmailError('SMTP Connection error: Check your MAIL_HOSTNAME or MAIL_PORT settings.')
+        raise SendEmailError('SMTP Connection error: Check your MAIL_SERVER and MAIL_PORT settings.')
     except smtplib.SMTPAuthenticationError:
         raise SendEmailError('SMTP Authentication error: Check your MAIL_USERNAME and MAIL_PASSWORD settings.')
 
-def _get_primary_email(user):
+def get_primary_user_email(user):
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
     if db_adapter.UserEmailClass:
         user_email = db_adapter.find_first_object(db_adapter.UserEmailClass,
                 user_id=int(user.get_id()),
                 is_primary=True)
-        return user_email.email if user_email else None
+        return user_email
     else:
-        return user.email
+        return user
 
 
 def send_confirm_email_email(user, user_email, confirm_email_link):
@@ -113,7 +113,9 @@ def send_password_changed_email(user):
     if not user_manager.send_password_changed_email: return
 
     # Retrieve email address from User or UserEmail object
-    email = _get_primary_email(user)
+    user_email = get_primary_user_email(user)
+    assert(user_email)
+    email = user_email.email
     assert(email)
 
     # Render subject, html message and text message
@@ -152,7 +154,9 @@ def send_username_changed_email(user):  # pragma: no cover
     if not user_manager.send_username_changed_email: return
 
     # Retrieve email address from User or UserEmail object
-    email = _get_primary_email(user)
+    user_email = get_primary_user_email(user)
+    assert(user_email)
+    email = user_email.email
     assert(email)
 
     # Render subject, html message and text message
