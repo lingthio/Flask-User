@@ -7,9 +7,6 @@ Flask-User |release|
 .. image:: https://img.shields.io/travis/lingthio/Flask-User.svg
     :target: https://travis-ci.org/lingthio/Flask-User
 
-.. image:: https://img.shields.io/pypi/dm/Flask-User.svg
-    :target: https://pypi.python.org/pypi/Flask-User
-
 .. image:: https://img.shields.io/pypi/l/Flask-User.svg
     :target: https://pypi.python.org/pypi/Flask-User
 
