@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-08-17 21:43-0700\n"
+"POT-Creation-Date: 2016-11-10 09:51-0800\n"
 "PO-Revision-Date: 2015-08-03 13:27-0800\n"
 "Last-Translator: Andriy Tymchenko <silpol@gmail.com>\n"
 "Language-Team: sv <LL@li.org>\n"
@@ -210,28 +210,28 @@ msgstr "Profilsida"
 msgid "Special Page"
 msgstr "Speciell sida"
 
-#: flask_user/views.py:34
+#: flask_user/views.py:39
 msgid "Your confirmation token has expired."
 msgstr "Ditt igenkänningstecken har upphört att gälla."
 
-#: flask_user/views.py:38 flask_user/views.py:58
+#: flask_user/views.py:43 flask_user/views.py:63
 msgid "Invalid confirmation token."
 msgstr "Ogiltigt igenkänningstecken."
 
-#: flask_user/views.py:65
+#: flask_user/views.py:70
 msgid "Your email has been confirmed."
 msgstr "Din e-postadress har bekräftats."
 
-#: flask_user/views.py:102
+#: flask_user/views.py:107
 msgid "Your password has been changed successfully."
 msgstr "Ditt lösenord har ändrats."
 
-#: flask_user/views.py:138
+#: flask_user/views.py:143
 #, python-format
 msgid "Your username has been changed to '%(username)s'."
 msgstr "Ditt användarnamn har ändrats till '%(username)s'."
 
-#: flask_user/views.py:205
+#: flask_user/views.py:210
 #, python-format
 msgid ""
 "A reset password email has been sent to '%(email)s'. Open that email and "
@@ -241,43 +241,43 @@ msgstr ""
 "'%(email)s'. Öppna e-postmeddelandet och följ instruktionerna för att "
 "återställa ditt lösenord."
 
-#: flask_user/views.py:276
+#: flask_user/views.py:281
 msgid "You have signed out successfully."
 msgstr "Din utloggning lyckades. "
 
-#: flask_user/views.py:517
+#: flask_user/views.py:522
 msgid "Invitation has been sent."
 msgstr ""
 
-#: flask_user/views.py:560
+#: flask_user/views.py:565
 msgid "Your reset password token has expired."
 msgstr "Ditt igenkänningstecken för återställning lösenordet har blivit gammalt."
 
-#: flask_user/views.py:564 flask_user/views.py:575
+#: flask_user/views.py:569 flask_user/views.py:580
 msgid "Your reset password token is invalid."
 msgstr "Ditt igenkänningstecken för återställning av lösenordet är ogiltigt."
 
-#: flask_user/views.py:602
+#: flask_user/views.py:607
 #, fuzzy
 msgid "Your password has been reset successfully."
 msgstr "Ditt lösenord har ändrats."
 
-#: flask_user/views.py:619
+#: flask_user/views.py:624
 #, python-format
 msgid "You must confirm your email to access '%(url)s'."
 msgstr "Du måste bekräfta din e-postadress för att få tillträde till '%(url)s'."
 
-#: flask_user/views.py:630
+#: flask_user/views.py:635
 #, python-format
 msgid "You must be signed in to access '%(url)s'."
 msgstr "Du måste vara inloggad för att få tillträde '%(url)s'."
 
-#: flask_user/views.py:644
+#: flask_user/views.py:649
 #, python-format
 msgid "You do not have permission to access '%(url)s'."
 msgstr "Du har inte tillgång till '%(url)s'."
 
-#: flask_user/views.py:675 flask_user/views.py:696
+#: flask_user/views.py:680 flask_user/views.py:701
 #, python-format
 msgid ""
 "A confirmation email has been sent to %(email)s with instructions to "
@@ -286,15 +286,15 @@ msgstr ""
 "En bekräftelse-e-post har skickats till %(email)s med instruktioner för "
 "hur du slutför din registrering."
 
-#: flask_user/views.py:677
+#: flask_user/views.py:682
 msgid "You have registered successfully."
 msgstr "Din registrering har lyckats."
 
-#: flask_user/views.py:705
+#: flask_user/views.py:710
 msgid "Your account has not been enabled."
 msgstr "Ditt användarkonto har inte aktiverats."
 
-#: flask_user/views.py:714
+#: flask_user/views.py:719
 #, python-format
 msgid ""
 "Your email address has not yet been confirmed. Check your email Inbox and"
@@ -306,7 +306,7 @@ msgstr ""
 "eller <a href=\"%(url)s\">återsänd e-postmeddelandet \"bekräftelse av "
 "e-post\"</a>."
 
-#: flask_user/views.py:725
+#: flask_user/views.py:730
 msgid "You have signed in successfully."
 msgstr "Din inloggning har lyckats."
 

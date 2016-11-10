@@ -8,25 +8,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-08-05 12:15-0700\n"
+"POT-Creation-Date: 2016-11-10 09:51-0800\n"
 "PO-Revision-Date: 2016-11-04 01:24+0330\n"
 "Last-Translator: Mohammad Amin Sameti <mamins1376@gmail.com>\n"
-"Language: fa\n"
 "Language-Team: Persian <>\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=1; plural=0\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.3.4\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"Generated-By: Babel 1.3\n"
 
 #: flask_user/forms.py:35
 msgid ""
 "Password must have at least 6 characters with one lowercase letter, one "
 "uppercase letter and one number"
 msgstr ""
-"گذرواژه باید حداقل ۶ کاراکتر شامل حداقل یک عدد، یک حرف بزرگ و یک حرف کوچک "
-"باشد"
+"گذرواژه باید حداقل ۶ کاراکتر شامل حداقل یک عدد، یک حرف بزرگ و یک حرف کوچک"
+" باشد"
 
 #: flask_user/forms.py:41
 msgid "Username must be at least 3 characters long"
@@ -35,7 +33,8 @@ msgstr "نام کاربری باید حداقل ۳ کاراکتر باشد"
 #: flask_user/forms.py:46
 msgid "Username may only contain letters, numbers, '-', '.' and '_'"
 msgstr ""
-"نام کاربری می‌تواند فقط دارای عدد، حروف و یکی از کاراکترهای رو به رو باشد: ـ-."
+"نام کاربری می‌تواند فقط دارای عدد، حروف و یکی از کاراکترهای رو به رو "
+"باشد: ـ-."
 
 #: flask_user/forms.py:52
 msgid "This Username is already in use. Please try another one."
@@ -162,6 +161,11 @@ msgstr "رایانامه یا نام کاربری"
 msgid "Username/Email"
 msgstr "رایانامه/نام کاربری"
 
+#: flask_user/forms.py:234
+#, fuzzy
+msgid "Incorrect Password"
+msgstr "فراموشی گذرواژه"
+
 #: flask_user/forms.py:238
 #, python-format
 msgid "Incorrect %(username_or_email)s and/or Password"
@@ -205,98 +209,100 @@ msgstr "صفحه نمایه"
 msgid "Special Page"
 msgstr "صفحه خاص"
 
-#: flask_user/views.py:29
+#: flask_user/views.py:39
 msgid "Your confirmation token has expired."
 msgstr "توکن تأیید شما منقضی شده است."
 
-#: flask_user/views.py:33 flask_user/views.py:53
+#: flask_user/views.py:43 flask_user/views.py:63
 msgid "Invalid confirmation token."
 msgstr "توکن تأیید نامعتبر است."
 
-#: flask_user/views.py:60
+#: flask_user/views.py:70
 msgid "Your email has been confirmed."
 msgstr "رایانامه شما تأیید شد."
 
-#: flask_user/views.py:97
+#: flask_user/views.py:107
 msgid "Your password has been changed successfully."
 msgstr "گذرواژه شما با موفقیت تغییر یافت."
 
-#: flask_user/views.py:133
+#: flask_user/views.py:143
 #, python-format
 msgid "Your username has been changed to '%(username)s'."
 msgstr "نام کاربری شما به '%(username)s' تغییر یافت."
 
-#: flask_user/views.py:200
+#: flask_user/views.py:210
 #, python-format
 msgid ""
 "A reset password email has been sent to '%(email)s'. Open that email and "
 "follow the instructions to reset your password."
 msgstr ""
-"یک رایانامه برای بازنشانی گذرواژه به '%(email)s' ارسال شد. آن نشانی را باز "
-"کنید و مراحل را دنبال کنید تا گذرواژه‌تان را بازنشانی کنید."
+"یک رایانامه برای بازنشانی گذرواژه به '%(email)s' ارسال شد. آن نشانی را "
+"باز کنید و مراحل را دنبال کنید تا گذرواژه‌تان را بازنشانی کنید."
 
-#: flask_user/views.py:271
+#: flask_user/views.py:281
 msgid "You have signed out successfully."
 msgstr "شما با موفقیت خارج شدید."
 
-#: flask_user/views.py:509
+#: flask_user/views.py:522
 msgid "Invitation has been sent."
 msgstr "دعوت‌نامه فرستاده شد."
 
-#: flask_user/views.py:552
+#: flask_user/views.py:565
 msgid "Your reset password token has expired."
 msgstr "توکن بازنشانی گذرواژه شما منقضی شده است."
 
-#: flask_user/views.py:556 flask_user/views.py:567
+#: flask_user/views.py:569 flask_user/views.py:580
 msgid "Your reset password token is invalid."
 msgstr "توکن بازنشانی گذرواژه شما نامعتبر است."
 
-#: flask_user/views.py:594
+#: flask_user/views.py:607
 msgid "Your password has been reset successfully."
 msgstr "گذرواژه شما با موفقیت بازنشانده شد."
 
-#: flask_user/views.py:611
+#: flask_user/views.py:624
 #, python-format
 msgid "You must confirm your email to access '%(url)s'."
 msgstr "شما باید برای دسترسی به '%(url)s' رایانامه خود را تأیید کنید."
 
-#: flask_user/views.py:622
+#: flask_user/views.py:635
 #, python-format
 msgid "You must be signed in to access '%(url)s'."
 msgstr "برای دسترسی به نشانی '%(url)s' باید وارد شوی."
 
-#: flask_user/views.py:636
+#: flask_user/views.py:649
 #, python-format
 msgid "You do not have permission to access '%(url)s'."
 msgstr "شما اجازه دسترسی به '%(url)s' را ندارید."
 
-#: flask_user/views.py:667 flask_user/views.py:688
+#: flask_user/views.py:680 flask_user/views.py:701
 #, python-format
 msgid ""
 "A confirmation email has been sent to %(email)s with instructions to "
 "complete your registration."
 msgstr ""
-"یک رایانامه به همراه راهنمای کامل کردن ثبت‌نام شما به %(email)s فرستاده شد."
+"یک رایانامه به همراه راهنمای کامل کردن ثبت‌نام شما به %(email)s فرستاده "
+"شد."
 
-#: flask_user/views.py:669
+#: flask_user/views.py:682
 msgid "You have registered successfully."
 msgstr "شما با موفقیت ثبت نام کردید."
 
-#: flask_user/views.py:697
+#: flask_user/views.py:710
 msgid "Your account has not been enabled."
 msgstr "حساب شما فعال نشده استو"
 
-#: flask_user/views.py:706
+#: flask_user/views.py:719
 #, python-format
 msgid ""
-"Your email address has not yet been confirmed. Check your email Inbox and "
-"Spam folders for the confirmation email or <a href=\"%(url)s\">Re-send "
+"Your email address has not yet been confirmed. Check your email Inbox and"
+" Spam folders for the confirmation email or <a href=\"%(url)s\">Re-send "
 "confirmation email</a>."
 msgstr ""
-"رایانامه شما هنوز تأیید نشده است. صندوق ورودی یا پوشه اسپم رایانامه خود را "
-"بررسی کنید یا <a href=\"%(url)s\">رایانامه تأیید را دوباره ارسال کنید</a>."
+"رایانامه شما هنوز تأیید نشده است. صندوق ورودی یا پوشه اسپم رایانامه خود "
+"را بررسی کنید یا <a href=\"%(url)s\">رایانامه تأیید را دوباره ارسال "
+"کنید</a>."
 
-#: flask_user/views.py:717
+#: flask_user/views.py:730
 msgid "You have signed in successfully."
 msgstr "شما با موفقیت وارد شدید."
 
@@ -336,3 +342,4 @@ msgstr "بازنشانی گذرواژه"
 #: flask_user/templates/flask_user/user_profile.html:5
 msgid "User profile"
 msgstr "نمایه کاربر"
+

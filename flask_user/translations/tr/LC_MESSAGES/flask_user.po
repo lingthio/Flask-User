@@ -7,22 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-08-05 12:15-0700\n"
+"POT-Creation-Date: 2016-11-10 09:51-0800\n"
 "PO-Revision-Date: 2016-08-15 09:56+0300\n"
 "Last-Translator: aripddev <dev@aripd.com>\n"
-"Language: tr\n"
 "Language-Team: tr <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.3.4\n"
+"Generated-By: Babel 1.3\n"
 
 #: flask_user/forms.py:35
 msgid ""
 "Password must have at least 6 characters with one lowercase letter, one "
 "uppercase letter and one number"
-msgstr "Parola en az 6 karakter uzunluğunda olmalı, en az bir küçük harf, bir büyük harf ve bir rakam içermeli"
+msgstr ""
+"Parola en az 6 karakter uzunluğunda olmalı, en az bir küçük harf, bir "
+"büyük harf ve bir rakam içermeli"
 
 #: flask_user/forms.py:41
 msgid "Username must be at least 3 characters long"
@@ -34,7 +35,9 @@ msgstr "Kullanıcı adı sadece harf, rakam, '-', '.' ve '_' içerebilir"
 
 #: flask_user/forms.py:52
 msgid "This Username is already in use. Please try another one."
-msgstr "Kullanımda olan bir kullanıcı adı girdiniz. Lütfen başka bir tane deneyiniz."
+msgstr ""
+"Kullanımda olan bir kullanıcı adı girdiniz. Lütfen başka bir tane "
+"deneyiniz."
 
 #: flask_user/forms.py:59
 msgid "This Email is already in use. Please try another one."
@@ -157,6 +160,11 @@ msgstr "Kullanıcı adı veya Eposta"
 msgid "Username/Email"
 msgstr "Kullanıcı adı/Eposta"
 
+#: flask_user/forms.py:234
+#, fuzzy
+msgid "Incorrect Password"
+msgstr "Parolanızı mı unuttunuz?"
+
 #: flask_user/forms.py:238
 #, python-format
 msgid "Incorrect %(username_or_email)s and/or Password"
@@ -200,93 +208,99 @@ msgstr "Profil sayfası"
 msgid "Special Page"
 msgstr "Özel sayfa"
 
-#: flask_user/views.py:29
+#: flask_user/views.py:39
 msgid "Your confirmation token has expired."
 msgstr "Doğrulama anahtarınızın süresi dolmuş."
 
-#: flask_user/views.py:33 flask_user/views.py:53
+#: flask_user/views.py:43 flask_user/views.py:63
 msgid "Invalid confirmation token."
 msgstr "Doğrulama anahtarınız geçersiz."
 
-#: flask_user/views.py:60
+#: flask_user/views.py:70
 msgid "Your email has been confirmed."
 msgstr "Epostanız doğrulandı."
 
-#: flask_user/views.py:97
+#: flask_user/views.py:107
 msgid "Your password has been changed successfully."
 msgstr "Parolanız başarı ile değiştirildi."
 
-#: flask_user/views.py:133
+#: flask_user/views.py:143
 #, python-format
 msgid "Your username has been changed to '%(username)s'."
 msgstr "Kullanıcı adınız '%(username)s' olarak değiştirildi."
 
-#: flask_user/views.py:200
+#: flask_user/views.py:210
 #, python-format
 msgid ""
 "A reset password email has been sent to '%(email)s'. Open that email and "
 "follow the instructions to reset your password."
-msgstr "Parolanızın sıfırlanması için %(email)s adresine talimatları içeren bir eposta gönderildi "
+msgstr ""
+"Parolanızın sıfırlanması için %(email)s adresine talimatları içeren bir "
+"eposta gönderildi "
 
-#: flask_user/views.py:271
+#: flask_user/views.py:281
 msgid "You have signed out successfully."
 msgstr "Başarı ile çıkış yaptınız."
 
-#: flask_user/views.py:509
+#: flask_user/views.py:522
 msgid "Invitation has been sent."
 msgstr "Davetiniz gönderildi."
 
-#: flask_user/views.py:552
+#: flask_user/views.py:565
 msgid "Your reset password token has expired."
 msgstr "Parola sıfırlama anahtarınızın süresi geçmiş."
 
-#: flask_user/views.py:556 flask_user/views.py:567
+#: flask_user/views.py:569 flask_user/views.py:580
 msgid "Your reset password token is invalid."
 msgstr "Parola sıfırlama anahtarınız geçersiz."
 
-#: flask_user/views.py:594
+#: flask_user/views.py:607
 msgid "Your password has been reset successfully."
 msgstr "Parolanız başarı ile sıfırlandı."
 
-#: flask_user/views.py:611
+#: flask_user/views.py:624
 #, python-format
 msgid "You must confirm your email to access '%(url)s'."
 msgstr "'%(url)s' adresine erişmek için epostanızı doğrulamalısınız."
 
-#: flask_user/views.py:622
+#: flask_user/views.py:635
 #, python-format
 msgid "You must be signed in to access '%(url)s'."
 msgstr "'%(url)s' adresine erişmek için giriş yapmalısınız."
 
-#: flask_user/views.py:636
+#: flask_user/views.py:649
 #, python-format
 msgid "You do not have permission to access '%(url)s'."
 msgstr "'%(url)s' adresine erişim izniniz yok."
 
-#: flask_user/views.py:667 flask_user/views.py:688
+#: flask_user/views.py:680 flask_user/views.py:701
 #, python-format
 msgid ""
 "A confirmation email has been sent to %(email)s with instructions to "
 "complete your registration."
-msgstr "Kaydınızın tamamlanması için %(email)s adresine talimatları içeren bir eposta gönderildi "
+msgstr ""
+"Kaydınızın tamamlanması için %(email)s adresine talimatları içeren bir "
+"eposta gönderildi "
 
-#: flask_user/views.py:669
+#: flask_user/views.py:682
 msgid "You have registered successfully."
 msgstr "Kaydınız başarı ile gerçekleştirildi."
 
-#: flask_user/views.py:697
+#: flask_user/views.py:710
 msgid "Your account has not been enabled."
 msgstr "Hesabınız etkinleştirilmedi"
 
-#: flask_user/views.py:706
+#: flask_user/views.py:719
 #, python-format
 msgid ""
 "Your email address has not yet been confirmed. Check your email Inbox and"
 " Spam folders for the confirmation email or <a href=\"%(url)s\">Re-send "
 "confirmation email</a>."
-msgstr "Eposta adresiniz henüz doğrulanmadı. Gelen ve İstenmeyen kutunuza bakın veya <a href=\"%(url)s\">Doğrulama epostasını tekrar gönderin</a>."
+msgstr ""
+"Eposta adresiniz henüz doğrulanmadı. Gelen ve İstenmeyen kutunuza bakın "
+"veya <a href=\"%(url)s\">Doğrulama epostasını tekrar gönderin</a>."
 
-#: flask_user/views.py:717
+#: flask_user/views.py:730
 msgid "You have signed in successfully."
 msgstr "Başarı ile giriş yaptınız."
 
@@ -326,3 +340,4 @@ msgstr "Parolayı sıfırla"
 #: flask_user/templates/flask_user/user_profile.html:5
 msgid "User profile"
 msgstr "Kullanıcı profili"
+

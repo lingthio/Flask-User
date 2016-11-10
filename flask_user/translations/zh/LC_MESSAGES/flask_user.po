@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  Flask-User\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-08-17 21:43-0700\n"
+"POT-Creation-Date: 2016-11-10 09:51-0800\n"
 "PO-Revision-Date: 2014-11-02 22:26+1000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -208,86 +208,86 @@ msgstr "信息页"
 msgid "Special Page"
 msgstr "特别页"
 
-#: flask_user/views.py:34
+#: flask_user/views.py:39
 msgid "Your confirmation token has expired."
 msgstr "您的确认码已经过期。"
 
-#: flask_user/views.py:38 flask_user/views.py:58
+#: flask_user/views.py:43 flask_user/views.py:63
 msgid "Invalid confirmation token."
 msgstr "无效的确认码。"
 
-#: flask_user/views.py:65
+#: flask_user/views.py:70
 msgid "Your email has been confirmed."
 msgstr "邮箱已被确认。"
 
-#: flask_user/views.py:102
+#: flask_user/views.py:107
 msgid "Your password has been changed successfully."
 msgstr "密码更改成功。"
 
-#: flask_user/views.py:138
+#: flask_user/views.py:143
 #, python-format
 msgid "Your username has been changed to '%(username)s'."
 msgstr "您的用户名已更改为“%(username)s”。"
 
-#: flask_user/views.py:205
+#: flask_user/views.py:210
 #, python-format
 msgid ""
 "A reset password email has been sent to '%(email)s'. Open that email and "
 "follow the instructions to reset your password."
 msgstr "一封重置密码邮件已经发送至“%(email)s”。打开那封邮件，按照其指引重置您的密码。"
 
-#: flask_user/views.py:276
+#: flask_user/views.py:281
 msgid "You have signed out successfully."
 msgstr "登出成功。"
 
-#: flask_user/views.py:517
+#: flask_user/views.py:522
 msgid "Invitation has been sent."
 msgstr "邀请邮件已发送。"
 
-#: flask_user/views.py:560
+#: flask_user/views.py:565
 msgid "Your reset password token has expired."
 msgstr "您的重置密码请求码已过期。"
 
-#: flask_user/views.py:564 flask_user/views.py:575
+#: flask_user/views.py:569 flask_user/views.py:580
 msgid "Your reset password token is invalid."
 msgstr "您的重置密码请求码无效。"
 
-#: flask_user/views.py:602
+#: flask_user/views.py:607
 #, fuzzy
 msgid "Your password has been reset successfully."
 msgstr "密码更改成功。"
 
-#: flask_user/views.py:619
+#: flask_user/views.py:624
 #, python-format
 msgid "You must confirm your email to access '%(url)s'."
 msgstr "您须确认您的邮箱才能访问“%(url)s”。"
 
-#: flask_user/views.py:630
+#: flask_user/views.py:635
 #, python-format
 msgid "You must be signed in to access '%(url)s'."
 msgstr "您须登录才能访问“%(url)s”。"
 
-#: flask_user/views.py:644
+#: flask_user/views.py:649
 #, python-format
 msgid "You do not have permission to access '%(url)s'."
 msgstr "您无权限访问“%(url)s”。"
 
-#: flask_user/views.py:675 flask_user/views.py:696
+#: flask_user/views.py:680 flask_user/views.py:701
 #, python-format
 msgid ""
 "A confirmation email has been sent to %(email)s with instructions to "
 "complete your registration."
 msgstr "一封确认邮件已发送到%(email)s，请阅读内含信息以完成注册。"
 
-#: flask_user/views.py:677
+#: flask_user/views.py:682
 msgid "You have registered successfully."
 msgstr "注册成功。"
 
-#: flask_user/views.py:705
+#: flask_user/views.py:710
 msgid "Your account has not been enabled."
 msgstr "您的帐户已被禁用。"
 
-#: flask_user/views.py:714
+#: flask_user/views.py:719
 #, python-format
 msgid ""
 "Your email address has not yet been confirmed. Check your email Inbox and"
@@ -295,7 +295,7 @@ msgid ""
 "confirmation email</a>."
 msgstr "您的邮箱地址尚未确认。查看您的邮箱收件箱或垃圾箱以找到确认邮件，或者<a href=\"%(url)s\">再次发送确认邮件</a>。"
 
-#: flask_user/views.py:725
+#: flask_user/views.py:730
 msgid "You have signed in successfully."
 msgstr "登录成功。"
 
