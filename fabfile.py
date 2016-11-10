@@ -19,14 +19,14 @@ def coverage():
 @task
 def babel():
     local('pybabel extract -F flask_user/translations/babel.cfg -c NOTE -o flask_user/translations/flask_user.pot flask_user flask_user')
-    for code in ('en', 'fi', 'fr', 'nl', 'sv', 'zh'):
+    for code in ('en', 'fi', 'fr', 'it', 'nl', 'sv', 'zh'):
         local('pybabel update -i flask_user/translations/flask_user.pot --domain=flask_user --output-dir flask_user/translations -l '+code)
     local('pybabel compile -f --domain=flask_user --directory flask_user/translations')
 
 @task
 def babel_init():
     local('pybabel extract -F flask_user/translations/babel.cfg -c NOTE -o flask_user/translations/flask_user.pot flask_user flask_user')
-    for code in ('en', 'fi', 'fr', 'nl', 'sv', 'zh'):
+    for code in ('en', 'fi', 'fr', 'it', 'nl', 'sv', 'zh'):
         local('pybabel init -i flask_user/translations/flask_user.pot --domain=flask_user --output-dir flask_user/translations -l '+code)
     local('pybabel compile -f --domain=flask_user --directory flask_user/translations')
 

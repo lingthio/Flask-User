@@ -1,291 +1,289 @@
-# Chinese translations for .
-# Copyright (C) 2014 ORGANIZATION
-# This file is distributed under the same license as the  project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Italian translations for Flask-Users.
+# Copyright (C) 2016 Lele Gaifax
+# This file is distributed under the same license as the Flask-Users
+# project.
+# Lele Gaifax <lele@metapensiero.it>, 2016.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version:  Flask-User\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-08-17 21:43-0700\n"
-"PO-Revision-Date: 2014-11-02 22:26+1000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: \n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Project-Id-Version: Flask-Users 0.6.8\n"
+"Report-Msgid-Bugs-To: lele@metapensiero.it\n"
+"POT-Creation-Date: 2016-08-14 18:13+0200\n"
+"PO-Revision-Date: 2016-08-14 18:32+0200\n"
+"Last-Translator: Lele Gaifax <lele@metapensiero.it>\n"
+"Language: it\n"
+"Language-Team: it <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 1.3\n"
+"Generated-By: Babel 2.3.4\n"
 
 #: flask_user/forms.py:35
 msgid ""
 "Password must have at least 6 characters with one lowercase letter, one "
 "uppercase letter and one number"
-msgstr "密码须包含至少6个字符，其中至少1个小写字母，1个大写字母和1个数字"
+msgstr ""
+"La password deve contenere almeno 6 caratteri, tra cui almeno una lettera"
+" minuscola, una maiuscola e una cifra."
 
 #: flask_user/forms.py:41
 msgid "Username must be at least 3 characters long"
-msgstr "用户名须多于3个字符"
+msgstr "Il nome utente deve essere composto di almeno tre lettere."
 
 #: flask_user/forms.py:46
-#, fuzzy
 msgid "Username may only contain letters, numbers, '-', '.' and '_'"
-msgstr "用户名只能包含字母，数字，或‘-’，‘.’，‘_’字符。"
+msgstr "Il nome utente può contenere solo lettere, cifre, '-', '.' e '_'"
 
 #: flask_user/forms.py:52
 msgid "This Username is already in use. Please try another one."
-msgstr "此用户名已被使用，请尝试其它。"
+msgstr "Questo nome utente è già stato usato. Scegli un nome diverso."
 
 #: flask_user/forms.py:59
 msgid "This Email is already in use. Please try another one."
-msgstr "此邮箱已被使用，请尝试其它。"
+msgstr "Questa email è già stata usata. Scegli un indirizzo diverso."
 
 #: flask_user/forms.py:66 flask_user/forms.py:167 flask_user/forms.py:226
 #: flask_user/forms.py:254 flask_user/forms.py:330
 msgid "Email"
-msgstr "邮箱"
+msgstr "Email"
 
 #: flask_user/forms.py:67 flask_user/forms.py:168 flask_user/forms.py:255
 #: flask_user/forms.py:331
 msgid "Email is required"
-msgstr "邮箱是必需项"
+msgstr "L'indirizzo email è obbligatorio"
 
 #: flask_user/forms.py:68 flask_user/forms.py:169 flask_user/forms.py:256
 #: flask_user/forms.py:332
 msgid "Invalid Email"
-msgstr "无效邮箱"
+msgstr "Email non valida"
 
 #: flask_user/forms.py:70
 msgid "Add Email"
-msgstr "添加邮箱"
+msgstr "Aggiungi email"
 
 #: flask_user/forms.py:73 flask_user/forms.py:116
 msgid "Old Password"
-msgstr "当前密码"
+msgstr "Password precedente"
 
 #: flask_user/forms.py:74 flask_user/forms.py:117
 msgid "Old Password is required"
-msgstr "当前密码是必需项"
+msgstr "La password precedente è obbligatoria."
 
 #: flask_user/forms.py:76 flask_user/forms.py:304
 msgid "New Password"
-msgstr "新密码"
+msgstr "Nuova password"
 
 #: flask_user/forms.py:77 flask_user/forms.py:305
 msgid "New Password is required"
-msgstr "新密码是必需项"
+msgstr "La nuova password è obbligatoria."
 
 #: flask_user/forms.py:79 flask_user/forms.py:306
 msgid "Retype New Password"
-msgstr "确认新密码"
+msgstr "Ripeti la nuova password"
 
 #: flask_user/forms.py:80 flask_user/forms.py:307
 msgid "New Password and Retype Password did not match"
-msgstr "两次输入的新密码不一致"
+msgstr "La nuova password e la sua ripetizione non combaciano."
 
 #: flask_user/forms.py:83 flask_user/forms.py:309
 #: flask_user/templates/flask_user/change_password.html:5
 #: flask_user/templates/flask_user/user_profile.html:11
 msgid "Change password"
-msgstr "更改密码"
+msgstr "Cambia password"
 
 #: flask_user/forms.py:105 flask_user/forms.py:139
 msgid "Old Password is incorrect"
-msgstr "当前密码不正确"
+msgstr "La password precedente non è corretta."
 
 #: flask_user/forms.py:112
 msgid "New Username"
-msgstr "新用户名"
+msgstr "Nuovo nome utente"
 
 #: flask_user/forms.py:113 flask_user/forms.py:165 flask_user/forms.py:252
 msgid "Username is required"
-msgstr "用户名是必需项"
+msgstr "Il nome utente è obbligatorio."
 
 #: flask_user/forms.py:120
 #: flask_user/templates/flask_user/change_username.html:5
 #: flask_user/templates/flask_user/user_profile.html:8
 msgid "Change username"
-msgstr "更改用户名"
+msgstr "Cambia nome utente"
 
 #: flask_user/forms.py:146 flask_user/forms.py:297
 msgid "Your email address"
-msgstr "您的邮箱地址"
+msgstr "Indirizzo email"
 
 #: flask_user/forms.py:147 flask_user/forms.py:298
-#, fuzzy
 msgid "Email address is required"
-msgstr "邮箱是必需项"
+msgstr "L'indirizzo email è obbligatorio"
 
 #: flask_user/forms.py:148 flask_user/forms.py:299
-#, fuzzy
 msgid "Invalid Email address"
-msgstr "无效邮箱"
+msgstr "Indirizzo email non valido"
 
 #: flask_user/forms.py:150
 msgid "Send reset password email"
-msgstr "发送重置密码邮件"
+msgstr "Invia email di reset della password"
 
 #: flask_user/forms.py:157 flask_user/forms.py:231
 #, python-format
 msgid "%(username_or_email)s does not exist"
-msgstr "用户名或邮箱不存在"
+msgstr "%(username_or_email)s non esistente"
 
 #: flask_user/forms.py:164 flask_user/forms.py:223 flask_user/forms.py:251
 msgid "Username"
-msgstr "用户名"
+msgstr "Nome utente"
 
 #: flask_user/forms.py:171 flask_user/forms.py:258
 msgid "Password"
-msgstr "密码"
+msgstr "Password"
 
 #: flask_user/forms.py:172 flask_user/forms.py:259
 msgid "Password is required"
-msgstr "密码是必需项"
+msgstr "La password è obbligatoria"
 
 #: flask_user/forms.py:174
 msgid "Remember me"
-msgstr "记住我"
+msgstr "Ricorda la mia identità"
 
 #: flask_user/forms.py:176 flask_user/templates/flask_user/login.html:5
 #: flask_user/templates/flask_user/login_or_register.html:9
 msgid "Sign in"
-msgstr "登入"
+msgstr "Accedi"
 
 #: flask_user/forms.py:183
 msgid "Username or Email"
-msgstr "用户名或邮箱"
+msgstr "Nome utente o email"
 
 #: flask_user/forms.py:220
-#, fuzzy
 msgid "Username/Email"
-msgstr "用户名或邮箱"
-
-#: flask_user/forms.py:234
-#, fuzzy
-msgid "Incorrect Password"
-msgstr "忘记密码"
+msgstr "Nome utente/email"
 
 #: flask_user/forms.py:238
-#, fuzzy, python-format
+#, python-format
 msgid "Incorrect %(username_or_email)s and/or Password"
-msgstr "用户名、邮箱或密码不正确"
+msgstr "%(username_or_email)s e/o password non corretti"
 
 #: flask_user/forms.py:260
 msgid "Retype Password"
-msgstr "再次输入密码"
+msgstr "Ripeti la password"
 
 #: flask_user/forms.py:261
 msgid "Password and Retype Password did not match"
-msgstr "两次输入的密码不一致"
+msgstr "La password e la sua ripetizione non combaciano."
 
 #: flask_user/forms.py:262
 msgid "Token"
-msgstr ""
+msgstr "Token"
 
 #: flask_user/forms.py:264
 #: flask_user/templates/flask_user/login_or_register.html:41
 #: flask_user/templates/flask_user/register.html:5
 msgid "Register"
-msgstr "注册"
+msgstr "Registrati"
 
 #: flask_user/forms.py:301
 msgid "Resend email confirmation email"
-msgstr "再次发送确认邮件"
+msgstr "Rispedisci l'email di conferma"
 
 #: flask_user/forms.py:334
 msgid "Invite!"
-msgstr "邀请"
+msgstr "Invita!"
 
 #: flask_user/translations.py:74
 msgid "Home Page"
-msgstr "主页"
+msgstr ""
 
 #: flask_user/translations.py:75
 msgid "Profile Page"
-msgstr "信息页"
+msgstr ""
 
 #: flask_user/translations.py:76
 msgid "Special Page"
-msgstr "特别页"
+msgstr ""
 
 #: flask_user/views.py:34
 msgid "Your confirmation token has expired."
-msgstr "您的确认码已经过期。"
+msgstr "Il token di conferma è scaduto."
 
 #: flask_user/views.py:38 flask_user/views.py:58
 msgid "Invalid confirmation token."
-msgstr "无效的确认码。"
+msgstr "Il token di conferma non è valido."
 
 #: flask_user/views.py:65
 msgid "Your email has been confirmed."
-msgstr "邮箱已被确认。"
+msgstr "Il tuo indirizzo email è stato confermato."
 
 #: flask_user/views.py:102
 msgid "Your password has been changed successfully."
-msgstr "密码更改成功。"
+msgstr "La tua password è stata modificata con successo."
 
 #: flask_user/views.py:138
 #, python-format
 msgid "Your username has been changed to '%(username)s'."
-msgstr "您的用户名已更改为“%(username)s”。"
+msgstr "Il tuo nome utente è stato cambiato a “%(username)s”."
 
 #: flask_user/views.py:205
 #, python-format
 msgid ""
 "A reset password email has been sent to '%(email)s'. Open that email and "
 "follow the instructions to reset your password."
-msgstr "一封重置密码邮件已经发送至“%(email)s”。打开那封邮件，按照其指引重置您的密码。"
+msgstr ""
+"Una email di reset della password è stata inviata a “%(email)s”. Apri "
+"quel messaggio e segui le istruzioni per resettare la password."
 
 #: flask_user/views.py:276
 msgid "You have signed out successfully."
-msgstr "登出成功。"
+msgstr "Ti sei disconnesso con successo."
 
 #: flask_user/views.py:517
 msgid "Invitation has been sent."
-msgstr "邀请邮件已发送。"
+msgstr "L'invito è stato spedito."
 
 #: flask_user/views.py:560
 msgid "Your reset password token has expired."
-msgstr "您的重置密码请求码已过期。"
+msgstr "Il token di reset della password è scaduto."
 
 #: flask_user/views.py:564 flask_user/views.py:575
 msgid "Your reset password token is invalid."
-msgstr "您的重置密码请求码无效。"
+msgstr "Il token di reset della password non è valido."
 
 #: flask_user/views.py:602
-#, fuzzy
 msgid "Your password has been reset successfully."
-msgstr "密码更改成功。"
+msgstr "La tua password è stata resettata correttamente."
 
 #: flask_user/views.py:619
 #, python-format
 msgid "You must confirm your email to access '%(url)s'."
-msgstr "您须确认您的邮箱才能访问“%(url)s”。"
+msgstr "Devi confermare l'indirizzo email per accedere a '%(url)s'."
 
 #: flask_user/views.py:630
 #, python-format
 msgid "You must be signed in to access '%(url)s'."
-msgstr "您须登录才能访问“%(url)s”。"
+msgstr "Per accedere a “%(url)s” devi farti riconoscere."
 
 #: flask_user/views.py:644
 #, python-format
 msgid "You do not have permission to access '%(url)s'."
-msgstr "您无权限访问“%(url)s”。"
+msgstr "Non hai i permessi per accedere a “%(url)s”."
 
 #: flask_user/views.py:675 flask_user/views.py:696
 #, python-format
 msgid ""
 "A confirmation email has been sent to %(email)s with instructions to "
 "complete your registration."
-msgstr "一封确认邮件已发送到%(email)s，请阅读内含信息以完成注册。"
+msgstr ""
+"Una email di conferma è stata inviata a %(email)s con le istruzioni per "
+"completare la registrazione."
 
 #: flask_user/views.py:677
 msgid "You have registered successfully."
-msgstr "注册成功。"
+msgstr "Sei stato registrato con successo."
 
 #: flask_user/views.py:705
 msgid "Your account has not been enabled."
-msgstr "您的帐户已被禁用。"
+msgstr "Il tuo account non è stato abilitato."
 
 #: flask_user/views.py:714
 #, python-format
@@ -293,64 +291,49 @@ msgid ""
 "Your email address has not yet been confirmed. Check your email Inbox and"
 " Spam folders for the confirmation email or <a href=\"%(url)s\">Re-send "
 "confirmation email</a>."
-msgstr "您的邮箱地址尚未确认。查看您的邮箱收件箱或垃圾箱以找到确认邮件，或者<a href=\"%(url)s\">再次发送确认邮件</a>。"
+msgstr ""
+"Il tuo indirizzo email non è ancora stato confermato. Controlla se il "
+"messaggio di conferma è presente nella cartella \"Posta in arrivo\" o "
+"nella \"Spam\", oppure <a href=\"%(url)s\">richiedine l'invio</a>."
 
 #: flask_user/views.py:725
 msgid "You have signed in successfully."
-msgstr "登录成功。"
+msgstr "Sei stato riconosciuto con successo."
 
 #: flask_user/templates/flask_user/forgot_password.html:5
 msgid "Forgot Password"
-msgstr "忘记密码"
+msgstr "Ho dimenticato la password"
 
 #: flask_user/templates/flask_user/invite.html:5
 msgid "Invite User"
-msgstr "邀请用户"
+msgstr "Invita utente"
 
 #: flask_user/templates/flask_user/login.html:21
 msgid "New here? Register."
-msgstr "新用户吗？请注册。"
+msgstr "Nuovo utente? Registrati!"
 
 #: flask_user/templates/flask_user/login.html:44
 #: flask_user/templates/flask_user/login_or_register.html:34
 msgid "Forgot your Password?"
-msgstr "忘记密码吗？"
+msgstr "Hai dimenticato la password?"
 
 #: flask_user/templates/flask_user/manage_emails.html:5
 msgid "Manage Emails"
-msgstr "管理邮箱"
+msgstr "Gestione indirizzi email"
 
 #: flask_user/templates/flask_user/register.html:21
 msgid "Already registered? Sign in."
-msgstr "已注册吗？登录。"
+msgstr "Sei già registrato? Fatti riconoscere."
 
 #: flask_user/templates/flask_user/resend_confirm_email.html:5
 msgid "Resend Confirmation Email"
-msgstr "重发确认邮件"
+msgstr "Reinvio email di conferma"
 
 #: flask_user/templates/flask_user/reset_password.html:5
 msgid "Reset Password"
-msgstr "重置密码"
+msgstr "Resetta la password"
 
 #: flask_user/templates/flask_user/user_profile.html:5
 msgid "User profile"
-msgstr "账号"
-
-#~ msgid "Incorrect Username and Password"
-#~ msgstr "用户名或密码不正确"
-
-#~ msgid "Incorrect Email and Password"
-#~ msgstr "邮箱或密码不正确"
-
-#~ msgid ""
-#~ msgstr "您的密码已成功重置。请使用新密码登录。"
-
-#~ msgid "Change Password"
-#~ msgstr "更改密码"
-
-#~ msgid "Change Username"
-#~ msgstr "更改用户名"
-
-#~ msgid "Email does not exist"
-#~ msgstr "邮箱不存在"
+msgstr "Profilo utente"
 
