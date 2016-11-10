@@ -103,6 +103,7 @@ Documentation
 
 Revision History
 ----------------
+* v0.6.9 Added support for Flask-Login v0.4+, German, Persian, Turkish translations
 * v0.6.8 Added support for Flask-Login v0.3+
 * v0.6.7 Uses Python package bcrypt instead of py-bcrypt.
 * v0.6.6 Forgot password form now honors USER_SHOW_USERNAME_OR_EMAIL_DOES_NOT_EXIST setting.

@@ -7,10 +7,16 @@ into other languages. This allows us to:
 * Translate built-in English text into another language
 
 Flask-User ships with the following languages:
-* English (en)
-* Chinese (Simplified) (zh, v0.6.1 and up)
-* Dutch (nl)
-* French (fr, v0.6.1 and up)
+* de - German (v0.6.9+)
+* en - English (v0.1+)
+* fa - Farsi (v0.6.9+)
+* fi - Finnish (v0.6.9+)
+* fr - French (v0.6.1+)
+* it - Italian (v0.6.9+)
+* nl - Dutch (v0.1+)
+* sv - Swedish (v0.6.9+)
+* tr - Turkish (v0.6.9+)
+* zh - Chinese (Simplified) (v0.6.1+)
 
 
 REQUIRED: Installing Flask-Babel
