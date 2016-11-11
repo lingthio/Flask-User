@@ -16,8 +16,8 @@ the user is logged in before accessing that particular page:
 
     from flask_user import login_required
 
-    @login_required
     @route('/profile')
+    @login_required
     def profile_page():
         # render the user profile page
 
@@ -33,8 +33,8 @@ In the example below the current user is required to have the 'admin' role::
 
     from flask_user import roles_required
 
-    @roles_required('admin')
     @route('/admin/dashboard')
+    @roles_required('admin')
     def admin_dashboard():
         # render the admin dashboard
 
