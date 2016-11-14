@@ -29,7 +29,7 @@ class ConfigClass(object):
     # Flask-User settings
     USER_APP_NAME        = "AppName"                # Used by email templates
     USER_ENABLE_RETYPE_PASSWORD = False
-    USER_ENABLE_LOGIN_WITHOUT_CONFIRM = True
+    USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL = True
 
 def create_app(test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
