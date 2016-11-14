@@ -12,7 +12,8 @@
     USER_ENABLE_FORGOT_PASSWORD    = True      # Allow users to reset their passwords
                                                # Requires USER_ENABLE_EMAIL=True
 
-    USER_ENABLE_LOGIN_WITHOUT_CONFIRM = False  # Allow users to login without a
+    USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL = False
+                                               # Allow users to login without a
                                                # confirmed email address
                                                # Protect views using @confirm_email_required
 
