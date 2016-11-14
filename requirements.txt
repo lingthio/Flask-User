@@ -11,6 +11,6 @@ Flask-WTF==0.9.4
 # Python packages
 passlib==1.6.5
 bcrypt==2.0.0
-pycrypto==2.6.1
+pycryptodome==3.4.3
 speaklater==1.3
 
