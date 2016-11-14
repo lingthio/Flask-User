@@ -43,4 +43,5 @@ def rebuild_docs():
 
 @task
 def upload_to_pypi():
-    local('python setup.py sdist upload')
+    local('python setup.py sdist')
+    local('twine upload dist/*')
