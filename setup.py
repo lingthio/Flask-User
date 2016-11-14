@@ -101,7 +101,7 @@ setup(
     platforms='any',
     install_requires=[
         'passlib',
-        'bcrypt',
+        'py-bcrypt',
         'pycrypto',
         'Flask',
         'Flask-Login',
