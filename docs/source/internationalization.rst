@@ -7,6 +7,7 @@ into other languages. This allows us to:
 * Translate built-in English text into another language
 
 Flask-User ships with the following languages:
+
 * de - German (v0.6.9+)
 * en - English (v0.1+)
 * fa - Farsi (v0.6.9+)

@@ -14,6 +14,26 @@ Flask-User |release|
 Customizable User Account Management for Flask
 ----------------------------------------------
 
+.. topic:: Attention
+
+    | We are working on the v0.9 (beta) and v1.0 (production) versions of flask_user.
+    | They both are INCOMPATIBLE with v0.6 (production).
+    | To avoid disruption in the near future, please take the time now
+      to add the following to your requirements.txt file:
+
+    | Flask-User==0.6.9 # pin flask_user to a specific version
+    |
+    | or:
+    |
+    | Flask-User<0.7 # limit flask_user version
+
+.. topic:: Headsup
+
+    When using Flask-Login v0.3.x, use Flask-User v0.6.8+
+
+    When using Flask-Login v0.4.x, use Flask-User v0.6.9+
+
+
 | So you're writing a Flask web application and would like to authenticate your users.
 | You start with a simple **Login** page, but soon enough you'll need to handle:
 
@@ -37,15 +57,7 @@ And wouldn't it be nice to also offer:
 * **Largely configurable** (Through configuration settings)
 * **Fully customizable** (Through customizable functions and email templates)
 * **Well documented**
-* **Translations** (Chinese,  Dutch, English, Finnish, French, Swedish)
-
-
-.. topic:: Headsup
-
-    Flask-Login v0.3.x broke backward compatibility by using *properties*
-    instead of *methods* for current_user.is_authenticated(),
-    is_anonymous() and is_active().
-    Please upgrade to Flask-User v0.6.8+ if you plan to use Flask-Login v0.3+.
+* **Translations** (Chinese, Dutch, English, Farsi, Finnish, French, German, Italian, Swedish, Turkish)
 
 
 Status
