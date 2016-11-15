@@ -16,7 +16,7 @@ Customizable User Account Management for Flask
 
 .. topic:: Attention
 
-    | We are working on the v0.9 (beta) and v1.0 (production) versions of flask_user.
+    | We are working on the v0.9 (beta) and v1.0 (production) versions of Flask-User.
     | They both are INCOMPATIBLE with v0.6 (production).
     | To avoid disruption in the near future, please take the time now
       to add the following to your requirements.txt file:
