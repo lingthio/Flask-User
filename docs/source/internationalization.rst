@@ -10,6 +10,7 @@ Flask-User ships with the following languages:
 
 * de - German (v0.6.9+)
 * en - English (v0.1+)
+* es - Spanish (v0.6.10+)
 * fa - Farsi (v0.6.9+)
 * fi - Finnish (v0.6.9+)
 * fr - French (v0.6.1+)

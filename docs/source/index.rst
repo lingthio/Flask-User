@@ -112,6 +112,7 @@ Documentation
 
 Revision History
 ----------------
+* v0.6.10 Added Spanish translation.
 * v0.6.9 Added support for Flask-Login v0.4+.
     Replaced pycrypto with pycryptodome.
     Added Farsi, Italian and Turkish translations.
