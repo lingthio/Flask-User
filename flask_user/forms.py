@@ -7,7 +7,7 @@
 import string
 from flask import current_app
 from flask_login import current_user
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import BooleanField, HiddenField, PasswordField, SubmitField, StringField
 from wtforms import validators, ValidationError
 from .translations import lazy_gettext as _
@@ -62,14 +62,14 @@ def unique_email_validator(form, field):
 # ** Forms **
 # ***********
 
-class AddEmailForm(Form):
+class AddEmailForm(FlaskForm):
     email = StringField(_('Email'), validators=[
         validators.DataRequired(_('Email is required')),
         validators.Email(_('Invalid Email')),
         unique_email_validator])
     submit = SubmitField(_('Add Email'))
 
-class ChangePasswordForm(Form):
+class ChangePasswordForm(FlaskForm):
     old_password = PasswordField(_('Old Password'), validators=[
         validators.DataRequired(_('Old Password is required')),
         ])
@@ -108,7 +108,7 @@ class ChangePasswordForm(Form):
         # All is well
         return True
 
-class ChangeUsernameForm(Form):
+class ChangeUsernameForm(FlaskForm):
     new_username = StringField(_('New Username'), validators=[
         validators.DataRequired(_('Username is required')),
         unique_username_validator,
@@ -142,7 +142,7 @@ class ChangeUsernameForm(Form):
         # All is well
         return True
 
-class ForgotPasswordForm(Form):
+class ForgotPasswordForm(FlaskForm):
     email = StringField(_('Your email address'), validators=[
         validators.DataRequired(_('Email address is required')),
         validators.Email(_('Invalid Email address')),
@@ -157,7 +157,7 @@ class ForgotPasswordForm(Form):
                 raise ValidationError(_('%(username_or_email)s does not exist', username_or_email=_('Email')))
 
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     next = HiddenField()         # for login.html
     reg_next = HiddenField()     # for login_or_register.html
 
@@ -242,7 +242,7 @@ class LoginForm(Form):
         return False                                # Unsuccessful authentication
 
 
-class RegisterForm(Form):
+class RegisterForm(FlaskForm):
     password_validator_added = False
 
     next = HiddenField()        # for login_or_register.html
@@ -293,14 +293,14 @@ class RegisterForm(Form):
         # All is well
         return True
 
-class ResendConfirmEmailForm(Form):
+class ResendConfirmEmailForm(FlaskForm):
     email = StringField(_('Your email address'), validators=[
         validators.DataRequired(_('Email address is required')),
         validators.Email(_('Invalid Email address')),
         ])
     submit = SubmitField(_('Resend email confirmation email'))
 
-class ResetPasswordForm(Form):
+class ResetPasswordForm(FlaskForm):
     new_password = PasswordField(_('New Password'), validators=[
         validators.DataRequired(_('New Password is required'))])
     retype_password = PasswordField(_('Retype New Password'), validators=[
@@ -326,7 +326,7 @@ class ResetPasswordForm(Form):
         # All is well
         return True
 
-class InviteForm(Form):
+class InviteForm(FlaskForm):
     email = StringField(_('Email'), validators=[
         validators.Required(_('Email is required')),
         validators.Email(_('Invalid Email'))])
