@@ -31,10 +31,12 @@ def is_safe_url(target):
 
 
 def safe_redirect(target):
+    """ Redirect to `target` or USER_UNSAFE_REDIRECT_ENDPOINT if it's unsafe."""
+    user_manager = current_app.user_manager
     if is_safe_url(target):
         return redirect(target)
     else:
-        return redirect('/')
+        return redirect(_endpoint_url(user_manager.unsafe_redirect_endpoint))
 
 
 def render(*args, **kwargs):

@@ -24,3 +24,6 @@
     # Unauthorized users trying to access a view that has been decorated
     # with @roles_required will be redirected to this endpoint
     USER_UNAUTHORIZED_ENDPOINT               = ''              # v0.5.3 and up
+
+    # Redirects to an unsafe URL will be replaced with redirects to this endpoint
+    USER_UNSAFE_REDIRECT_ENDPOINT            = ''              # unreleased
