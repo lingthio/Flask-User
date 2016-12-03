@@ -103,10 +103,10 @@ class CustomUserManager(UserManager):
         self.db_adapter = SQLAlchemyAdapter(db, User, UserInvitationClass=UserInvitation)
 
         # Customize settings
-        self.APP_NAME = "CustomAppName"
-        self.ENABLE_EMAIL = True
-        self.ENABLE_CONFIRM_EMAIL = True
-        self.ENABLE_INVITATION = True
+        self.app_name = "CustomAppName"
+        self.enable_email = True
+        self.enable_confirm_email = True
+        self.enable_invitation = True
 
 
 def init_app(app, test_config=None):                   # For automated tests

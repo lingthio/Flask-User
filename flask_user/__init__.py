@@ -53,16 +53,16 @@ class UserManager(object):
         # define short names
 
         # General settings
-        self.APP_NAME =                 app.config.get('USER_APP_NAME', 'AppName')
+        self.app_name =                 app.config.get('USER_APP_NAME', 'AppName')
 
         # Set default features
         self.enable_change_password =   app.config.get('USER_ENABLE_CHANGE_PASSWORD', True)
         self.enable_change_username =   app.config.get('USER_ENABLE_CHANGE_USERNAME', True)
-        self.ENABLE_EMAIL =             app.config.get('USER_ENABLE_EMAIL', False)
-        self.ENABLE_CONFIRM_EMAIL =     app.config.get('USER_ENABLE_CONFIRM_EMAIL', self.ENABLE_EMAIL)
-        self.enable_forgot_password =   app.config.get('USER_ENABLE_FORGOT_PASSWORD', self.ENABLE_EMAIL)
+        self.enable_email =             app.config.get('USER_ENABLE_EMAIL', False)
+        self.enable_confirm_email =     app.config.get('USER_ENABLE_CONFIRM_EMAIL', self.enable_email)
+        self.enable_forgot_password =   app.config.get('USER_ENABLE_FORGOT_PASSWORD', self.enable_email)
         self.enable_login_without_confirm_email = app.config.get('USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL', False)
-        self.ENABLE_MULTIPLE_EMAILS =   app.config.get('USER_ENABLE_MULTIPLE_EMAILS', False)
+        self.enable_multiple_emails =   app.config.get('USER_ENABLE_MULTIPLE_EMAILS', False)
         self.enable_register =          app.config.get('USER_ENABLE_REGISTER', True)
         self.enable_remember_me =       app.config.get('USER_ENABLE_REMEMBER_ME', True)
         self.enable_retype_password =   app.config.get('USER_ENABLE_RETYPE_PASSWORD', True)
@@ -80,11 +80,11 @@ class UserManager(object):
         self.password_hash =            app.config.get('USER_PASSWORD_HASH', 'bcrypt')
         self.password_salt =            app.config.get('USER_PASSWORD_SALT', app.config['SECRET_KEY'])
         self.reset_password_expiration = app.config.get('USER_RESET_PASSWORD_EXPIRATION', 2 * 24 * 3600)  # 2 days
-        self.ENABLE_INVITATION =        app.config.get('USER_ENABLE_INVITATION', False)
+        self.enable_invitation =        app.config.get('USER_ENABLE_INVITATION', False)
         self.require_invitation =       app.config.get('USER_REQUIRE_INVITATION', False)
-        self.send_password_changed_email = app.config.get('USER_SEND_PASSWORD_CHANGED_EMAIL', self.ENABLE_EMAIL)
-        self.send_registered_email =    app.config.get('USER_SEND_REGISTERED_EMAIL', self.ENABLE_EMAIL)
-        self.send_username_changed_email = app.config.get('USER_SEND_USERNAME_CHANGED_EMAIL', self.ENABLE_EMAIL)
+        self.send_password_changed_email = app.config.get('USER_SEND_PASSWORD_CHANGED_EMAIL', self.enable_email)
+        self.send_registered_email =    app.config.get('USER_SEND_REGISTERED_EMAIL', self.enable_email)
+        self.send_username_changed_email = app.config.get('USER_SEND_USERNAME_CHANGED_EMAIL', self.enable_email)
         self.show_username_email_does_not_exist = app.config.get('USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST', self.enable_register)
 
         # Set default URLs
@@ -153,23 +153,23 @@ class UserManager(object):
             pass
 
         # USER_ENABLE_REGISTER=True must have USER_ENABLE_USERNAME=True or USER_ENABLE_EMAIL=True or both.
-        if self.enable_register and not (self.enable_username or self.ENABLE_EMAIL):
+        if self.enable_register and not (self.enable_username or self.enable_email):
             raise ConfigurationError('USER_ENABLE_REGISTER=True must have USER_ENABLE_USERNAME=True or USER_ENABLE_EMAIL=True or both.')
         # USER_ENABLE_CONFIRM_EMAIL=True must have USER_ENABLE_EMAIL=True
-        if self.ENABLE_CONFIRM_EMAIL and not self.ENABLE_EMAIL:
+        if self.enable_confirm_email and not self.enable_email:
             raise ConfigurationError('USER_ENABLE_CONFIRM_EMAIL=True must have USER_ENABLE_EMAIL=True.')
         # USER_ENABLE_MULTIPLE_EMAILS=True must have USER_ENABLE_EMAIL=True
-        if self.ENABLE_MULTIPLE_EMAILS and not self.ENABLE_EMAIL:
+        if self.enable_multiple_emails and not self.enable_email:
             raise ConfigurationError('USER_ENABLE_MULTIPLE_EMAILS=True must have USER_ENABLE_EMAIL=True.')
         # USER_SEND_REGISTERED_EMAIL=True must have USER_ENABLE_EMAIL=True
-        if self.send_registered_email and not self.ENABLE_EMAIL:
+        if self.send_registered_email and not self.enable_email:
             raise ConfigurationError('USER_SEND_REGISTERED_EMAIL=True must have USER_ENABLE_EMAIL=True.')
         # USER_ENABLE_CHANGE_USERNAME=True must have USER_ENABLE_USERNAME=True.
         if self.enable_change_username and not self.enable_username:
             raise ConfigurationError('USER_ENABLE_CHANGE_USERNAME=True must have USER_ENABLE_USERNAME=True.')
-        if self.require_invitation and not self.ENABLE_INVITATION:
+        if self.require_invitation and not self.enable_invitation:
             raise ConfigurationError('USER_REQUIRE_INVITATION=True must have USER_ENABLE_INVITATION=True.')
-        if self.ENABLE_INVITATION and not self.db_adapter.UserInvitationClass:
+        if self.enable_invitation and not self.db_adapter.UserInvitationClass:
             raise ConfigurationError(
                 'USER_ENABLE_INVITATION=True must pass UserInvitationClass to SQLAlchemyAdapter().')
 
@@ -328,7 +328,7 @@ class UserManager(object):
         """ Add URL Routes"""
         app.add_url_rule(self.login_url,  'user.login',  self.login_view_function,  methods=['GET', 'POST'])
         app.add_url_rule(self.logout_url, 'user.logout', self.logout_view_function, methods=['GET', 'POST'])
-        if self.ENABLE_CONFIRM_EMAIL:
+        if self.enable_confirm_email:
             app.add_url_rule(self.confirm_email_url, 'user.confirm_email', self.confirm_email_view_function)
             app.add_url_rule(self.resend_confirm_email_url, 'user.resend_confirm_email', self.resend_confirm_email_view_function, methods=['GET', 'POST'])
         if self.enable_change_password:
@@ -344,7 +344,7 @@ class UserManager(object):
             app.add_url_rule(self.email_action_url,  'user.email_action',  self.email_action_view_function)
             app.add_url_rule(self.manage_emails_url, 'user.manage_emails', self.manage_emails_view_function, methods=['GET', 'POST'])
         app.add_url_rule(self.user_profile_url,  'user.profile',  self.user_profile_view_function,  methods=['GET', 'POST'])
-        if self.ENABLE_INVITATION:
+        if self.enable_invitation:
             app.add_url_rule(self.invite_url, 'user.invite', self.invite_view_function, methods=['GET', 'POST'])
     # Obsoleted function. Replace with hash_password()
     def generate_password_hash(self, password):

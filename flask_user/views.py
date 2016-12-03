@@ -97,7 +97,7 @@ def change_password():
         user_manager.update_password(current_user, hashed_password)
 
         # Send 'password_changed' email
-        if user_manager.ENABLE_EMAIL and user_manager.send_password_changed_email:
+        if user_manager.enable_email and user_manager.send_password_changed_email:
             emails.send_password_changed_email(current_user)
 
         # Send password_changed signal
@@ -133,7 +133,7 @@ def change_username():
         db_adapter.commit()
 
         # Send 'username_changed' email
-        if user_manager.ENABLE_EMAIL and user_manager.send_username_changed_email:
+        if user_manager.enable_email and user_manager.send_username_changed_email:
             emails.send_username_changed_email(current_user)
 
         # Send username_changed signal
@@ -251,7 +251,7 @@ def login():
                         is_primary=True,
                         )
             # Find user record by email (with form.username)
-            if not user and user_manager.ENABLE_EMAIL:
+            if not user and user_manager.enable_email:
                 user, user_email = user_manager.find_user_by_email(login_form.username.data)
         else:
             # Find user by email (with form.email)
@@ -446,7 +446,7 @@ def register():
                                      user_invite=user_invite)
 
         # Redirect if USER_ENABLE_CONFIRM_EMAIL is set
-        if user_manager.ENABLE_CONFIRM_EMAIL and require_email_confirmation:
+        if user_manager.enable_confirm_email and require_email_confirmation:
             next = request.args.get('next', _endpoint_url(user_manager.after_register_endpoint))
             return redirect(next)
 
@@ -600,7 +600,7 @@ def reset_password(token):
         db_adapter.commit()
 
         # Send 'password_changed' email
-        if user_manager.ENABLE_EMAIL and user_manager.send_password_changed_email:
+        if user_manager.enable_email and user_manager.send_password_changed_email:
             emails.send_password_changed_email(user)
 
         # Prepare one-time system message
@@ -665,7 +665,7 @@ def _send_registered_email(user, user_email, require_email_confirmation=True):
     db_adapter = user_manager.db_adapter
 
     # Send 'confirm_email' or 'registered' email
-    if user_manager.ENABLE_EMAIL and user_manager.ENABLE_CONFIRM_EMAIL:
+    if user_manager.enable_email and user_manager.enable_confirm_email:
         # Generate confirm email link
         object_id = user_email.id if user_email else int(user.get_id())
         token = user_manager.generate_token(object_id)
@@ -675,7 +675,7 @@ def _send_registered_email(user, user_email, require_email_confirmation=True):
         emails.send_registered_email(user, user_email, confirm_email_link)
 
         # Prepare one-time system message
-        if user_manager.ENABLE_CONFIRM_EMAIL and require_email_confirmation:
+        if user_manager.enable_confirm_email and require_email_confirmation:
             email = user_email.email if user_email else user.email
             flash(_('A confirmation email has been sent to %(email)s with instructions to complete your registration.', email=email), 'success')
         else:
@@ -687,7 +687,7 @@ def _send_confirm_email(user, user_email):
     db_adapter = user_manager.db_adapter
 
     # Send 'confirm_email' or 'registered' email
-    if user_manager.ENABLE_EMAIL and user_manager.ENABLE_CONFIRM_EMAIL:
+    if user_manager.enable_email and user_manager.enable_confirm_email:
         # Generate confirm email link
         object_id = user_email.id if user_email else int(user.get_id())
         token = user_manager.generate_token(object_id)
@@ -712,7 +712,7 @@ def _do_login_user(user, next, remember_me=False):
 
     # Check if user has a confirmed email address
     user_manager = current_app.user_manager
-    if user_manager.ENABLE_EMAIL and user_manager.ENABLE_CONFIRM_EMAIL \
+    if user_manager.enable_email and user_manager.enable_confirm_email \
             and not current_app.user_manager.enable_login_without_confirm_email \
             and not user.has_confirmed_email():
         url = url_for('user.resend_confirm_email')

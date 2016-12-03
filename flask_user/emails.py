@@ -69,8 +69,8 @@ def get_primary_user_email(user):
 def send_confirm_email_email(user, user_email, confirm_email_link):
     # Verify certain conditions
     user_manager =  current_app.user_manager
-    if not user_manager.ENABLE_EMAIL: return
-    if not user_manager.send_registered_email and not user_manager.ENABLE_CONFIRM_EMAIL: return
+    if not user_manager.enable_email: return
+    if not user_manager.send_registered_email and not user_manager.enable_confirm_email: return
 
     # Retrieve email address from User or UserEmail object
     email = user_email.email if user_email else user.email
@@ -80,7 +80,7 @@ def send_confirm_email_email(user, user_email, confirm_email_link):
     subject, html_message, text_message = _render_email(
             user_manager.confirm_email_email_template,
             user=user,
-            app_name=user_manager.APP_NAME,
+            app_name=user_manager.app_name,
             confirm_email_link=confirm_email_link)
 
     # Send email message using Flask-Mail
@@ -89,7 +89,7 @@ def send_confirm_email_email(user, user_email, confirm_email_link):
 def send_forgot_password_email(user, user_email, reset_password_link):
     # Verify certain conditions
     user_manager =  current_app.user_manager
-    if not user_manager.ENABLE_EMAIL: return
+    if not user_manager.enable_email: return
     assert user_manager.enable_forgot_password
 
     # Retrieve email address from User or UserEmail object
@@ -100,7 +100,7 @@ def send_forgot_password_email(user, user_email, reset_password_link):
     subject, html_message, text_message = _render_email(
             user_manager.forgot_password_email_template,
             user=user,
-            app_name=user_manager.APP_NAME,
+            app_name=user_manager.app_name,
             reset_password_link=reset_password_link)
 
     # Send email message using Flask-Mail
@@ -109,7 +109,7 @@ def send_forgot_password_email(user, user_email, reset_password_link):
 def send_password_changed_email(user):
     # Verify certain conditions
     user_manager =  current_app.user_manager
-    if not user_manager.ENABLE_EMAIL: return
+    if not user_manager.enable_email: return
     if not user_manager.send_password_changed_email: return
 
     # Retrieve email address from User or UserEmail object
@@ -122,7 +122,7 @@ def send_password_changed_email(user):
     subject, html_message, text_message = _render_email(
             user_manager.password_changed_email_template,
             user=user,
-            app_name=user_manager.APP_NAME)
+            app_name=user_manager.app_name)
 
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
@@ -130,7 +130,7 @@ def send_password_changed_email(user):
 def send_registered_email(user, user_email, confirm_email_link):    # pragma: no cover
     # Verify certain conditions
     user_manager =  current_app.user_manager
-    if not user_manager.ENABLE_EMAIL: return
+    if not user_manager.enable_email: return
     if not user_manager.send_registered_email: return
 
     # Retrieve email address from User or UserEmail object
@@ -141,7 +141,7 @@ def send_registered_email(user, user_email, confirm_email_link):    # pragma: no
     subject, html_message, text_message = _render_email(
             user_manager.registered_email_template,
             user=user,
-            app_name=user_manager.APP_NAME,
+            app_name=user_manager.app_name,
             confirm_email_link=confirm_email_link)
 
     # Send email message using Flask-Mail
@@ -150,7 +150,7 @@ def send_registered_email(user, user_email, confirm_email_link):    # pragma: no
 def send_username_changed_email(user):  # pragma: no cover
     # Verify certain conditions
     user_manager =  current_app.user_manager
-    if not user_manager.ENABLE_EMAIL: return
+    if not user_manager.enable_email: return
     if not user_manager.send_username_changed_email: return
 
     # Retrieve email address from User or UserEmail object
@@ -163,20 +163,20 @@ def send_username_changed_email(user):  # pragma: no cover
     subject, html_message, text_message = _render_email(
             user_manager.username_changed_email_template,
             user=user,
-            app_name=user_manager.APP_NAME)
+            app_name=user_manager.app_name)
 
     # Send email message using Flask-Mail
     user_manager.send_email_function(email, subject, html_message, text_message)
 
 def send_invite_email(user, accept_invite_link):
     user_manager = current_app.user_manager
-    if not user_manager.ENABLE_EMAIL: return
+    if not user_manager.enable_email: return
 
     # Render subject, html message and text message
     subject, html_message, text_message = _render_email(
             user_manager.invite_email_template,
             user=user,
-            app_name=user_manager.APP_NAME,
+            app_name=user_manager.app_name,
             accept_invite_link=accept_invite_link)
 
     # Send email message using Flask-Mail

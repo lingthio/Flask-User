@@ -20,6 +20,6 @@ def is_authenticated():
 def is_confirmed_email():
     user_manager = current_app.user_manager
     # If confirm email has been enabled, user must have at least one confirmed email
-    return not user_manager.ENABLE_EMAIL\
-                    or not user_manager.ENABLE_CONFIRM_EMAIL\
+    return not user_manager.enable_email\
+                    or not user_manager.enable_confirm_email\
                     or current_user.has_confirmed_email()

@@ -178,7 +178,7 @@ class LoginForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
         user_manager =  current_app.user_manager
-        if user_manager.enable_username and user_manager.ENABLE_EMAIL:
+        if user_manager.enable_username and user_manager.enable_email:
             # Renamed 'Username' label to 'Username or Email'
             self.username.label.text = _('Username or Email')
 
@@ -202,7 +202,7 @@ class LoginForm(FlaskForm):
             user = user_manager.find_user_by_username(self.username.data)
 
             # Find user by email address (username field)
-            if not user and user_manager.ENABLE_EMAIL:
+            if not user and user_manager.enable_email:
                 user, user_email = user_manager.find_user_by_email(self.username.data)
 
         else:
@@ -215,7 +215,7 @@ class LoginForm(FlaskForm):
 
         # Handle unsuccessful authentication
         # Email, Username or Email/Username depending on settings
-        if user_manager.enable_username and user_manager.ENABLE_EMAIL:
+        if user_manager.enable_username and user_manager.enable_email:
             username_or_email_field = self.username
             username_or_email_text = (_('Username/Email'))
         elif user_manager.enable_username:
@@ -268,7 +268,7 @@ class RegisterForm(FlaskForm):
         user_manager =  current_app.user_manager
         if not user_manager.enable_username:
             delattr(self, 'username')
-        if not user_manager.ENABLE_EMAIL:
+        if not user_manager.enable_email:
             delattr(self, 'email')
         if not user_manager.enable_retype_password:
             delattr(self, 'retype_password')

@@ -35,12 +35,12 @@ def test_multiple_emails(app, db, client):
     um = current_app.user_manager
     um.enable_register = True
     um.enable_username = False
-    um.ENABLE_EMAIL = True
-    um.ENABLE_CONFIRM_EMAIL = True
+    um.enable_email = True
+    um.enable_confirm_email = True
     um.enable_change_username = False
     um.enable_change_password = False
     um.enable_forgot_password = False
-    um.ENABLE_MULTIPLE_EMAILS = True
+    um.enable_multiple_emails = True
     um.enable_retype_password = False
 
     # Adjust DbAdapter settings
@@ -107,8 +107,8 @@ def test_multiple_emails(app, db, client):
     client.logout()
 
     # Restore settings
-    um.ENABLE_MULTIPLE_EMAILS = False
-    um.ENABLE_CONFIRM_EMAIL = True
+    um.enable_multiple_emails = False
+    um.enable_confirm_email = True
     um.enable_retype_password = True
     um.db_adapter.UserEmailClass = None
 

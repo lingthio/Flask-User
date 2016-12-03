@@ -48,7 +48,7 @@
     {% set field = register_form.username if user_manager.enable_username else register_form.email %}
     {{ render_field(field, tabindex=210) }}
 
-    {% if user_manager.ENABLE_EMAIL and user_manager.enable_username %}
+    {% if user_manager.enable_email and user_manager.enable_username %}
         {{ render_field(register_form.email, tabindex=220) }}
     {% endif %}
 

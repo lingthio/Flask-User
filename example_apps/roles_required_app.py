@@ -71,7 +71,7 @@ def create_app(test_config=None):                   # For automated tests
             # Customize the DB Adapter for SQLAlchemy with this User model
             self.db_adapter = SQLAlchemyAdapter(db, User)
             # Customize Flask-User settings
-            self.APP_NAME = "RolesRequiredApp"      # Used by base and email templates
+            self.app_name = "RolesRequiredApp"      # Used by base and email templates
 
     # Setup Flask-User
     user_manager = CustomUserManager(app)

@@ -30,7 +30,7 @@
         {% endif %}
     </div>
 
-    {% if user_manager.ENABLE_EMAIL and user_manager.enable_username %}
+    {% if user_manager.enable_email and user_manager.enable_username %}
         {{ render_field(form.email, tabindex=220) }}
     {% endif %}
 

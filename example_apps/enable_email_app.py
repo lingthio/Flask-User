@@ -61,8 +61,8 @@ def create_app():
             # Customize the DB Adapter for SQLAlchemy with this User model
             self.db_adapter = SQLAlchemyAdapter(db, User)
             # Customize Flask-User settings
-            self.APP_NAME = "EnableEmailApp"    # Used by base and email templates
-            self.ENABLE_EMAIL = True            # Enable emails
+            self.app_name = "EnableEmailApp"    # Used by base and email templates
+            self.enable_email = True            # Enable emails
 
     # Setup Flask-User
     user_manager = CustomUserManager(app)     # Initialize Flask-User
