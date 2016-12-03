@@ -10,13 +10,13 @@ Derived CustomUserManager class
 Instead of customizing Flask-User through config settings and init_app() parameters,
 v1.0 now relies on creating a custom subclass.
 
-Old:
+Old::
 
     # Setup Flask-User
     db_adapter = SQLAlchemyAdapter(db, User)        # Select database adapter
     user_manager = UserManager(db_adapter, app)     # Init Flask-User and bind to app
 
-New:
+New::
 
     # Create custom UserManager subclass
     class CustomUserManager(UserManager):
@@ -35,7 +35,7 @@ Config settings
 ---------------
 USER_ENABLE_EMAIL: The default is now 'False'. Set this to True if emails are used.
 
-Optional: It is now recommended to use the CustomUserManager.customize() method to configure Flask-User settings:
+Optional: It is now recommended to use the CustomUserManager.customize() method to configure Flask-User settings::
 
     # Create CustomUserManager class
     class CustomUserManager(UserManager):
