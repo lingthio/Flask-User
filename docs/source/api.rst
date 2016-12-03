@@ -1,74 +1,11 @@
 Flask-User API
 ==============
-* `Config Settings`_
-* `SQLAlchemyAdapter()`_
 * `UserManager`_
+* `SQLAlchemyAdapter()`_
+* `Config Settings`_
 * `Template variables`_
 * `Template functions`_
 * `Signals`_
-
-Config Settings
----------------
-.. include:: includes/config_features.txt
-
-.. include:: includes/config_settings.txt
-
-.. include:: includes/config_urls.txt
-
-.. include:: includes/config_endpoints.txt
-
-.. include:: includes/config_email_templates.txt
-
-.. include:: includes/config_form_templates.txt
-
-.. _sqlalchemyadapter:
-
-SQLAlchemyAdapter()
--------------------
-Flask-User shields itself from database operations through a DBAdapter.
-It ships with a SQLAlchemyAdapter, but the API is very simple, so other adapters
-can be easily added.
-
-::
-
-    class SQLAlchemyAdapter(DBAdapter):
-        """ This object shields Flask-User from database specific functions. """
-
-        def get_object(self, ObjectClass, pk):
-            """ Retrieve one object specified by the primary key 'pk' """
-
-        def find_all_objects(self, ObjectClass, **kwargs):
-            """ Retrieve all objects matching the case sensitive filters in 'kwargs'. """
-
-        def find_first_object(self, ObjectClass, **kwargs):
-            """ Retrieve the first object matching the case sensitive filters in 'kwargs'. """
-
-        def ifind_first_object(self, ObjectClass, **kwargs):
-            """ Retrieve the first object matching the case insensitive filters in 'kwargs'. """
-
-        def add_object(self, ObjectClass, **kwargs):
-            """ Add an object with fields and values specified in kwargs. """
-
-        def update_object(self, object, **kwargs):
-            """ Update an object with fields and values specified in kwargs. """
-
-        def delete_object(self, object):
-            """ Delete an object. """
-
-        def commit(self):
-            """ Commit an Add, Update or Delete. """
-
-Template variables
-------------------
-The following template variables are available for use in email and form templates:
-
-.. include:: includes/template_variables.txt
-
-Template functions
-------------------
-The following template functions are available for use in email and form templates:
-
-.. include:: includes/template_functions.txt
 
 UserManager
 -----------
@@ -77,9 +14,10 @@ UserManager()
 ~~~~~~~~~~~~~
 ::
 
+    from flask_user import UserManager
+
     user_manager = UserManager(
-            db_adapter,                     # typically from SQLAlchemyAdapter()
-            app = None,                     # typically from Flask() or None
+            app = None,                     # typically from app=Flask() or None
 
             # Forms
             add_email_form                  = forms.AddEmailForm,
@@ -121,31 +59,111 @@ Typical use:
 
 ::
 
-    app = Flask(__name__)
-    db = SQLAlchemy(app)
-    db_adapter = SQLAlchemyAdapter(db, User)
-    user_manager = UserManager(db_adapter, app,
-            register_form=my_register_form,
-            register_view_function=my_register_view_function)
-
-Work in progress. See :doc:`basic_app` for now.
-
-init_app()
-~~~~~~~~~~
-init_app() is used by Application Factories to bind the UserManager to a specific app.
-
-typical use::
-
-    db = SQLAlchemy()
-    db_adapter = SQLAlchemyAdapter(db, User)
-    user_manager = UserManager(db_adapter)
+    from flask import Flask
+    from flask_sqlalchemy import SQLAlchemy
+    from flask_user import UserManager, SQLAlchemyAdapter
 
     def create_app():
-        app = Flask(__name__)
-        db.init_app(app)
-        user_manager.init_app(app)
+        app = Flask(__name__)           # Initialize Flask
+        db = SQLAlchemy(app)            # Setup SQLAlchemy
+
+        # Define custom UserManager class
+        class CustomUserManager(UserManager):
+            def customize(self, app):
+                # Customize the DB Adapter for SQLAlchemy with this User model
+                self.db_adapter = SQLAlchemyAdapter(db, User)
+                # Customize Flask-User settings
+                self.enable_email = True
+
+        # Setup Flask-User
+        user_manager = CustomUserManager(app)
+
+As an a alternative, user_manager.init_app(app) can be used::
+
+    from flask import Flask
+    from flask_sqlalchemy import SQLAlchemy
+    from flask_user import UserManager, SQLAlchemyAdapter
+
+    # Define custom UserManager class
+    class CustomUserManager(UserManager):
+        def customize(self, app):
+            # Customize the DB Adapter for SQLAlchemy with this User model
+            self.db_adapter = SQLAlchemyAdapter(db, User)
+            # Customize Flask-User settings
+            self.enable_email = True
+
+    db = SQLAlchemy(app)                            # Setup SQLAlchemy
+    user_manager = CustomUserManager(UserManager)   # Setup Flask-User
+
+    def create_app():
+        app = Flask(__name__)           # Initialize Flask
+        db.init_app(app)                # Initialize SQLAlchemy
+        user_manager.init_app(app)      # Initialize Flask-User
 
 Work in progress. See :doc:`basic_app` for now.
+
+SQLAlchemyAdapter()
+-------------------
+Flask-User shields itself from database operations through a DBAdapter.
+It ships with a SQLAlchemyAdapter, but the API is very simple, so other adapters
+can be easily added.
+
+::
+
+    class SQLAlchemyAdapter(DBAdapter):
+        """ This object shields Flask-User from database specific functions. """
+
+        def get_object(self, ObjectClass, pk):
+            """ Retrieve one object specified by the primary key 'pk' """
+
+        def find_all_objects(self, ObjectClass, **kwargs):
+            """ Retrieve all objects matching the case sensitive filters in 'kwargs'. """
+
+        def find_first_object(self, ObjectClass, **kwargs):
+            """ Retrieve the first object matching the case sensitive filters in 'kwargs'. """
+
+        def ifind_first_object(self, ObjectClass, **kwargs):
+            """ Retrieve the first object matching the case insensitive filters in 'kwargs'. """
+
+        def add_object(self, ObjectClass, **kwargs):
+            """ Add an object with fields and values specified in kwargs. """
+
+        def update_object(self, object, **kwargs):
+            """ Update an object with fields and values specified in kwargs. """
+
+        def delete_object(self, object):
+            """ Delete an object. """
+
+        def commit(self):
+            """ Commit an Add, Update or Delete. """
+
+Config Settings
+---------------
+.. include:: includes/config_features.txt
+
+.. include:: includes/config_settings.txt
+
+.. include:: includes/config_urls.txt
+
+.. include:: includes/config_endpoints.txt
+
+.. include:: includes/config_email_templates.txt
+
+.. include:: includes/config_form_templates.txt
+
+.. _sqlalchemyadapter:
+
+Template variables
+------------------
+The following template variables are available for use in email and form templates:
+
+.. include:: includes/template_variables.txt
+
+Template functions
+------------------
+The following template functions are available for use in email and form templates:
+
+.. include:: includes/template_functions.txt
 
 hash_password()
 ~~~~~~~~~~~~~~~

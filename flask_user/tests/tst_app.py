@@ -180,7 +180,7 @@ def init_app(app, test_config=None):                   # For automated tests
             {% endblock %}
             """)
 
-    # The '/special' page requires a user that has the 'special' AND ('sauce' OR 'agent') role.
+    # The '/special' page requires a user that has the 'secret' AND ('sauce' OR 'agent') role.
     @app.route('/special')
     @roles_required('secret', ['sauce', 'agent'])   # Use of @roles_required decorator
     def special_page():

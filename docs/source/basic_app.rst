@@ -5,13 +5,12 @@ The sample code below illustrates the power of using Flask-User with sensible de
 With just a dozen additional code statements,
 a basic Flask application can be transformed to offer the following features:
 
-* Register with username and email
-* Email confirmation
-* Login with username or email, Logout
-* Protect pages from unauthenticated access
-* Change username
-* Change password
-* Forgot password
+* Register form
+* Login form
+* Logout link
+* Authorize pages that require a logged in user
+* Change username form
+* Change password form
 
 Single-file techniques
 ----------------------
@@ -20,7 +19,7 @@ Single-file techniques
 | - Using ``render_template_string()`` instead of ``render_template()``
 | - Placing everything in one file
 
-*None of these techniques are recommended outside of tutorial usage*.
+*None of these techniques are recommended for use outside of tutorial.*
 
 
 Setup a development environment
@@ -34,7 +33,6 @@ and that the code resides in ~/dev/example::
     # Install required Python packages in the 'example' virtualenv
     workon example
     pip install flask-user
-    pip install flask-mail
 
     # Change working directory
     mkdir -p ~dev/example
@@ -46,22 +44,12 @@ Create the basic_app.py file
 
 Create ~/dev/example/basic_app.py with the content below.
 
-| Make sure to replace the following settings:
-|     MAIL_USERNAME = 'email@example.com'
-|     MAIL_PASSWORD = 'password'
-|     MAIL_DEFAULT_SENDER = '"Sender" <noreply@example.com>'
-|     MAIL_SERVER   = 'smtp.gmail.com'
-|     MAIL_PORT     = 465
-|     MAIL_USE_SSL  = True
-|     MAIL_USE_TLS  = False
-| with settings that are appropriate for your SMTP server.
-
 Highlighted lines shows the lines added to a basic Flask application.
 
 .. literalinclude:: includes/basic_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 5, 39-55, 60-62, 79
+   :emphasize-lines: 4, 29-41, 46-53, 70
 
 
 Run the Basic App

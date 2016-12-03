@@ -3,13 +3,12 @@ Roles Required App
 ==================
 The Roles Required App builds on the features of :doc:`basic_app`:
 
-* Register with username and email
-* Email confirmation
-* Login with username or email, Logout
-* Protect pages from unauthenticated access
-* Change username
-* Change password
-* Forgot password
+* Register form
+* Login form
+* Logout link
+* Authorize pages that require a logged in user
+* Change username form
+* Change password form
 
 And adds the following:
 
@@ -23,7 +22,7 @@ Single-file techniques
 | - Using ``render_template_string()`` instead of ``render_template()``
 | - Placing everything in one file
 
-*None of these techniques are recommended outside of tutorial usage*.
+*None of these techniques are recommended for use outside of tutorial.*
 
 
 Setup a development environment
@@ -37,7 +36,6 @@ and that the code resides in ~/dev/example::
     # Install required Python packages in the 'example' virtualenv
     workon example
     pip install flask-user
-    pip install flask-mail
 
     # Change working directory
     mkdir -p ~dev/example
@@ -49,22 +47,12 @@ Create roles_required_app.py
 
 Create ~/dev/example/roles_required_app.py with the content below.
 
-| Make sure to replace the following settings:
-|     MAIL_USERNAME = 'email@example.com'
-|     MAIL_PASSWORD = 'password'
-|     MAIL_DEFAULT_SENDER = '"Sender" <noreply@example.com>'
-|     MAIL_SERVER   = 'smtp.gmail.com'
-|     MAIL_PORT     = 465
-|     MAIL_USE_SSL  = True
-|     MAIL_USE_TLS  = False
-| with settings that are appropriate for your SMTP server.
-
-Highlighted lines shows the lines added to the Basic App.
+Highlighted lines shows the lines added to the Basic App to produce the Roles Required App
 
 .. literalinclude:: includes/roles_required_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 6, 64-66, 71-80, 89-96, 108, 123, 127-140
+   :emphasize-lines: 5, 50-63, 79-86, 119
 
 Run the Roles Required App
 --------------------------
