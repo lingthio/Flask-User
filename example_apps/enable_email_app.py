@@ -1,6 +1,5 @@
 import os
 from flask import Flask, render_template_string
-from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import login_required, UserManager, UserMixin, SQLAlchemyAdapter
 
@@ -10,23 +9,19 @@ from flask_user import login_required, UserManager, UserMixin, SQLAlchemyAdapter
 class ConfigClass(object):
     # Flask settings
     SECRET_KEY =              os.getenv('SECRET_KEY',       'THIS IS AN INSECURE SECRET')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///multi_email_app.sqlite')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///basic_app.sqlite')
     CSRF_ENABLED = True
 
     # Flask-SQLAlchemy settings
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Flask-Mail settings
-    MAIL_USERNAME =           os.getenv('MAIL_USERNAME',        'email@example.com')
-    MAIL_PASSWORD =           os.getenv('MAIL_PASSWORD',        'password')
-    MAIL_DEFAULT_SENDER =     os.getenv('MAIL_DEFAULT_SENDER',  '"MyApp" <noreply@example.com>')
-    MAIL_SERVER =             os.getenv('MAIL_SERVER',          'smtp.gmail.com')
-    MAIL_PORT =           int(os.getenv('MAIL_PORT',            '465'))
-    MAIL_USE_SSL =        int(os.getenv('MAIL_USE_SSL',         True))
-
-    # Flask-User settings
-    USER_APP_NAME        = "AppName"                # Used by email templates
-    USER_ENABLE_MULTIPLE_EMAILS = True
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME', 'email@example.com')
+    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD', 'password')
+    MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER', '"EnableEmailApp" <noreply@example.com>')
+    MAIL_SERVER = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
+    MAIL_PORT = int(os.getenv('MAIL_PORT', '465'))
+    MAIL_USE_SSL = os.getenv('MAIL_USE_SSL', True)
 
 
 def create_app():
@@ -38,7 +33,6 @@ def create_app():
 
     # Initialize Flask extensions
     db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
-    mail = Mail(app)                                # Initialize Flask-Mail
 
     # Define the User data model. Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
@@ -49,35 +43,29 @@ def create_app():
         password = db.Column(db.String(255), nullable=False, server_default='')
         reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
 
+        # User email information
+        email = db.Column(db.String(255), nullable=False, unique=True)
+        confirmed_at = db.Column(db.DateTime(), nullable=True)
+
         # User information
         active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
         first_name = db.Column(db.String(100), nullable=False, server_default='')
         last_name = db.Column(db.String(100), nullable=False, server_default='')
 
-        # Relationship
-        user_emails = db.relationship('UserEmail')
-
-
-    # Define UserEmail DataModel.
-    class UserEmail(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-        # User email information
-        email = db.Column(db.String(255), nullable=False, unique=True)
-        confirmed_at = db.Column(db.DateTime())
-        is_primary = db.Column(db.Boolean(), nullable=False, default=False)
-
-        # Relationship
-        user = db.relationship('User', uselist=False)
-
-
     # Create all database tables
     db.create_all()
 
+    # Define custom UserManager class
+    class CustomUserManager(UserManager):
+        def customize(self, app):
+            # Customize the DB Adapter for SQLAlchemy with this User model
+            self.db_adapter = SQLAlchemyAdapter(db, User)
+            # Customize Flask-User settings
+            self.APP_NAME = "EnableEmailApp"    # Used by base and email templates
+            self.ENABLE_EMAIL = True            # Enable emails
+
     # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db, User, UserEmailClass=UserEmail)        # Register the User model
-    user_manager = UserManager(db_adapter, app)     # Initialize Flask-User
+    user_manager = CustomUserManager(app)     # Initialize Flask-User
 
     # The Home page is accessible to anyone
     @app.route('/')

@@ -96,6 +96,19 @@ class ConfigClass(object):
     USER_ENABLE_INVITATION      = True
 
 
+# Define custom UserManager class
+class CustomUserManager(UserManager):
+    def customize(self, app):
+        # Customize the DB Adapter for SQLAlchemy with this User model
+        self.db_adapter = SQLAlchemyAdapter(db, User, UserInvitationClass=UserInvitation)
+
+        # Customize settings
+        self.APP_NAME = "CustomAppName"
+        self.ENABLE_EMAIL = True
+        self.ENABLE_CONFIRM_EMAIL = True
+        self.ENABLE_INVITATION = True
+
+
 def init_app(app, test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
     app.config.from_object(__name__+'.ConfigClass')
@@ -116,8 +129,7 @@ def init_app(app, test_config=None):                   # For automated tests
     db.create_all()
 
     # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db,  User, UserInvitationClass=UserInvitation)
-    user_manager = UserManager(db_adapter, app)
+    user_manager = CustomUserManager(app)
 
     # Create regular 'member' user
     if not User.query.filter(User.username=='member').first():

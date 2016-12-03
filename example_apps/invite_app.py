@@ -15,6 +15,9 @@ class ConfigClass(object):
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///test_app.sqlite')
     CSRF_ENABLED = True
 
+    # Flask-SQLAlchemy settings
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
     # Flask-Mail settings
     MAIL_USERNAME =           os.getenv('MAIL_USERNAME',        'email@example.com')
     MAIL_PASSWORD =           os.getenv('MAIL_PASSWORD',        'password')

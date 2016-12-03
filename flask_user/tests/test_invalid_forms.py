@@ -64,9 +64,9 @@ def test_init(db):
     um.enable_register = True
     um.enable_change_username = True
     um.enable_change_password = True
-    um.enable_confirm_email = True
+    um.ENABLE_CONFIRM_EMAIL = True
     um.enable_reset_password = True
-    um.enable_email = True
+    um.ENABLE_EMAIL = True
     um.enable_retype_password = True
 
     # Tests have not been written with auto_login in mind
@@ -204,7 +204,7 @@ def test_invalid_login_with_username_form(client):
 
     # Choose config
     um = current_app.user_manager
-    um.enable_email = True
+    um.ENABLE_EMAIL = True
     um.enable_username = True
 
     # Set default values
@@ -243,7 +243,7 @@ def test_invalid_login_with_email_form(client):
 
     # Choose config
     um = current_app.user_manager
-    um.enable_email = True
+    um.ENABLE_EMAIL = True
     um.enable_username = False
 
     # Set default values
@@ -283,7 +283,7 @@ def test_invalid_change_username_form(client):
     # Set user manager config
     um =  current_app.user_manager
     um.enable_username = True
-    um.enable_email = False
+    um.ENABLE_EMAIL = False
 
     # Set default values
     username = 'user1'
@@ -433,8 +433,8 @@ def test_login_without_confirm_email(client):
 
     um = current_app.user_manager
     um.enable_username = False
-    um.enable_email = True
-    um.enable_confirm_email = True
+    um.ENABLE_EMAIL = True
+    um.ENABLE_CONFIRM_EMAIL = True
     um.enable_retype_password = False
 
     email = 'notconfirmed@example.com'

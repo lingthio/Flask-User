@@ -1,6 +1,5 @@
 import os
 from flask import Flask, render_template_string, request
-from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
 from flask_user import roles_required
@@ -11,19 +10,11 @@ from flask_user import roles_required
 class ConfigClass(object):
     # Flask settings
     SECRET_KEY =              os.getenv('SECRET_KEY',       'THIS IS AN INSECURE SECRET')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///single_file_app.sqlite')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///roles_required_app.sqlite')
     CSRF_ENABLED = True
 
-    # Flask-Mail settings
-    MAIL_USERNAME =           os.getenv('MAIL_USERNAME',        'email@example.com')
-    MAIL_PASSWORD =           os.getenv('MAIL_PASSWORD',        'password')
-    MAIL_DEFAULT_SENDER =     os.getenv('MAIL_DEFAULT_SENDER',  '"MyApp" <noreply@example.com>')
-    MAIL_SERVER =             os.getenv('MAIL_SERVER',          'smtp.gmail.com')
-    MAIL_PORT =           int(os.getenv('MAIL_PORT',            '465'))
-    MAIL_USE_SSL =        int(os.getenv('MAIL_USE_SSL',         True))
-
-    # Flask-User settings
-    USER_APP_NAME        = "AppName"                # Used by email templates
+    # Flask-SQLAlchemy settings
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 def create_app(test_config=None):                   # For automated tests
@@ -40,7 +31,6 @@ def create_app(test_config=None):                   # For automated tests
         app.config.update(test_config)
 
     # Initialize Flask extensions
-    mail = Mail(app)                                # Initialize Flask-Mail
     db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
 
     # Define the User data model. Make sure to add flask_user UserMixin!!
@@ -51,10 +41,6 @@ def create_app(test_config=None):                   # For automated tests
         username = db.Column(db.String(50), nullable=False, unique=True)
         password = db.Column(db.String(255), nullable=False, server_default='')
         reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
-
-        # User email information
-        email = db.Column(db.String(255), nullable=False, unique=True)
-        confirmed_at = db.Column(db.DateTime())
 
         # User information
         active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
@@ -79,14 +65,21 @@ def create_app(test_config=None):                   # For automated tests
     # Reset all the database tables
     db.create_all()
 
+    # Define custom UserManager class
+    class CustomUserManager(UserManager):
+        def customize(self, app):
+            # Customize the DB Adapter for SQLAlchemy with this User model
+            self.db_adapter = SQLAlchemyAdapter(db, User)
+            # Customize Flask-User settings
+            self.APP_NAME = "RolesRequiredApp"      # Used by base and email templates
+
     # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db,  User)
-    user_manager = UserManager(db_adapter, app)
+    user_manager = CustomUserManager(app)
 
     # Create 'user007' user with 'secret' and 'agent' roles
     if not User.query.filter(User.username=='user007').first():
-        user1 = User(username='user007', email='user007@example.com', active=True,
-                password=user_manager.hash_password('Password1'))
+        user1 = User(username='user007', active=True,
+                password=user_manager.hash_password('password'))
         user1.roles.append(Role(name='secret'))
         user1.roles.append(Role(name='agent'))
         db.session.add(user1)
@@ -102,7 +95,7 @@ def create_app(test_config=None):                   # For automated tests
                 <p>This page can be accessed by anyone.</p><br/>
                 <p><a href={{ url_for('home_page') }}>Home page</a> (anyone)</p>
                 <p><a href={{ url_for('members_page') }}>Members page</a> (login required)</p>
-                <p><a href={{ url_for('special_page') }}>Special page</a> (login with username 'user007' and password 'Password1')</p>
+                <p><a href={{ url_for('special_page') }}>Special page</a> (login with username 'user007' and password 'password')</p>
             {% endblock %}
             """)
 
@@ -117,7 +110,7 @@ def create_app(test_config=None):                   # For automated tests
                 <p>This page can only be accessed by authenticated users.</p><br/>
                 <p><a href={{ url_for('home_page') }}>Home page</a> (anyone)</p>
                 <p><a href={{ url_for('members_page') }}>Members page</a> (login required)</p>
-                <p><a href={{ url_for('special_page') }}>Special page</a> (login with username 'user007' and password 'Password1')</p>
+                <p><a href={{ url_for('special_page') }}>Special page</a> (login with username 'user007' and password 'password')</p>
             {% endblock %}
             """)
 
@@ -132,7 +125,7 @@ def create_app(test_config=None):                   # For automated tests
                 <p>This page can only be accessed by user007.</p><br/>
                 <p><a href={{ url_for('home_page') }}>Home page</a> (anyone)</p>
                 <p><a href={{ url_for('members_page') }}>Members page</a> (login required)</p>
-                <p><a href={{ url_for('special_page') }}>Special page</a> (login with username 'user007' and password 'Password1')</p>
+                <p><a href={{ url_for('special_page') }}>Special page</a> (login with username 'user007' and password 'password')</p>
             {% endblock %}
             """)
 
