@@ -47,4 +47,4 @@ Optional: It is now recommended to use the CustomUserManager.customize() method 
             self.db_adapter = SQLAlchemyAdapter(db, User)
 
             # Customize settings
-            self.enable = True    # Note that it's 'enable_email' and not 'USER_ENABLE_EMAIL'
+            self.enable_email = True    # Note that it's 'enable_email' and not 'USER_ENABLE_EMAIL'
