@@ -43,14 +43,9 @@ def create_app():
     # Create all database tables
     db.create_all()
 
-    # Define custom UserManager class
-    class CustomUserManager(UserManager):
-        def customize(self, app):
-            # Customize the DB Adapter for SQLAlchemy with this User model
-            self.db_adapter = SQLAlchemyAdapter(db, User)
-
     # Setup Flask-User
-    user_manager = CustomUserManager(app)     # Initialize Flask-User
+    db_adapter = SQLAlchemyAdapter(db, User)        # Define SQLAlchemy DB with User model
+    user_manager = UserManager(app, db_adapter)     # Initialize Flask-User
 
     # The Home page is accessible to anyone
     @app.route('/')

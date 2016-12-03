@@ -2,33 +2,24 @@
 Installation
 ============
 
-Flask-User v1.0 breaks backwards compatibility with v0.6 in major ways.
+Flask-User v0.9 breaks backwards compatibility with v0.6 in order to support custom UserManager subclasses.
 
-Derived CustomUserManager class
--------------------------------
+UserManager() and init_app() parameter order
+--------------------------------------------
 
-Instead of customizing Flask-User through config settings and init_app() parameters,
-v1.0 now relies on creating a custom subclass.
+Flask-User v0.9 accepts the `app` and `db_adapter` parameters to be specified to UserManager() and init_app()
+in two different orders::
 
-Old::
+    db_adapter = SQLAlchemyAdapter(db, User)        # Define SQLAlchemy DB with User model
+    user_manager = UserManager(app, db_adapter)     # Inititialize v0.9+ style
 
-    # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db, User)        # Select database adapter
-    user_manager = UserManager(db_adapter, app)     # Init Flask-User and bind to app
+or::
 
-New::
+    db_adapter = SQLAlchemyAdapter(db, User)        # Define SQLAlchemy DB with User model
+    user_manager = UserManager(db_adapter, app)     # Inititialize v0.6 style
 
-    # Create custom UserManager subclass
-    class CustomUserManager(UserManager):
-
-        # Customize settings
-        def customize(self, app):
-
-            # Specify a SQLAlchemy DB Adapter with a User model
-            self.db_adapter = SQLAlchemyAdapter(db, User)
-
-    # Setup Flask-User
-    user_manager = CustomUserManager(app)     # Init Flask-User and bind to app
+The v0.9+ style is recommended. The v0.6 style will be supported in Flask-User v0.9 and v1.0
+but may be obsoleted in the future.
 
 
 Config settings
@@ -37,14 +28,9 @@ USER_ENABLE_EMAIL: The default is now 'False'. Set this to True if emails are us
 
 Optional: It is now recommended to use the CustomUserManager.customize() method to configure Flask-User settings::
 
-    # Create CustomUserManager class
+    # Define CustomUserManager subclass
     class CustomUserManager(UserManager):
 
         # Customize settings
         def customize(self, app):
-
-            # Specify a SQLAlchemy DB Adapter with a User model
-            self.db_adapter = SQLAlchemyAdapter(db, User)
-
-            # Customize settings
             self.enable_email = True    # Note that it's 'enable_email' and not 'USER_ENABLE_EMAIL'

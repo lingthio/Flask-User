@@ -5,7 +5,7 @@
     :license: Simplified BSD License, see LICENSE.txt for more details."""
 
 from passlib.context import CryptContext
-from flask import Blueprint, current_app, url_for, render_template
+from flask import Blueprint, current_app, Flask, url_for, render_template
 from flask_login import LoginManager, UserMixin as LoginUserMixin
 from flask_user.db_adapters import DBAdapter
 from .db_adapters import SQLAlchemyAdapter
@@ -43,106 +43,114 @@ def _flask_user_context_processor():
 class UserManager(object):
     """ This is the Flask-User object that manages the User management process."""
 
-    def __init__(self, app=None, **kwargs):
+    def __init__(self, app=None, db_adapter=None, **kwargs):
         """ Initialize UserManager, with or without an app """
         if app:
-            self.init_app(app, **kwargs)
+            self.init_app(app, db_adapter, **kwargs)
 
-    def _init_settings(self, app):
+    def customize(self, app):
+        pass
+
+    def _sds(self, attribute_name, default_value):
+        """ Set default setting (sds) but only if attribute has not been set before """
+        if not hasattr(self, attribute_name):
+            setattr(self, attribute_name, default_value)
+
+    def _set_default_settings(self, app):
         """ Set default app.config settings, but only if they have not been set before """
-        # define short names
 
         # General settings
-        self.app_name =                 app.config.get('USER_APP_NAME', 'AppName')
+        self._sds('app_name',                 app.config.get('USER_APP_NAME', 'AppName'))
 
         # Set default features
-        self.enable_change_password =   app.config.get('USER_ENABLE_CHANGE_PASSWORD', True)
-        self.enable_change_username =   app.config.get('USER_ENABLE_CHANGE_USERNAME', True)
-        self.enable_email =             app.config.get('USER_ENABLE_EMAIL', False)
-        self.enable_confirm_email =     app.config.get('USER_ENABLE_CONFIRM_EMAIL', self.enable_email)
-        self.enable_forgot_password =   app.config.get('USER_ENABLE_FORGOT_PASSWORD', self.enable_email)
-        self.enable_login_without_confirm_email = app.config.get('USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL', False)
-        self.enable_multiple_emails =   app.config.get('USER_ENABLE_MULTIPLE_EMAILS', False)
-        self.enable_register =          app.config.get('USER_ENABLE_REGISTER', True)
-        self.enable_remember_me =       app.config.get('USER_ENABLE_REMEMBER_ME', True)
-        self.enable_retype_password =   app.config.get('USER_ENABLE_RETYPE_PASSWORD', True)
-        self.enable_username =          app.config.get('USER_ENABLE_USERNAME', True)
+        self._sds('enable_change_password',   app.config.get('USER_ENABLE_CHANGE_PASSWORD', True))
+        self._sds('enable_change_username',   app.config.get('USER_ENABLE_CHANGE_USERNAME', True))
+        self._sds('enable_email',             app.config.get('USER_ENABLE_EMAIL', False))
+        self._sds('enable_confirm_email',     app.config.get('USER_ENABLE_CONFIRM_EMAIL', self.enable_email))
+        self._sds('enable_forgot_password',   app.config.get('USER_ENABLE_FORGOT_PASSWORD', self.enable_email))
+        self._sds('enable_login_without_confirm_email', app.config.get('USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL', False))
+        self._sds('enable_multiple_emails',   app.config.get('USER_ENABLE_MULTIPLE_EMAILS', False))
+        self._sds('enable_register',          app.config.get('USER_ENABLE_REGISTER', True))
+        self._sds('enable_remember_me',       app.config.get('USER_ENABLE_REMEMBER_ME', True))
+        self._sds('enable_retype_password',   app.config.get('USER_ENABLE_RETYPE_PASSWORD', True))
+        self._sds('enable_username',          app.config.get('USER_ENABLE_USERNAME', True))
 
         # Set default settings
-        self.auto_login =               app.config.get('USER_AUTO_LOGIN', True)
-        self.auto_login_after_confirm = app.config.get('USER_AUTO_LOGIN_AFTER_CONFIRM', self.auto_login)
-        self.auto_login_after_register = app.config.get('USER_AUTO_LOGIN_AFTER_REGISTER', self.auto_login)
-        self.auto_login_after_reset_password = app.config.get('USER_AUTO_LOGIN_AFTER_RESET_PASSWORD', self.auto_login)
-        self.auto_login_at_login =      app.config.get('USER_AUTO_LOGIN_AT_LOGIN', self.auto_login)
-        self.confirm_email_expiration = app.config.get('USER_CONFIRM_EMAIL_EXPIRATION', 2 * 24 * 3600)  # 2 days
-        self.invite_expiration =        app.config.get('USER_INVITE_EXPIRATION', 90 * 24 * 3600)  # 90 days
-        self.password_hash_mode =       app.config.get('USER_PASSWORD_HASH_MODE', 'passlib')
-        self.password_hash =            app.config.get('USER_PASSWORD_HASH', 'bcrypt')
-        self.password_salt =            app.config.get('USER_PASSWORD_SALT', app.config['SECRET_KEY'])
-        self.reset_password_expiration = app.config.get('USER_RESET_PASSWORD_EXPIRATION', 2 * 24 * 3600)  # 2 days
-        self.enable_invitation =        app.config.get('USER_ENABLE_INVITATION', False)
-        self.require_invitation =       app.config.get('USER_REQUIRE_INVITATION', False)
-        self.send_password_changed_email = app.config.get('USER_SEND_PASSWORD_CHANGED_EMAIL', self.enable_email)
-        self.send_registered_email =    app.config.get('USER_SEND_REGISTERED_EMAIL', self.enable_email)
-        self.send_username_changed_email = app.config.get('USER_SEND_USERNAME_CHANGED_EMAIL', self.enable_email)
-        self.show_username_email_does_not_exist = app.config.get('USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST', self.enable_register)
+        self._sds('auto_login',               app.config.get('USER_AUTO_LOGIN', True))
+        self._sds('auto_login_after_confirm', app.config.get('USER_AUTO_LOGIN_AFTER_CONFIRM', self.auto_login))
+        self._sds('auto_login_after_register', app.config.get('USER_AUTO_LOGIN_AFTER_REGISTER', self.auto_login))
+        self._sds('auto_login_after_reset_password', app.config.get('USER_AUTO_LOGIN_AFTER_RESET_PASSWORD', self.auto_login))
+        self._sds('auto_login_at_login',      app.config.get('USER_AUTO_LOGIN_AT_LOGIN', self.auto_login))
+        self._sds('confirm_email_expiration', app.config.get('USER_CONFIRM_EMAIL_EXPIRATION', 2 * 24 * 3600))  # 2 days
+        self._sds('invite_expiration',        app.config.get('USER_INVITE_EXPIRATION', 90 * 24 * 3600))  # 90 days
+        self._sds('password_hash_mode',       app.config.get('USER_PASSWORD_HASH_MODE', 'passlib'))
+        self._sds('password_hash',            app.config.get('USER_PASSWORD_HASH', 'bcrypt'))
+        self._sds('password_salt',            app.config.get('USER_PASSWORD_SALT', app.config['SECRET_KEY']))
+        self._sds('reset_password_expiration', app.config.get('USER_RESET_PASSWORD_EXPIRATION', 2 * 24 * 3600))  # 2 days
+        self._sds('enable_invitation',        app.config.get('USER_ENABLE_INVITATION', False))
+        self._sds('require_invitation',       app.config.get('USER_REQUIRE_INVITATION', False))
+        self._sds('send_password_changed_email', app.config.get('USER_SEND_PASSWORD_CHANGED_EMAIL', self.enable_email))
+        self._sds('send_registered_email',    app.config.get('USER_SEND_REGISTERED_EMAIL', self.enable_email))
+        self._sds('send_username_changed_email', app.config.get('USER_SEND_USERNAME_CHANGED_EMAIL', self.enable_email))
+        self._sds('show_username_email_does_not_exist', app.config.get('USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST', self.enable_register))
 
         # Set default URLs
-        self.change_password_url =      app.config.get('USER_CHANGE_PASSWORD_URL', '/user/change-password')
-        self.change_username_url =      app.config.get('USER_CHANGE_USERNAME_URL', '/user/change-username')
-        self.confirm_email_url =        app.config.get('USER_CONFIRM_EMAIL_URL', '/user/confirm-email/<token>')
-        self.email_action_url =         app.config.get('USER_EMAIL_ACTION_URL', '/user/email/<id>/<action>')
-        self.forgot_password_url =      app.config.get('USER_FORGOT_PASSWORD_URL', '/user/forgot-password')
-        self.login_url =                app.config.get('USER_LOGIN_URL', '/user/sign-in')
-        self.logout_url =               app.config.get('USER_LOGOUT_URL', '/user/sign-out')
-        self.manage_emails_url =        app.config.get('USER_MANAGE_EMAILS_URL', '/user/manage-emails')
-        self.register_url =             app.config.get('USER_REGISTER_URL', '/user/register')
-        self.resend_confirm_email_url = app.config.get('USER_RESEND_CONFIRM_EMAIL_URL', '/user/resend-confirm-email')
-        self.reset_password_url =       app.config.get('USER_RESET_PASSWORD_URL', '/user/reset-password/<token>')
-        self.user_profile_url =         app.config.get('USER_PROFILE_URL', '/user/profile')
-        self.invite_url =               app.config.get('USER_INVITE_URL', '/user/invite')
+        self._sds('base_url',                 app.config.get('USER_CHANGE_PASSWORD_URL',  '/user'))
+        self._sds('change_password_url',      app.config.get('USER_CHANGE_PASSWORD_URL',  self.base_url+'/change-password'))
+        self._sds('change_username_url',      app.config.get('USER_CHANGE_USERNAME_URL',  self.base_url+'/change-username'))
+        self._sds('confirm_email_url',        app.config.get('USER_CONFIRM_EMAIL_URL',    self.base_url+'/confirm-email/<token>'))
+        self._sds('email_action_url',         app.config.get('USER_EMAIL_ACTION_URL',     self.base_url+'/email/<id>/<action>'))
+        self._sds('forgot_password_url',      app.config.get('USER_FORGOT_PASSWORD_URL',  self.base_url+'/forgot-password'))
+        self._sds('login_url',                app.config.get('USER_LOGIN_URL',            self.base_url+'/sign-in'))
+        self._sds('logout_url',               app.config.get('USER_LOGOUT_URL',           self.base_url+'/sign-out'))
+        self._sds('manage_emails_url',        app.config.get('USER_MANAGE_EMAILS_URL',    self.base_url+'/manage-emails'))
+        self._sds('register_url',             app.config.get('USER_REGISTER_URL',         self.base_url+'/register'))
+        self._sds('resend_confirm_email_url', app.config.get('USER_RESEND_CONFIRM_EMAIL_URL', self.base_url+'/resend-confirm-email'))
+        self._sds('reset_password_url',       app.config.get('USER_RESET_PASSWORD_URL',   self.base_url+'/reset-password/<token>'))
+        self._sds('user_profile_url',         app.config.get('USER_PROFILE_URL',          self.base_url+'/profile'))
+        self._sds('invite_url',               app.config.get('USER_INVITE_URL',           self.base_url+'/invite'))
 
         # Set default ENDPOINTs
         home_endpoint = ''
-        login_endpoint = self.login_endpoint = 'user.login'
-        self.after_change_password_endpoint = app.config.get('USER_AFTER_CHANGE_PASSWORD_ENDPOINT', home_endpoint)
-        self.after_change_username_endpoint = app.config.get('USER_AFTER_CHANGE_USERNAME_ENDPOINT', home_endpoint)
-        self.after_confirm_endpoint = app.config.get('USER_AFTER_CONFIRM_ENDPOINT', home_endpoint)
-        self.after_forgot_password_endpoint = app.config.get('USER_AFTER_FORGOT_PASSWORD_ENDPOINT', home_endpoint)
-        self.after_login_endpoint = app.config.get('USER_AFTER_LOGIN_ENDPOINT', home_endpoint)
-        self.after_logout_endpoint = app.config.get('USER_AFTER_LOGOUT_ENDPOINT', login_endpoint)
-        self.after_register_endpoint = app.config.get('USER_AFTER_REGISTER_ENDPOINT', home_endpoint)
-        self.after_resend_confirm_email_endpoint = app.config.get('USER_AFTER_RESEND_CONFIRM_EMAIL_ENDPOINT', home_endpoint)
-        self.after_reset_password_endpoint = app.config.get('USER_AFTER_RESET_PASSWORD_ENDPOINT', home_endpoint)
-        self.after_invite_endpoint = app.config.get('USER_INVITE_ENDPOINT', home_endpoint)
-        self.unconfirmed_email_endpoint = app.config.get('USER_UNCONFIRMED_EMAIL_ENDPOINT', home_endpoint)
-        self.unauthenticated_endpoint = app.config.get('USER_UNAUTHENTICATED_ENDPOINT', login_endpoint)
-        self.unauthorized_endpoint = app.config.get('USER_UNAUTHORIZED_ENDPOINT', home_endpoint)
+        login_endpoint = 'user.login'
+        self._sds('after_change_password_endpoint', app.config.get('USER_AFTER_CHANGE_PASSWORD_ENDPOINT', home_endpoint))
+        self._sds('after_change_username_endpoint', app.config.get('USER_AFTER_CHANGE_USERNAME_ENDPOINT', home_endpoint))
+        self._sds('after_confirm_endpoint', app.config.get('USER_AFTER_CONFIRM_ENDPOINT', home_endpoint))
+        self._sds('after_forgot_password_endpoint', app.config.get('USER_AFTER_FORGOT_PASSWORD_ENDPOINT', home_endpoint))
+        self._sds('after_login_endpoint', app.config.get('USER_AFTER_LOGIN_ENDPOINT', home_endpoint))
+        self._sds('after_logout_endpoint', app.config.get('USER_AFTER_LOGOUT_ENDPOINT', login_endpoint))
+        self._sds('after_register_endpoint', app.config.get('USER_AFTER_REGISTER_ENDPOINT', home_endpoint))
+        self._sds('after_resend_confirm_email_endpoint', app.config.get('USER_AFTER_RESEND_CONFIRM_EMAIL_ENDPOINT', home_endpoint))
+        self._sds('after_reset_password_endpoint', app.config.get('USER_AFTER_RESET_PASSWORD_ENDPOINT', home_endpoint))
+        self._sds('after_invite_endpoint', app.config.get('USER_INVITE_ENDPOINT', home_endpoint))
+        self._sds('unconfirmed_email_endpoint', app.config.get('USER_UNCONFIRMED_EMAIL_ENDPOINT', home_endpoint))
+        self._sds('unauthenticated_endpoint', app.config.get('USER_UNAUTHENTICATED_ENDPOINT', login_endpoint))
+        self._sds('unauthorized_endpoint', app.config.get('USER_UNAUTHORIZED_ENDPOINT', home_endpoint))
 
         # Set default template files
-        self.change_password_template = app.config.get('USER_CHANGE_PASSWORD_TEMPLATE', 'flask_user/change_password.html')
-        self.change_username_template = app.config.get('USER_CHANGE_USERNAME_TEMPLATE', 'flask_user/change_username.html')
-        self.forgot_password_template = app.config.get('USER_FORGOT_PASSWORD_TEMPLATE', 'flask_user/forgot_password.html')
-        self.login_template = app.config.get('USER_LOGIN_TEMPLATE', 'flask_user/login.html')
-        self.manage_emails_template = app.config.get('USER_MANAGE_EMAILS_TEMPLATE', 'flask_user/manage_emails.html')
-        self.register_template = app.config.get('USER_REGISTER_TEMPLATE', 'flask_user/register.html')
-        self.resend_confirm_email_template = app.config.get('USER_RESEND_CONFIRM_EMAIL_TEMPLATE',
-                                              'flask_user/resend_confirm_email.html')
-        self.reset_password_template = app.config.get('USER_RESET_PASSWORD_TEMPLATE', 'flask_user/reset_password.html')
-        self.user_profile_template = app.config.get('USER_PROFILE_TEMPLATE', 'flask_user/user_profile.html')
-        self.invite_template = app.config.get('USER_INVITE_TEMPLATE', 'flask_user/invite.html')
-        self.invite_accept_template = app.config.get('USER_INVITE_ACCEPT_TEMPLATE', 'flask_user/register.html')
+        self._sds('change_password_template', app.config.get('USER_CHANGE_PASSWORD_TEMPLATE', 'flask_user/change_password.html'))
+        self._sds('change_username_template', app.config.get('USER_CHANGE_USERNAME_TEMPLATE', 'flask_user/change_username.html'))
+        self._sds('forgot_password_template', app.config.get('USER_FORGOT_PASSWORD_TEMPLATE', 'flask_user/forgot_password.html'))
+        self._sds('login_template', app.config.get('USER_LOGIN_TEMPLATE', 'flask_user/login.html'))
+        self._sds('manage_emails_template', app.config.get('USER_MANAGE_EMAILS_TEMPLATE', 'flask_user/manage_emails.html'))
+        self._sds('register_template', app.config.get('USER_REGISTER_TEMPLATE', 'flask_user/register.html'))
+        self._sds('resend_confirm_email_template', app.config.get('USER_RESEND_CONFIRM_EMAIL_TEMPLATE',
+                                              'flask_user/resend_confirm_email.html'))
+        self._sds('reset_password_template', app.config.get('USER_RESET_PASSWORD_TEMPLATE', 'flask_user/reset_password.html'))
+        self._sds('user_profile_template', app.config.get('USER_PROFILE_TEMPLATE', 'flask_user/user_profile.html'))
+        self._sds('invite_template', app.config.get('USER_INVITE_TEMPLATE', 'flask_user/invite.html'))
+        self._sds('invite_accept_template', app.config.get('USER_INVITE_ACCEPT_TEMPLATE', 'flask_user/register.html'))
 
         # Set default email template files
-        self.confirm_email_email_template = app.config.get('USER_CONFIRM_EMAIL_EMAIL_TEMPLATE', 'flask_user/emails/confirm_email')
-        self.forgot_password_email_template = app.config.get('USER_FORGOT_PASSWORD_EMAIL_TEMPLATE',
-                                               'flask_user/emails/forgot_password')
-        self.password_changed_email_template = app.config.get('USER_PASSWORD_CHANGED_EMAIL_TEMPLATE',
-                                                'flask_user/emails/password_changed')
-        self.registered_email_template = app.config.get('USER_REGISTERED_EMAIL_TEMPLATE', 'flask_user/emails/registered')
-        self.username_changed_email_template = app.config.get('USER_USERNAME_CHANGED_EMAIL_TEMPLATE',
-                                                'flask_user/emails/username_changed')
-        self.invite_email_template = app.config.get('USER_INVITE_EMAIL_TEMPLATE', 'flask_user/emails/invite')
+        self._sds('confirm_email_email_template', app.config.get('USER_CONFIRM_EMAIL_EMAIL_TEMPLATE', 'flask_user/emails/confirm_email'))
+        self._sds('forgot_password_email_template', app.config.get('USER_FORGOT_PASSWORD_EMAIL_TEMPLATE',
+                                               'flask_user/emails/forgot_password'))
+        self._sds('password_changed_email_template', app.config.get('USER_PASSWORD_CHANGED_EMAIL_TEMPLATE',
+                                                'flask_user/emails/password_changed'))
+        self._sds('registered_email_template', app.config.get('USER_REGISTERED_EMAIL_TEMPLATE', 'flask_user/emails/registered'))
+        self._sds('username_changed_email_template', app.config.get('USER_USERNAME_CHANGED_EMAIL_TEMPLATE',
+                                                'flask_user/emails/username_changed'))
+        self._sds('invite_email_template', app.config.get('USER_INVITE_EMAIL_TEMPLATE', 'flask_user/emails/invite'))
 
 
     def _check_settings(self):
@@ -173,10 +181,7 @@ class UserManager(object):
             raise ConfigurationError(
                 'USER_ENABLE_INVITATION=True must pass UserInvitationClass to SQLAlchemyAdapter().')
 
-    def customize(self, app):
-        pass
-
-    def init_app(self, app,
+    def init_app(self, app, db_adapter=None,
                 # Forms
                 add_email_form=forms.AddEmailForm,
                 change_password_form=forms.ChangePasswordForm,
@@ -216,8 +221,29 @@ class UserManager(object):
                 legacy_check_password_hash=None):
 
         """ Initialize the UserManager object """
-        self.db_adapter = None
+
+        # Perform some Python magic to allow for v0.6 and v0.9+ parameter orders
+        if isinstance(app, DBAdapter) or isinstance(db_adapter, Flask):
+            # Flask-User v0.6 used init_app(db_adapter, app)
+            self.app = db_adapter
+            self.db_adapter = app
+        else:
+            # Flask-User v0.9+ uses init_app(app, db_adapter)
+            self.app = app
+            self.db_adapter = db_adapter
+
+        # Perform Class type checking
+        if not isinstance(self.app, Flask):
+            raise TypeError("flask_user.UserManager.init_app(): Parameter 'app' is an instance of class '%s' "
+                            "instead of a subclass of class 'flask.Flask'."
+                            % app.__class__.__name__)
+        if not isinstance(self.db_adapter, DBAdapter):
+            raise TypeError("flask_user.UserManager.init_app(): Parameter 'db_adapter' is instance of class '%s' "
+                            "instead of a subclass of 'flask_user.DBAdapter'."
+                            % app.__class__.__name__)
+
         self.app = app
+        self.db_adapter = db_adapter
 
         # Forms
         self.add_email_form = add_email_form
@@ -265,10 +291,11 @@ class UserManager(object):
             app.extensions = {}
         app.extensions['user'] = self
 
-        # Initialize settings
-        self._init_settings(app)
-
+        # Allow CustomUserManager to customize certain settings
         self.customize(app)
+
+        # Initialize default settings, but only for settings that have not been set
+        self._set_default_settings(app)
 
         # Make sure the settings are valid -- raise ConfigurationError if not
         self._check_settings()

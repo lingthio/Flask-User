@@ -65,16 +65,9 @@ def create_app(test_config=None):                   # For automated tests
     # Reset all the database tables
     db.create_all()
 
-    # Define custom UserManager class
-    class CustomUserManager(UserManager):
-        def customize(self, app):
-            # Customize the DB Adapter for SQLAlchemy with this User model
-            self.db_adapter = SQLAlchemyAdapter(db, User)
-            # Customize Flask-User settings
-            self.app_name = "RolesRequiredApp"      # Used by base and email templates
-
     # Setup Flask-User
-    user_manager = CustomUserManager(app)
+    db_adapter = SQLAlchemyAdapter(db, User)        # Define SQLAlchemy DB with User model
+    user_manager = UserManager(app, db_adapter)     # Initialize Flask-User
 
     # Create 'user007' user with 'secret' and 'agent' roles
     if not User.query.filter(User.username=='user007').first():
