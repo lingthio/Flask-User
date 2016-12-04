@@ -1,6 +1,6 @@
-============
-Installation
-============
+================================
+Porting Flask-User v0.6 to v0.9+
+================================
 
 Flask-User v0.9 breaks backwards compatibility with v0.6 in order to support custom UserManager subclasses.
 
@@ -33,4 +33,4 @@ Optional: It is now recommended to use the CustomUserManager.customize() method 
 
         # Customize settings
         def customize(self, app):
-            self.enable_email = True    # Note that it's 'enable_email' and not 'USER_ENABLE_EMAIL'
+            self.ENABLE_EMAIL = True    # Note that it's 'ENABLE_EMAIL' and not 'USER_ENABLE_EMAIL'

@@ -89,16 +89,13 @@ class ConfigClass(object):
     MAIL_USE_SSL =            os.getenv('MAIL_USE_SSL',         True)
 
 
-
 # Define custom UserManager class
 class CustomUserManager(UserManager):
+    # Customize settings
     def customize(self, app):
-        # Customize the DB Adapter for SQLAlchemy with this User model
-
-        # Customize settings
-        self.app_name = "CustomAppName"
-        self.enable_email = True
-        self.enable_invitation = True
+        self.APP_NAME = "CustomAppName"
+        self.ENABLE_EMAIL = True
+        self.ENABLE_INVITATION = True
 
 
 def init_app(app, test_config=None):                # For automated tests
