@@ -4,7 +4,6 @@
     :author: Ling Thio (ling.thio@gmail.com)
     :license: Simplified BSD License, see LICENSE.txt for more details."""
 
-from passlib.context import CryptContext
 from flask import Blueprint, current_app, Flask, url_for, render_template
 from flask_login import LoginManager, UserMixin as LoginUserMixin
 from flask_user.db_adapters import DBAdapter
@@ -177,14 +176,9 @@ class UserManager(object):
         self._create_default_attr('password_crypt_context', password_crypt_context)
         self._create_default_attr('send_email_function', send_email_function)
 
-        # Create password_crypt_context if needed
-        if not self.password_crypt_context:
-            self.password_crypt_context = CryptContext(
-                    schemes=[self.password_hash])
-
         # Setup default PasswordManager
         if not self.password_manager:
-            self.password_manager = passwords.PasswordManager(self)
+            self.password_manager = passwords.PasswordManager(self, self.password_crypt_context)
 
         # Setup default TokenManager
         if not self.token_manager:

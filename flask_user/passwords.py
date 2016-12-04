@@ -5,6 +5,7 @@
     :license: Simplified BSD License, see LICENSE.txt for more details."""
 
 from __future__ import print_function
+from passlib.context import CryptContext
 import hashlib
 import hmac
 import base64
@@ -16,9 +17,15 @@ def generate_sha512_hmac(self, password_salt, password):
 
 
 class PasswordManager(object):
-    def __init__(self, user_manager):
+    def __init__(self, user_manager, password_crypt_context):
         self.user_manager = user_manager
 
+        if password_crypt_context:
+            self.password_crypt_context = password_crypt_context
+        else:
+            # Create passlib's CryptContext if needed
+            self.password_crypt_context = CryptContext(
+                    schemes=[self.user_manager.password_hash])
 
     def hash_password(self, password):
         """ Generate hashed password using SHA512 HMAC and the USER_PASSWORD_HASH hash function."""
@@ -31,7 +38,7 @@ class PasswordManager(object):
             password = generate_sha512_hmac(self.user_manager.password_salt, password)
 
         # Use passlib's CryptContext to hash password
-        hashed_password = self.user_manager.password_crypt_context.encrypt(password)
+        hashed_password = self.password_crypt_context.encrypt(password)
 
         return hashed_password
 
@@ -56,7 +63,7 @@ class PasswordManager(object):
             password = generate_sha512_hmac(self.user_manager.password_salt, password)
 
         # Use passlib's CryptContext to verify
-        return self.user_manager.password_crypt_context.verify(password, hashed_password)
+        return self.password_crypt_context.verify(password, hashed_password)
 
 
     def update_hashed_password(self, user, hashed_password):
