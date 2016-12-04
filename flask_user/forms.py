@@ -34,6 +34,7 @@ def password_validator(form, field):
     if not is_valid:
         raise ValidationError(_('Password must have at least 6 characters with one lowercase letter, one uppercase letter and one number'))
 
+
 def username_validator(form, field):
     """ Username must cont at least 3 alphanumeric characters long"""
     username = field.data
@@ -44,6 +45,7 @@ def username_validator(form, field):
     for char in chars:
         if char not in valid_chars:
             raise ValidationError(_("Username may only contain letters, numbers, '-', '.' and '_'"))
+
 
 def unique_username_validator(form, field):
     """ Username must be unique"""
@@ -58,6 +60,7 @@ def unique_email_validator(form, field):
     if not user_manager.email_is_available(field.data):
         raise ValidationError(_('This Email is already in use. Please try another one.'))
 
+
 # ***********
 # ** Forms **
 # ***********
@@ -68,6 +71,7 @@ class AddEmailForm(FlaskForm):
         validators.Email(_('Invalid Email')),
         unique_email_validator])
     submit = SubmitField(_('Add Email'))
+
 
 class ChangePasswordForm(FlaskForm):
     old_password = PasswordField(_('Old Password'), validators=[
@@ -108,6 +112,7 @@ class ChangePasswordForm(FlaskForm):
         # All is well
         return True
 
+
 class ChangeUsernameForm(FlaskForm):
     new_username = StringField(_('New Username'), validators=[
         validators.DataRequired(_('Username is required')),
@@ -141,6 +146,7 @@ class ChangeUsernameForm(FlaskForm):
 
         # All is well
         return True
+
 
 class ForgotPasswordForm(FlaskForm):
     email = StringField(_('Your email address'), validators=[
@@ -210,7 +216,7 @@ class LoginForm(FlaskForm):
             user, user_email = user_manager.find_user_by_email(self.email.data)
 
         # Handle successful authentication
-        if user and user_manager.get_password(user) and user_manager.verify_password(self.password.data, user):
+        if user and user_manager.verify_password(self.password.data, user):
             return True                         # Successful authentication
 
         # Handle unsuccessful authentication
@@ -293,12 +299,14 @@ class RegisterForm(FlaskForm):
         # All is well
         return True
 
+
 class ResendConfirmEmailForm(FlaskForm):
     email = StringField(_('Your email address'), validators=[
         validators.DataRequired(_('Email address is required')),
         validators.Email(_('Invalid Email address')),
         ])
     submit = SubmitField(_('Resend email confirmation email'))
+
 
 class ResetPasswordForm(FlaskForm):
     new_password = PasswordField(_('New Password'), validators=[
@@ -325,6 +333,7 @@ class ResetPasswordForm(FlaskForm):
             return False
         # All is well
         return True
+
 
 class InviteForm(FlaskForm):
     email = StringField(_('Email'), validators=[

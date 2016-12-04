@@ -9,33 +9,62 @@ import hashlib
 import hmac
 import base64
 
-def generate_sha512_hmac(password_salt, password):
+
+def generate_sha512_hmac(self, password_salt, password):
     """ Generate SHA512 HMAC -- for compatibility with Flask-Security """
     return base64.b64encode(hmac.new(password_salt, password.encode('utf-8'), hashlib.sha512).digest())
 
-def hash_password(user_manager, password):
-    """ Generate hashed password using SHA512 HMAC and the USER_PASSWORD_HASH hash function."""
-    # Handle plaintext storage
-    if user_manager.password_hash == 'plaintext':
-        return password
-    # Generate SHA512 HMAC -- For compatibility with Flask-Security
-    if user_manager.password_hash_mode == 'Flask-Security':
-        password = generate_sha512_hmac(user_manager.password_salt, password)
-    # Use passlib to hash password
-    hashed_password = user_manager.password_crypt_context.encrypt(password)
 
-    return hashed_password
+class PasswordManager(object):
+    def __init__(self, user_manager):
+        self.user_manager = user_manager
 
-def verify_password(user_manager, password, hashed_password):
-    """ Verify password with previously hashed password.
-        Returns True on matching password.
-        Returns False otherwise."""
-    # Handle plaintext storage
-    if user_manager.password_hash == 'plaintext':
-        return password==hashed_password
-    # Generate SHA512 HMAC -- For compatibility with Flask-Security
-    if user_manager.password_hash_mode == 'Flask-Security':
-        password = generate_sha512_hmac(user_manager.password_salt, password)
 
-    return user_manager.password_crypt_context.verify(password, hashed_password)
+    def hash_password(self, password):
+        """ Generate hashed password using SHA512 HMAC and the USER_PASSWORD_HASH hash function."""
+        # Handle plaintext storage
+        if self.user_manager.password_hash == 'plaintext':
+            return password
+
+        # Pre-generate SHA512 HMAC -- For compatibility with Flask-Security
+        if self.user_manager.password_hash_mode == 'Flask-Security':
+            password = generate_sha512_hmac(self.user_manager.password_salt, password)
+
+        # Use passlib's CryptContext to hash password
+        hashed_password = self.user_manager.password_crypt_context.encrypt(password)
+
+        return hashed_password
+
+
+    def verify_password(self, password, user):
+        """ Verify password with user's hashed password.
+            Returns True on matching password.
+            Returns False otherwise."""
+
+        # Hashed password is stored with the User model or the UserAuth model
+        if self.user_manager.db_adapter.UserAuthClass and hasattr(self.user_manager.db_adapter.UserClass, 'user_auth'):
+            hashed_password = user.user_auth.password
+        else:
+            hashed_password = user.password
+
+        # Handle plaintext storage
+        if self.user_manager.password_hash == 'plaintext':
+            return password==hashed_password
+
+        # Pre-generate SHA512 HMAC -- For compatibility with Flask-Security
+        if self.user_manager.password_hash_mode == 'Flask-Security':
+            password = generate_sha512_hmac(self.user_manager.password_salt, password)
+
+        # Use passlib's CryptContext to verify
+        return self.user_manager.password_crypt_context.verify(password, hashed_password)
+
+
+    def update_hashed_password(self, user, hashed_password):
+        # Hashed password is stored with the User model or the UserAuth model
+        if self.user_manager.db_adapter.UserAuthClass and hasattr(self.user_manager.db_adapter.UserClass, 'user_auth'):
+            user.user_auth.password = hashed_password
+        else:
+            user.password = hashed_password
+        self.user_manager.db_adapter.commit()
+
 

@@ -94,7 +94,7 @@ def change_password():
         hashed_password = user_manager.hash_password(form.new_password.data)
 
         # Change password
-        user_manager.update_password(current_user, hashed_password)
+        user_manager.password_manager.update_hashed_password(current_user, hashed_password)
 
         # Send 'password_changed' email
         if user_manager.enable_email and user_manager.send_password_changed_email:

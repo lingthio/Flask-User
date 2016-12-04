@@ -10,7 +10,7 @@ from Crypto.Cipher import AES
 from itsdangerous import BadSignature, SignatureExpired, TimestampSigner
 
 class TokenManager(object):
-    def setup(self, secret):
+    def __init__(self, secret):
         """ Create a cypher to encrypt IDs and a signer to sign tokens."""
         # Create cypher to encrypt IDs
         # and ensure >=16 characters

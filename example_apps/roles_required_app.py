@@ -17,6 +17,11 @@ class ConfigClass(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
+class CustomUserManager(UserManager):
+    def customize(self, app):
+        self.APP_NAME = "RolesRequiredApp"
+
+
 def create_app(test_config=None):                   # For automated tests
     # Setup Flask and read config from ConfigClass defined above
     app = Flask(__name__)
@@ -66,8 +71,8 @@ def create_app(test_config=None):                   # For automated tests
     db.create_all()
 
     # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db, User)        # Define SQLAlchemy DB with User model
-    user_manager = UserManager(app, db_adapter)     # Initialize Flask-User
+    db_adapter = SQLAlchemyAdapter(db, User)            # Define SQLAlchemy DB with User model
+    user_manager = CustomUserManager(app, db_adapter)   # Initialize Flask-User
 
     # Create 'user007' user with 'secret' and 'agent' roles
     if not User.query.filter(User.username=='user007').first():
