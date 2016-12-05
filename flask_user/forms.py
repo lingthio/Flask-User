@@ -7,7 +7,13 @@
 import string
 from flask import current_app
 from flask_login import current_user
-from flask_wtf import FlaskForm
+
+# Flask-WTF v0.13 renamed Flask to FlaskForm
+try:
+    from flask_wtf import FlaskForm             # Try Flask-WTF v0.13+
+except ImportError:
+    from flask_wtf import Form as FlaskForm     # Fallback to Flask-WTF v0.12 or older
+
 from wtforms import BooleanField, HiddenField, PasswordField, SubmitField, StringField
 from wtforms import validators, ValidationError
 from .translations import lazy_gettext as _
@@ -105,7 +111,7 @@ class ChangePasswordForm(FlaskForm):
             return False
 
         # Verify current_user and current_password
-        if not current_user or not user_manager.verify_password(self.old_password.data, current_user):
+        if not current_user or not user_manager.verify_password(current_user, self.old_password.data):
             self.old_password.errors.append(_('Old Password is incorrect'))
             return False
 
@@ -140,7 +146,7 @@ class ChangeUsernameForm(FlaskForm):
             return False
 
         # Verify current_user and current_password
-        if not current_user or not user_manager.verify_password(self.old_password.data, current_user):
+        if not current_user or not user_manager.verify_password(current_user, self.old_password.data):
             self.old_password.errors.append(_('Old Password is incorrect'))
             return False
 
@@ -216,7 +222,7 @@ class LoginForm(FlaskForm):
             user, user_email = user_manager.find_user_by_email(self.email.data)
 
         # Handle successful authentication
-        if user and user_manager.verify_password(self.password.data, user):
+        if user and user_manager.verify_password(user, self.password.data):
             return True                         # Successful authentication
 
         # Handle unsuccessful authentication

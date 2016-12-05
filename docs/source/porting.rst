@@ -6,20 +6,28 @@ Flask-User v0.9 breaks backwards compatibility with v0.6 in order to support cus
 
 UserManager() and init_app() parameter order
 --------------------------------------------
+Flask-User v0.9 changed the parameter order for UserManager() and init_app()::
 
-Flask-User v0.9 accepts the `app` and `db_adapter` parameters to be specified to UserManager() and init_app()
-in two different orders::
+    user_manager = UserManager(app, db_adapter)     # v0.9 style call
 
-    db_adapter = SQLAlchemyAdapter(db, User)        # Define SQLAlchemy DB with User model
-    user_manager = UserManager(app, db_adapter)     # Inititialize v0.9+ style
+For backward compatibility reasons, the v0.6 parameter order is also supported, but not recommended::
 
-or::
+    user_manager = UserManager(db_adapter, app)     # v0.6 style call
 
-    db_adapter = SQLAlchemyAdapter(db, User)        # Define SQLAlchemy DB with User model
-    user_manager = UserManager(db_adapter, app)     # Inititialize v0.6 style
+The v0.6 style will be suppored in v0.9 and v1.0, but will be obsoleted in the future.
 
-The v0.9+ style is recommended. The v0.6 style will be supported in Flask-User v0.9 and v1.0
-but may be obsoleted in the future.
+
+verify_password() parameter order
+---------------------------------
+Flask-User v0.9 changed the parameter order for verify_password::
+
+    verify_password(user, password)                 # v0.9 style call
+
+For backward compatibility reasons, the v0.6 parameter order is also supported, but not recommended::
+
+    verify_password(password, user)                 # v0.6 style call
+
+The v0.6 style will be suppored in v0.9 and v1.0, but will be obsoleted in the future.
 
 
 Config settings

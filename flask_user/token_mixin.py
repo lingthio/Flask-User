@@ -9,8 +9,9 @@ import base64
 from Crypto.Cipher import AES
 from itsdangerous import BadSignature, SignatureExpired, TimestampSigner
 
-class TokenManager(object):
-    def __init__(self, secret):
+class TokenMixin(object):
+
+    def init_token_mixin(self, secret):
         """ Create a cypher to encrypt IDs and a signer to sign tokens."""
         # Create cypher to encrypt IDs
         # and ensure >=16 characters
@@ -24,7 +25,7 @@ class TokenManager(object):
         # Create signer to sign tokens
         self.signer = TimestampSigner(secret)
 
-    def encrypt_id(self, id):
+    def _encrypt_id(self, id):
         """ Encrypts integer ID to url-safe base64 string."""
         # 16 byte integer
         str1 = '%016d' % id
@@ -35,7 +36,7 @@ class TokenManager(object):
         # return base64 string without '=='
         return str3[0:-2]
 
-    def decrypt_id(self, encrypted_id):
+    def _decrypt_id(self, encrypted_id):
         """ Decrypts url-safe base64 string to integer ID"""
         # Convert strings and unicode strings to bytes if needed
         if hasattr(encrypted_id, 'encode'):
@@ -50,14 +51,14 @@ class TokenManager(object):
             #print('str1=', str1)
             return int(str1)                        # --> integer id
         except Exception as e:                      # pragma: no cover
-            print('!!!Exception in decrypt_id!!!:', e)
+            print('!!!Exception in _decrypt_id()!!!:', e)
             return 0
 
     def generate_token(self, id):
         """ Return token with id, timestamp and signature"""
         # In Python3 we must make sure that bytes are converted to strings.
         # Hence the addition of '.decode()'
-        return self.signer.sign(self.encrypt_id(id)).decode()
+        return self.signer.sign(self._encrypt_id(id)).decode()
 
     def verify_token(self, token, expiration_in_seconds):
         """ Verify token and return (is_valid, has_expired, id).
@@ -68,7 +69,7 @@ class TokenManager(object):
             data = self.signer.unsign(token, max_age=expiration_in_seconds)
             is_valid = True
             has_expired = False
-            id = self.decrypt_id(data)
+            id = self._decrypt_id(data)
         except SignatureExpired:
             is_valid = False
             has_expired = True

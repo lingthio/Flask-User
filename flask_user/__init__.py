@@ -8,14 +8,15 @@ from flask import Blueprint, current_app, Flask, url_for, render_template
 from flask_login import LoginManager, UserMixin as LoginUserMixin
 from flask_user.db_adapters import DBAdapter
 from .db_adapters import SQLAlchemyAdapter
-from . import emails
+from .password_mixin import PasswordMixin
+from .send_email_mixin import SendEmailMixin
+from .token_mixin import TokenMixin
+from . import send_email_mixin
 from . import forms
-from . import passwords
-from . import tokens
-from . import translations
-from . import views
 from . import signals
+from . import translations
 from .translations import get_translations
+from . import views
 
 # Enable the following: from flask_user import current_user
 from flask_login import current_user
@@ -39,10 +40,9 @@ def _flask_user_context_processor():
         user_manager=current_app.user_manager,
         call_or_get=_call_or_get)
 
-
-class UserManager(object):
+class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
     """ This is the Flask-User object that manages the User management process."""
-    
+
     # ***** Initialization methods *****
 
     def __init__(self, app=None, db_adapter=None, **kwargs):
@@ -51,47 +51,47 @@ class UserManager(object):
             self.init_app(app, db_adapter, **kwargs)
 
     def init_app(self, app, db_adapter=None,
-                # Forms
+                 # Forms
                 add_email_form=forms.AddEmailForm,
-                change_password_form=forms.ChangePasswordForm,
-                change_username_form=forms.ChangeUsernameForm,
-                forgot_password_form=forms.ForgotPasswordForm,
-                login_form=forms.LoginForm,
-                register_form=forms.RegisterForm,
-                resend_confirm_email_form=forms.ResendConfirmEmailForm,
-                reset_password_form=forms.ResetPasswordForm,
-                invite_form=forms.InviteForm,
-                # Validators
+                 change_password_form=forms.ChangePasswordForm,
+                 change_username_form=forms.ChangeUsernameForm,
+                 forgot_password_form=forms.ForgotPasswordForm,
+                 login_form=forms.LoginForm,
+                 register_form=forms.RegisterForm,
+                 resend_confirm_email_form=forms.ResendConfirmEmailForm,
+                 reset_password_form=forms.ResetPasswordForm,
+                 invite_form=forms.InviteForm,
+                 # Validators
                 username_validator=forms.username_validator,
-                password_validator=forms.password_validator,
-                # View functions
+                 password_validator=forms.password_validator,
+                 # View functions
                 render_function=render_template,
-                change_password_view_function=views.change_password,
-                change_username_view_function=views.change_username,
-                confirm_email_view_function=views.confirm_email,
-                email_action_view_function=views.email_action,
-                forgot_password_view_function=views.forgot_password,
-                login_view_function=views.login,
-                logout_view_function=views.logout,
-                manage_emails_view_function=views.manage_emails,
-                register_view_function=views.register,
-                resend_confirm_email_view_function = views.resend_confirm_email,
-                reset_password_view_function = views.reset_password,
-                unconfirmed_email_view_function = views.unconfirmed,
-                unauthenticated_view_function = views.unauthenticated,
-                unauthorized_view_function = views.unauthorized,
-                user_profile_view_function = views.user_profile,
-                invite_view_function = views.invite,
-                # Misc
-                login_manager = None,
-                password_manager = None,
-                token_manager = None,
-                password_crypt_context = None,
-                send_email_function = emails.send_email):
+                 change_password_view_function=views.change_password,
+                 change_username_view_function=views.change_username,
+                 confirm_email_view_function=views.confirm_email,
+                 email_action_view_function=views.email_action,
+                 forgot_password_view_function=views.forgot_password,
+                 login_view_function=views.login,
+                 logout_view_function=views.logout,
+                 manage_emails_view_function=views.manage_emails,
+                 register_view_function=views.register,
+                 resend_confirm_email_view_function = views.resend_confirm_email,
+                 reset_password_view_function = views.reset_password,
+                 unconfirmed_email_view_function = views.unconfirmed,
+                 unauthenticated_view_function = views.unauthenticated,
+                 unauthorized_view_function = views.unauthorized,
+                 user_profile_view_function = views.user_profile,
+                 invite_view_function = views.invite,
+                 # Misc
+                 login_manager = None,
+                 password_crypt_context = None,
+                 send_email_function = None):
 
         """ Initialize the UserManager object """
 
-        # Perform some Python magic to allow for v0.6 and v0.9+ parameter orders
+        # Perform some Python magic to allow for:
+        # - v0.6  init_app(db_adapter, app), and
+        # - v0.9+ init_app(app, db_adapter) parameter order
         if isinstance(app, DBAdapter) or isinstance(db_adapter, Flask):
             # Flask-User v0.6 used init_app(db_adapter, app)
             self.app = db_adapter
@@ -112,8 +112,6 @@ class UserManager(object):
                             % app.__class__.__name__)
 
         self.login_manager = login_manager
-        self.password_manager = password_manager
-        self.token_manager = token_manager
 
         # Bind Flask-USER to app
         app.user_manager = self
@@ -176,13 +174,16 @@ class UserManager(object):
         self._create_default_attr('password_crypt_context', password_crypt_context)
         self._create_default_attr('send_email_function', send_email_function)
 
-        # Setup default PasswordManager
-        if not self.password_manager:
-            self.password_manager = passwords.PasswordManager(self, self.password_crypt_context)
+        # Initialize PasswordMixin
+        self.init_password_mixin()
+
+        # Initialize SendEmailMixin
+        if not self.send_email_function:
+            self.send_email_function = self.send_email
+            self.init_email_mixin()
 
         # Setup default TokenManager
-        if not self.token_manager:
-            self.token_manager = tokens.TokenManager(self.password_salt)
+        self.init_token_mixin(self.password_salt)
 
         # Setup default LoginManager using Flask-Login
         if not self.login_manager:
@@ -193,10 +194,20 @@ class UserManager(object):
             # Note: user_id is a UNICODE string returned by UserMixin.get_id().
             # See https://flask-login.readthedocs.org/en/latest/#how-it-works
             @self.login_manager.user_loader
-            def load_user_by_id(user_unicode_id):
-                user_id = int(user_unicode_id)
-                # print('load_user_by_id: user_id=', user_id)
-                return self.get_user_by_id(user_id)
+            def load_user_by_user_token(user_token):
+                # decode token
+                is_valid, has_expired, user_id = self.verify_token(
+                    user_token,
+                    3600)  # timeout in seconds
+                print "load_user_by_user_token(): is_valid:", is_valid, "has_expired:", has_expired, "user_id:", user_id
+
+                # verify token
+                if not is_valid or has_expired:
+                    return None
+
+                # load user by user ID
+                user = self.get_user_by_id(user_id)
+                return user
 
 
         # Add flask_user/templates directory using a Blueprint
@@ -389,18 +400,6 @@ class UserManager(object):
         if self.enable_invitation:
             app.add_url_rule(self.invite_url, 'user.invite', self.invite_view_function, methods=['GET', 'POST'])
 
-    def hash_password(self, password):
-        return self.password_manager.hash_password(password)
-
-    def verify_password(self, password, user):
-        return self.password_manager.verify_password(password, user)
-
-    def generate_token(self, user_id):
-        return self.token_manager.generate_token(user_id)
-
-    def verify_token(self, token, expiration_in_seconds):
-        return self.token_manager.verify_token(token, expiration_in_seconds)
-
     def get_user_by_id(self, user_id):
         # Handle v0.5 backward compatibility
         ObjectClass = self.db_adapter.UserAuthClass if self.db_adapter.UserAuthClass and self.db_adapter.UserProfileClass else self.db_adapter.UserClass
@@ -484,7 +483,7 @@ class UserManager(object):
             reset_password_link = url_for('user.reset_password', token=token, _external=True)
 
             # Send forgot password email
-            emails.send_forgot_password_email(user, user_email, reset_password_link)
+            self.send_email_forgot_password(user, user_email, reset_password_link)
 
             # Store token
             if hasattr(user, 'reset_password_token'):
@@ -497,6 +496,15 @@ class UserManager(object):
 
 class UserMixin(LoginUserMixin):
     """ This class adds methods to the User model class required by Flask-Login and Flask-User."""
+
+    def get_id(self):
+        """ Return a token string representing the user's ID """
+        # Works in tandem with user_loader()
+        user_manager = current_app.user_manager
+        user_token = user_manager.generate_token(self.id)
+        print "UserMixin.get_id: ID:", self.id, "token:", user_token
+        return user_token
+
 
     def is_active(self):
         if hasattr(self, 'active'):
@@ -605,10 +613,8 @@ class UserMixin(LoginUserMixin):
     # This function enables the user ID to be encrypted as a token.
     # See https://flask-login.readthedocs.org/en/latest/#remember-me
     def get_auth_token(self):
-        token_manager = current_app.user_manager.token_manager
         user_id = int(self.get_id())
-        token = token_manager.encrypt_id(user_id)
-        #print('get_auth_token: user_id=', user_id, 'token=', token)
+        token = current_app.user_manager._encrypt_id(user_id)
         return token
 
 

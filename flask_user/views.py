@@ -12,7 +12,7 @@ try: # Handle Python 2.x and Python 3.x
 except ImportError:
     from urllib import quote            # Python 2.x
 from .decorators import confirm_email_required, login_required
-from . import emails
+from . import send_email_mixin
 from . import signals
 from .translations import gettext as _
 
@@ -94,11 +94,11 @@ def change_password():
         hashed_password = user_manager.hash_password(form.new_password.data)
 
         # Change password
-        user_manager.password_manager.update_hashed_password(current_user, hashed_password)
+        user_manager.update_hashed_password(current_user, hashed_password)
 
         # Send 'password_changed' email
         if user_manager.enable_email and user_manager.send_password_changed_email:
-            emails.send_password_changed_email(current_user)
+            user_manager.send_email_password_changed(current_user)
 
         # Send password_changed signal
         signals.user_changed_password.send(current_app._get_current_object(), user=current_user)
@@ -134,7 +134,7 @@ def change_username():
 
         # Send 'username_changed' email
         if user_manager.enable_email and user_manager.send_username_changed_email:
-            emails.send_username_changed_email(current_user)
+            user_manager.send_email_username_changed(current_user)
 
         # Send username_changed signal
         signals.user_changed_username.send(current_app._get_current_object(), user=current_user)
@@ -507,7 +507,7 @@ def invite():
 
         try:
             # Send 'invite' email
-            emails.send_invite_email(user_invite, accept_invite_link)
+            user_manager.send_email_invite(user_invite, accept_invite_link)
         except Exception as e:
             # delete new User object if send fails
             db_adapter.delete_object(user_invite)
@@ -581,7 +581,7 @@ def reset_password(token):
         return redirect(_endpoint_url(user_manager.login_endpoint))
 
     # Mark email as confirmed
-    user_email = emails.get_primary_user_email(user)
+    user_email = user_manager.get_primary_user_email(user)
     user_email.confirmed_at = datetime.utcnow()
 
     # Initialize form
@@ -601,7 +601,7 @@ def reset_password(token):
 
         # Send 'password_changed' email
         if user_manager.enable_email and user_manager.send_password_changed_email:
-            emails.send_password_changed_email(user)
+            user_manager.send_email_password_changed(user)
 
         # Prepare one-time system message
         flash(_("Your password has been reset successfully."), 'success')
@@ -672,7 +672,7 @@ def _send_registered_email(user, user_email, require_email_confirmation=True):
         confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
 
         # Send email
-        emails.send_registered_email(user, user_email, confirm_email_link)
+        user_manager.send_email_registered(user, user_email, confirm_email_link)
 
         # Prepare one-time system message
         if user_manager.enable_confirm_email and require_email_confirmation:
@@ -694,7 +694,7 @@ def _send_confirm_email(user, user_email):
         confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
 
         # Send email
-        emails.send_confirm_email_email(user, user_email, confirm_email_link)
+        user_manager.send_email_confirm_email(user, user_email, confirm_email_link)
 
         # Prepare one-time system message
         email = user_email.email if user_email else user.email
@@ -720,7 +720,7 @@ def _do_login_user(user, next, remember_me=False):
         return redirect(url_for('user.login'))
 
     # Use Flask-Login to sign in user
-    #print('login_user: remember_me=', remember_me)
+    print('login_user: remember_me=', remember_me)
     login_user(user, remember=remember_me)
 
     # Send user_logged_in signal
