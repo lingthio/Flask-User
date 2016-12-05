@@ -199,7 +199,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
                 is_valid, has_expired, user_id = self.verify_token(
                     user_token,
                     3600)  # timeout in seconds
-                print "load_user_by_user_token(): is_valid:", is_valid, "has_expired:", has_expired, "user_id:", user_id
+                # print("load_user_by_user_token(): is_valid:", is_valid, "has_expired:", has_expired, "user_id:", user_id)
 
                 # verify token
                 if not is_valid or has_expired:
@@ -408,7 +408,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
     # NB: This backward compatibility function may be obsoleted in the future
     # Use 'get_user_by_id() instead.
     def find_user_by_id(self, user_id):
-        print('Warning: find_user_by_id() will be deprecated in the future. User get_user_by_id() instead.')
+        print('Warning: find_user_by_id() will be deprecated in the future. Use get_user_by_id() instead.')
         return self.get_user_by_id(user_id)
 
     def get_user_email_by_id(self, user_email_id):
@@ -417,7 +417,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
     # NB: This backward compatibility function may be obsoleted in the future
     # Use 'get_user_email_by_id() instead.
     def find_user_email_by_id(self, user_email_id):
-        print('Warning: find_user_email_by_id() will be deprecated in the future. User get_user_email_by_id() instead.')
+        print('Warning: find_user_email_by_id() will be deprecated in the future. Use get_user_email_by_id() instead.')
         return self.get_user_email_by_id(user_email_id)
 
     def find_user_by_username(self, username):
@@ -479,7 +479,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
         user, user_email = self.find_user_by_email(email)
         if user:
             # Generate reset password link
-            token = self.generate_token(int(user.get_id()))
+            token = self.generate_token(user.id)
             reset_password_link = url_for('user.reset_password', token=token, _external=True)
 
             # Send forgot password email
@@ -502,7 +502,7 @@ class UserMixin(LoginUserMixin):
         # Works in tandem with user_loader()
         user_manager = current_app.user_manager
         user_token = user_manager.generate_token(self.id)
-        print "UserMixin.get_id: ID:", self.id, "token:", user_token
+        # print("UserMixin.get_id: ID:", self.id, "token:", user_token)
         return user_token
 
 
@@ -607,15 +607,6 @@ class UserMixin(LoginUserMixin):
 
         # All requirements have been met: return True
         return True
-
-
-    # Flask-Login is capable of remembering the current user ID in the browser's session.
-    # This function enables the user ID to be encrypted as a token.
-    # See https://flask-login.readthedocs.org/en/latest/#remember-me
-    def get_auth_token(self):
-        user_id = int(self.get_id())
-        token = current_app.user_manager._encrypt_id(user_id)
-        return token
 
 
     def has_confirmed_email(self):

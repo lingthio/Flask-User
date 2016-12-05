@@ -160,7 +160,7 @@ def email_action(id, action):
     user_email = db_adapter.find_first_object(db_adapter.UserEmailClass, id=id)
 
     # Users may only change their own UserEmails
-    if not user_email or user_email.user_id != int(current_user.get_id()):
+    if not user_email or user_email.user_id != current_user.id:
         return unauthorized()
 
     if action=='delete':
@@ -173,7 +173,7 @@ def email_action(id, action):
 
     elif action=='make-primary':
         # Disable previously primary emails
-        user_emails = db_adapter.find_all_objects(db_adapter.UserEmailClass, user_id=int(current_user.get_id()))
+        user_emails = db_adapter.find_all_objects(db_adapter.UserEmailClass, user_id=current_user.id)
         for ue in user_emails:
             if ue.is_primary:
                 ue.is_primary = False
@@ -247,7 +247,7 @@ def login():
             # Find primary user_email record
             if user and db_adapter.UserEmailClass:
                 user_email = db_adapter.find_first_object(db_adapter.UserEmailClass,
-                        user_id=int(user.get_id()),
+                        user_id=user.id,
                         is_primary=True,
                         )
             # Find user record by email (with form.username)
@@ -291,13 +291,13 @@ def manage_emails():
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
 
-    user_emails = db_adapter.find_all_objects(db_adapter.UserEmailClass, user_id=int(current_user.get_id()))
+    user_emails = db_adapter.find_all_objects(db_adapter.UserEmailClass, user_id=current_user.id)
     form = user_manager.add_email_form()
 
     # Process valid POST request
     if request.method=="POST" and form.validate():
         user_emails = db_adapter.add_object(db_adapter.UserEmailClass,
-                user_id=int(current_user.get_id()),
+                user_id=current_user.id,
                 email=form.email.data)
         db_adapter.commit()
         return redirect(url_for('user.manage_emails'))
@@ -667,7 +667,7 @@ def _send_registered_email(user, user_email, require_email_confirmation=True):
     # Send 'confirm_email' or 'registered' email
     if user_manager.enable_email and user_manager.enable_confirm_email:
         # Generate confirm email link
-        object_id = user_email.id if user_email else int(user.get_id())
+        object_id = user_email.id if user_email else user.id
         token = user_manager.generate_token(object_id)
         confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
 
@@ -689,7 +689,7 @@ def _send_confirm_email(user, user_email):
     # Send 'confirm_email' or 'registered' email
     if user_manager.enable_email and user_manager.enable_confirm_email:
         # Generate confirm email link
-        object_id = user_email.id if user_email else int(user.get_id())
+        object_id = user_email.id if user_email else user.id
         token = user_manager.generate_token(object_id)
         confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
 
@@ -720,7 +720,7 @@ def _do_login_user(user, next, remember_me=False):
         return redirect(url_for('user.login'))
 
     # Use Flask-Login to sign in user
-    print('login_user: remember_me=', remember_me)
+    # print('login_user: remember_me=', remember_me)
     login_user(user, remember=remember_me)
 
     # Send user_logged_in signal
