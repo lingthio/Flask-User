@@ -15,6 +15,10 @@ class ConfigClass(object):
     # Flask-SQLAlchemy settings
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    # Flask-User settings
+    USER_APP_NAME = "BasicApp"                      # Used in base and email templates
+    USER_ENABLE_EMAIL = False                       # Disable email functionality
+
 
 def create_app():
     """ Flask application factory """
@@ -44,7 +48,7 @@ def create_app():
     db.create_all()
 
     # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db, User)        # Define SQLAlchemy DB with User model
+    db_adapter = SQLAlchemyAdapter(db, User)        # Specify SQLAlchemy DB with User model
     user_manager = UserManager(app, db_adapter)     # Initialize Flask-User
 
     # The Home page is accessible to anyone

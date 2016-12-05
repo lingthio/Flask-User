@@ -52,7 +52,7 @@ Highlighted lines shows the lines added to the Basic App to produce the Roles Re
 .. literalinclude:: includes/roles_required_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 5, 50-63, 72-79, 112
+   :emphasize-lines: 5, 54-67, 76-83, 116
 
 Run the Roles Required App
 --------------------------

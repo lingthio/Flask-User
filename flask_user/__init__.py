@@ -238,7 +238,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
         # Create default features
         self._create_default_setting('enable_change_password',     app, True)
         self._create_default_setting('enable_change_username',     app, True)
-        self._create_default_setting('enable_email',               app, False)
+        self._create_default_setting('enable_email',               app, True)
         self._create_default_setting('enable_confirm_email',       app, self.enable_email)
         self._create_default_setting('enable_forgot_password',     app, self.enable_email)
         self._create_default_setting('enable_login_without_confirm_email', app, False)
