@@ -119,7 +119,8 @@ def init_app(app, test_config=None):                # For automated tests
 
     # Setup Flask-User
     db_adapter = SQLAlchemyAdapter(db, User, UserInvitationClass=UserInvitation)
-    user_manager = CustomUserManager(app, db_adapter)
+    user_manager = CustomUserManager()
+    user_manager.init_app(app, db_adapter)
 
     # Create regular 'member' user
     if not User.query.filter(User.username=='member').first():

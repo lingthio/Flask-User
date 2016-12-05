@@ -47,6 +47,8 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
 
     def __init__(self, app=None, db_adapter=None, **kwargs):
         """ Initialize UserManager, with or without an app """
+        self.app = app              # Make sure to set self.app here
+                                    # See http://flask.pocoo.org/docs/0.11/extensiondev/
         if app:
             self.init_app(app, db_adapter, **kwargs)
 
@@ -86,32 +88,31 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
                  login_manager = None,
                  password_crypt_context = None,
                  send_email_function = None):
-
         """ Initialize the UserManager object """
+
+        # Make sure to NOT set self.app here
+        # See http://flask.pocoo.org/docs/0.11/extensiondev/
 
         # Perform some Python magic to allow for:
         # - v0.6  init_app(db_adapter, app), and
         # - v0.9+ init_app(app, db_adapter) parameter order
         if isinstance(app, DBAdapter) or isinstance(db_adapter, Flask):
-            # Flask-User v0.6 used init_app(db_adapter, app)
-            self.app = db_adapter
-            self.db_adapter = app
-        else:
-            # Flask-User v0.9+ uses init_app(app, db_adapter)
-            self.app = app
-            self.db_adapter = db_adapter
+            # Switch v0.6 parameter order
+            temp = app
+            app = db_adapter
+            db_adapter = temp
 
         # Perform Class type checking
-        if not isinstance(self.app, Flask):
+        if not isinstance(app, Flask):
             raise TypeError("flask_user.UserManager.init_app(): Parameter 'app' is an instance of class '%s' "
                             "instead of a subclass of class 'flask.Flask'."
                             % app.__class__.__name__)
-        if not isinstance(self.db_adapter, DBAdapter):
+        if not isinstance(db_adapter, DBAdapter):
             raise TypeError("flask_user.UserManager.init_app(): Parameter 'db_adapter' is instance of class '%s' "
                             "instead of a subclass of 'flask_user.DBAdapter'."
                             % app.__class__.__name__)
 
-        self.login_manager = login_manager
+        self.db_adapter = db_adapter
 
         # Bind Flask-USER to app
         app.user_manager = self
@@ -171,6 +172,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
         self._create_default_attr('user_profile_view_function', user_profile_view_function)
         self._create_default_attr('invite_view_function', invite_view_function)
         # Misc
+        self._create_default_attr('login_manager', login_manager)
         self._create_default_attr('password_crypt_context', password_crypt_context)
         self._create_default_attr('send_email_function', send_email_function)
 
@@ -231,102 +233,100 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
     
     def _create_default_settings(self, app):
         """ Set default app.config settings, but only if they have not been set before """
-
-        # _create_default_setting('attribute', default_value):
-        #      sets self.attribute = self.ATTRIBUTE or app.config.USER_ATTRIBUTE or default_value
+        # sets self.attribute = self.ATTRIBUTE or app.config.USER_ATTRIBUTE or default_value
 
         # Create default features
-        self._create_default_setting('enable_change_password',     True)
-        self._create_default_setting('enable_change_username',     True)
-        self._create_default_setting('enable_email',               False)
-        self._create_default_setting('enable_confirm_email',       self.enable_email)
-        self._create_default_setting('enable_forgot_password',     self.enable_email)
-        self._create_default_setting('enable_login_without_confirm_email', False)
-        self._create_default_setting('enable_multiple_emails',     False)
-        self._create_default_setting('enable_register',            True)
-        self._create_default_setting('enable_remember_me',         True)
-        self._create_default_setting('enable_retype_password',     True)
-        self._create_default_setting('enable_username',            True)
+        self._create_default_setting('enable_change_password',     app, True)
+        self._create_default_setting('enable_change_username',     app, True)
+        self._create_default_setting('enable_email',               app, False)
+        self._create_default_setting('enable_confirm_email',       app, self.enable_email)
+        self._create_default_setting('enable_forgot_password',     app, self.enable_email)
+        self._create_default_setting('enable_login_without_confirm_email', app, False)
+        self._create_default_setting('enable_multiple_emails',     app, False)
+        self._create_default_setting('enable_register',            app, True)
+        self._create_default_setting('enable_remember_me',         app, True)
+        self._create_default_setting('enable_retype_password',     app, True)
+        self._create_default_setting('enable_username',            app, True)
 
         # Create default settings
-        self._create_default_setting('app_name',                   'MyApp')
-        self._create_default_setting('auto_login',                 True)
-        self._create_default_setting('auto_login_after_confirm',   self.auto_login)
-        self._create_default_setting('auto_login_after_register',  self.auto_login)
-        self._create_default_setting('auto_login_after_reset_password', self.auto_login)
-        self._create_default_setting('auto_login_at_login',        self.auto_login)
-        self._create_default_setting('confirm_email_expiration',   2 * 24 * 3600)  # 2 days
-        self._create_default_setting('invite_expiration',          90 * 24 * 3600)  # 90 days
-        self._create_default_setting('password_hash_mode',         'passlib')
-        self._create_default_setting('password_hash',              'bcrypt')
-        self._create_default_setting('password_salt',              app.config['SECRET_KEY'])
-        self._create_default_setting('reset_password_expiration',  2 * 24 * 3600)  # 2 days
-        self._create_default_setting('enable_invitation',          False)
-        self._create_default_setting('require_invitation',         False)
-        self._create_default_setting('send_password_changed_email', self.enable_email)
-        self._create_default_setting('send_registered_email',      self.enable_email)
-        self._create_default_setting('send_username_changed_email', self.enable_email)
-        self._create_default_setting('show_username_email_does_not_exist', self.enable_register)
+        self._create_default_setting('app_name',                   app, 'MyApp')
+        self._create_default_setting('auto_login',                 app, True)
+        self._create_default_setting('auto_login_after_confirm',   app, self.auto_login)
+        self._create_default_setting('auto_login_after_register',  app, self.auto_login)
+        self._create_default_setting('auto_login_after_reset_password', app, self.auto_login)
+        self._create_default_setting('auto_login_at_login',        app, self.auto_login)
+        self._create_default_setting('confirm_email_expiration',   app, 2 * 24 * 3600)  # 2 days
+        self._create_default_setting('invite_expiration',          app, 90 * 24 * 3600)  # 90 days
+        self._create_default_setting('password_hash_mode',         app, 'passlib')
+        self._create_default_setting('password_hash',              app, 'bcrypt')
+        self._create_default_setting('password_salt',              app, app.config['SECRET_KEY'])
+        self._create_default_setting('reset_password_expiration',  app, 2 * 24 * 3600)  # 2 days
+        self._create_default_setting('enable_invitation',          app, False)
+        self._create_default_setting('require_invitation',         app, False)
+        self._create_default_setting('send_password_changed_email',app, self.enable_email)
+        self._create_default_setting('send_registered_email',      app, self.enable_email)
+        self._create_default_setting('send_username_changed_email',app, self.enable_email)
+        self._create_default_setting('show_username_email_does_not_exist', app, self.enable_register)
 
         # Create default URLs
-        self._create_default_setting('base_url',                   '/user')
-        self._create_default_setting('change_password_url',        self.base_url+'/change-password')
-        self._create_default_setting('change_username_url',        self.base_url+'/change-username')
-        self._create_default_setting('confirm_email_url',          self.base_url+'/confirm-email/<token>')
-        self._create_default_setting('email_action_url',           self.base_url+'/email/<id>/<action>')
-        self._create_default_setting('forgot_password_url',        self.base_url+'/forgot-password')
-        self._create_default_setting('login_url',                  self.base_url+'/sign-in')
-        self._create_default_setting('logout_url',                 self.base_url+'/sign-out')
-        self._create_default_setting('manage_emails_url',          self.base_url+'/manage-emails')
-        self._create_default_setting('register_url',               self.base_url+'/register')
-        self._create_default_setting('resend_confirm_email_url',   self.base_url+'/resend-confirm-email')
-        self._create_default_setting('reset_password_url',         self.base_url+'/reset-password/<token>')
-        self._create_default_setting('user_profile_url',           self.base_url+'/profile')
-        self._create_default_setting('invite_url',                 self.base_url+'/invite')
+        self._create_default_setting('base_url',                   app, '/user')
+        self._create_default_setting('change_password_url',        app, self.base_url+'/change-password')
+        self._create_default_setting('change_username_url',        app, self.base_url+'/change-username')
+        self._create_default_setting('confirm_email_url',          app, self.base_url+'/confirm-email/<token>')
+        self._create_default_setting('email_action_url',           app, self.base_url+'/email/<id>/<action>')
+        self._create_default_setting('forgot_password_url',        app, self.base_url+'/forgot-password')
+        self._create_default_setting('login_url',                  app, self.base_url+'/sign-in')
+        self._create_default_setting('logout_url',                 app, self.base_url+'/sign-out')
+        self._create_default_setting('manage_emails_url',          app, self.base_url+'/manage-emails')
+        self._create_default_setting('register_url',               app, self.base_url+'/register')
+        self._create_default_setting('resend_confirm_email_url',   app, self.base_url+'/resend-confirm-email')
+        self._create_default_setting('reset_password_url',         app, self.base_url+'/reset-password/<token>')
+        self._create_default_setting('user_profile_url',           app, self.base_url+'/profile')
+        self._create_default_setting('invite_url',                 app, self.base_url+'/invite')
 
         # Create default ENDPOINTs
         home_endpoint = ''
         login_endpoint = 'user.login'
-        self._create_default_setting('after_change_password_endpoint', home_endpoint)
-        self._create_default_setting('after_change_username_endpoint', home_endpoint)
-        self._create_default_setting('after_confirm_endpoint',         home_endpoint)
-        self._create_default_setting('after_forgot_password_endpoint', home_endpoint)
-        self._create_default_setting('after_login_endpoint',           home_endpoint)
-        self._create_default_setting('after_logout_endpoint',          login_endpoint)
-        self._create_default_setting('after_register_endpoint',        home_endpoint)
-        self._create_default_setting('after_resend_confirm_email_endpoint', home_endpoint)
-        self._create_default_setting('after_reset_password_endpoint',  home_endpoint)
-        self._create_default_setting('after_invite_endpoint',          home_endpoint)
-        self._create_default_setting('unconfirmed_email_endpoint',     home_endpoint)
-        self._create_default_setting('unauthenticated_endpoint',       login_endpoint)
-        self._create_default_setting('unauthorized_endpoint',          home_endpoint)
+        self._create_default_setting('after_change_password_endpoint', app, home_endpoint)
+        self._create_default_setting('after_change_username_endpoint', app, home_endpoint)
+        self._create_default_setting('after_confirm_endpoint',         app, home_endpoint)
+        self._create_default_setting('after_forgot_password_endpoint', app, home_endpoint)
+        self._create_default_setting('after_login_endpoint',           app, home_endpoint)
+        self._create_default_setting('after_logout_endpoint',          app, login_endpoint)
+        self._create_default_setting('after_register_endpoint',        app, home_endpoint)
+        self._create_default_setting('after_resend_confirm_email_endpoint', app, home_endpoint)
+        self._create_default_setting('after_reset_password_endpoint',  app, home_endpoint)
+        self._create_default_setting('after_invite_endpoint',          app, home_endpoint)
+        self._create_default_setting('unconfirmed_email_endpoint',     app, home_endpoint)
+        self._create_default_setting('unauthenticated_endpoint',       app, login_endpoint)
+        self._create_default_setting('unauthorized_endpoint',          app, home_endpoint)
 
         # Create default template files
         template_base = 'flask_user'
-        self._create_default_setting('change_password_template',       template_base+'/change_password.html')
-        self._create_default_setting('change_username_template',       template_base+'/change_username.html')
-        self._create_default_setting('forgot_password_template',       template_base+'/forgot_password.html')
-        self._create_default_setting('login_template',                 template_base+'/login.html')
-        self._create_default_setting('manage_emails_template',         template_base+'/manage_emails.html')
-        self._create_default_setting('register_template',              template_base+'/register.html')
-        self._create_default_setting('resend_confirm_email_template',  template_base+'/resend_confirm_email.html')
-        self._create_default_setting('reset_password_template',        template_base+'/reset_password.html')
-        self._create_default_setting('user_profile_template',          template_base+'/user_profile.html')
-        self._create_default_setting('invite_template',                template_base+'/invite.html')
-        self._create_default_setting('invite_accept_template',         template_base+'/register.html')
+        self._create_default_setting('change_password_template',       app, template_base+'/change_password.html')
+        self._create_default_setting('change_username_template',       app, template_base+'/change_username.html')
+        self._create_default_setting('forgot_password_template',       app, template_base+'/forgot_password.html')
+        self._create_default_setting('login_template',                 app, template_base+'/login.html')
+        self._create_default_setting('manage_emails_template',         app, template_base+'/manage_emails.html')
+        self._create_default_setting('register_template',              app, template_base+'/register.html')
+        self._create_default_setting('resend_confirm_email_template',  app, template_base+'/resend_confirm_email.html')
+        self._create_default_setting('reset_password_template',        app, template_base+'/reset_password.html')
+        self._create_default_setting('user_profile_template',          app, template_base+'/user_profile.html')
+        self._create_default_setting('invite_template',                app, template_base+'/invite.html')
+        self._create_default_setting('invite_accept_template',         app, template_base+'/register.html')
 
         # Create default email template files
-        self._create_default_setting('confirm_email_email_template',   template_base+'/emails/confirm_email')
-        self._create_default_setting('forgot_password_email_template', template_base+'/emails/forgot_password')
-        self._create_default_setting('password_changed_email_template',template_base+'/emails/password_changed')
-        self._create_default_setting('registered_email_template',      template_base+'/emails/registered')
-        self._create_default_setting('username_changed_email_template',template_base+'/emails/username_changed')
-        self._create_default_setting('invite_email_template',          template_base+'/emails/invite')
+        self._create_default_setting('confirm_email_email_template',   app, template_base+'/emails/confirm_email')
+        self._create_default_setting('forgot_password_email_template', app, template_base+'/emails/forgot_password')
+        self._create_default_setting('password_changed_email_template',app, template_base+'/emails/password_changed')
+        self._create_default_setting('registered_email_template',      app, template_base+'/emails/registered')
+        self._create_default_setting('username_changed_email_template',app, template_base+'/emails/username_changed')
+        self._create_default_setting('invite_email_template',          app, template_base+'/emails/invite')
 
 
     # ***** Internal methods *****
 
-    def _create_default_setting(self, attribute_name, default_value):
+    def _create_default_setting(self, attribute_name, app, default_value):
         """ self.attribute = self.ATTRIBUTE or app.config.USER_ATTRIBUTE or default_value """
 
         # If self.ATTRIBUTE is set in CustomUserManager.customize():
@@ -337,7 +337,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
 
         else:
             # value = app.config['USER_ATTRIBUTE'] or default_value
-            value = self.app.config.get('USER_'+UPPERCASE_NAME, default_value)
+            value = app.config.get('USER_'+UPPERCASE_NAME, default_value)
 
         # self.attribute = value
         setattr(self, attribute_name, value)
