@@ -33,8 +33,8 @@ def babel_init():
 @task
 def docs():
     local('cp example_apps/*_app.py docs/source/includes/.')
-    local('sphinx-build -b html docs/source ../builds/flask_user/docs')
-    local('cd ../builds/flask_user/docs && zip -u -r flask_user_docs *')
+    local('sphinx-build -b html docs/source ../builds/flask_user1/docs')
+    local('cd ../builds/flask_user1/docs && zip -u -r flask_user1_docs *')
 
 @task
 def rebuild_docs():

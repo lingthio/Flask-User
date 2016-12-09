@@ -40,6 +40,8 @@ def _flask_user_context_processor():
         user_manager=current_app.user_manager,
         call_or_get=_call_or_get)
 
+# The UserManager is implemented across several source code files.
+# Mixins are used to aggregate all member functions into the one UserManager class.
 class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
     """ This is the Flask-User object that manages the User management process."""
 

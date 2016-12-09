@@ -9,8 +9,13 @@ import base64
 from Crypto.Cipher import AES
 from itsdangerous import BadSignature, SignatureExpired, TimestampSigner
 
+# The UserManager is implemented across several source code files.
+# Mixins are used to aggregate all member functions into the one UserManager class.
 class TokenMixin(object):
 
+    # *** Public methods ***
+
+    # Called by UserManager.init_app()
     def init_token_mixin(self, secret):
         """ Create a cypher to encrypt IDs and a signer to sign tokens."""
         # Create cypher to encrypt IDs
@@ -24,6 +29,34 @@ class TokenMixin(object):
 
         # Create signer to sign tokens
         self.signer = TimestampSigner(secret)
+
+    def generate_token(self, id):
+        """ Return token with id, timestamp and signature"""
+        # In Python3 we must make sure that bytes are converted to strings.
+        # Hence the addition of '.decode()'
+        return self.signer.sign(self._encrypt_id(id)).decode()
+
+    def verify_token(self, token, expiration_in_seconds):
+        """ Verify token and return (is_valid, has_expired, id).
+            Returns (True, False, id) on success.
+            Returns (False, True, None) on expired tokens.
+            Returns (False, False, None) on invalid tokens."""
+        try:
+            data = self.signer.unsign(token, max_age=expiration_in_seconds)
+            is_valid = True
+            has_expired = False
+            id = self._decrypt_id(data)
+        except SignatureExpired:
+            is_valid = False
+            has_expired = True
+            id = None
+        except BadSignature:
+            is_valid = False
+            has_expired = False
+            id = None
+        return (is_valid, has_expired, id)
+
+    # *** Private methods ***
 
     def _encrypt_id(self, id):
         """ Encrypts integer ID to url-safe base64 string."""
@@ -54,28 +87,3 @@ class TokenMixin(object):
             print('!!!Exception in _decrypt_id()!!!:', e)
             return 0
 
-    def generate_token(self, id):
-        """ Return token with id, timestamp and signature"""
-        # In Python3 we must make sure that bytes are converted to strings.
-        # Hence the addition of '.decode()'
-        return self.signer.sign(self._encrypt_id(id)).decode()
-
-    def verify_token(self, token, expiration_in_seconds):
-        """ Verify token and return (is_valid, has_expired, id).
-            Returns (True, False, id) on success.
-            Returns (False, True, None) on expired tokens.
-            Returns (False, False, None) on invalid tokens."""
-        try:
-            data = self.signer.unsign(token, max_age=expiration_in_seconds)
-            is_valid = True
-            has_expired = False
-            id = self._decrypt_id(data)
-        except SignatureExpired:
-            is_valid = False
-            has_expired = True
-            id = None
-        except BadSignature:
-            is_valid = False
-            has_expired = False
-            id = None
-        return (is_valid, has_expired, id)

@@ -16,9 +16,12 @@ def generate_sha512_hmac(self, password_salt, password):
     return base64.b64encode(hmac.new(password_salt, password.encode('utf-8'), hashlib.sha512).digest())
 
 
+# The UserManager is implemented across several source code files.
+# Mixins are used to aggregate all member functions into the one UserManager class.
 class PasswordMixin(object):
     """ PasswordMixin provides password management methods using passlib """
 
+    # Called by UserManager.init_app()
     def init_password_mixin(self):
         # Create passlib's CryptContext if needed
         if not self.password_crypt_context:

@@ -9,22 +9,14 @@ import smtplib
 import socket
 from flask import current_app, render_template
 
-def _render_email(filename, **kwargs):
-    # Render subject
-    subject = render_template(filename+'_subject.txt', **kwargs)
-    # Make sure that subject lines do not contain newlines
-    subject = subject.replace('\n', ' ')
-    subject = subject.replace('\r', ' ')
-    # Render HTML message
-    html_message = render_template(filename+'_message.html', **kwargs)
-    # Render text message
-    text_message = render_template(filename+'_message.txt', **kwargs)
-
-    return (subject, html_message, text_message)
-
+# The UserManager is implemented across several source code files.
+# Mixins are used to aggregate all member functions into the one UserManager class.
 class SendEmailMixin(object):
     """ SendEmailMixin provides email sending methods using Flask-Mail """
 
+    # *** Public methods ***
+
+    # Called by UserManager.init_app()
     def init_email_mixin(self):
         pass
 
@@ -59,18 +51,6 @@ class SendEmailMixin(object):
             raise SendEmailError('SMTP Connection error: Check your MAIL_SERVER and MAIL_PORT settings.')
         except smtplib.SMTPAuthenticationError:
             raise SendEmailError('SMTP Authentication error: Check your MAIL_USERNAME and MAIL_PASSWORD settings.')
-
-    def get_primary_user_email(self, user):
-        user_manager =  current_app.user_manager
-        db_adapter = user_manager.db_adapter
-        if db_adapter.UserEmailClass:
-            user_email = db_adapter.find_first_object(db_adapter.UserEmailClass,
-                    user_id=user.id,
-                    is_primary=True)
-            return user_email
-        else:
-            return user
-
 
     def send_email_confirm_email(self, user, user_email, confirm_email_link):
         # Verify certain conditions
@@ -187,3 +167,30 @@ class SendEmailMixin(object):
 
         # Send email message using Flask-Mail
         user_manager.send_email_function(user.email, subject, html_message, text_message)
+
+
+    def get_primary_user_email(self, user):
+        user_manager = current_app.user_manager
+        db_adapter = user_manager.db_adapter
+        if db_adapter.UserEmailClass:
+            user_email = db_adapter.find_first_object(db_adapter.UserEmailClass,
+                                                      user_id=user.id,
+                                                      is_primary=True)
+            return user_email
+        else:
+            return user
+
+
+def _render_email(filename, **kwargs):
+    # Render subject
+    subject = render_template(filename+'_subject.txt', **kwargs)
+    # Make sure that subject lines do not contain newlines
+    subject = subject.replace('\n', ' ')
+    subject = subject.replace('\r', ' ')
+    # Render HTML message
+    html_message = render_template(filename+'_message.html', **kwargs)
+    # Render text message
+    text_message = render_template(filename+'_message.txt', **kwargs)
+
+    return (subject, html_message, text_message)
+
