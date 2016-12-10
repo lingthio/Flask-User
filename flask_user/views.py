@@ -364,20 +364,12 @@ def register():
             user_auth_fields = {}
 
         # Enable user account
-        if db_adapter.UserProfileClass:
-            if hasattr(db_adapter.UserProfileClass, 'active'):
-                user_auth_fields['active'] = True
-            elif hasattr(db_adapter.UserProfileClass, 'is_enabled'):
-                user_auth_fields['is_enabled'] = True
-            else:
-                user_auth_fields['is_active'] = True
+        if hasattr(db_adapter.UserClass, 'active'):
+            user_fields['active'] = True
+        elif hasattr(db_adapter.UserClass, 'is_enabled'):
+            user_fields['is_enabled'] = True
         else:
-            if hasattr(db_adapter.UserClass, 'active'):
-                user_fields['active'] = True
-            elif hasattr(db_adapter.UserClass, 'is_enabled'):
-                user_fields['is_enabled'] = True
-            else:
-                user_fields['is_active'] = True
+            user_fields['is_active'] = True
 
         # For all form fields
         for field_name, field_value in register_form.data.items():
@@ -401,8 +393,6 @@ def register():
 
         # Add User record using named arguments 'user_fields'
         user = db_adapter.add_object(User, **user_fields)
-        if db_adapter.UserProfileClass:
-            user_profile = user
 
         # Add UserEmail record using named arguments 'user_email_fields'
         if db_adapter.UserEmailClass:
@@ -416,10 +406,7 @@ def register():
         # Add UserAuth record using named arguments 'user_auth_fields'
         if db_adapter.UserAuthClass:
             user_auth = db_adapter.add_object(UserAuth, **user_auth_fields)
-            if db_adapter.UserProfileClass:
-                user = user_auth
-            else:
-                user.user_auth = user_auth
+            user.user_auth = user_auth
 
         require_email_confirmation = True
         if user_invite:

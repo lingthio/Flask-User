@@ -403,8 +403,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
             app.add_url_rule(self.invite_url, 'user.invite', self.invite_view_function, methods=['GET', 'POST'])
 
     def get_user_by_id(self, user_id):
-        # Handle v0.5 backward compatibility
-        ObjectClass = self.db_adapter.UserAuthClass if self.db_adapter.UserAuthClass and self.db_adapter.UserProfileClass else self.db_adapter.UserClass
+        ObjectClass = self.db_adapter.UserAuthClass if self.db_adapter.UserAuthClass else self.db_adapter.UserClass
         return self.db_adapter.get_object(ObjectClass, user_id)
 
     # NB: This backward compatibility function may be obsoleted in the future
@@ -428,10 +427,6 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
         # The username field can either be in the UserAuth class or in the User class
         if self.db_adapter.UserAuthClass and hasattr(self.db_adapter.UserAuthClass, 'username'):
             user_auth = self.db_adapter.ifind_first_object(self.db_adapter.UserAuthClass, username=username)
-
-            # Handle v0.5 backward compatibility
-            if self.db_adapter.UserProfileClass: return user_auth
-
             user = user_auth.user if user_auth else None
         else:
             user = self.db_adapter.ifind_first_object(self.db_adapter.UserClass, username=username)
@@ -449,10 +444,6 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
             # The email field can either be in the UserAuth class or in the User class
             if self.db_adapter.UserAuthClass and hasattr(self.db_adapter.UserAuthClass, 'email'):
                 user_auth = self.db_adapter.ifind_first_object(self.db_adapter.UserAuthClass, email=email)
-
-                # Handle v0.5 backward compatibility
-                if self.db_adapter.UserProfileClass: return (user_auth, user_email)
-
                 user = user_auth.user if user_auth else None
             else:
                 user = self.db_adapter.ifind_first_object(self.db_adapter.UserClass, email=email)
