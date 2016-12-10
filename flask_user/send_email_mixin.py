@@ -172,8 +172,8 @@ class SendEmailMixin(object):
     def get_primary_user_email(self, user):
         user_manager = current_app.user_manager
         db_adapter = user_manager.db_adapter
-        if db_adapter.UserEmailClass:
-            user_email = db_adapter.find_first_object(db_adapter.UserEmailClass,
+        if user_manager.UserEmailModel:
+            user_email = db_adapter.find_first_object(user_manager.UserEmailModel,
                                                       user_id=user.id,
                                                       is_primary=True)
             return user_email

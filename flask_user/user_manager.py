@@ -106,7 +106,13 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
                             "instead of a subclass of 'flask_user.DBAdapter'."
                             % app.__class__.__name__)
 
+        # Start moving the Model attributes from db_adapter to user_manager
         self.db_adapter = db_adapter
+        self.db = db_adapter.db
+        self.UserModel = db_adapter.UserClassX
+        self.UserAuthModel = db_adapter.UserAuthClassX
+        self.UserEmailModel = db_adapter.UserEmailClassX
+        self.UserInvitationModel = db_adapter.UserInvitationClassX
 
         # Bind Flask-USER to app
         app.user_manager = self
@@ -366,7 +372,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
             raise ConfigurationError('USER_ENABLE_CHANGE_USERNAME=True must have USER_ENABLE_USERNAME=True.')
         if self.require_invitation and not self.enable_invitation:
             raise ConfigurationError('USER_REQUIRE_INVITATION=True must have USER_ENABLE_INVITATION=True.')
-        if self.enable_invitation and not self.db_adapter.UserInvitationClass:
+        if self.enable_invitation and not self.UserInvitationModel:
             raise ConfigurationError(
                 'USER_ENABLE_INVITATION=True must pass UserInvitationClass to SQLAlchemyAdapter().')
 
@@ -387,7 +393,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
             app.add_url_rule(self.reset_password_url, 'user.reset_password', self.reset_password_view_function, methods=['GET', 'POST'])
         if self.enable_register:
             app.add_url_rule(self.register_url, 'user.register', self.register_view_function, methods=['GET', 'POST'])
-        if self.db_adapter.UserEmailClass:
+        if self.UserEmailModel:
             app.add_url_rule(self.email_action_url,  'user.email_action',  self.email_action_view_function)
             app.add_url_rule(self.manage_emails_url, 'user.manage_emails', self.manage_emails_view_function, methods=['GET', 'POST'])
         app.add_url_rule(self.user_profile_url,  'user.profile',  self.user_profile_view_function,  methods=['GET', 'POST'])
@@ -395,7 +401,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
             app.add_url_rule(self.invite_url, 'user.invite', self.invite_view_function, methods=['GET', 'POST'])
 
     def get_user_by_id(self, user_id):
-        ObjectClass = self.db_adapter.UserAuthClass if self.db_adapter.UserAuthClass else self.db_adapter.UserClass
+        ObjectClass = self.UserAuthModel if self.UserAuthModel else self.UserModel
         return self.db_adapter.get_object(ObjectClass, user_id)
 
     # NB: This backward compatibility function may be obsoleted in the future
@@ -405,7 +411,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
         return self.get_user_by_id(user_id)
 
     def get_user_email_by_id(self, user_email_id):
-        return self.db_adapter.get_object(self.db_adapter.UserEmailClass, user_email_id)
+        return self.db_adapter.get_object(self.UserEmailModel, user_email_id)
 
     # NB: This backward compatibility function may be obsoleted in the future
     # Use 'get_user_email_by_id() instead.
@@ -417,11 +423,11 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
         user_auth = None
 
         # The username field can either be in the UserAuth class or in the User class
-        if self.db_adapter.UserAuthClass and hasattr(self.db_adapter.UserAuthClass, 'username'):
-            user_auth = self.db_adapter.ifind_first_object(self.db_adapter.UserAuthClass, username=username)
+        if self.UserAuthModel and hasattr(self.UserAuthModel, 'username'):
+            user_auth = self.db_adapter.ifind_first_object(self.UserAuthModel, username=username)
             user = user_auth.user if user_auth else None
         else:
-            user = self.db_adapter.ifind_first_object(self.db_adapter.UserClass, username=username)
+            user = self.db_adapter.ifind_first_object(self.UserModel, username=username)
 
         return user
 
@@ -429,16 +435,16 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
     def find_user_by_email(self, email):
         user_email = None
         user_auth = None
-        if self.db_adapter.UserEmailClass:
-            user_email = self.db_adapter.ifind_first_object(self.db_adapter.UserEmailClass, email=email)
+        if self.UserEmailModel:
+            user_email = self.db_adapter.ifind_first_object(self.UserEmailModel, email=email)
             user = user_email.user if user_email else None
         else:
             # The email field can either be in the UserAuth class or in the User class
-            if self.db_adapter.UserAuthClass and hasattr(self.db_adapter.UserAuthClass, 'email'):
-                user_auth = self.db_adapter.ifind_first_object(self.db_adapter.UserAuthClass, email=email)
+            if self.UserAuthModel and hasattr(self.UserAuthModel, 'email'):
+                user_auth = self.db_adapter.ifind_first_object(self.UserAuthModel, email=email)
                 user = user_auth.user if user_auth else None
             else:
-                user = self.db_adapter.ifind_first_object(self.db_adapter.UserClass, email=email)
+                user = self.db_adapter.ifind_first_object(self.UserModel, email=email)
 
         return (user, user_email)
 
@@ -453,7 +459,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
             Return False otherwise."""
         # Allow user to change username to the current username
         if _call_or_get(current_user.is_authenticated):
-            current_username = current_user.user_auth.username if self.db_adapter.UserAuthClass and hasattr(current_user, 'user_auth') else current_user.username
+            current_username = current_user.user_auth.username if self.UserAuthModel and hasattr(current_user, 'user_auth') else current_user.username
             if new_username == current_username:
                 return True
         # See if new_username is available

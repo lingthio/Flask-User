@@ -13,10 +13,10 @@ class DBAdapter(object):
         It's used as the base class for ORM specific adapters like SQLAlchemyAdapter."""
     def __init__(self, db, UserClass, UserAuthClass=None, UserEmailClass=None, UserInvitationClass=None):
         self.db = db
-        self.UserClass = UserClass                  # first_name, last_name, etc.
-        self.UserAuthClass = UserAuthClass          # username, password, etc.
-        self.UserEmailClass = UserEmailClass        # For multiple emails per user
-        self.UserInvitationClass = UserInvitationClass
+        self.UserClassX = UserClass                  # first_name, last_name, etc.
+        self.UserAuthClassX = UserAuthClass          # username, password, etc.
+        self.UserEmailClassX = UserEmailClass        # For multiple emails per user
+        self.UserInvitationClassX = UserInvitationClass
 
 
 class SQLAlchemyAdapter(DBAdapter):

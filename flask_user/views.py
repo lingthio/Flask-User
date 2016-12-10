@@ -44,7 +44,7 @@ def confirm_email(token):
 
     # Confirm email by setting User.confirmed_at=utcnow() or UserEmail.confirmed_at=utcnow()
     user = None
-    if db_adapter.UserEmailClass:
+    if user_manager.UserEmailModel:
         user_email = user_manager.get_user_email_by_id(object_id)
         if user_email:
             user_email.confirmed_at = datetime.utcnow()
@@ -127,7 +127,7 @@ def change_username():
         new_username = form.new_username.data
 
         # Change username
-        user_auth = current_user.user_auth if db_adapter.UserAuthClass and hasattr(current_user, 'user_auth') else current_user
+        user_auth = current_user.user_auth if user_manager.UserAuthModel and hasattr(current_user, 'user_auth') else current_user
         db_adapter.update_object(user_auth, username=new_username)
         db_adapter.commit()
 
@@ -156,7 +156,7 @@ def email_action(id, action):
     db_adapter = user_manager.db_adapter
 
     # Retrieve UserEmail by id
-    user_email = db_adapter.find_first_object(db_adapter.UserEmailClass, id=id)
+    user_email = db_adapter.find_first_object(user_manager.UserEmailModel, id=id)
 
     # Users may only change their own UserEmails
     if not user_email or user_email.user_id != current_user.id:
@@ -172,7 +172,7 @@ def email_action(id, action):
 
     elif action=='make-primary':
         # Disable previously primary emails
-        user_emails = db_adapter.find_all_objects(db_adapter.UserEmailClass, user_id=current_user.id)
+        user_emails = db_adapter.find_all_objects(user_manager.UserEmailModel, user_id=current_user.id)
         for ue in user_emails:
             if ue.is_primary:
                 ue.is_primary = False
@@ -244,8 +244,8 @@ def login():
             user = user_manager.find_user_by_username(login_form.username.data)
             user_email = None
             # Find primary user_email record
-            if user and db_adapter.UserEmailClass:
-                user_email = db_adapter.find_first_object(db_adapter.UserEmailClass,
+            if user and user_manager.UserEmailModel:
+                user_email = db_adapter.find_first_object(user_manager.UserEmailModel,
                         user_id=user.id,
                         is_primary=True,
                         )
@@ -290,12 +290,12 @@ def manage_emails():
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
 
-    user_emails = db_adapter.find_all_objects(db_adapter.UserEmailClass, user_id=current_user.id)
+    user_emails = db_adapter.find_all_objects(user_manager.UserEmailModel, user_id=current_user.id)
     form = user_manager.add_email_form()
 
     # Process valid POST request
     if request.method=="POST" and form.validate():
-        user_emails = db_adapter.add_object(db_adapter.UserEmailClass,
+        user_emails = db_adapter.add_object(user_manager.UserEmailModel,
                 user_id=current_user.id,
                 email=form.email.data)
         db_adapter.commit()
@@ -329,8 +329,8 @@ def register():
         return redirect(url_for('user.login'))
 
     user_invite = None
-    if invite_token and db_adapter.UserInvitationClass:
-        user_invite = db_adapter.find_first_object(db_adapter.UserInvitationClass, token=invite_token)
+    if invite_token and user_manager.UserInvitationModel:
+        user_invite = db_adapter.find_first_object(user_manager.UserInvitationModel, token=invite_token)
         if user_invite:
             register_form.invite_token.data = invite_token
         else:
@@ -346,26 +346,26 @@ def register():
     # Process valid POST
     if request.method=='POST' and register_form.validate():
         # Create a User object using Form fields that have a corresponding User field
-        User = db_adapter.UserClass
+        User = user_manager.UserModel
         user_class_fields = User.__dict__
         user_fields = {}
 
         # Create a UserEmail object using Form fields that have a corresponding UserEmail field
-        if db_adapter.UserEmailClass:
-            UserEmail = db_adapter.UserEmailClass
+        if user_manager.UserEmailModel:
+            UserEmail = user_manager.UserEmailModel
             user_email_class_fields = UserEmail.__dict__
             user_email_fields = {}
 
         # Create a UserAuth object using Form fields that have a corresponding UserAuth field
-        if db_adapter.UserAuthClass:
-            UserAuth = db_adapter.UserAuthClass
+        if user_manager.UserAuthModel:
+            UserAuth = user_manager.UserAuthModel
             user_auth_class_fields = UserAuth.__dict__
             user_auth_fields = {}
 
         # Enable user account
-        if hasattr(db_adapter.UserClass, 'active'):
+        if hasattr(user_manager.UserModel, 'active'):
             user_fields['active'] = True
-        elif hasattr(db_adapter.UserClass, 'is_enabled'):
+        elif hasattr(user_manager.UserModel, 'is_enabled'):
             user_fields['is_enabled'] = True
         else:
             user_fields['is_active'] = True
@@ -375,7 +375,7 @@ def register():
             # Hash password field
             if field_name=='password':
                 hashed_password = user_manager.hash_password(field_value)
-                if db_adapter.UserAuthClass:
+                if user_manager.UserAuthModel:
                     user_auth_fields['password'] = hashed_password
                 else:
                     user_fields['password'] = hashed_password
@@ -383,10 +383,10 @@ def register():
             else:
                 if field_name in user_class_fields:
                     user_fields[field_name] = field_value
-                if db_adapter.UserEmailClass:
+                if user_manager.UserEmailModel:
                     if field_name in user_email_class_fields:
                         user_email_fields[field_name] = field_value
-                if db_adapter.UserAuthClass:
+                if user_manager.UserAuthModel:
                     if field_name in user_auth_class_fields:
                         user_auth_fields[field_name] = field_value
 
@@ -394,7 +394,7 @@ def register():
         user = db_adapter.add_object(User, **user_fields)
 
         # Add UserEmail record using named arguments 'user_email_fields'
-        if db_adapter.UserEmailClass:
+        if user_manager.UserEmailModel:
             user_email = db_adapter.add_object(UserEmail,
                     user=user,
                     is_primary=True,
@@ -403,7 +403,7 @@ def register():
             user_email = None
 
         # Add UserAuth record using named arguments 'user_auth_fields'
-        if db_adapter.UserAuthClass:
+        if user_manager.UserAuthModel:
             user_auth = db_adapter.add_object(UserAuth, **user_auth_fields)
             user.user_auth = user_auth
 
@@ -463,7 +463,7 @@ def invite():
     if request.method=='POST' and invite_form.validate():
         email = invite_form.email.data
 
-        User = db_adapter.UserClass
+        User = user_manager.UserModel
         user_class_fields = User.__dict__
         user_fields = {
             "email": email
@@ -475,7 +475,7 @@ def invite():
             return redirect(url_for('user.invite'))
         else:
             user_invite = db_adapter \
-                            .add_object(db_adapter.UserInvitationClass, **{
+                            .add_object(user_manager.UserInvitationModel, **{
                                 "email": email,
                                 "invited_by_user_id": current_user.id
                             })
@@ -487,7 +487,7 @@ def invite():
                                      _external=True)
 
         # Store token
-        if hasattr(db_adapter.UserInvitationClass, 'token'):
+        if hasattr(user_manager.UserInvitationModel, 'token'):
             user_invite.token = token
             db_adapter.commit()
 
@@ -581,7 +581,7 @@ def reset_password(token):
 
         # Change password
         hashed_password = user_manager.hash_password(form.new_password.data)
-        user_auth = user.user_auth if db_adapter.UserAuthClass and hasattr(user, 'user_auth') else user
+        user_auth = user.user_auth if user_manager.UserAuthModel and hasattr(user, 'user_auth') else user
         db_adapter.update_object(user_auth, password=hashed_password)
         db_adapter.commit()
 

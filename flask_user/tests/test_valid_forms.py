@@ -129,7 +129,7 @@ def check_all_valid_forms(um, client):
 def check_valid_register_form(um, client, db):
     # Using global variable for speed
     global valid_user
-    User = um.db_adapter.UserClass
+    User = um.UserModel
 
     # Build variable argument list depending on config settings
     kwargs = {}
@@ -312,7 +312,7 @@ def check_valid_invite_email(um, client):
     if not um.enable_invitation: return
     # Submit form and verify that response has no errors
     global valid_user_invite
-    UserInvite = um.db_adapter.UserInvitationClass
+    UserInvite = um.UserInvitationModel
     client.login(username='member', email='member@example.com', password='Password1')
     client.post_valid_form(url_for('user.invite'), email=INVITE_USER_EMAIL)
     valid_user_invite = UserInvite.query.filter(UserInvite.email==INVITE_USER_EMAIL).first()

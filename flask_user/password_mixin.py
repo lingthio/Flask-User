@@ -59,7 +59,7 @@ class PasswordMixin(object):
             password = temp
 
         # Hashed password is stored with the User model or the UserAuth model
-        if self.db_adapter.UserAuthClass and hasattr(self.db_adapter.UserClass, 'user_auth'):
+        if self.UserAuthModel and hasattr(self.UserModel, 'user_auth'):
             hashed_password = user.user_auth.password
         else:
             hashed_password = user.password
@@ -78,7 +78,7 @@ class PasswordMixin(object):
 
     def update_hashed_password(self, user, hashed_password):
         # Hashed password is stored with the User model or the UserAuth model
-        if self.db_adapter.UserAuthClass and hasattr(self.db_adapter.UserClass, 'user_auth'):
+        if self.UserAuthModel and hasattr(self.UserModel, 'user_auth'):
             user.user_auth.password = hashed_password
         else:
             user.password = hashed_password
