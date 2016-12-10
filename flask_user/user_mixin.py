@@ -115,22 +115,3 @@ class UserMixin(LoginUserMixin):
         # All requirements have been met: return True
         return True
 
-
-    def has_confirmed_email(self):
-        user_manager = current_app.user_manager
-        db_adapter = user_manager.db_adapter
-
-        # Handle multiple emails per user: Find at least one confirmed email
-        if user_manager.UserEmailModel:
-            has_confirmed_email = False
-            user_emails = db_adapter.find_all_objects(user_manager.UserEmailModel, user_id=self.id)
-            for user_email in user_emails:
-                if user_email.confirmed_at:
-                    has_confirmed_email = True
-                    break
-
-        # Handle single email per user
-        else:
-            has_confirmed_email = True if self.confirmed_at else False
-
-        return has_confirmed_email

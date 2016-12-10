@@ -14,6 +14,7 @@ except ImportError:
 from .decorators import confirm_email_required, login_required
 from . import signals
 from .translations import gettext as _
+from .utils import user_has_confirmed_email
 
 
 def _call_or_get(function_or_property):
@@ -700,7 +701,7 @@ def _do_login_user(user, next, remember_me=False):
     user_manager = current_app.user_manager
     if user_manager.enable_email and user_manager.enable_confirm_email \
             and not current_app.user_manager.enable_login_without_confirm_email \
-            and not user.has_confirmed_email():
+            and not user_has_confirmed_email(user):
         url = url_for('user.resend_confirm_email')
         flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email or <a href="%(url)s">Re-send confirmation email</a>.', url=url), 'error')
         return redirect(url_for('user.login'))

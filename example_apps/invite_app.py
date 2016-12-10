@@ -3,7 +3,7 @@ from flask import Flask, redirect, render_template_string, request, url_for
 from flask_babel import Babel
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
-from flask_user import confirm_email_required, current_user, login_required, \
+from flask_user import confirm_email_required, utils, login_required, \
                         UserManager, UserMixin, SQLAlchemyAdapter
 from flask_user.signals import user_sent_invitation, user_registered
 
@@ -115,7 +115,7 @@ def create_app(test_config=None):                   # For automated tests
                 {% endif %}
             {% endblock %}
             """)
-        if _call_or_get(current_user.is_authenticated):
+        if _call_or_get(utils.is_authenticated):
             return redirect(url_for('user_profile_page'))
         else:
             return redirect(url_for('user.login'))
