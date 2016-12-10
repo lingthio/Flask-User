@@ -12,7 +12,6 @@ try: # Handle Python 2.x and Python 3.x
 except ImportError:
     from urllib import quote            # Python 2.x
 from .decorators import confirm_email_required, login_required
-from . import send_email_mixin
 from . import signals
 from .translations import gettext as _
 
