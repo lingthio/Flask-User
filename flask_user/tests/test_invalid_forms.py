@@ -375,8 +375,7 @@ def test_invalid_reset_password(client):
     # Set default values
     new_password = 'Password5'
     # Simulate a valid forgot password form
-    user1.reset_password_token = um.generate_token(user1.id)
-    token = user1.reset_password_token
+    token = um.generate_token(user1.id)
 
     # Test invalid token
     url = url_for('user.reset_password', token='InvalidToken')

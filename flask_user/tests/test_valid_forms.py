@@ -282,8 +282,7 @@ def check_valid_reset_password_page(um, client):
     print("test_valid_reset_password_page")
 
     # Simulate a valid forgot password form
-    valid_user.reset_password_token = um.generate_token(valid_user.id)
-    token = valid_user.reset_password_token
+    token = um.generate_token(valid_user.id)
 
     # Define defaults
     password = 'Password1'

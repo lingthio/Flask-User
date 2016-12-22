@@ -51,9 +51,9 @@ Required Data model field names:
 ::
 
     # User authentication information
+    User.id
     User.username              or  UserAuth.username
     User.password              or  UserAuth.password
-    User.reset_password_token  or  UserAuth.reset_password_token
                                    UserAuth.user_id
 
     # User email information
