@@ -44,7 +44,6 @@ def create_app():
         # User authentication information
         username = db.Column(db.String(50), nullable=False, unique=True)
         password = db.Column(db.String(255), nullable=False, server_default='')
-        reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
 
         # User information
         active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
