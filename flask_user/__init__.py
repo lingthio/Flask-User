@@ -28,7 +28,7 @@ from .decorators import *
 from .signals import *
 
 
-__version__ = '0.6.10'
+__version__ = '0.6.11'
 
 
 def _call_or_get(function_or_property):
@@ -89,6 +89,7 @@ class UserManager(object):
                 login_manager=LoginManager(),
                 password_crypt_context=None,
                 send_email_function = emails.send_email,
+                make_safe_url_function = views.make_safe_url,
                 token_manager=tokens.TokenManager(),
                 legacy_check_password_hash=None
                 ):
@@ -132,6 +133,7 @@ class UserManager(object):
         self.token_manager = token_manager
         self.password_crypt_context = password_crypt_context
         self.send_email_function = send_email_function
+        self.make_safe_url_function = make_safe_url_function
         self.legacy_check_password_hash = legacy_check_password_hash
 
         """ Initialize app.user_manager."""
