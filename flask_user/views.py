@@ -7,14 +7,21 @@
 from datetime import datetime
 from flask import current_app, flash, redirect, request, url_for
 from flask_login import current_user, login_user, logout_user
-try: # Handle Python 2.x and Python 3.x
-    from urllib.parse import quote      # Python 3.x
-except ImportError:
-    from urllib import quote            # Python 2.x
 from .decorators import confirm_email_required, login_required
 from . import signals
 from .translations import gettext as _
 from .utils import user_has_confirmed_email
+
+# Python version specific imports
+from sys import version_info as py_version
+is_py2 = (py_version[0] == 2)     #: Python 2.x?
+is_py3 = (py_version[0] == 3)     #: Python 3.x?
+if is_py2:
+    from urlparse import urlsplit, urlunsplit
+    from urllib import quote, unquote
+if is_py3:
+    from urllib.parse import urlsplit, urlunsplit
+    from urllib.parse import quote, unquote
 
 
 def _call_or_get(function_or_property):
@@ -70,11 +77,11 @@ def confirm_email(token):
     flash(_('Your email has been confirmed.'), 'success')
 
     # Auto-login after confirm or redirect to login page
-    next = request.args.get('next', _endpoint_url(user_manager.after_confirm_endpoint))
+    safe_next = _get_safe_next_param('next', user_manager.after_confirm_endpoint)
     if user_manager.auto_login_after_confirm:
-        return _do_login_user(user, next)                       # auto-login
+        return _do_login_user(user, safe_next)                       # auto-login
     else:
-        return redirect(url_for('user.login')+'?next='+next)    # redirect to login page
+        return redirect(url_for('user.login')+'?next='+quote(safe_next))    # redirect to login page
 
 
 @login_required
@@ -86,7 +93,8 @@ def change_password():
 
     # Initialize form
     form = user_manager.change_password_form(request.form)
-    form.next.data = request.args.get('next', _endpoint_url(user_manager.after_change_password_endpoint))  # Place ?next query param in next form field
+    safe_next = _get_safe_next_param('next', user_manager.after_change_password_endpoint)
+    form.next.data = safe_next
 
     # Process valid POST
     if request.method=='POST' and form.validate():
@@ -107,7 +115,8 @@ def change_password():
         flash(_('Your password has been changed successfully.'), 'success')
 
         # Redirect to 'next' URL
-        return redirect(form.next.data)
+        safe_next = user_manager.make_safe_url_function(form.next.data)
+        return redirect(safe_next)
 
     # Process GET or invalid POST
     return render(user_manager.change_password_template, form=form)
@@ -121,7 +130,8 @@ def change_username():
 
     # Initialize form
     form = user_manager.change_username_form(request.form)
-    form.next.data = request.args.get('next', _endpoint_url(user_manager.after_change_username_endpoint))  # Place ?next query param in next form field
+    safe_next = _get_safe_next_param('next', user_manager.after_change_username_endpoint)
+    form.next.data = safe_next
 
     # Process valid POST
     if request.method=='POST' and form.validate():
@@ -143,7 +153,8 @@ def change_username():
         flash(_("Your username has been changed to '%(username)s'.", username=new_username), 'success')
 
         # Redirect to 'next' URL
-        return redirect(form.next.data)
+        safe_next = user_manager.make_safe_url_function(form.next.data)
+        return redirect(safe_next)
 
     # Process GET or invalid POST
     return render(user_manager.change_username_template, form=form)
@@ -221,19 +232,19 @@ def login():
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
 
-    next = request.args.get('next', _endpoint_url(user_manager.after_login_endpoint))
-    reg_next = request.args.get('reg_next', _endpoint_url(user_manager.after_register_endpoint))
+    safe_next = _get_safe_next_param('next', user_manager.after_login_endpoint)
+    safe_reg_next = _get_safe_next_param('reg_next', user_manager.after_register_endpoint)
 
     # Immediately redirect already logged in users
     if _call_or_get(current_user.is_authenticated) and user_manager.auto_login_at_login:
-        return redirect(next)
+        return redirect(safe_next)
 
     # Initialize form
     login_form = user_manager.login_form(request.form)          # for login.html
     register_form = user_manager.register_form()                # for login_or_register.html
     if request.method!='POST':
-        login_form.next.data     = register_form.next.data = next
-        login_form.reg_next.data = register_form.reg_next.data = reg_next
+        login_form.next.data     = register_form.next.data     = safe_next
+        login_form.reg_next.data = register_form.reg_next.data = safe_reg_next
 
     # Process valid POST
     if request.method=='POST' and login_form.validate():
@@ -259,7 +270,8 @@ def login():
 
         if user:
             # Log user in
-            return _do_login_user(user, login_form.next.data, login_form.remember_me.data)
+            safe_next = user_manager.make_safe_url_function(login_form.next.data)
+            return _do_login_user(user, safe_next, login_form.remember_me.data)
 
     # Process GET or invalid POST
     return render(user_manager.login_template,
@@ -281,8 +293,8 @@ def logout():
     flash(_('You have signed out successfully.'), 'success')
 
     # Redirect to logout_next endpoint or '/'
-    next = request.args.get('next', _endpoint_url(user_manager.after_logout_endpoint))  # Get 'next' query param
-    return redirect(next)
+    safe_next = _get_safe_next_param('next', user_manager.after_logout_endpoint)
+    return redirect(safe_next)
 
 
 @login_required
@@ -314,8 +326,8 @@ def register():
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
 
-    next = request.args.get('next', _endpoint_url(user_manager.after_login_endpoint))
-    reg_next = request.args.get('reg_next', _endpoint_url(user_manager.after_register_endpoint))
+    safe_next = _get_safe_next_param('next', user_manager.after_login_endpoint)
+    safe_reg_next = _get_safe_next_param('reg_next', user_manager.after_register_endpoint)
 
     # Initialize form
     login_form = user_manager.login_form()                      # for login_or_register.html
@@ -339,8 +351,8 @@ def register():
             return redirect(url_for('user.login'))
 
     if request.method!='POST':
-        login_form.next.data     = register_form.next.data     = next
-        login_form.reg_next.data = register_form.reg_next.data = reg_next
+        login_form.next.data     = register_form.next.data     = safe_next
+        login_form.reg_next.data = register_form.reg_next.data = safe_reg_next
         if user_invite:
             register_form.email.data = user_invite.email
 
@@ -434,15 +446,18 @@ def register():
 
         # Redirect if USER_ENABLE_CONFIRM_EMAIL is set
         if user_manager.enable_confirm_email and require_email_confirmation:
-            next = request.args.get('next', _endpoint_url(user_manager.after_register_endpoint))
-            return redirect(next)
+            safe_reg_next = user_manager.make_safe_url_function(register_form.reg_next.data)
+            return redirect(safe_reg_next)
 
         # Auto-login after register or redirect to login page
-        next = request.args.get('next', _endpoint_url(user_manager.after_confirm_endpoint))
-        if user_manager.auto_login_after_register:
-            return _do_login_user(user, reg_next)                     # auto-login
+        if 'reg_next' in request.args:
+            safe_reg_next = user_manager.make_safe_url_function(register_form.reg_next.data)
         else:
-            return redirect(url_for('user.login')+'?next='+reg_next)  # redirect to login page
+            safe_reg_next = _endpoint_url(user_manager.after_confirm_endpoint)
+        if user_manager.auto_login_after_register:
+            return _do_login_user(user, safe_reg_next)                     # auto-login
+        else:
+            return redirect(url_for('user.login')+'?next='+quote(safe_reg_next))  # redirect to login page
 
     # Process GET or invalid POST
     return render(user_manager.register_template,
@@ -455,9 +470,6 @@ def invite():
     """ Allows users to send invitations to register an account """
     user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter
-
-    next = request.args.get('next',
-                            _endpoint_url(user_manager.after_invite_endpoint))
 
     invite_form = user_manager.invite_form(request.form)
 
@@ -507,7 +519,8 @@ def invite():
                   form=invite_form)
 
         flash(_('Invitation has been sent.'), 'success')
-        return redirect(next)
+        safe_next = _get_safe_next_param('next', user_manager.after_invite_endpoint)
+        return redirect(safe_next)
 
     return render(user_manager.invite_template, form=invite_form)
 
@@ -594,11 +607,11 @@ def reset_password(token):
         flash(_("Your password has been reset successfully."), 'success')
 
         # Auto-login after reset password or redirect to login page
-        next = request.args.get('next', _endpoint_url(user_manager.after_reset_password_endpoint))
+        safe_next = _get_safe_next_param('next', user_manager.after_reset_password_endpoint)
         if user_manager.auto_login_after_reset_password:
-            return _do_login_user(user, next)                       # auto-login
+            return _do_login_user(user, safe_next)                       # auto-login
         else:
-            return redirect(url_for('user.login')+'?next='+next)    # redirect to login page
+            return redirect(url_for('user.login')+'?next='+quote(safe_next))    # redirect to login page
 
     # Process GET or invalid POST
     return render(user_manager.reset_password_template, form=form)
@@ -617,16 +630,14 @@ def unconfirmed():
 
 def unauthenticated():
     """ Prepare a Flash message and redirect to USER_UNAUTHENTICATED_ENDPOINT"""
+    user_manager = current_app.user_manager
     # Prepare Flash message
     url = request.url
     flash(_("You must be signed in to access '%(url)s'.", url=url), 'error')
 
-    # quote the fully qualified url
-    quoted_url = quote(url)
-
     # Redirect to USER_UNAUTHENTICATED_ENDPOINT
-    user_manager = current_app.user_manager
-    return redirect(_endpoint_url(user_manager.unauthenticated_endpoint)+'?next='+ quoted_url)
+    safe_next = user_manager.make_safe_url_function(url)
+    return redirect(_endpoint_url(user_manager.unauthenticated_endpoint)+'?next='+quote(safe_next))
 
 
 def unauthorized():
@@ -688,7 +699,7 @@ def _send_confirm_email(user, user_email):
         flash(_('A confirmation email has been sent to %(email)s with instructions to complete your registration.', email=email), 'success')
 
 
-def _do_login_user(user, next, remember_me=False):
+def _do_login_user(user, safe_next, remember_me=False):
     # User must have been authenticated
     if not user: return unauthenticated()
 
@@ -717,7 +728,29 @@ def _do_login_user(user, next, remember_me=False):
     flash(_('You have signed in successfully.'), 'success')
 
     # Redirect to 'next' URL
-    return redirect(next)
+    return redirect(safe_next)
+
+
+# Turns an usafe absolute URL into a safe relative URL by removing the scheme and the hostname
+# Example: make_safe_url('http://hostname/path1/path2?q1=v1&q2=v2#fragment')
+#          returns: '/path1/path2?q1=v1&q2=v2#fragment
+def make_safe_url(url):
+    parts = urlsplit(url)
+    safe_url = parts.path+parts.query+parts.fragment
+    return safe_url
+
+
+# 'next' and 'reg_next' query parameters contain quoted (URL-encoded) URLs
+# that may contain unsafe hostnames.
+# Return the query parameter as a safe, unquoted URL
+def _get_safe_next_param(param_name, default_endpoint):
+    if param_name in request.args:
+        # return safe unquoted query parameter value
+        safe_next = current_app.user_manager.make_safe_url_function(unquote(request.args[param_name]))
+    else:
+        # return URL of default endpoint
+        safe_next = _endpoint_url(default_endpoint)
+    return safe_next
 
 
 def _endpoint_url(endpoint):

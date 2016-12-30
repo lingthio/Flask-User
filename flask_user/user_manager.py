@@ -81,7 +81,8 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
                  # Misc
                  login_manager = None,
                  password_crypt_context = None,
-                 send_email_function = None):
+                 send_email_function = None,
+                 make_safe_url_function = views.make_safe_url):
         """ Initialize the UserManager object """
 
         # Make sure to NOT set self.app here
@@ -175,6 +176,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
         self._create_default_attr('login_manager', login_manager)
         self._create_default_attr('password_crypt_context', password_crypt_context)
         self._create_default_attr('send_email_function', send_email_function)
+        self._create_default_attr('make_safe_url_function', make_safe_url_function)
 
         # Initialize PasswordMixin
         self.init_password_mixin()
