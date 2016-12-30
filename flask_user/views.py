@@ -327,7 +327,7 @@ def register():
     db_adapter = user_manager.db_adapter
 
     safe_next = _get_safe_next_param('next', user_manager.after_login_endpoint)
-    safe_reg_next = _get_safe_next_param('next', user_manager.after_register_endpoint)
+    safe_reg_next = _get_safe_next_param('reg_next', user_manager.after_register_endpoint)
 
     # Initialize form
     login_form = user_manager.login_form()                      # for login_or_register.html
