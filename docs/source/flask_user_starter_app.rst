@@ -14,7 +14,7 @@ Files of interest:
 
 * app/startup/init_app.py
 * app/models/user.py
-* app/templates/flask_user/*.html
+* app/templates/flask_user/\*.html
 * app/templates/users/user_profile_page.html
 
 Up Next
