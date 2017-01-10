@@ -16,7 +16,10 @@ except ImportError:
 
 from wtforms import BooleanField, HiddenField, PasswordField, SubmitField, StringField
 from wtforms import validators, ValidationError
-from .translations import lazy_gettext as _
+try:
+    from flask_babelex import lazy_gettext as _
+except ImportError:
+    from .translations import lazy_gettext as _
 
 # **************************
 # ** Validation Functions **

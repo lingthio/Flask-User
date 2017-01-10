@@ -4,6 +4,7 @@
     :author: Ling Thio (ling.thio@gmail.com)
     :license: Simplified BSD License, see LICENSE.txt for more details."""
 
+import os
 from passlib.context import CryptContext
 from flask import Blueprint, current_app, url_for, render_template
 from flask_login import LoginManager, UserMixin as LoginUserMixin
@@ -14,10 +15,8 @@ from . import forms
 from . import passwords
 from . import settings
 from . import tokens
-from . import translations
 from . import views
 from . import signals
-from .translations import get_translations
 
 # Enable the following: from flask_user import current_user
 from flask_login import current_user
@@ -149,14 +148,26 @@ class UserManager(object):
         settings.check_settings(self)
 
         # Initialize Translations -- Only if Flask-Babel has been installed
-        if hasattr(app.jinja_env, 'install_gettext_callables'):
-            app.jinja_env.install_gettext_callables(
-                    lambda x: get_translations().ugettext(x),
-                    lambda s, p, n: get_translations().ungettext(s, p, n),
-                    newstyle=True)
+        try:
+            from flask_babelex import Domain
+        except ImportError:
+            from .translations import get_translations
+            if hasattr(app.jinja_env, 'install_gettext_callables'):
+                app.jinja_env.install_gettext_callables(
+                        lambda x: get_translations().ugettext(x),
+                        lambda s, p, n: get_translations().ungettext(s, p, n),
+                        newstyle=True)
+            else:
+                app.jinja_env.add_extension('jinja2.ext.i18n')
+                app.jinja_env.install_null_translations()
         else:
-            app.jinja_env.add_extension('jinja2.ext.i18n')
-            app.jinja_env.install_null_translations()
+            trans_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "translations")
+            flask_user_domain = Domain(trans_path, domain='flask_user')
+
+            @app.before_first_request
+            def merge_translations():
+                from flask_babelex import get_domain
+                get_domain().get_translations().merge(flask_user_domain.get_translations())
 
 
         # Create password_crypt_context if needed
@@ -179,9 +190,6 @@ class UserManager(object):
 
         # Add context processor
         app.context_processor(_flask_user_context_processor)
-
-        # Prepare for translations
-        _ = translations.gettext
 
 
     def setup_login_manager(self, app):
