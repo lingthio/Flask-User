@@ -334,7 +334,7 @@ class ResetPasswordForm(FlaskForm):
 
 class InviteForm(FlaskForm):
     email = StringField(_('Email'), validators=[
-        validators.Required(_('Email is required')),
+        validators.DataRequired(_('Email is required')),
         validators.Email(_('Invalid Email'))])
     next = HiddenField()
     submit = SubmitField(_('Invite!'))
