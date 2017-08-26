@@ -2,17 +2,26 @@
 Limitations
 ===========
 
-As you will soon experience, a great many things in Flask-User can be customized
-so it can behave exactly the way you want it to behave. But this documentation
-would not be complete without first discussing what its limitations are.
+We want to be transparent about what this package can and can not do.
+
+
+Python versions
+---------------
+Flask-User has been tested with Python |supported_python_versions_and|
+
+
+Flask versions
+--------------
+Flask-User has been tested with Flask 0.10, 0.11 and 0.12
 
 
 Supported Databases
 -------------------
-Out-of-the box, Flask-User ships with a SQLAlchemyAdapter, allowing
-support for many SQL databases including:
+Flask-User uses a 'DatabaseAdapter' to shield its functionality from
+the underlying database. It ships with a DatabaseAdapter for SQLAlchemy.
 
-* Drizzle
+SQLAlchemy supports many SQL database, including:
+
 * Firebird
 * Microsoft SQL Server
 * MySQL
@@ -21,77 +30,94 @@ support for many SQL databases including:
 * SQLite
 * Sybase
 
-For a full list see http://docs.sqlalchemy.org/en/rel_0_9/dialects/index.html
-
-Flask-User does abstract DB interactions through a 'DbAdapter' class,
-so support for other databases is possible by writing a DbAdapter extension class.
-
-Database table names
---------------------
-No known restrictions
+The DatabaseAdapter can be subclassed to support other Databases.
 
 
-Database column names
----------------------
-No known restrictions
+Python data-model class names
+-----------------------------
+No known restrictions.
+
+Flask-User relies on a User class and optionally on a UserAuth, UserEmail, UserInvitation and Role class.
+The names of these classes can be anything you choose.
 
 
-Primary keys
-------------
-The primary key of the User table must be an Integer and may not be a compound key.
+Python data-model attribute names
+---------------------------------
+
+If a single User data-model class is specified, the following attribute names are fixed::
+
+    User.id
+    User.password
+
+    User.email                 # If FLASK_USER_ENABLE_EMAIL is True
+    User.email_confirmed_at    # If FLASK_USER_ENABLE_EMAIL is True
+
+    User.username              # If FLASK_USER_ENABLE_USERNAME is True
+
+    User.active        # Optional, to enable activation/deactivation of users
+
+    User.roles         # Optional, only for role-based authorization
+    Role.id            # Optional, only for role-based authorization
+    Role.name          # Optional, only for role-based authorization
+
+    User.user_emails   # Optional, only for multiple emails per user
 
 
-Data model field names
-----------------------
-Flask-User requires specific Data model field names, but accepts
-arbitrary names for the Database column names.
-
-Required Data model field names:
+| If your existing code uses different attribute names you have two options:
+| 1) Rename these attributes throughout your code base
+| 2) Use Python's property and propery-setters to translate attribute names
 
 ::
 
-    # User authentication information
-    User.id
-    User.username              or  UserAuth.username
-    User.password              or  UserAuth.password
-                                   UserAuth.user_id
+    class User(db.Model, UserMixin):
+            ...
+        email_address = db.Column(db.String(255), nullable=False, unique=True)
+            ...
 
-    # User email information
-    User.email                 or  UserEmail.email
-    User.confirmed_at          or  UserEmail.confirmed_at
-                                   UserEmail.user_id
+        @property
+        def email(self):
+            return self.email_address   # on user.email: return user.email_address
 
-    # User information
-    User.active
-
-    # Relationships
-    User.roles                 # only if @roles_required is used
-
-    # Role information
-    Role.name
+        @email.setter
+        def email(self, value):
+            self.email_address = value  # on user.email='xyz': set user.email_address='xyz'
 
 
-SQLAlchemy offers a way to use specific Data model field names
-with different Database column names:
+Note: Depending on Flask-User configuration settings, some attributes may move to other data-model classes,
+such as UserAuth and UserEmail. These configurations will be discussed elsewhere.
+
+
+SQL table names
+---------------
+No known restrictions
+
+
+SQL column names
+----------------
+No known restrictions.
+
+Note: Even though some Python data-model attribute names are fixed,
+SQLAlchemy allows column names to be different from their corresponding attribute names.
 
 ::
 
     class User(db.Model, UserMixin)
 
-        # Map Data model field 'email' to Database column 'email_address'
+        # Map Python Data-model attribute 'email' to SQL column 'email_address'
         email = db.Column('email_address', db.String(100))
 
-        # Map Data model field 'active' to Database column 'is_active'
+        # Map Python Data-model attribute 'active' to SQL column 'is_active'
         active = db.Column('is_active', db.Boolean())
 
 
-Flask versions
---------------
-Flask-User has been tested with Flask 0.10
+Primary keys
+------------
+The primary key of the User, UserAuth, UserEmail, UserInvitation and Role tables:
+
+- must be named 'id'
+- must be an Integer
+- may not be a compound key.
 
 
-Python versions
----------------
-Flask-User has been tested with Python 2.6, 2.7, 3.3 and 3.4
 
 

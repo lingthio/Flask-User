@@ -64,8 +64,10 @@ def confirm_email(token):
             user.confirmed_at = datetime.utcnow()
 
     if user:
-        user.set_active(True)
-        db_adapter.commit()
+        # If User.active exists: activate User
+        if hasattr(user, 'active'):
+            db_adapter.update_object(user, active=True)
+            db_adapter.commit()
     else:                                               # pragma: no cover
         flash(_('Invalid confirmation token.'), 'error')
         return redirect(url_for('user.login'))
@@ -138,8 +140,8 @@ def change_username():
         new_username = form.new_username.data
 
         # Change username
-        user_auth = current_user.user_auth if user_manager.UserAuthModel and hasattr(current_user, 'user_auth') else current_user
-        db_adapter.update_object(user_auth, username=new_username)
+        object = current_user.user_auth if user_manager.UserAuthModel and hasattr(current_user, 'user_auth') else current_user
+        db_adapter.update_object(object, username=new_username)
         db_adapter.commit()
 
         # Send 'username_changed' email
@@ -184,13 +186,12 @@ def email_action(id, action):
 
     elif action=='make-primary':
         # Disable previously primary emails
-        user_emails = db_adapter.find_all_objects(user_manager.UserEmailModel, user_id=current_user.id)
-        for ue in user_emails:
-            if ue.is_primary:
-                ue.is_primary = False
+        user_emails = db_adapter.find_objects(user_manager.UserEmailModel, user_id=current_user.id)
+        for other_user_email in user_emails:
+            if other_user_email.is_primary:
+                db_adapter.update_object(other_user_email, is_primary=False)
         # Enable current primary email
-        user_email.is_primary = True
-        # Commit
+        db_adapter.update_object(user_email, is_primary=True)
         db_adapter.commit()
 
     elif action=='confirm':
@@ -303,7 +304,7 @@ def manage_emails():
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
 
-    user_emails = db_adapter.find_all_objects(user_manager.UserEmailModel, user_id=current_user.id)
+    user_emails = db_adapter.find_objects(user_manager.UserEmailModel, user_id=current_user.id)
     form = user_manager.add_email_form()
 
     # Process valid POST request
@@ -375,13 +376,9 @@ def register():
             user_auth_class_fields = UserAuth.__dict__
             user_auth_fields = {}
 
-        # Enable user account
+        # If User.active exists: activate User
         if hasattr(user_manager.UserModel, 'active'):
             user_fields['active'] = True
-        elif hasattr(user_manager.UserModel, 'is_enabled'):
-            user_fields['is_enabled'] = True
-        else:
-            user_fields['is_active'] = True
 
         # For all form fields
         for field_name, field_value in register_form.data.items():
@@ -501,7 +498,7 @@ def invite():
 
         # Store token
         if hasattr(user_manager.UserInvitationModel, 'token'):
-            user_invite.token = token
+            db_adapter.update_object(user_invite, token=token)
             db_adapter.commit()
 
         try:

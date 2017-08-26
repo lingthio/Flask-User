@@ -76,22 +76,22 @@ def test_init(db):
     User = um.UserModel
 
     # Create user1 with username and email
-    user1 = User(username='user1', email='user1@example.com', password=hashed_password, active=True)
+    user1 = User(username='user1', email='user1@example.com', password=hashed_password)
     assert user1
     db.session.add(user1)
 
     # Create user1 with email only
-    user2 = User(email='user2@example.com', password=hashed_password, active=True)
+    user2 = User(email='user2@example.com', password=hashed_password,)
     assert user2
     db.session.add(user2)
 
     # Create user3 with username and email
-    user3 = User(username='user3', email='user3@example.com', password=hashed_password, active=True)
+    user3 = User(username='user3', email='user3@example.com', password=hashed_password)
     assert user3
     db.session.add(user3)
 
     # Create user4 with email only
-    user4 = User(email='user4@example.com', password=hashed_password, active=True)
+    user4 = User(email='user4@example.com', password=hashed_password)
     assert user4
     db.session.add(user4)
 
@@ -450,18 +450,19 @@ def test_login_without_confirm_email(client):
             email=email,
             password=password)
 
-    # Confirm email manually, but disable account
-    User = um.UserModel
-    user = User.query.filter(User.email==email).first()
-    assert(user)
-    user.active = False
-    user.confirmed_at = datetime.utcnow()
-
-    # Try logging in into  disabled account
-    client.post_invalid_form(url_for('user.login'),
-            'Your account has not been enabled',
-            email=email,
-            password=password)
+    # TODO
+    # # Confirm email manually, but disable account
+    # User = um.UserModel
+    # user = User.query.filter(User.email==email).first()
+    # assert(user)
+    # user.active = False
+    # user.confirmed_at = datetime.utcnow()
+    #
+    # # Try logging in into  disabled account
+    # client.post_invalid_form(url_for('user.login'),
+    #         'Your account has not been enabled',
+    #         email=email,
+    #         password=password)
 
 def test_cleanup(db):
     """

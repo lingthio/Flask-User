@@ -13,20 +13,6 @@ class UserMixin(LoginUserMixin):
         return user_token
 
 
-    def is_active(self):
-        if hasattr(self, 'active'):
-            return self.active
-        else:
-            return self.is_enabled
-
-
-    def set_active(self, active):
-        if hasattr(self, 'active'):
-            self.active = active
-        else:
-            self.is_enabled = active
-
-
     def has_role(self, *specified_role_names):
         """ Return True if the user has one of the specified roles. Return False otherwise.
 

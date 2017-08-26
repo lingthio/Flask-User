@@ -5,30 +5,17 @@
     :license: Simplified BSD License, see LICENSE.txt for more details."""
 
 from __future__ import print_function
-from datetime import datetime
-from flask_login import current_user
 
-class DBAdapter(object):
-    """ This object is used to shield Flask-User from ORM specific functions.
-        It's used as the base class for ORM specific adapters like SQLAlchemyAdapter."""
-    def __init__(self, db, UserClass, UserAuthClass=None, UserEmailClass=None, UserInvitationClass=None):
-        self.db = db
-        self.UserClassX = UserClass                  # first_name, last_name, etc.
-        self.UserAuthClassX = UserAuthClass          # username, password, etc.
-        self.UserEmailClassX = UserEmailClass        # For multiple emails per user
-        self.UserInvitationClassX = UserInvitationClass
+from .db_adapter import DbAdapter
 
-
-class SQLAlchemyAdapter(DBAdapter):
-    """ This object is used to shield Flask-User from SQLAlchemy specific functions."""
-    def __init__(self, db, UserClass, UserAuthClass=None, UserEmailClass=None, UserInvitationClass=None):
-        super(SQLAlchemyAdapter, self).__init__(db, UserClass, UserAuthClass, UserEmailClass, UserInvitationClass)
+class BaseAlchemyDbAdapter(DbAdapter):
+    """ This class the base class for SQLAlchemyAdapter and MongoAlchemyAdapter."""
 
     def get_object(self, ObjectClass, id):
         """ Retrieve one object specified by the primary key 'pk' """
         return ObjectClass.query.get(id)
 
-    def find_all_objects(self, ObjectClass, **kwargs):
+    def find_objects(self, ObjectClass, **kwargs):
         """ Retrieve all objects matching the case sensitive filters in 'kwargs'. """
 
         # Convert each name/value pair in 'kwargs' into a filter
@@ -38,10 +25,10 @@ class SQLAlchemyAdapter(DBAdapter):
             # Make sure that ObjectClass has a 'field_name' property
             field = getattr(ObjectClass, field_name, None)
             if field is None:
-                raise KeyError("SQLAlchemyAdapter.find_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
+                raise KeyError("BaseAlchemyAdapter.find_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
 
             # Add a filter to the query
-            query = query.filter(field.in_((field_value,)))
+            query = query.filter(field==field_value)
 
         # Execute query
         return query.all()
@@ -57,7 +44,7 @@ class SQLAlchemyAdapter(DBAdapter):
             # Make sure that ObjectClass has a 'field_name' property
             field = getattr(ObjectClass, field_name, None)
             if field is None:
-                raise KeyError("SQLAlchemyAdapter.find_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
+                raise KeyError("BaseAlchemyAdapter.find_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
 
             # Add a case sensitive filter to the query
             query = query.filter(field==field_value)  # case sensitive!!
@@ -75,7 +62,7 @@ class SQLAlchemyAdapter(DBAdapter):
             # Make sure that ObjectClass has a 'field_name' property
             field = getattr(ObjectClass, field_name, None)
             if field is None:
-                raise KeyError("SQLAlchemyAdapter.find_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
+                raise KeyError("BaseAlchemyAdapter.find_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
 
             # Add a case sensitive filter to the query
             query = query.filter(field.ilike(field_value))  # case INsensitive!!
@@ -101,5 +88,43 @@ class SQLAlchemyAdapter(DBAdapter):
         """ Delete object 'object'. """
         self.db.session.delete(object)
 
+class SQLAlchemyDbAdapter(BaseAlchemyDbAdapter):
+    """ This class shields the code from SQLAlchemy specifics."""
+
     def commit(self):
         self.db.session.commit()
+
+
+class MongoAlchemyDbAdapter(BaseAlchemyDbAdapter):
+    """ This class shields the code from MongoAlchemy specifics."""
+
+    def ifind_first_object(self, ObjectClass, **kwargs):
+        """ Retrieve the first object matching the case insensitive filters in 'kwargs'. """
+
+        # Convert each name/value pair in 'kwargs' into a filter
+        query = ObjectClass.query
+        for field_name, field_value in kwargs.items():
+
+            # Make sure that ObjectClass has a 'field_name' property
+            field = getattr(ObjectClass, field_name, None)
+            if field is None:
+                raise KeyError("BaseAlchemyAdapter.find_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
+
+            # Add a case sensitive filter to the query
+            query = query.filter({ field : {"$regex": field_value, "$options": 'i'} })  # case INsensitive!!
+
+        # Execute query
+        return query.first()
+
+    def update_object(self, object, **kwargs):
+        # Update object
+        super(MongoAlchemyDbAdapter, self).__init__(object, **kwargs)
+        # Save changes to DB
+        object.save()
+
+    def delete_object(self, object):
+        """ Delete object 'object'. """
+        self.db.session.remove(object)
+
+    def commit(self):
+        self.db.session.flush()

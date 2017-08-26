@@ -11,16 +11,16 @@ def test_roles(db):
     role2 = Role(name='Role 2')
 
     # user0 has no roles
-    user0 = User(username='user0', email='user0@example.com', password=hashed_password, active=True)
+    user0 = User(username='user0', email='user0@example.com', password=hashed_password)
     db.session.add(user0)
     
     # user1 has only role1 
-    user1 = User(username='user1', email='user1@example.com', password=hashed_password, active=True)
+    user1 = User(username='user1', email='user1@example.com', password=hashed_password)
     user1.roles.append(role1)
     db.session.add(user1)
     
     # user2 has role1 and role2
-    user2 = User(username='user2', email='user2@example.com', password=hashed_password, active=True)
+    user2 = User(username='user2', email='user2@example.com', password=hashed_password)
     user2.roles.append(role1)
     user2.roles.append(role2)
     db.session.add(user2)

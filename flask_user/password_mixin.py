@@ -78,10 +78,8 @@ class PasswordMixin(object):
 
     def update_hashed_password(self, user, hashed_password):
         # Hashed password is stored with the User model or the UserAuth model
-        if self.UserAuthModel and hasattr(self.UserModel, 'user_auth'):
-            user.user_auth.password = hashed_password
-        else:
-            user.password = hashed_password
+        object = user.user_auth if self.UserAuthModel and hasattr(self.UserModel, 'user_auth') else user
+        self.db_adapter.update_object(object, password=hashed_password)
         self.db_adapter.commit()
 
 

@@ -7,6 +7,7 @@
 
 import base64
 from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
 from itsdangerous import BadSignature, SignatureExpired, TimestampSigner
 
 # The UserManager is implemented across several source code files.
@@ -20,11 +21,11 @@ class TokenMixin(object):
         """ Create a cypher to encrypt IDs and a signer to sign tokens."""
         # Create cypher to encrypt IDs
         # and ensure >=16 characters
-        precursor = b'0123456789abcdef'
+        trailer = b'0123456789abcdef'
         if isinstance(secret, bytes):
-            key = secret + precursor
+            key = secret + trailer
         else:
-            key = secret.encode("utf-8") + precursor
+            key = secret.encode("utf-8") + trailer
         self.cipher = AES.new(key[0:16], AES.MODE_ECB)
 
         # Create signer to sign tokens
@@ -60,14 +61,23 @@ class TokenMixin(object):
 
     def _encrypt_id(self, id):
         """ Encrypts integer ID to url-safe base64 string."""
-        # 16 byte integer
-        str1 = '%016d' % id
-        # encrypted data
-        str2 = self.cipher.encrypt(str1.encode())
-        # URL safe base64 string with '=='
-        str3 = base64.urlsafe_b64encode(str2)
-        # return base64 string without '=='
-        return str3[0:-2]
+        hex_str = format(id, 'x')                                 # Convert integer to hex string
+        hex_bytes = hex_str.encode()                              # Convert to bytes
+        padded_bytes = pad(hex_bytes, 16)                         # Pad to multiples of 16
+        encrypted_bytes = self.cipher.encrypt(padded_bytes)       # Encrypt
+        url_safe_str = base64.urlsafe_b64encode(encrypted_bytes)  # Convert to URL-safe string
+        encrypted_id = url_safe_str[0:-2]                         # Remove trailing base64 '=='
+
+        # For debug purposes
+        print('TokenMixin._encrypt_id()')
+        print('hex_str', hex_str)
+        print('hex_bytes', hex_bytes)
+        print('padded_bytes', padded_bytes)
+        print('encrypted_bytes', encrypted_bytes)
+        print('url_safe_str', url_safe_str)
+        print('encrypted_id', encrypted_id)
+
+        return encrypted_id
 
     def _decrypt_id(self, encrypted_id):
         """ Decrypts url-safe base64 string to integer ID"""
@@ -76,13 +86,21 @@ class TokenMixin(object):
             encrypted_id = encrypted_id.encode('ascii', 'ignore')
 
         try:
-            str3 = encrypted_id + b'=='             # --> base64 string with '=='
-            #print('str3=', str3)
-            str2 = base64.urlsafe_b64decode(str3)   # --> encrypted data
-            #print('str2=', str2)
-            str1 = self.cipher.decrypt(str2)        # --> 16 byte integer string
-            #print('str1=', str1)
-            return int(str1)                        # --> integer id
+            url_safe_str = encrypted_id + b'=='                       # Add trailing base64 '=='
+            encrypted_bytes = base64.urlsafe_b64decode(url_safe_str)  # Convert to bytes
+            padded_bytes = self.cipher.decrypt(encrypted_bytes)       # Decrypt
+            hex_bytes = unpad(padded_bytes, 16)                       # Remove padding
+            id = int(hex_bytes, 16)                                   # Convert hex to integer
+
+            # For debug purposes
+            print('TokenMixin._decrypt_id()')
+            print('url_safe_str', url_safe_str)
+            print('encrypted_bytes', encrypted_bytes)
+            print('padded_bytes', padded_bytes)
+            print('hex_bytes', hex_bytes)
+            print('id', id)
+
+            return id
         except Exception as e:                      # pragma: no cover
             print('!!!Exception in _decrypt_id()!!!:', e)
             return 0

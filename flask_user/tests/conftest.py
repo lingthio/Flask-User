@@ -35,7 +35,8 @@ def db(app, request):
     def teardown():
         app.db.drop_all()
 
-    app.db.create_all()
+    if hasattr(app.db, 'create_all'):
+        app.db.create_all()
 
     request.addfinalizer(teardown)
     return app.db

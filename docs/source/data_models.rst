@@ -1,105 +1,81 @@
-===============
-User DataModels
-===============
+===========
+Data-models
+===========
 
-Flask-User distinguishes between the following groups of user information:
+Note: The code examples below assume the use of Flask-SQLAlchemy
 
-1. User Authentication information such as username and password
-2. User Email information such as email address and confirmed_at
-3. User information such as first_name and last_name
-4. User Role information
+User data-model
+---------------
+In its simplest form, Flask-User makes use of a single User data-model class::
 
-Flask-User allows the developer to store Authentication, Email and User information in one DataModel or across several DataModels.
-
-Flask-User requires User Role information to be stored in a Role DataModel and an UserRole association table.
-
-
-All-in-one User DataModel
--------------------------
-If you'd like to store all user information in one DataModel, use the following:
-
-::
-
-    # Define User model. Make sure to add flask_user UserMixin !!!
+    # Define User data-model
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
 
-        # User Authentication information
-        username = db.Column(db.String(50), nullable=False, unique=True)
-        password = db.Column(db.String(255), nullable=False, default='')
-
-        # User Email information
+        # User Authentication fields
         email = db.Column(db.String(255), nullable=False, unique=True)
-        confirmed_at = db.Column(db.DateTime())
+        email_confirmed_at = db.Column(db.DateTime())
+        username = db.Column(db.String(50), nullable=False, unique=True)
+        password = db.Column(db.String(255), nullable=False)
 
-        # User information
-        is_enabled = db.Column(db.Boolean(), nullable=False, default=False)
-        first_name = db.Column(db.String(50), nullable=False, default='')
-        last_name = db.Column(db.String(50), nullable=False, default='')
-
-        def is_active(self):
-          return self.is_enabled
+        # User fields
+        active = db.Column(db.Boolean(),
+        first_name = db.Column(db.String(50), nullable=False)
+        last_name = db.Column(db.String(50), nullable=False)
 
     # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db, User)        # Register the User model
-    user_manager = UserManager(db_adapter, app)     # Initialize Flask-User
+    user_manager = UserManager(app, db, User)
+Optional UserAuth data-model
+----------------------------
+If desired, the authentication fields can be stored in a separate UserAuth data-model class::
 
-
-Separated User/UserAuth DataModel
----------------------------------
-If you'd like to store User Authentication information separate from User information, use the following:
-
-::
-
-    # Define User DataModel
-    class User(db.Model):
+    # Define User data-model
+    class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
 
-        # User email information
-        email = db.Column(db.String(255), nullable=False, unique=True)
-        confirmed_at = db.Column(db.DateTime())
+        # User fields
+        active = db.Column(db.Boolean(),
+        first_name = db.Column(db.String(50), nullable=False)
+        last_name = db.Column(db.String(50), nullable=False)
 
-        # User information
-        is_enabled = db.Column(db.Boolean(), nullable=False, default=False)
-        first_name = db.Column(db.String(50), nullable=False, default='')
-        last_name = db.Column(db.String(50), nullable=False, default='')
-
-        def is_active(self):
-          return self.is_enabled
-
-    # Define UserAuth DataModel. Make sure to add flask_user UserMixin!!
-    class UserAuth(db.Model, UserMixin):
+    # Define UserAuth data-model
+    class UserAuth(db.Model):
         id = db.Column(db.Integer, primary_key=True)
+
         user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
-
-        # User authentication information
-        username = db.Column(db.String(50), nullable=False, unique=True)
-        password = db.Column(db.String(255), nullable=False, default='')
-
-        # Relationships
         user = db.relationship('User', uselist=False, foreign_keys=user_id)
 
+        # Authentication fields
+        email = db.Column(db.String(255), nullable=False, unique=True)
+        email_confirmed_at = db.Column(db.DateTime())
+        username = db.Column(db.String(50), nullable=False, unique=True)
+        password = db.Column(db.String(255), nullable=False)
+
     # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db,  User, UserAuthClass=UserAuth)
-    user_manager = UserManager(db_adapter, app)
+    user_manager = UserManager(app, User, UserAuthClass=UserAuth)
 
 
-UserEmail DataModel
--------------------
-Separating User Email information from User information allows for support of multiple emails per user.
+Optional UserEmail data-model
+-----------------------------
+Flask-User can be configured to allow for multiple emails per users, pointing to the same user account
+and sharing the same password. In this configuration, a separate UserEmail data-model class must be specified.
 
-It can be applied to both the All-in-one User DataModel and the separated User/UserAuth DataModel
+The 'is_primary' attribute defines with email receives account notification emails.
 
 ::
 
-    # Define User DataModel. Make sure to add flask_user UserMixin !!!
+    # Define User data-model
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
-        ...
+
+        # User Authentication fields
+        username = db.Column(db.String(50), nullable=False, unique=True)
+        password = db.Column(db.String(255), nullable=False)
+
         # Relationship
         user_emails = db.relationship('UserEmail')
 
-    # Define UserEmail DataModel.
+    # Define UserEmail data-model
     class UserEmail(db.Model):
         id = db.Column(db.Integer, primary_key=True)
         user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -107,63 +83,82 @@ It can be applied to both the All-in-one User DataModel and the separated User/U
         # User email information
         email = db.Column(db.String(255), nullable=False, unique=True)
         confirmed_at = db.Column(db.DateTime())
-        is_primary = db.Column(db.Boolean(), nullable=False, default=False)
+        is_primary = db.Column(db.Boolean(), nullable=False, server_default='0')
 
         # Relationship
         user = db.relationship('User', uselist=False)
 
+    # Setup Flask-User
+    user_manager = UserManager(app, User, UserEmailClass=UserEmail)
 
-User Roles DataModel
---------------------
+Note: The UserEmail data-model can also be specified when the UserAuth data-model is being used::
 
-The Roles table holds the name of each role. This name will be matched to the @roles_required
+    # Setup Flask-User
+    user_manager = UserManager(app, User, UserAuthClass=UserAuth, UserEmailClass=UserEmail)
+
+
+Optional Role and UserRoles data-models
+---------------------------------------
+
+The Role and UserRoles data-models are only required for role-based authentication.
+In this configuration, the User data-model MUST define a 'roles' relationship attribute.
+
+The Role data-model holds the name of each role. This name will be matched to the @roles_required
 function decorator in a CASE SENSITIVE manner.
 
-::
-
-    # Define the Role DataModel
-    class Role(db.Model):
-        id = db.Column(db.Integer(), primary_key=True)
-        name = db.Column(db.String(50), unique=True)
-
-The UserRoles DataModel associates Users with their Roles.
-
-It can be applied to both the All-in-one User DataModel and the separated User/UserAuth DataModel
+The UserRoles data-model associates Users with their Roles.
 
 ::
 
-    # Define the User DataModel. Make sure to add flask_user UserMixin!!
+    # Define the User data-model
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
+
         ...
+
         # Relationships
         roles = db.relationship('Role', secondary='user_roles',
                 backref=db.backref('users', lazy='dynamic'))
 
-    # Define the UserRoles DataModel
+    # Define the Role data-model
+    class Role(db.Model):
+        id = db.Column(db.Integer(), primary_key=True)
+        name = db.Column(db.String(50), unique=True)
+
+    # Define the UserRoles data-model
     class UserRoles(db.Model):
         id = db.Column(db.Integer(), primary_key=True)
         user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
         role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
 
 
+Fixed attribute names
+---------------------
+All the attribute names mentioned above (except `first_name` and `last_name`) are fixed
+(they must be named this way).
 
-Porting Flask-User v0.5 applications to Flask-User v0.6
--------------------------------------------------------
-For applications using the All-in-one User DataModel, no changes are required.
+SQLAlchemy allows the database column name to be different from the data-model attribute name.
+To use the data-model attribute `email` with the database column name `email_address`::
 
-For applications using the separated User/UserAuth DataModel, v0.6 maintains backward compatibility,
-but future versions may not, and it is therefore recommended to make the following changes:
+    email = db.Column('email_address', db.String(255), nullable=False, unique=True)
 
-* Change ``SQLAlchemyAdapter(db, User, UserProfile=UserProfile)`` to
-  ``SQLAlchemyAdapter(db, UserProfile, UserAuth=User)``.
+| If your existing code uses different attribute names you have two options:
+| 1) Rename these attributes throughout your code base
+| 2) Use Python's property and propery-setters to translate attribute names
 
-* Move the UserMixin from ``class User(db.Model)`` to ``class UserProfile(db.Model, UserMixin)``
+::
 
-* Move the ``roles`` relationship from class User to class UserProfile.
+    class User(db.Model, UserMixin):
+            ...
+        email_address = db.Column(db.String(255), nullable=False, unique=True)
+            ...
 
-* Move the UserRoles.user_id association from 'user.id' to 'user_profile.id'.
-  This requires a DB schema change.
+        @property
+        def email(self):
+            return self.email_address   # on user.email: return user.email_address
 
-* If it's possible to rename table names, please rename User to UserAuth and UserProfile to User.
-  This would require a DB schema change.
+        @email.setter
+        def email(self, value):
+            self.email_address = value  # on user.email='xyz': set user.email_address='xyz'
+
+

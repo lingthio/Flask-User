@@ -7,12 +7,16 @@ def runserver():
     local('python runserver.py')
 
 @task
+def runapp(appname):
+    local('PYTHONPATH=. python example_apps/'+appname+'_app.py')
+
+@task
 def test():
     # Requires "pip install pytest"
     local('py.test flask_user/tests/')
 
 @task
-def coverage():
+def cov():
     # Requires "pip install pytest-coverage"
     local('py.test --cov flask_user --cov-report term-missing --cov-config flask_user/tests/.coveragerc flask_user/tests/')
 
@@ -38,8 +42,9 @@ def docs():
 
 @task
 def rebuild_docs():
-    local('rm -fr ../builds/flask_user/docs')
-    docs()
+    local('cp example_apps/*_app.py docs/source/includes/.')
+    local('sphinx-build -b html -a -E docs/source ../builds/flask_user1/docs')
+    local('cd ../builds/flask_user1/docs && zip -u -r flask_user1_docs *')
 
 @task
 def upload_to_pypi():

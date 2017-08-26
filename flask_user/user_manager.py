@@ -4,9 +4,10 @@
     :author: Ling Thio (ling.thio@gmail.com)
     :license: Simplified BSD License, see LICENSE.txt for more details."""
 
+
 from flask import Blueprint, current_app, Flask, url_for, render_template
 from flask_login import LoginManager, current_user
-from flask_user.db_adapters import DBAdapter
+
 from .password_mixin import PasswordMixin
 from .send_email_mixin import SendEmailMixin
 from .token_mixin import TokenMixin
@@ -39,15 +40,16 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
 
     # ***** Initialization methods *****
 
-    def __init__(self, app=None, db_adapter=None, **kwargs):
-        """ Initialize UserManager, with or without an app """
-        self.app = app              # Make sure to set self.app here
-                                    # See http://flask.pocoo.org/docs/0.11/extensiondev/
+    def __init__(self, app=None, db=None, UserClass=None, **kwargs):
+        """ Create UserManager, see http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code """
+        self.app = app
         if app:
-            self.init_app(app, db_adapter, **kwargs)
+            self.init_app(app, db, UserClass, **kwargs)
 
-    def init_app(self, app, db_adapter=None,
-                 # Forms
+    def init_app(self, app, db, UserClass,
+                 UserInvitationClass=None,
+                 UserAuthClass=None,
+                 UserEmailClass=None,
                 add_email_form=forms.AddEmailForm,
                  change_password_form=forms.ChangePasswordForm,
                  change_username_form=forms.ChangeUsernameForm,
@@ -83,37 +85,30 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
                  password_crypt_context = None,
                  send_email_function = None,
                  make_safe_url_function = views.make_safe_url):
-        """ Initialize the UserManager object """
+        """ Initialize UserManager, see http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code """
 
-        # Make sure to NOT set self.app here
-        # See http://flask.pocoo.org/docs/0.11/extensiondev/
+        from flask_sqlalchemy import SQLAlchemy
+        if isinstance(db, SQLAlchemy):
+            from .db_adapters.alchemy_db_adapter import SQLAlchemyDbAdapter
+            self.db_adapter = SQLAlchemyDbAdapter(db)
 
-        # Perform some Python magic to allow for:
-        # - v0.6  init_app(db_adapter, app), and
-        # - v0.9+ init_app(app, db_adapter) parameter order
-        if isinstance(app, DBAdapter) or isinstance(db_adapter, Flask):
-            # Switch v0.6 parameter order
-            temp = app
-            app = db_adapter
-            db_adapter = temp
+        from flask_mongoalchemy import MongoAlchemy
+        if isinstance(db, MongoAlchemy):
+            from .db_adapters.alchemy_db_adapter import MongoAlchemyDbAdapter
+            self.db_adapter = MongoAlchemyDbAdapter(db)
 
         # Perform Class type checking
         if not isinstance(app, Flask):
             raise TypeError("flask_user.UserManager.init_app(): Parameter 'app' is an instance of class '%s' "
                             "instead of a subclass of class 'flask.Flask'."
                             % app.__class__.__name__)
-        if not isinstance(db_adapter, DBAdapter):
-            raise TypeError("flask_user.UserManager.init_app(): Parameter 'db_adapter' is instance of class '%s' "
-                            "instead of a subclass of 'flask_user.DBAdapter'."
-                            % app.__class__.__name__)
 
         # Start moving the Model attributes from db_adapter to user_manager
-        self.db_adapter = db_adapter
-        self.db = db_adapter.db
-        self.UserModel = db_adapter.UserClassX
-        self.UserAuthModel = db_adapter.UserAuthClassX
-        self.UserEmailModel = db_adapter.UserEmailClassX
-        self.UserInvitationModel = db_adapter.UserInvitationClassX
+        self.db = db
+        self.UserModel = UserClass
+        self.UserAuthModel = UserAuthClass
+        self.UserEmailModel = UserEmailClass
+        self.UserInvitationModel = UserInvitationClass
 
         # Bind Flask-USER to app
         app.user_manager = self
@@ -239,7 +234,6 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
 
         # Create default features
         self._create_default_setting('enable_change_password',     app, True)
-        self._create_default_setting('enable_change_username',     app, True)
         self._create_default_setting('enable_email',               app, True)
         self._create_default_setting('enable_confirm_email',       app, self.enable_email)
         self._create_default_setting('enable_forgot_password',     app, self.enable_email)
@@ -249,6 +243,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
         self._create_default_setting('enable_remember_me',         app, True)
         self._create_default_setting('enable_retype_password',     app, True)
         self._create_default_setting('enable_username',            app, True)
+        self._create_default_setting('enable_change_username',     app, self.enable_username)
 
         # Create default settings
         self._create_default_setting('app_name',                   app, 'MyApp')

@@ -3,82 +3,25 @@ import datetime
 from flask import Flask, render_template_string, request
 from flask_babel import Babel
 from flask_mail import Mail
-from flask_sqlalchemy import SQLAlchemy
-from flask_user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
+from flask_user import login_required, UserManager, UserMixin
 from flask_user import roles_required, confirm_email_required
 
+ORM_type = 'SQLAlchemy'
 
 app = Flask(__name__)
-db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
-
-
-# Define the User data model. Make sure to add flask_user UserMixin!!
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-
-    # User authentication information
-    username = db.Column(db.String(50), nullable=True, unique=True)
-    password = db.Column(db.String(255), nullable=False, server_default='')
-    # reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
-
-    # User email information
-    email = db.Column(db.String(255), nullable=True, unique=True)
-    confirmed_at = db.Column(db.DateTime())
-
-    # User information
-    active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
-    first_name = db.Column(db.String(100), nullable=False, server_default='')
-    last_name = db.Column(db.String(100), nullable=False, server_default='')
-
-    # Relationships
-    roles = db.relationship('Role', secondary='user_roles',
-            backref=db.backref('users', lazy='dynamic'))
-
-
-# Define UserEmail DataModel.
-class UserEmail(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    # User email information
-    email = db.Column(db.String(255), nullable=True, unique=True)
-    confirmed_at = db.Column(db.DateTime())
-    is_primary = db.Column(db.Boolean(), nullable=False, default=False)
-
-    # Relationship
-    user = db.relationship('User', uselist=False)
-
-
-class UserInvitation(db.Model):
-    __tablename__ = 'user_invite'
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255), nullable=False)
-    # save the user of the invitee
-    invited_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    # token used for registration page to identify user registering
-    token = db.Column(db.String(100), nullable=False, server_default='')
-
-
-# Define the Role data model
-class Role(db.Model):
-    id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String(50), unique=True)
-
-
-# Define the UserRoles data model
-class UserRoles(db.Model):
-    id = db.Column(db.Integer(), primary_key=True)
-    user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
-    role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
-
 
 # Use a Class-based config to avoid needing a 2nd file
 # os.getenv() enables configuration through OS environment variables
 class ConfigClass(object):
     # Flask settings
     SECRET_KEY =              os.getenv('SECRET_KEY',       'THIS IS AN INSECURE SECRET')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///tst_app.sqlite')
-    CSRF_ENABLED = True
+
+    # Flask-SQLAlchemy settings
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///tst_app.sqlite'    # File-based SQL database
+    SQLALCHEMY_TRACK_MODIFICATIONS = False    # Avoids SQLAlchemy warning
+
+    # Flask-MongoAlchemy settings
+    MONGOALCHEMY_DATABASE = 'flask_user_quickstart_db'
 
     # Flask-Mail settings
     MAIL_USERNAME =           os.getenv('MAIL_USERNAME',        'email@example.com')
@@ -88,20 +31,114 @@ class ConfigClass(object):
     MAIL_PORT =           int(os.getenv('MAIL_PORT',            '465'))
     MAIL_USE_SSL =            os.getenv('MAIL_USE_SSL',         True)
 
+# Read config from ConfigClass defined above
+app.config.from_object(__name__+'.ConfigClass')
+
+if ORM_type=='SQLAlchemy':
+    # Initialize Flask-SQLAlchemy
+    from flask_sqlalchemy import SQLAlchemy
+    db = SQLAlchemy(app)
+
+    # Define the User data model. Make sure to add flask_user UserMixin!!
+    class User(db.Model, UserMixin):
+        id = db.Column(db.Integer, primary_key=True)
+
+        # User authentication information
+        username = db.Column(db.String(50), nullable=True, unique=True)
+        email = db.Column(db.String(255), nullable=True, unique=True)
+        confirmed_at = db.Column(db.DateTime())
+        password = db.Column(db.String(255), nullable=False, server_default='')
+        # reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
+
+        # User information
+        first_name = db.Column(db.String(100), nullable=False, server_default='')
+        last_name = db.Column(db.String(100), nullable=False, server_default='')
+
+        # Relationships
+        roles = db.relationship('Role', secondary='user_roles',
+                backref=db.backref('users', lazy='dynamic'))
+
+    # Define UserEmail DataModel.
+    class UserEmail(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+        # User email information
+        email = db.Column(db.String(255), nullable=True, unique=True)
+        confirmed_at = db.Column(db.DateTime())
+        is_primary = db.Column(db.Boolean(), nullable=False, default=False)
+
+        # Relationship
+        user = db.relationship('User', uselist=False)
+
+    class UserInvitation(db.Model):
+        __tablename__ = 'user_invite'
+        id = db.Column(db.Integer, primary_key=True)
+        email = db.Column(db.String(255), nullable=False)
+        # save the user of the invitee
+        invited_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+        # token used for registration page to identify user registering
+        token = db.Column(db.String(100), nullable=False, server_default='')
+
+    # Define the Role data model
+    class Role(db.Model):
+        id = db.Column(db.Integer(), primary_key=True)
+        name = db.Column(db.String(50), unique=True)
+
+    # Define the UserRoles data model
+    class UserRoles(db.Model):
+        id = db.Column(db.Integer(), primary_key=True)
+        user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+        role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
+
+
+if ORM_type == 'MongoAlchemy':
+    # Initialize Flask-MongoAlchemy
+    from flask_mongoalchemy import MongoAlchemy
+    db = MongoAlchemy(app)
+
+    # Define the User data model.
+    # NB: Make sure to add flask_user UserMixin !!!
+    class User(db.Document, UserMixin):
+        # Map MongoAlchemy's mongod_id to Flask-User's id - getter
+        @property
+        def id(self):
+            # Convert MongoDB hexadecimal string to Flask-User Integer
+            id = int(str(self.mongo_id), 16)
+            return id
+
+        # # Map MongoDB's _id to Flask-User's id - setter
+        # @id.setter
+        # def id(self, value):
+        #     # Convert Flask-User Integer to MongoDB hexadecimal string
+        #     self._id = format(value, 'x')
+
+        # User authentication information
+        username = db.StringField(required=False)
+        email = db.StringField(required=False)
+        password = db.StringField()
+        confirmed_at = db.DateTimeField(required=False)
+
+        # User information
+        first_name = db.StringField(required=False)
+        last_name = db.StringField(required=False)
+
+
+
+
+
 
 # Define custom UserManager class
 class CustomUserManager(UserManager):
     # Customize settings
-    def customize(self, app):
+    def __init__(self, *args, **kwargs):
+        super(CustomUserManager, self).__init__(*args, **kwargs)
         self.APP_NAME = "CustomAppName"
         self.ENABLE_EMAIL = True
         self.ENABLE_INVITATION = True
 
 
 def init_app(app, test_config=None):                # For automated tests
-    # Setup Flask and read config from ConfigClass defined above
-    app.config.from_object(__name__+'.ConfigClass')
-
     # Load local_settings.py if file exists         # For automated tests
     try: app.config.from_object('local_settings')
     except: pass
@@ -115,28 +152,31 @@ def init_app(app, test_config=None):                # For automated tests
     mail = Mail(app)                                # Initialize Flask-Mail
 
     # Reset all the database tables
-    db.create_all()
+    if ORM_type == 'SQLAlchemy':
+        db.create_all()
 
     # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db, User, UserInvitationClass=UserInvitation)
-    user_manager = CustomUserManager()
-    user_manager.init_app(app, db_adapter)
+    if ORM_type == 'SQLAlchemy':
+        user_manager = CustomUserManager(app, db, User, UserInvitationClass=UserInvitation)
+    else:
+        user_manager = CustomUserManager(app, db, User)
 
     # Create regular 'member' user
     if not User.query.filter(User.username=='member').first():
-        user = User(username='member', email='member@example.com', active=True,
+        user = User(username='member', email='member@example.com',
                 password=user_manager.hash_password('Password1'), confirmed_at=datetime.datetime.utcnow())
         db.session.add(user)
-        db.session.commit()
+        user_manager.db_adapter.commit()
 
     # Create 'user007' user with 'secret' and 'agent' roles
     if not User.query.filter(User.username=='user007').first():
-        user1 = User(username='user007', email='user007@example.com', active=True,
+        user1 = User(username='user007', email='user007@example.com',
                 password=user_manager.hash_password('Password1'))
-        user1.roles.append(Role(name='secret'))
-        user1.roles.append(Role(name='agent'))
+        if ORM_type == 'SQLAlchemy':
+            user1.roles.append(Role(name='secret'))
+            user1.roles.append(Role(name='agent'))
         db.session.add(user1)
-        db.session.commit()
+        user_manager.db_adapter.commit()
 
     # The '/' page is accessible to anyone
     @app.route('/')
@@ -147,7 +187,7 @@ def init_app(app, test_config=None):                # For automated tests
             <h2>{%trans%}Home Page{%endtrans%}</h2>
             <p><a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
             {% endblock %}
-            """)
+                """)
 
     # The '/profile' page requires a logged-in user
     @app.route('/user/profile')
@@ -184,12 +224,13 @@ def init_app(app, test_config=None):                # For automated tests
 
     # For testing only
     app.db = db
-    app.UserEmailClass = UserEmail
+    if ORM_type == 'SQLAlchemy':
+        app.UserEmailClass = UserEmail
 
     return app
 
 
 # Start development web server
 if __name__=='__main__':
-    app = create_app()
+    app = init_app(app)
     app.run(host='0.0.0.0', port=5555, debug=True)

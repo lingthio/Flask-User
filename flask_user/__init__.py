@@ -6,7 +6,6 @@
 
 from .user_mixin import UserMixin
 from .user_manager import UserManager
-from .db_adapters import SQLAlchemyAdapter
 
 # Export Flask-Login's current user
 from flask_login import current_user            # pass through Flask-Login's current_user

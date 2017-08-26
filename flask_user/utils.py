@@ -32,7 +32,7 @@ def user_has_confirmed_email(user):
     # Handle multiple emails per user: Find at least one confirmed email
     if user_manager.UserEmailModel:
         has_confirmed_email = False
-        user_emails = db_adapter.find_all_objects(user_manager.UserEmailModel, user_id=user.id)
+        user_emails = db_adapter.find_objects(user_manager.UserEmailModel, user_id=user.id)
         for user_email in user_emails:
             if user_email.confirmed_at:
                 has_confirmed_email = True

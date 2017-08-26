@@ -155,9 +155,6 @@ def check_valid_register_form(um, client, db):
             valid_user = User.query.filter(User.email==VALID_EMAIL).first()
         assert valid_user
 
-        # Verify operations
-        assert valid_user.active
-
     else:
         # Create user record manually
 
@@ -165,7 +162,7 @@ def check_valid_register_form(um, client, db):
         kwargs['password'] = um.hash_password(VALID_PASSWORD)
 
         # Create User
-        valid_user = User(active=True, confirmed_at=datetime.datetime.utcnow(), **kwargs)
+        valid_user = User(confirmed_at=datetime.datetime.utcnow(), **kwargs)
         db.session.add(valid_user)
         db.session.commit()
         assert valid_user
@@ -196,7 +193,6 @@ def check_valid_confirm_email_page(um, client):
     client.get_valid_page(url_for('user.confirm_email', token=confirmation_token))
 
     # Verify operations
-    assert valid_user.active
     assert valid_user.confirmed_at != None
 
 def check_valid_login_form(um, client):

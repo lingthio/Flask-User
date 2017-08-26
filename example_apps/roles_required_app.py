@@ -74,7 +74,7 @@ def create_app(test_config=None):                   # For automated tests
 
     # Create 'user007' user with 'secret' and 'agent' roles
     if not User.query.filter(User.username=='user007').first():
-        user1 = User(username='user007', active=True,
+        user1 = User(username='user007',
                 password=user_manager.hash_password('password'))
         user1.roles.append(Role(name='secret'))
         user1.roles.append(Role(name='agent'))

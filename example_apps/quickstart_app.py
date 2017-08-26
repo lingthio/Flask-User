@@ -1,58 +1,74 @@
-import os
+# This file contains an example Flask-User application.
+# To keep the example simple, we are applying some unusual techniques:
+# - Using class-based configuration (instead of file-based configuration)
+# - Using string-based templates (instead of file-based templates)
+# - Placing everything in one file
+
 from flask import Flask, render_template_string
 from flask_sqlalchemy import SQLAlchemy
-from flask_user import login_required, UserManager, UserMixin, SQLAlchemyAdapter
+from flask_user import login_required, UserManager, UserMixin
 
 
-# Use a Class-based config to avoid needing a 2nd file
-# os.getenv() enables configuration through OS environment variables
+# Class-based application configuration
 class ConfigClass(object):
+    """ Flask application config """
+
     # Flask settings
-    SECRET_KEY =              os.getenv('SECRET_KEY',       'THIS IS AN INSECURE SECRET')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///basic_app.sqlite')
-    CSRF_ENABLED = True
+    SECRET_KEY = 'THIS IS AN INSECURE SECRET'
 
     # Flask-SQLAlchemy settings
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///quickstart_app.sqlite'    # File-based SQL database
+    SQLALCHEMY_TRACK_MODIFICATIONS = False    # Avoids SQLAlchemy warning
+
+    # Flask-Mail settings
+    MAIL_USERNAME = 'email@example.com'
+    MAIL_PASSWORD = 'password'
+    MAIL_DEFAULT_SENDER = '“Sender” <noreply@example.com>'
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USE_TLS = False
 
     # Flask-User settings
-    USER_APP_NAME = "BasicApp"                      # Used in base and email templates
-    USER_ENABLE_EMAIL = False                       # Disable email functionality
+    USER_APP_NAME = "Flask-User QuickStart App"      # Shown in and email templates and page footers
+    USER_ENABLE_EMAIL = True        # Enable email authentication
+    USER_ENABLE_USERNAME = False    # Disable username authentication
 
 
 def create_app():
     """ Flask application factory """
     
-    # Setup Flask app and app.config
+    # Create Flask app load app.config
     app = Flask(__name__)
     app.config.from_object(__name__+'.ConfigClass')
 
-    # Initialize Flask extensions
-    db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
+    # Initialize Flask-SQLAlchemy
+    db = SQLAlchemy(app)
 
-    # Define the User data model. Make sure to add flask_user UserMixin !!!
+    # Define the User data model.
+    # NB: Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
 
         # User authentication information
-        username = db.Column(db.String(50), nullable=False, unique=True)
+        email = db.Column(db.String(255), nullable=False, unique=True)
         password = db.Column(db.String(255), nullable=False, server_default='')
+        confirmed_at = db.Column(db.DateTime())
 
         # User information
-        active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
         first_name = db.Column(db.String(100), nullable=False, server_default='')
         last_name = db.Column(db.String(100), nullable=False, server_default='')
 
     # Create all database tables
     db.create_all()
 
-    # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db, User)        # Specify SQLAlchemy DB with User model
-    user_manager = UserManager(app, db_adapter)     # Initialize Flask-User
+    # Setup Flask-User and specify the User database model
+    user_manager = UserManager(app, db, User)
 
     # The Home page is accessible to anyone
     @app.route('/')
     def home_page():
+        # String-based templates
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
@@ -63,10 +79,11 @@ def create_app():
             {% endblock %}
             """)
 
-    # The Members page is only accessible to authenticated users
+    # The Members page is only accessible to authenticated users via the @login_required decorator
     @app.route('/members')
-    @login_required                                 # Use of @login_required decorator
+    @login_required    # User must be authenticated
     def members_page():
+        # String-based templates
         return render_template_string("""
             {% extends "base.html" %}
             {% block content %}
