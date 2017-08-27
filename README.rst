@@ -36,7 +36,7 @@ And wouldn't it be nice to also offer:
 * **Largely configurable** (Through configuration settings)
 * **Fully customizable** (Through customizable functions and email templates)
 * **Well documented**
-* **Tested on Python 2.6, 2.7, 3.3 and 3.4**
+* **Tested on Python 2.6, 2.7, 3.3, 3.4, 3.5 and 3.6**
 
 Status
 ------

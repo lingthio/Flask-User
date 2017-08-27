@@ -50,7 +50,7 @@ And wouldn't it be nice to also offer:
 | Flask-User offers these user features (and more) out-of-the-box
 | while also honoring the following developer needs:
 
-* **Tested on Python 2.6, 2.7, 3.3 and 3.4**
+* **Tested on Python 2.6, 2.7, 3.3, 3.4, 3.5 and 3.6**
 * **Reliable** (Code coverage of over 95%)
 * **Secure** (Built on top of widely deployed Flask-Login)
 * **Ready to use** (Through sensible defaults)
@@ -112,7 +112,8 @@ Documentation
 
 Revision History
 ----------------
-* v0.6.11 Added Russian translation.
+* v0.6.12 Added Russian translation.
+* v0.6.11 (Skipped)
 * v0.6.10 Added Spanish translation.
 * v0.6.9 Added support for Flask-Login v0.4+.
     Replaced pycrypto with pycryptodome.

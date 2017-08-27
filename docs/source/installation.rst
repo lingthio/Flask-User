@@ -17,7 +17,7 @@ After setting up virtualenv, installation is as easy as::
 
 Requirements
 ------------
-- Python 2.6, 2.7, 3.3 or 3.4
+- Python 2.6, 2.7, 3.3+
 - Flask 0.10+
 - Flask-Login 0.2+
 - Flask-Mail 0.9+ or Flask-Sendmail

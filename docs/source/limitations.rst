@@ -92,6 +92,6 @@ Flask-User has been tested with Flask 0.10
 
 Python versions
 ---------------
-Flask-User has been tested with Python 2.6, 2.7, 3.3 and 3.4
+Flask-User has been tested with Python 2.6, 2.7, 3.3, 3.4, 3.5 and 3.6
 
 

@@ -36,5 +36,21 @@ def rebuild_docs():
 
 @task
 def upload_to_pypi():
+    local('rm dist/*.tar.gz')
     local('python setup.py sdist')
     local('twine upload dist/*')
+
+# PyEnv: https://gist.github.com/Bouke/11261620
+# PyEnv and Tox: https://www.holger-peters.de/using-pyenv-and-tox.html
+# Available Python versions: pyenv install --list
+@task
+def setup_tox():
+    versions_str = '2.6.9 2.7.13 3.3.6 3.4.6 3.5.3 3.6.2'
+    versions = versions_str.split()
+    for version in versions:
+        local('pyenv install --skip-existing '+version)
+    local('pyenv global '+versions_str)
+
+@task
+def tox():
+    local('tox')
