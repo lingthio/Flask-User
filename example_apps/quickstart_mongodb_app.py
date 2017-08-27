@@ -35,9 +35,10 @@ class ConfigClass(object):
     USER_ENABLE_USERNAME = False    # Disable username authentication
 
     # For debugging purposes
-    # USER_SEND_PASSWORD_CHANGED_EMAIL=False
-    # USER_SEND_REGISTERED_EMAIL=False
-    # USER_SEND_USERNAME_CHANGED_EMAIL=False
+    USER_SEND_PASSWORD_CHANGED_EMAIL=False
+    USER_SEND_REGISTERED_EMAIL=False
+    USER_SEND_USERNAME_CHANGED_EMAIL=False
+    USER_ENABLE_CONFIRM_EMAIL=False
 
 
 def create_app():
@@ -49,9 +50,6 @@ def create_app():
 
     # Initialize MongoDB
     db = MongoAlchemy(app)
-
-    # Drop existing table
-    db.session.db.connection.drop_database(app.config.get('MONGOALCHEMY_DATABASE', ''))
 
     # Define the User data model.
     # NB: Make sure to add flask_user UserMixin !!!

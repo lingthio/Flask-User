@@ -65,17 +65,15 @@ class TokenMixin(object):
         hex_bytes = hex_str.encode()                              # Convert to bytes
         padded_bytes = pad(hex_bytes, 16)                         # Pad to multiples of 16
         encrypted_bytes = self.cipher.encrypt(padded_bytes)       # Encrypt
-        url_safe_str = base64.urlsafe_b64encode(encrypted_bytes)  # Convert to URL-safe string
-        encrypted_id = url_safe_str[0:-2]                         # Remove trailing base64 '=='
+        encrypted_id = base64.urlsafe_b64encode(encrypted_bytes)  # Convert to URL-safe string
 
         # For debug purposes
-        print('TokenMixin._encrypt_id()')
-        print('hex_str', hex_str)
-        print('hex_bytes', hex_bytes)
-        print('padded_bytes', padded_bytes)
-        print('encrypted_bytes', encrypted_bytes)
-        print('url_safe_str', url_safe_str)
-        print('encrypted_id', encrypted_id)
+        # print('TokenMixin._encrypt_id()')
+        # print('hex_str', hex_str)
+        # print('hex_bytes', hex_bytes)
+        # print('padded_bytes', padded_bytes)
+        # print('encrypted_bytes', encrypted_bytes)
+        # print('encrypted_id', encrypted_id)
 
         return encrypted_id
 
@@ -86,19 +84,18 @@ class TokenMixin(object):
             encrypted_id = encrypted_id.encode('ascii', 'ignore')
 
         try:
-            url_safe_str = encrypted_id + b'=='                       # Add trailing base64 '=='
-            encrypted_bytes = base64.urlsafe_b64decode(url_safe_str)  # Convert to bytes
+            encrypted_bytes = base64.urlsafe_b64decode(encrypted_id)  # Convert to bytes
             padded_bytes = self.cipher.decrypt(encrypted_bytes)       # Decrypt
             hex_bytes = unpad(padded_bytes, 16)                       # Remove padding
             id = int(hex_bytes, 16)                                   # Convert hex to integer
 
             # For debug purposes
-            print('TokenMixin._decrypt_id()')
-            print('url_safe_str', url_safe_str)
-            print('encrypted_bytes', encrypted_bytes)
-            print('padded_bytes', padded_bytes)
-            print('hex_bytes', hex_bytes)
-            print('id', id)
+            # print('TokenMixin._decrypt_id()')
+            # print('encrypted_id', encrypted_id)
+            # print('encrypted_bytes', encrypted_bytes)
+            # print('padded_bytes', padded_bytes)
+            # print('hex_bytes', hex_bytes)
+            # print('id', id)
 
             return id
         except Exception as e:                      # pragma: no cover

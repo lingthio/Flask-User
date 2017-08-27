@@ -55,22 +55,23 @@ def confirm_email(token):
     if user_manager.UserEmailModel:
         user_email = user_manager.get_user_email_by_id(object_id)
         if user_email:
-            user_email.confirmed_at = datetime.utcnow()
+            db_adapter.update_object(user_email, confirmed_at=datetime.utcnow())
             user = user_email.user
     else:
         user_email = None
         user = user_manager.get_user_by_id(object_id)
         if user:
-            user.confirmed_at = datetime.utcnow()
+            db_adapter.update_object(user, confirmed_at=datetime.utcnow())
 
     if user:
         # If User.active exists: activate User
         if hasattr(user, 'active'):
             db_adapter.update_object(user, active=True)
-            db_adapter.commit()
     else:                                               # pragma: no cover
         flash(_('Invalid confirmation token.'), 'error')
         return redirect(url_for('user.login'))
+
+    db_adapter.commit()
 
     # Send email_confirmed signal
     signals.user_confirmed_email.send(current_app._get_current_object(), user=user)

@@ -32,7 +32,7 @@
         <div class="pull-left"><a href="/"><h1 class="no-margins">{{ user_manager.app_name }}</h1></a></div>
         <div class="pull-right">
             {% if call_or_get(current_user.is_authenticated) %}
-                <a href="{{ url_for('user.profile') }}">{{ current_user.username }}</a>
+                <a href="{{ url_for('user.profile') }}">{{ current_user.username or current_user.email }}</a>
                 &nbsp; | &nbsp;
                 <a href="{{ url_for('user.logout') }}">Sign out</a>
             {% else %}

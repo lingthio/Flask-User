@@ -74,28 +74,25 @@ def test_init(db):
 
     hashed_password = um.hash_password('Password1')
     User = um.UserModel
+    add_object = um.db_adapter.add_object
 
     # Create user1 with username and email
-    user1 = User(username='user1', email='user1@example.com', password=hashed_password)
+    user1 = add_object(User, username='user1', email='user1@example.com', password=hashed_password)
     assert user1
-    db.session.add(user1)
 
     # Create user1 with email only
-    user2 = User(email='user2@example.com', password=hashed_password,)
+    user2 = add_object(User, email='user2@example.com', password=hashed_password,)
     assert user2
-    db.session.add(user2)
 
     # Create user3 with username and email
-    user3 = User(username='user3', email='user3@example.com', password=hashed_password)
+    user3 = add_object(User, username='user3', email='user3@example.com', password=hashed_password)
     assert user3
-    db.session.add(user3)
 
     # Create user4 with email only
-    user4 = User(email='user4@example.com', password=hashed_password)
+    user4 = add_object(User, email='user4@example.com', password=hashed_password)
     assert user4
-    db.session.add(user4)
 
-    db.session.commit()
+    um.db_adapter.commit()
 
 
 def test_invalid_register_with_username_form(client):
@@ -469,11 +466,12 @@ def test_cleanup(db):
     Delete user1 and user2
     """
     global user1, user2, user3, user4
-    db.session.delete(user1)
-    db.session.delete(user2)
-    db.session.delete(user3)
-    db.session.delete(user4)
-    db.session.commit()
+    um = current_app.user_manager
+    um.db_adapter.delete_object(user1)
+    um.db_adapter.delete_object(user2)
+    um.db_adapter.delete_object(user3)
+    um.db_adapter.delete_object(user4)
+    um.db_adapter.commit()
     user1 = None
     user2 = None
     user3 = None

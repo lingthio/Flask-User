@@ -12,7 +12,7 @@ class BaseAlchemyDbAdapter(DbAdapter):
     """ This class the base class for SQLAlchemyAdapter and MongoAlchemyAdapter."""
 
     def get_object(self, ObjectClass, id):
-        """ Retrieve one object specified by the primary key 'pk' """
+        """ Retrieve object by ID """
         return ObjectClass.query.get(id)
 
     def find_objects(self, ObjectClass, **kwargs):
@@ -98,6 +98,12 @@ class SQLAlchemyDbAdapter(BaseAlchemyDbAdapter):
 class MongoAlchemyDbAdapter(BaseAlchemyDbAdapter):
     """ This class shields the code from MongoAlchemy specifics."""
 
+    def get_object(self, ObjectClass, id):
+        """ Retrieve object by ID """
+        # Translate Flask-User integer ID to MongoDB ObjectID
+        hex_id = format(id, 'x')
+        return ObjectClass.query.get(hex_id)
+
     def ifind_first_object(self, ObjectClass, **kwargs):
         """ Retrieve the first object matching the case insensitive filters in 'kwargs'. """
 
@@ -118,7 +124,7 @@ class MongoAlchemyDbAdapter(BaseAlchemyDbAdapter):
 
     def update_object(self, object, **kwargs):
         # Update object
-        super(MongoAlchemyDbAdapter, self).__init__(object, **kwargs)
+        super(MongoAlchemyDbAdapter, self).update_object(object, **kwargs)
         # Save changes to DB
         object.save()
 

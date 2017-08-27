@@ -6,7 +6,7 @@ from flask_mail import Mail
 from flask_user import login_required, UserManager, UserMixin
 from flask_user import roles_required, confirm_email_required
 
-ORM_type = 'SQLAlchemy'
+ORM_type = 'MongoAlchemy'   # SQLAlchemy  or MongoAlchemy
 
 app = Flask(__name__)
 
@@ -30,6 +30,11 @@ class ConfigClass(object):
     MAIL_SERVER =             os.getenv('MAIL_SERVER',          'smtp.gmail.com')
     MAIL_PORT =           int(os.getenv('MAIL_PORT',            '465'))
     MAIL_USE_SSL =            os.getenv('MAIL_USE_SSL',         True)
+
+    # Disable email sending
+    USER_SEND_PASSWORD_CHANGED_EMAIL=False
+    USER_SEND_REGISTERED_EMAIL=False
+    USER_SEND_USERNAME_CHANGED_EMAIL=False
 
 # Read config from ConfigClass defined above
 app.config.from_object(__name__+'.ConfigClass')
@@ -97,6 +102,12 @@ if ORM_type == 'MongoAlchemy':
     from flask_mongoalchemy import MongoAlchemy
     db = MongoAlchemy(app)
 
+
+    class Role(db.Document):
+        name = db.StringField()
+        label = db.StringField(default='')
+
+
     # Define the User data model.
     # NB: Make sure to add flask_user UserMixin !!!
     class User(db.Document, UserMixin):
@@ -114,18 +125,17 @@ if ORM_type == 'MongoAlchemy':
         #     self._id = format(value, 'x')
 
         # User authentication information
-        username = db.StringField(required=False)
-        email = db.StringField(required=False)
+        username = db.StringField(default='')
+        email = db.StringField(default='')
         password = db.StringField()
-        confirmed_at = db.DateTimeField(required=False)
+        confirmed_at = db.DateTimeField(default=None)
 
         # User information
-        first_name = db.StringField(required=False)
-        last_name = db.StringField(required=False)
+        first_name = db.StringField(default='')
+        last_name = db.StringField(default='')
 
-
-
-
+        # Relationships
+        roles = db.ListField(db.DocumentField(Role), required=False, default=[])
 
 
 # Define custom UserManager class
@@ -155,11 +165,22 @@ def init_app(app, test_config=None):                # For automated tests
     if ORM_type == 'SQLAlchemy':
         db.create_all()
 
+    if ORM_type == 'MongoAlchemy':
+        # Drop existing table
+        db.session.db.connection.drop_database(app.config.get('MONGOALCHEMY_DATABASE', ''))
+
+
     # Setup Flask-User
     if ORM_type == 'SQLAlchemy':
         user_manager = CustomUserManager(app, db, User, UserInvitationClass=UserInvitation)
     else:
         user_manager = CustomUserManager(app, db, User)
+
+    # For debugging purposes
+    # id = int('59a2258f9ebea4e67d20596f', 16)
+    # encrypted_id = user_manager._encrypt_id(id)
+    # decrypted_id = user_manager._decrypt_id(encrypted_id)
+    # assert(decrypted_id==id)
 
     # Create regular 'member' user
     if not User.query.filter(User.username=='member').first():

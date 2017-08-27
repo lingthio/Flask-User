@@ -164,7 +164,7 @@ def check_valid_register_form(um, client, db):
         # Create User
         valid_user = User(confirmed_at=datetime.datetime.utcnow(), **kwargs)
         db.session.add(valid_user)
-        db.session.commit()
+        um.db_adapter.commit()
         assert valid_user
 
 def check_valid_resend_confirm_email_form(um, client):
@@ -185,6 +185,7 @@ def check_valid_confirm_email_page(um, client):
     if not um.enable_confirm_email: return
 
     print("test_valid_confirm_email_page")
+    global valid_user
 
     # Generate confirmation token for user 1
     confirmation_token = um.generate_token(valid_user.id)
@@ -193,6 +194,7 @@ def check_valid_confirm_email_page(um, client):
     client.get_valid_page(url_for('user.confirm_email', token=confirmation_token))
 
     # Verify operations
+    valid_user = um.db_adapter.get_object(um.UserModel, valid_user.id)
     assert valid_user.confirmed_at != None
 
 def check_valid_login_form(um, client):
@@ -217,6 +219,7 @@ def check_valid_change_password_form(um, client):
     if not um.enable_change_password: return
 
     print("test_valid_change_password_form")
+    global valid_user
 
     # Define defaults
     new_password = 'Password9'
@@ -233,16 +236,18 @@ def check_valid_change_password_form(um, client):
     client.post_valid_form(url_for('user.change_password'), **kwargs)
 
     # Verify operations
+    valid_user = um.db_adapter.get_object(um.UserModel, valid_user.id)
     assert um.verify_password(valid_user, new_password)
 
     # Change password back to old password for subsequent tests
-    valid_user.password = old_hashed_password
+    um.db_adapter.update_object(valid_user, password=old_hashed_password)
 
 def check_valid_change_username_form(um, client):
     # Skip test for certain config combinations
     if not um.enable_change_username: return
 
     print("test_valid_change_username_form")
+    global valid_user
 
     new_username = 'user9'
 
@@ -250,6 +255,7 @@ def check_valid_change_username_form(um, client):
     client.post_valid_form(url_for('user.change_username'), new_username=new_username, old_password=VALID_PASSWORD)
 
     # Verify operations
+    valid_user = um.db_adapter.get_object(um.UserModel, valid_user.id)
     assert valid_user.username == new_username
 
     # Change username back to old password for subsequent tests
@@ -276,6 +282,7 @@ def check_valid_reset_password_page(um, client):
     if not um.enable_forgot_password: return
 
     print("test_valid_reset_password_page")
+    global valid_user
 
     # Simulate a valid forgot password form
     token = um.generate_token(valid_user.id)
@@ -296,6 +303,7 @@ def check_valid_reset_password_page(um, client):
     client.post_valid_form(url, **kwargs)
 
     # Verify operations
+    valid_user = um.db_adapter.get_object(um.UserModel, valid_user.id)
     assert um.verify_password(valid_user, new_password)
 
     # Change password back to old password for subsequent tests
@@ -319,8 +327,9 @@ def delete_valid_user(db):
 
     if valid_user:
         # Delete valid_user
-        db.session.delete(valid_user)
-        db.session.commit()
+        um = current_app.user_manager
+        um.db_adapter.delete_object(valid_user)
+        um.db_adapter.commit()
         valid_user = None
 
 def delete_valid_user_invite(db):
@@ -329,6 +338,7 @@ def delete_valid_user_invite(db):
 
     if valid_user_invite:
         # Delete valid_user_invite
-        db.session.delete(valid_user_invite)
-        db.session.commit()
+        um = current_app.user_manager
+        um.db_adapter.delete_object(valid_user_invite)
+        um.db_adapter.commit()
         valid_user_invite = None
