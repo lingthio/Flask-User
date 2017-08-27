@@ -6,7 +6,7 @@ from flask_mail import Mail
 from flask_user import login_required, UserManager, UserMixin
 from flask_user import roles_required, confirm_email_required
 
-ORM_type = 'MongoAlchemy'   # SQLAlchemy  or MongoAlchemy
+ORM_type = 'SQLAlchemy'   # SQLAlchemy  or MongoAlchemy
 
 app = Flask(__name__)
 
