@@ -7,17 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-11-10 09:51-0800\n"
+"POT-Creation-Date: 2017-08-27 03:41-0700\n"
 "PO-Revision-Date: 2015-08-03 13:27-0800\n"
 "Last-Translator: Andriy Tymchenko <silpol@gmail.com>\n"
+"Language: sv\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 1.3\n"
+"Generated-By: Babel 2.3.4\n"
 
-#: flask_user/forms.py:35
+#: flask_user/forms.py:41
 msgid ""
 "Password must have at least 6 characters with one lowercase letter, one "
 "uppercase letter and one number"
@@ -25,176 +26,176 @@ msgstr ""
 "Lösenordet måste vara minst 6 tecken långt och bör innehålla en liten "
 "bokstav, en stor bokstav och en siffra"
 
-#: flask_user/forms.py:41
+#: flask_user/forms.py:47
 msgid "Username must be at least 3 characters long"
 msgstr "Användarnamnet måste vara minst 3 tecken långt"
 
-#: flask_user/forms.py:46
+#: flask_user/forms.py:52
 #, fuzzy
 msgid "Username may only contain letters, numbers, '-', '.' and '_'"
 msgstr "Användarnamnet får endast innehålla bokstäver, siffror, '-', '.' och '_'."
 
-#: flask_user/forms.py:52
+#: flask_user/forms.py:58
 msgid "This Username is already in use. Please try another one."
 msgstr "Detta användarnamnet är redan i användning. Vänligen prova ett annat."
 
-#: flask_user/forms.py:59
+#: flask_user/forms.py:65
 msgid "This Email is already in use. Please try another one."
 msgstr "Denna e-postadress är redan registrerad. Vänligen prova en annan."
 
-#: flask_user/forms.py:66 flask_user/forms.py:167 flask_user/forms.py:226
-#: flask_user/forms.py:254 flask_user/forms.py:330
+#: flask_user/forms.py:72 flask_user/forms.py:173 flask_user/forms.py:232
+#: flask_user/forms.py:260 flask_user/forms.py:336
 msgid "Email"
 msgstr "E-postadress"
 
-#: flask_user/forms.py:67 flask_user/forms.py:168 flask_user/forms.py:255
-#: flask_user/forms.py:331
+#: flask_user/forms.py:73 flask_user/forms.py:174 flask_user/forms.py:261
+#: flask_user/forms.py:337
 msgid "Email is required"
 msgstr "E-postadress obligatorisk"
 
-#: flask_user/forms.py:68 flask_user/forms.py:169 flask_user/forms.py:256
-#: flask_user/forms.py:332
+#: flask_user/forms.py:74 flask_user/forms.py:175 flask_user/forms.py:262
+#: flask_user/forms.py:338
 msgid "Invalid Email"
 msgstr "Ogiltig e-postadress"
 
-#: flask_user/forms.py:70
+#: flask_user/forms.py:76
 msgid "Add Email"
 msgstr "Lägg till en e-postadress"
 
-#: flask_user/forms.py:73 flask_user/forms.py:116
+#: flask_user/forms.py:79 flask_user/forms.py:122
 msgid "Old Password"
 msgstr "Det gamla lösenordet"
 
-#: flask_user/forms.py:74 flask_user/forms.py:117
+#: flask_user/forms.py:80 flask_user/forms.py:123
 msgid "Old Password is required"
 msgstr "Det gamla lösenord är obligatoriskt"
 
-#: flask_user/forms.py:76 flask_user/forms.py:304
+#: flask_user/forms.py:82 flask_user/forms.py:310
 msgid "New Password"
 msgstr "Nya lösenordet"
 
-#: flask_user/forms.py:77 flask_user/forms.py:305
+#: flask_user/forms.py:83 flask_user/forms.py:311
 msgid "New Password is required"
 msgstr "Det nya lösenordet är obligatoriskt"
 
-#: flask_user/forms.py:79 flask_user/forms.py:306
+#: flask_user/forms.py:85 flask_user/forms.py:312
 msgid "Retype New Password"
 msgstr "Upprepa det nya lösenordet"
 
-#: flask_user/forms.py:80 flask_user/forms.py:307
+#: flask_user/forms.py:86 flask_user/forms.py:313
 msgid "New Password and Retype Password did not match"
 msgstr "Det nya lösenordet och det upprepade lösenordet överensstämmer inte"
 
-#: flask_user/forms.py:83 flask_user/forms.py:309
+#: flask_user/forms.py:89 flask_user/forms.py:315
 #: flask_user/templates/flask_user/change_password.html:5
 #: flask_user/templates/flask_user/user_profile.html:11
 msgid "Change password"
 msgstr "Ändra lösenord"
 
-#: flask_user/forms.py:105 flask_user/forms.py:139
+#: flask_user/forms.py:111 flask_user/forms.py:145
 msgid "Old Password is incorrect"
 msgstr "Det gamla lösenordet är felaktigt"
 
-#: flask_user/forms.py:112
+#: flask_user/forms.py:118
 msgid "New Username"
 msgstr "Nytt användarnamn"
 
-#: flask_user/forms.py:113 flask_user/forms.py:165 flask_user/forms.py:252
+#: flask_user/forms.py:119 flask_user/forms.py:171 flask_user/forms.py:258
 msgid "Username is required"
 msgstr "Användarnamn är obligatoriskt"
 
-#: flask_user/forms.py:120
+#: flask_user/forms.py:126
 #: flask_user/templates/flask_user/change_username.html:5
 #: flask_user/templates/flask_user/user_profile.html:8
 msgid "Change username"
 msgstr "Ändra användarnamn"
 
-#: flask_user/forms.py:146 flask_user/forms.py:297
+#: flask_user/forms.py:152 flask_user/forms.py:303
 msgid "Your email address"
 msgstr ""
 
-#: flask_user/forms.py:147 flask_user/forms.py:298
+#: flask_user/forms.py:153 flask_user/forms.py:304
 #, fuzzy
 msgid "Email address is required"
 msgstr "E-postadress obligatorisk"
 
-#: flask_user/forms.py:148 flask_user/forms.py:299
+#: flask_user/forms.py:154 flask_user/forms.py:305
 #, fuzzy
 msgid "Invalid Email address"
 msgstr "Ogiltig e-postadress"
 
-#: flask_user/forms.py:150
+#: flask_user/forms.py:156
 msgid "Send reset password email"
 msgstr "Skicka återställning av lösenord e-postmeddelande"
 
-#: flask_user/forms.py:157 flask_user/forms.py:231
+#: flask_user/forms.py:163 flask_user/forms.py:237
 #, python-format
 msgid "%(username_or_email)s does not exist"
 msgstr ""
 
-#: flask_user/forms.py:164 flask_user/forms.py:223 flask_user/forms.py:251
+#: flask_user/forms.py:170 flask_user/forms.py:229 flask_user/forms.py:257
 msgid "Username"
 msgstr "Användarnamn"
 
-#: flask_user/forms.py:171 flask_user/forms.py:258
+#: flask_user/forms.py:177 flask_user/forms.py:264
 msgid "Password"
 msgstr "Lösenord"
 
-#: flask_user/forms.py:172 flask_user/forms.py:259
+#: flask_user/forms.py:178 flask_user/forms.py:265
 msgid "Password is required"
 msgstr "Lösenordet är obligatoriskt"
 
-#: flask_user/forms.py:174
+#: flask_user/forms.py:180
 msgid "Remember me"
 msgstr "Kom ihåg mig"
 
-#: flask_user/forms.py:176 flask_user/templates/flask_user/login.html:5
+#: flask_user/forms.py:182 flask_user/templates/flask_user/login.html:5
 #: flask_user/templates/flask_user/login_or_register.html:9
 msgid "Sign in"
 msgstr "Logga in"
 
-#: flask_user/forms.py:183
+#: flask_user/forms.py:189
 msgid "Username or Email"
 msgstr "Användarnamn eller e-post"
 
-#: flask_user/forms.py:220
+#: flask_user/forms.py:226
 #, fuzzy
 msgid "Username/Email"
 msgstr "Användarnamn eller e-post"
 
-#: flask_user/forms.py:234
+#: flask_user/forms.py:240
 #, fuzzy
 msgid "Incorrect Password"
 msgstr "Glömt lösenordet"
 
-#: flask_user/forms.py:238
+#: flask_user/forms.py:244
 #, python-format
 msgid "Incorrect %(username_or_email)s and/or Password"
 msgstr "Felaktigt %(username_or_email)s och/eller lösenord"
 
-#: flask_user/forms.py:260
+#: flask_user/forms.py:266
 msgid "Retype Password"
 msgstr "Upprepa lösenordet"
 
-#: flask_user/forms.py:261
+#: flask_user/forms.py:267
 msgid "Password and Retype Password did not match"
 msgstr "Lösenordet och det upprepade lösenordet överensstämmer inte"
 
-#: flask_user/forms.py:262
+#: flask_user/forms.py:268
 msgid "Token"
 msgstr ""
 
-#: flask_user/forms.py:264
+#: flask_user/forms.py:270
 #: flask_user/templates/flask_user/login_or_register.html:41
 #: flask_user/templates/flask_user/register.html:5
 msgid "Register"
 msgstr "Registrera dig"
 
-#: flask_user/forms.py:301
+#: flask_user/forms.py:307
 msgid "Resend email confirmation email"
 msgstr "Återsänd e-postmeddelandet \"bekräftelse av e-postadress\""
 
-#: flask_user/forms.py:334
+#: flask_user/forms.py:340
 msgid "Invite!"
 msgstr ""
 
