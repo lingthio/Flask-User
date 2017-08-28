@@ -57,7 +57,7 @@ And wouldn't it be nice to also offer:
 * **Largely configurable** (Through configuration settings)
 * **Fully customizable** (Through customizable functions and email templates)
 * **Well documented**
-* **Translations** (Chinese, Dutch, English, Farsi, Finnish, French, German, Italian, Spanish, Swedish, Turkish)
+* **Translations** (Chinese, Dutch, English, Farsi, Finnish, French, German, Italian, Russian, Spanish, Swedish, Turkish)
 
 
 Status

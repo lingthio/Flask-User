@@ -16,6 +16,7 @@ Flask-User ships with the following languages:
 * fr - French (v0.6.1+)
 * it - Italian (v0.6.9+)
 * nl - Dutch (v0.1+)
+* ru - Russian (v0.6.12+)
 * sv - Swedish (v0.6.9+)
 * tr - Turkish (v0.6.9+)
 * zh - Chinese (Simplified) (v0.6.1+)
