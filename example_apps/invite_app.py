@@ -65,7 +65,7 @@ def create_app(test_config=None):                   # For automated tests
 
         # User email information
         email = db.Column(db.String(255), nullable=False, unique=True)
-        confirmed_at = db.Column(db.DateTime(), nullable=True)
+        email_confirmed_at = db.Column(db.DateTime(), nullable=True)
 
         # User information
         is_enabled = db.Column(db.Boolean(), nullable=False, server_default='0')

@@ -70,7 +70,7 @@ def create_app():
         # User authentication information
         email = db.StringField(default='')
         password = db.StringField(default='')
-        confirmed_at = db.DateTimeField(default=None)
+        email_confirmed_at = db.DateTimeField(default=None)
 
         # User information
         first_name = db.StringField(default='')

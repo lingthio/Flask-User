@@ -50,18 +50,18 @@ def confirm_email(token):
         flash(_('Invalid confirmation token.'), 'error')
         return redirect(url_for('user.login'))
 
-    # Confirm email by setting User.confirmed_at=utcnow() or UserEmail.confirmed_at=utcnow()
+    # Confirm email by setting User.email_confirmed_at=utcnow() or UserEmail.email_confirmed_at=utcnow()
     user = None
     if user_manager.UserEmailClass:
         user_email = user_manager.get_user_email_by_id(object_id)
         if user_email:
-            db_adapter.update_object(user_email, confirmed_at=datetime.utcnow())
+            db_adapter.update_object(user_email, email_confirmed_at=datetime.utcnow())
             user = user_email.user
     else:
         user_email = None
         user = user_manager.get_user_by_id(object_id)
         if user:
-            db_adapter.update_object(user, confirmed_at=datetime.utcnow())
+            db_adapter.update_object(user, email_confirmed_at=datetime.utcnow())
 
     if user:
         # If User.active exists: activate User
@@ -404,7 +404,7 @@ def register():
         if user_invite:
             if user_invite.email == register_form.email.data:
                 require_email_confirmation = False
-                db_adapter.update_object(user, confirmed_at=datetime.utcnow())
+                db_adapter.update_object(user, email_confirmed_at=datetime.utcnow())
 
         db_adapter.commit()
 
@@ -553,7 +553,7 @@ def reset_password(token):
 
     # Mark email as confirmed
     user_email = user_manager.get_primary_user_email(user)
-    user_email.confirmed_at = datetime.utcnow()
+    user_email.email_confirmed_at = datetime.utcnow()
 
     # Initialize form
     form = user_manager.reset_password_form(request.form)

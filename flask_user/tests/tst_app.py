@@ -51,7 +51,7 @@ if ORM_type=='SQLAlchemy':
         # User authentication information
         username = db.Column(db.String(50), nullable=True, unique=True)
         email = db.Column(db.String(255), nullable=True, unique=True)
-        confirmed_at = db.Column(db.DateTime())
+        email_confirmed_at = db.Column(db.DateTime())
         password = db.Column(db.String(255), nullable=False, server_default='')
 
         # User information
@@ -69,7 +69,7 @@ if ORM_type=='SQLAlchemy':
 
         # User email information
         email = db.Column(db.String(255), nullable=True, unique=True)
-        confirmed_at = db.Column(db.DateTime())
+        email_confirmed_at = db.Column(db.DateTime())
         is_primary = db.Column(db.Boolean(), nullable=False, default=False)
 
         # Relationship
@@ -127,7 +127,7 @@ if ORM_type == 'MongoAlchemy':
         username = db.StringField(default='')
         email = db.StringField(default='')
         password = db.StringField()
-        confirmed_at = db.DateTimeField(default=None)
+        email_confirmed_at = db.DateTimeField(default=None)
 
         # User information
         first_name = db.StringField(default='')
@@ -184,7 +184,7 @@ def init_app(app, test_config=None):                # For automated tests
     # Create regular 'member' user
     if not User.query.filter(User.username=='member').first():
         user = User(username='member', email='member@example.com',
-                password=user_manager.password_manager.hash_password('Password1'), confirmed_at=datetime.datetime.utcnow())
+                password=user_manager.password_manager.hash_password('Password1'), email_confirmed_at=datetime.datetime.utcnow())
         db.session.add(user)
         user_manager.db_adapter.commit()
 

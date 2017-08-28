@@ -453,7 +453,7 @@ def test_login_without_confirm_email(client):
     # user = User.query.filter(User.email==email).first()
     # assert(user)
     # user.active = False
-    # user.confirmed_at = datetime.utcnow()
+    # user.email_confirmed_at = datetime.utcnow()
     #
     # # Try logging in into  disabled account
     # client.post_invalid_form(url_for('user.login'),

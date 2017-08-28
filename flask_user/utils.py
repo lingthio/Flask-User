@@ -34,12 +34,12 @@ def user_has_confirmed_email(user):
         has_confirmed_email = False
         user_emails = db_adapter.find_objects(user_manager.UserEmailClass, user_id=user.id)
         for user_email in user_emails:
-            if user_email.confirmed_at:
+            if user_email.email_confirmed_at:
                 has_confirmed_email = True
                 break
 
     # Handle single email per user
     else:
-        has_confirmed_email = True if user.confirmed_at else False
+        has_confirmed_email = True if user.email_confirmed_at else False
 
     return has_confirmed_email

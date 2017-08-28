@@ -56,7 +56,7 @@ The 'is_primary' attribute defines with email receives account notification emai
 
         # User email information
         email = db.Column(db.String(255), nullable=False, unique=True)
-        confirmed_at = db.Column(db.DateTime())
+        email_confirmed_at = db.Column(db.DateTime())
         is_primary = db.Column(db.Boolean(), nullable=False, server_default='0')
 
 

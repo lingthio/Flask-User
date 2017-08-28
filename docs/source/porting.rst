@@ -40,12 +40,58 @@ Flask-User v1.0::
 The `db`  parameter can be any Database instance (for example `SQLAlchemy()` or a `MongoAlchemy()`) and the
 appropriate DbAdapter will be configured internally.
 
+Configuration settings changes
+------------------------------
+we renamed the `PASSWORD_HASH` setting to `PASSWORD_HASH_SCHEME` to better reflect what this setting means.
+
+Flask-User v0.6::
+
+    USER_PASSWORD_HASH = 'brcypt'
+
+Flask-User v1.0::
+
+    USER_PASSWORD_HASH_SCHEME = 'brcypt'
+
 
 Data-model changes
 ------------------
 The `confirmed_at` attribute name has been renamed to `email_confirmed_at` to better reflect what this attribute means.
 
+Flask-User v0.6::
+
+    class User(db.Model, UserMixin):
+            ....
+        email = db.Column(db.String(255), nullable=False, unique=True)
+        confirmed_at = db.Column(db.DateTime())
+
+    or:
+
+    class UserEmail(db.Model, UserMixin):
+            ....
+        email = db.Column(db.String(255), nullable=False, unique=True)
+        confirmed_at = db.Column(db.DateTime())
+
+Flask-User v1.0 (keeping the original database column names)::
+
+    class User(db.Model, UserMixin):
+            ....
+        email = db.Column(db.String(255), nullable=False, unique=True)
+        email_confirmed_at = db.Column('confirmed_at', db.DateTime())
+
+    or:
+
+    class UserEmail(db.Model, UserMixin):
+            ....
+        email = db.Column(db.String(255), nullable=False, unique=True)
+        email_confirmed_at = db.Column('confirmed_at', db.DateTime())
+
 The optional UserAuth class has been obsoleted. See below for a workaround.
+
+
+Flask-Login v0.3+ required
+--------------------------
+Since Flask-Login v0.3.0, `is_authenticated()`, `is_active()`, and `is_anonymous()`
+**methods** have been replaced by `is_authenticated`, `is_active`, and `is_anonymous` **properties**.
 
 
 PasswordManager() changes
@@ -60,8 +106,6 @@ We changed the `verify_user_password()` parameter order to be consistent with th
 We renamed `update_password()` to `update_user_hashed_password()` to better reflect what this method does.
 
 we renamed the `PASSWORD_HASH` setting to `PASSWORD_HASH_SCHEME` to better reflect what this setting means.
-
-We removed the hash scheme option `"plaintext"` for security reasons.
 
 Flask-User v0.6::
 
@@ -127,7 +171,7 @@ from the user profile fields, you can use the workaround recipe below::
 
         # User email information
         email = db.Column(db.String(255), nullable=False, unique=True)
-        confirmed_at = db.Column(db.DateTime())
+        email_confirmed_at = db.Column(db.DateTime())
 
         # User information
         active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')

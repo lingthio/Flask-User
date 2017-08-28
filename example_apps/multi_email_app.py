@@ -64,7 +64,7 @@ def create_app():
 
         # User email information
         email = db.Column(db.String(255), nullable=False, unique=True)
-        confirmed_at = db.Column(db.DateTime())
+        email_confirmed_at = db.Column(db.DateTime())
         is_primary = db.Column(db.Boolean(), nullable=False, default=False)
 
         # Relationship

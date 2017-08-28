@@ -203,8 +203,8 @@ A custom RegisterForm must be defined with field names
 **exactly matching** the names of the model fields::
 
     class MyRegisterForm(RegisterForm):
-        first_name = StringField('First name', validators=[Required('First name is required')])
-        last_name  = StringField('Last name',  validators=[Required('Last name is required')])
+        first_name = StringField('First name', validators=[DataRequired('First name is required')])
+        last_name  = StringField('Last name',  validators=[DataRequired('Last name is required')])
 
     user_manager = UserManager(db_adapter, app, register_form=MyRegisterForm)
 

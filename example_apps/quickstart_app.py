@@ -53,7 +53,7 @@ def create_app():
         # User authentication information
         email = db.Column(db.String(255), nullable=False, unique=True)
         password = db.Column(db.String(255), nullable=False, server_default='')
-        confirmed_at = db.Column(db.DateTime())
+        email_confirmed_at = db.Column(db.DateTime())
 
         # User information
         first_name = db.Column(db.String(100), nullable=False, server_default='')
