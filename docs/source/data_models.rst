@@ -27,7 +27,6 @@ If you'd like to store all user information in one DataModel, use the following:
         # User Authentication information
         username = db.Column(db.String(50), nullable=False, unique=True)
         password = db.Column(db.String(255), nullable=False, default='')
-        reset_password_token = db.Column(db.String(100), nullable=False, default='')
 
         # User Email information
         email = db.Column(db.String(255), nullable=False, unique=True)

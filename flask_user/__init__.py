@@ -357,11 +357,6 @@ class UserManager(object):
             # Send forgot password email
             emails.send_forgot_password_email(user, user_email, reset_password_link)
 
-            # Store token
-            if hasattr(user, 'reset_password_token'):
-                self.db_adapter.update_object(user, reset_password_token=token)
-                self.db_adapter.commit()
-
             # Send forgot_password signal
             signals.user_forgot_password.send(current_app._get_current_object(), user=user)
 

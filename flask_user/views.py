@@ -563,35 +563,24 @@ def reset_password(token):
 
     if has_expired:
         flash(_('Your reset password token has expired.'), 'error')
-        return redirect(url_for('user.login'))
+        return redirect(_endpoint_url(user_manager.login_endpoint))
 
     if not is_valid:
         flash(_('Your reset password token is invalid.'), 'error')
-        return redirect(url_for('user.login'))
+        return redirect(_endpoint_url(user_manager.login_endpoint))
 
     user = user_manager.get_user_by_id(user_id)
-    if user:
-        # Avoid re-using old tokens
-        if hasattr(user, 'reset_password_token'):
-            verified = user.reset_password_token == token
-        else:
-            verified = True
-    if not user or not verified:
-        flash(_('Your reset password token is invalid.'), 'error')
-        return redirect(_endpoint_url(user_manager.login_endpoint))
 
     # Mark email as confirmed
     user_email = emails.get_primary_user_email(user)
     user_email.confirmed_at = datetime.utcnow()
+    db_adapter.commit()
 
     # Initialize form
     form = user_manager.reset_password_form(request.form)
 
     # Process valid POST
     if request.method=='POST' and form.validate():
-        # Invalidate the token by clearing the stored token
-        if hasattr(user, 'reset_password_token'):
-            db_adapter.update_object(user, reset_password_token='')
 
         # Change password
         hashed_password = user_manager.hash_password(form.new_password.data)
