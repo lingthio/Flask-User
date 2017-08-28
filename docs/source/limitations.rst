@@ -20,7 +20,7 @@ Supported Databases
 Flask-User uses a 'DatabaseAdapter' to shield its functionality from
 the underlying database. It ships with a DatabaseAdapter for SQLAlchemy.
 
-SQLAlchemy supports many SQL database, including:
+SQLAlchemy supports many SQL databases, including:
 
 * Firebird
 * Microsoft SQL Server

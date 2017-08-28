@@ -19,12 +19,13 @@ In its simplest form, Flask-User makes use of a single User data-model class::
         password = db.Column(db.String(255), nullable=False)
 
         # User fields
-        active = db.Column(db.Boolean(),
+        active = db.Column(db.Boolean()),
         first_name = db.Column(db.String(50), nullable=False)
         last_name = db.Column(db.String(50), nullable=False)
 
     # Setup Flask-User
     user_manager = UserManager(app, db, User)
+
 Optional UserAuth data-model
 ----------------------------
 If desired, the authentication fields can be stored in a separate UserAuth data-model class::
@@ -34,9 +35,10 @@ If desired, the authentication fields can be stored in a separate UserAuth data-
         id = db.Column(db.Integer, primary_key=True)
 
         # User fields
-        active = db.Column(db.Boolean(),
+        active = db.Column(db.Boolean()),
         first_name = db.Column(db.String(50), nullable=False)
         last_name = db.Column(db.String(50), nullable=False)
+
 
     # Define UserAuth data-model
     class UserAuth(db.Model):
@@ -50,6 +52,7 @@ If desired, the authentication fields can be stored in a separate UserAuth data-
         email_confirmed_at = db.Column(db.DateTime())
         username = db.Column(db.String(50), nullable=False, unique=True)
         password = db.Column(db.String(255), nullable=False)
+
 
     # Setup Flask-User
     user_manager = UserManager(app, User, UserAuthClass=UserAuth)
@@ -75,26 +78,22 @@ The 'is_primary' attribute defines with email receives account notification emai
         # Relationship
         user_emails = db.relationship('UserEmail')
 
+
     # Define UserEmail data-model
     class UserEmail(db.Model):
         id = db.Column(db.Integer, primary_key=True)
+
         user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+        user = db.relationship('User', uselist=False)
 
         # User email information
         email = db.Column(db.String(255), nullable=False, unique=True)
         confirmed_at = db.Column(db.DateTime())
         is_primary = db.Column(db.Boolean(), nullable=False, server_default='0')
 
-        # Relationship
-        user = db.relationship('User', uselist=False)
 
     # Setup Flask-User
     user_manager = UserManager(app, User, UserEmailClass=UserEmail)
-
-Note: The UserEmail data-model can also be specified when the UserAuth data-model is being used::
-
-    # Setup Flask-User
-    user_manager = UserManager(app, User, UserAuthClass=UserAuth, UserEmailClass=UserEmail)
 
 
 Optional Role and UserRoles data-models
@@ -137,11 +136,6 @@ Fixed attribute names
 All the attribute names mentioned above (except `first_name` and `last_name`) are fixed
 (they must be named this way).
 
-SQLAlchemy allows the database column name to be different from the data-model attribute name.
-To use the data-model attribute `email` with the database column name `email_address`::
-
-    email = db.Column('email_address', db.String(255), nullable=False, unique=True)
-
 | If your existing code uses different attribute names you have two options:
 | 1) Rename these attributes throughout your code base
 | 2) Use Python's property and propery-setters to translate attribute names
@@ -161,4 +155,11 @@ To use the data-model attribute `email` with the database column name `email_add
         def email(self, value):
             self.email_address = value  # on user.email='xyz': set user.email_address='xyz'
 
+
+Flexible database column names
+------------------------------
+SQLAlchemy allows the database column name to be different from the data-model attribute name.
+To use the data-model attribute `email` with the database column name `email_address`::
+
+    email = db.Column('email_address', db.String(255), nullable=False, unique=True)
 

@@ -1,23 +1,9 @@
 Flask-User-starter-app
 ======================
 
-A more typical Flask application has modularized code organized in a directory structure.
-
-An example of such a Flask-User application is the Flask-User-starter-app,
-which available on Github:
+We provide a Flask-User starter application through github:
 
 https://github.com/lingthio/Flask-User-starter-app
 
-It can serve as a great starter app for building your next Flask-User application.
-
-Files of interest:
-
-* app/startup/init_app.py
-* app/models/user.py
-* app/templates/flask_user/*.html
-* app/templates/users/user_profile_page.html
-
-Up Next
--------
-:doc:`authorization`
+This may serve as a great starting place to create your next Flask application with Flask-User.
 

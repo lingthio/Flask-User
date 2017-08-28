@@ -1,41 +1,33 @@
 QuickStart
 ==========
 
-The sample code below illustrates the power of using Flask-User with sensible defaults:
-With just a dozen additional code statements,
-a basic Flask application can be transformed to offer the following features:
+With less than a dozen lines of code, we can add User Authentication and Management
+to existing Flask applications with the following additional functionality:
 
 * User registration
 * Email confirmation
-* Login and Logout
-* Authentication
+* Authentication (Login and Logout)
 * Change username
 * Change password
 * Forgot password
 
+Install Flask-User
+------------------
 
-Setup a development environment
--------------------------------
-These tutorials assume that you are working with virtualenv and virtualenvwrapper
-and that the code resides in ~/dev/example::
+We recommend making use of virtualenv and virtualenvwrapper::
 
-    # Create virtualenv 'example'
-    mkvirtualenv example
-
-    # Install required Python packages in the 'example' virtualenv
-    workon example
+    mkvirtualenv my_app
+    workon my_app
     pip install flask-user
-    pip install flask-mail
 
-    # Change working directory
-    mkdir -p ~dev/example           # or  mkdir C:\dev\example
-    cd ~/dev/example                # or  C:\dev\example on Windows
+    mkdir -p ~dev/my_app           # or  mkdir C:\dev\my_app
+    cd ~/dev/my_app                # or  cd C:\dev\my_app
 
 
 Create the quickstart_app.py file
 ---------------------------------
 
-Create ~/dev/example/quickstart_app.py with the content below.
+Create ~/dev/my_app/quickstart_app.py with the content below.
 
 Highlighted lines shows the lines added to a basic Flask application.
 
@@ -62,7 +54,7 @@ Run the QuickStart App
 ----------------------
 Run the QuickStart App with the following command::
 
-    cd ~/dev/example
+    cd ~/dev/my_app
     python quickstart_app.py
 
 And point your browser to ``http://localhost:5000``.

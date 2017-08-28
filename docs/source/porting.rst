@@ -41,6 +41,13 @@ The `db`  parameter can be any Database instance (for example `SQLAlchemy()` or 
 appropriate DbAdapter will be configured internally.
 
 
+Data-model changes
+------------------
+The `confirmed_at` attribute name has been renamed to `email_confirmed_at` to better reflect what this attribute means.
+
+The optional UserAuth class has been obsoleted. See below for a workaround.
+
+
 PasswordManager() changes
 -------------------------
 Password related methods have been moved from the UserManager class to a separate PasswordManager class,
@@ -84,11 +91,56 @@ This limitation has been removed in v1.0, to support Mongo ObjectIDs.
 
 As a result, the generated tokens are different, which will affect two areas:
 
-- v0.6 user-sessions that were stored in a browser cookie, are no longer valid in v1.0 and the user will be
-required to login again.
+- v0.6 user-sessions that were stored in a browser cookie, are no longer valid in v1.0
+  and the user will be required to login again.
 
 - v0.6 password tokens that were sent in password reset emails are no longer valid in v1.0
-and the user will have to issue a new forgot-password email request.
-This effect is mitigated by the fact that these tokens are meant to expire relatively quickly.
+  and the user will have to issue a new forgot-password email request.
+  This effect is mitigated by the fact that these tokens are meant to expire relatively quickly.
 
+
+UserAuth class
+--------------
+
+The optional UserAuth class has been obsoleted. If you still require a separate class, use the
+workaround recipe below::
+
+
+    # Define the UserAuth data model.
+    class UserAuth(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+
+        # User authentication information
+        username = db.Column(db.String(50), nullable=False, unique=True)
+        password = db.Column(db.String(255), nullable=False, server_default='')
+
+        # Relationships
+        user = db.relationship('User', uselist=False)
+
+
+    # Define the User data model. Make sure to add flask_user UserMixin!!
+    class User(db.Model, UserMixin):
+        id = db.Column(db.Integer, primary_key=True)
+
+        # User email information
+        email = db.Column(db.String(255), nullable=False, unique=True)
+        confirmed_at = db.Column(db.DateTime())
+
+        # User information
+        active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
+        first_name = db.Column(db.String(100), nullable=False, server_default='')
+        last_name = db.Column(db.String(100), nullable=False, server_default='')
+
+        # Relationships
+        user_auth = db.relationship('UserAuth', uselist=False)
+
+        # Map UserAuth attributes into User attributes
+        @property
+        def username(self):
+            return user_auth.username
+
+        @username.setter
+        def username(self, value)
+            user_auth.username = value
 

@@ -1,6 +1,6 @@
+from fabric.api import task
 from fabric.operations import local
-from fabric.api import cd, env, task, prefix, run
-from contextlib import contextmanager
+
 
 @task
 def runserver():
@@ -9,16 +9,6 @@ def runserver():
 @task
 def runapp(appname):
     local('PYTHONPATH=. python example_apps/'+appname+'_app.py')
-
-@task
-def test():
-    # Requires "pip install pytest"
-    local('py.test flask_user/tests/')
-
-@task
-def cov():
-    # Requires "pip install pytest-coverage"
-    local('py.test --cov flask_user --cov-report term-missing --cov-config flask_user/tests/.coveragerc flask_user/tests/')
 
 @task
 def update_babel():
@@ -34,6 +24,16 @@ def docs():
     local('cd ../builds/flask_user1/docs && zip -u -r flask_user1_docs *')
 
 @task
+def test():
+    # Requires "pip install pytest"
+    local('py.test flask_user/tests/')
+
+@task
+def cov():
+    # Requires "pip install pytest-coverage"
+    local('py.test --cov flask_user --cov-report term-missing --cov-config flask_user/tests/.coveragerc flask_user/tests/')
+
+@task
 def rebuild_docs():
     local('cp example_apps/*_app.py docs/source/includes/.')
     local('sphinx-build -b html -a -E docs/source ../builds/flask_user1/docs')
@@ -41,6 +41,8 @@ def rebuild_docs():
 
 @task
 def upload_to_pypi():
+    update_babel()
+    rebuild_docs()
     local('python setup.py sdist')
     local('twine upload dist/*')
 

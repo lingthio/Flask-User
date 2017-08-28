@@ -1,7 +1,7 @@
 ==================
 Roles Required App
 ==================
-The Roles Required App builds on the features of :doc:`basic_app`:
+The Roles Required App builds on the features of :doc:`quickstart`:
 
 * Register form
 * Login form
