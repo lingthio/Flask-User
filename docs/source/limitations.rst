@@ -37,7 +37,7 @@ Python data-model class names
 -----------------------------
 No known restrictions.
 
-Flask-User relies on a User class and optionally on a UserAuth, UserEmail, UserInvitation and Role class.
+Flask-User relies on a User class and optionally on a UserEmail, UserInvitation and Role class.
 The names of these classes can be anything you choose.
 
 
@@ -84,7 +84,7 @@ If a single User data-model class is specified, the following attribute names ar
 
 
 Note: Depending on Flask-User configuration settings, some attributes may move to other data-model classes,
-such as UserAuth and UserEmail. These configurations will be discussed elsewhere.
+such as UserEmail. These configurations will be discussed elsewhere.
 
 
 SQL table names
@@ -112,7 +112,7 @@ SQLAlchemy allows column names to be different from their corresponding attribut
 
 Primary keys
 ------------
-The primary key of the User, UserAuth, UserEmail, UserInvitation and Role tables:
+The primary key of the User, UserEmail, UserInvitation and Role tables:
 
 - must be named 'id'
 - must be an Integer

@@ -48,7 +48,6 @@ class UserManager():
 
     def init_app(self, app, db, UserClass,
                  UserInvitationClass=None,
-                 UserAuthClass=None,
                  UserEmailClass=None,
                 add_email_form=forms.AddEmailForm,
                  change_password_form=forms.ChangePasswordForm,
@@ -105,10 +104,9 @@ class UserManager():
 
         # Start moving the Model attributes from db_adapter to user_manager
         self.db = db
-        self.UserModel = UserClass
-        self.UserAuthModel = UserAuthClass
-        self.UserEmailModel = UserEmailClass
-        self.UserInvitationModel = UserInvitationClass
+        self.UserClass = UserClass
+        self.UserEmailClass = UserEmailClass
+        self.UserInvitationClass = UserInvitationClass
 
         # Bind Flask-USER to app
         app.user_manager = self
@@ -280,21 +278,21 @@ class UserManager():
         self._create_default_setting('invite_url',                 app, self.base_url+'/invite')
 
         # Create default ENDPOINTs
-        home_endpoint = ''
-        login_endpoint = 'user.login'
-        self._create_default_setting('after_change_password_endpoint', app, home_endpoint)
-        self._create_default_setting('after_change_username_endpoint', app, home_endpoint)
-        self._create_default_setting('after_confirm_endpoint',         app, home_endpoint)
-        self._create_default_setting('after_forgot_password_endpoint', app, home_endpoint)
-        self._create_default_setting('after_login_endpoint',           app, home_endpoint)
-        self._create_default_setting('after_logout_endpoint',          app, login_endpoint)
-        self._create_default_setting('after_register_endpoint',        app, home_endpoint)
-        self._create_default_setting('after_resend_confirm_email_endpoint', app, home_endpoint)
-        self._create_default_setting('after_reset_password_endpoint',  app, home_endpoint)
-        self._create_default_setting('after_invite_endpoint',          app, home_endpoint)
-        self._create_default_setting('unconfirmed_email_endpoint',     app, home_endpoint)
-        self._create_default_setting('unauthenticated_endpoint',       app, login_endpoint)
-        self._create_default_setting('unauthorized_endpoint',          app, home_endpoint)
+        self._create_default_setting('home_endpoint',                  app, '')
+        self._create_default_setting('login_endpoint',                 app, 'user.login')
+        self._create_default_setting('after_change_password_endpoint', app, self.home_endpoint)
+        self._create_default_setting('after_change_username_endpoint', app, self.home_endpoint)
+        self._create_default_setting('after_confirm_endpoint',         app, self.home_endpoint)
+        self._create_default_setting('after_forgot_password_endpoint', app, self.home_endpoint)
+        self._create_default_setting('after_login_endpoint',           app, self.home_endpoint)
+        self._create_default_setting('after_logout_endpoint',          app, self.login_endpoint)
+        self._create_default_setting('after_register_endpoint',        app, self.home_endpoint)
+        self._create_default_setting('after_resend_confirm_email_endpoint', app, self.home_endpoint)
+        self._create_default_setting('after_reset_password_endpoint',  app, self.home_endpoint)
+        self._create_default_setting('after_invite_endpoint',          app, self.home_endpoint)
+        self._create_default_setting('unconfirmed_email_endpoint',     app, self.home_endpoint)
+        self._create_default_setting('unauthenticated_endpoint',       app, self.login_endpoint)
+        self._create_default_setting('unauthorized_endpoint',          app, self.home_endpoint)
 
         # Create default template files
         template_base = 'flask_user'
@@ -367,7 +365,7 @@ class UserManager():
             raise ConfigurationError('USER_ENABLE_CHANGE_USERNAME=True must have USER_ENABLE_USERNAME=True.')
         if self.require_invitation and not self.enable_invitation:
             raise ConfigurationError('USER_REQUIRE_INVITATION=True must have USER_ENABLE_INVITATION=True.')
-        if self.enable_invitation and not self.UserInvitationModel:
+        if self.enable_invitation and not self.UserInvitationClass:
             raise ConfigurationError(
                 'USER_ENABLE_INVITATION=True must pass UserInvitationClass to SQLAlchemyAdapter().')
 
@@ -388,7 +386,7 @@ class UserManager():
             app.add_url_rule(self.reset_password_url, 'user.reset_password', self.reset_password_view_function, methods=['GET', 'POST'])
         if self.enable_register:
             app.add_url_rule(self.register_url, 'user.register', self.register_view_function, methods=['GET', 'POST'])
-        if self.UserEmailModel:
+        if self.UserEmailClass:
             app.add_url_rule(self.email_action_url,  'user.email_action',  self.email_action_view_function)
             app.add_url_rule(self.manage_emails_url, 'user.manage_emails', self.manage_emails_view_function, methods=['GET', 'POST'])
         app.add_url_rule(self.user_profile_url,  'user.profile',  self.user_profile_view_function,  methods=['GET', 'POST'])
@@ -396,8 +394,7 @@ class UserManager():
             app.add_url_rule(self.invite_url, 'user.invite', self.invite_view_function, methods=['GET', 'POST'])
 
     def get_user_by_id(self, user_id):
-        ObjectClass = self.UserAuthModel if self.UserAuthModel else self.UserModel
-        return self.db_adapter.get_object(ObjectClass, user_id)
+        return self.db_adapter.get_object(self.UserClass, user_id)
 
     # NB: This backward compatibility function may be obsoleted in the future
     # Use 'get_user_by_id() instead.
@@ -406,7 +403,7 @@ class UserManager():
         return self.get_user_by_id(user_id)
 
     def get_user_email_by_id(self, user_email_id):
-        return self.db_adapter.get_object(self.UserEmailModel, user_email_id)
+        return self.db_adapter.get_object(self.UserEmailClass, user_email_id)
 
     # NB: This backward compatibility function may be obsoleted in the future
     # Use 'get_user_email_by_id() instead.
@@ -415,31 +412,15 @@ class UserManager():
         return self.get_user_email_by_id(user_email_id)
 
     def find_user_by_username(self, username):
-        user_auth = None
-
-        # The username field can either be in the UserAuth class or in the User class
-        if self.UserAuthModel and hasattr(self.UserAuthModel, 'username'):
-            user_auth = self.db_adapter.ifind_first_object(self.UserAuthModel, username=username)
-            user = user_auth.user if user_auth else None
-        else:
-            user = self.db_adapter.ifind_first_object(self.UserModel, username=username)
-
-        return user
-
+        return self.db_adapter.ifind_first_object(self.UserClass, username=username)
 
     def find_user_by_email(self, email):
-        user_email = None
-        user_auth = None
-        if self.UserEmailModel:
-            user_email = self.db_adapter.ifind_first_object(self.UserEmailModel, email=email)
+        if self.UserEmailClass:
+            user_email = self.db_adapter.ifind_first_object(self.UserEmailClass, email=email)
             user = user_email.user if user_email else None
         else:
-            # The email field can either be in the UserAuth class or in the User class
-            if self.UserAuthModel and hasattr(self.UserAuthModel, 'email'):
-                user_auth = self.db_adapter.ifind_first_object(self.UserAuthModel, email=email)
-                user = user_auth.user if user_auth else None
-            else:
-                user = self.db_adapter.ifind_first_object(self.UserModel, email=email)
+            user_email = None
+            user = self.db_adapter.ifind_first_object(self.UserClass, email=email)
 
         return (user, user_email)
 
@@ -454,7 +435,7 @@ class UserManager():
             Return False otherwise."""
         # Allow user to change username to the current username
         if _call_or_get(current_user.is_authenticated):
-            current_username = current_user.user_auth.username if self.UserAuthModel and hasattr(current_user, 'user_auth') else current_user.username
+            current_username = current_user.username
             if new_username == current_username:
                 return True
         # See if new_username is available
@@ -471,18 +452,13 @@ class UserManager():
             # Send forgot password email
             self.email_manager.send_email_forgot_password(user, user_email, reset_password_link)
 
-            # Store token
-            if hasattr(user, 'reset_password_token'):
-                self.db_adapter.update_object(user, reset_password_token=token)
-                self.db_adapter.commit()
-
             # Send forgot_password signal
             signals.user_forgot_password.send(current_app._get_current_object(), user=user)
 
     def get_primary_user_email(self, user):
         db_adapter = self.db_adapter
-        if self.UserEmailModel:
-            user_email = db_adapter.find_first_object(self.UserEmailModel,
+        if self.UserEmailClass:
+            user_email = db_adapter.find_first_object(self.UserEmailClass,
                                                       user_id=user.id,
                                                       is_primary=True)
             return user_email

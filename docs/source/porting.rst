@@ -102,21 +102,23 @@ As a result, the generated tokens are different, which will affect two areas:
 UserAuth class
 --------------
 
-The optional UserAuth class has been obsoleted. If you still require a separate class, use the
-workaround recipe below::
+The optional v0.6 UserAuth class has been fully obsoleted in v1.0 to simplify the Flask-User source code.
+
+If you are using SQLAlchemy and choose to separate the uer authorization fields
+from the user profile fields, you can use the workaround recipe below::
 
 
     # Define the UserAuth data model.
     class UserAuth(db.Model):
         id = db.Column(db.Integer, primary_key=True)
+
+        # Relationship to user
         user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+        user = db.relationship('User', uselist=False)
 
         # User authentication information
         username = db.Column(db.String(50), nullable=False, unique=True)
         password = db.Column(db.String(255), nullable=False, server_default='')
-
-        # Relationships
-        user = db.relationship('User', uselist=False)
 
 
     # Define the User data model. Make sure to add flask_user UserMixin!!
@@ -135,7 +137,14 @@ workaround recipe below::
         # Relationships
         user_auth = db.relationship('UserAuth', uselist=False)
 
-        # Map UserAuth attributes into User attributes
+
+        # Create UserAuth instance when User instance is created
+        def __init__(self, *args, **kwargs):
+            super(User, self).__init__(*args, **kwargs)
+            self.user_auth = UserAuth(user=self)
+
+
+        # Map the User.username field into the UserAuth.username field
         @property
         def username(self):
             return user_auth.username
@@ -144,3 +153,12 @@ workaround recipe below::
         def username(self, value)
             user_auth.username = value
 
+
+        # Map the User.password field into the UserAuth.password field
+        @property
+        def password(self):
+            return user_auth.password
+
+        @password.setter
+        def password(self, value)
+            user_auth.password = value

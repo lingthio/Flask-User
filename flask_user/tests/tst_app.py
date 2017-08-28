@@ -53,7 +53,6 @@ if ORM_type=='SQLAlchemy':
         email = db.Column(db.String(255), nullable=True, unique=True)
         confirmed_at = db.Column(db.DateTime())
         password = db.Column(db.String(255), nullable=False, server_default='')
-        # reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
 
         # User information
         first_name = db.Column(db.String(100), nullable=False, server_default='')

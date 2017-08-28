@@ -129,7 +129,7 @@ def check_all_valid_forms(um, client):
 def check_valid_register_form(um, client, db):
     # Using global variable for speed
     global valid_user
-    User = um.UserModel
+    User = um.UserClass
 
     # Build variable argument list depending on config settings
     kwargs = {}
@@ -194,7 +194,7 @@ def check_valid_confirm_email_page(um, client):
     client.get_valid_page(url_for('user.confirm_email', token=confirmation_token))
 
     # Verify operations
-    valid_user = um.db_adapter.get_object(um.UserModel, valid_user.id)
+    valid_user = um.db_adapter.get_object(um.UserClass, valid_user.id)
     assert valid_user.confirmed_at != None
 
 def check_valid_login_form(um, client):
@@ -236,7 +236,7 @@ def check_valid_change_password_form(um, client):
     client.post_valid_form(url_for('user.change_password'), **kwargs)
 
     # Verify operations
-    valid_user = um.db_adapter.get_object(um.UserModel, valid_user.id)
+    valid_user = um.db_adapter.get_object(um.UserClass, valid_user.id)
     assert um.password_manager.verify_user_password(valid_user, new_password)
 
     # Change password back to old password for subsequent tests
@@ -255,7 +255,7 @@ def check_valid_change_username_form(um, client):
     client.post_valid_form(url_for('user.change_username'), new_username=new_username, old_password=VALID_PASSWORD)
 
     # Verify operations
-    valid_user = um.db_adapter.get_object(um.UserModel, valid_user.id)
+    valid_user = um.db_adapter.get_object(um.UserClass, valid_user.id)
     assert valid_user.username == new_username
 
     # Change username back to old password for subsequent tests
@@ -303,7 +303,7 @@ def check_valid_reset_password_page(um, client):
     client.post_valid_form(url, **kwargs)
 
     # Verify operations
-    valid_user = um.db_adapter.get_object(um.UserModel, valid_user.id)
+    valid_user = um.db_adapter.get_object(um.UserClass, valid_user.id)
     assert um.password_manager.verify_user_password(valid_user, new_password)
 
     # Change password back to old password for subsequent tests
@@ -315,7 +315,7 @@ def check_valid_invite_email(um, client):
     if not um.enable_invitation: return
     # Submit form and verify that response has no errors
     global valid_user_invite
-    UserInvite = um.UserInvitationModel
+    UserInvite = um.UserInvitationClass
     client.login(username='member', email='member@example.com', password='Password1')
     client.post_valid_form(url_for('user.invite'), email=INVITE_USER_EMAIL)
     valid_user_invite = UserInvite.query.filter(UserInvite.email==INVITE_USER_EMAIL).first()

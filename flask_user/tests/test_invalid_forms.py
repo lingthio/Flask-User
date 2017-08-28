@@ -73,7 +73,7 @@ def test_init(db):
     um.auto_login = False
 
     hashed_password = um.password_manager.hash_password('Password1')
-    User = um.UserModel
+    User = um.UserClass
     add_object = um.db_adapter.add_object
 
     # Create user1 with username and email
@@ -101,7 +101,7 @@ def test_invalid_register_with_username_form(client):
     # Choose config
     um =  current_app.user_manager
     um.enable_username = True
-    User = um.UserModel
+    User = um.UserClass
 
     # Set default values
     url = url_for('user.register')
@@ -145,7 +145,7 @@ def test_invalid_register_with_email_form(client):
     # Choose config
     um =  current_app.user_manager
     um.enable_username = False
-    User = um.UserModel
+    User = um.UserClass
 
     # Set default values
     url = url_for('user.register')
@@ -393,7 +393,7 @@ def test_invalid_reset_password(client):
 
 def test_valid_roles(client):
     um =  current_app.user_manager
-    User = um.UserModel
+    User = um.UserClass
 
     # Perform only for roles_required_app
     user007 = User.query.filter(User.username=='user007').first()
@@ -410,7 +410,7 @@ def test_valid_roles(client):
 
 def test_invalid_roles(client):
     um =  current_app.user_manager
-    User = um.UserModel
+    User = um.UserClass
 
     # Perform only for roles_required_app
     user007 = User.query.filter(User.username=='user007').first()
@@ -449,7 +449,7 @@ def test_login_without_confirm_email(client):
 
     # TODO
     # # Confirm email manually, but disable account
-    # User = um.UserModel
+    # User = um.UserClass
     # user = User.query.filter(User.email==email).first()
     # assert(user)
     # user.active = False

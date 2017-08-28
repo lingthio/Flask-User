@@ -44,7 +44,7 @@ def test_multiple_emails(app, db, client):
     um.enable_retype_password = False
 
     # Adjust DbAdapter settings
-    um.UserEmailModel = app.UserEmailClass
+    um.UserEmailClass = app.UserEmailClass
 
     # Adjust URL routes
     app.add_url_rule(um.email_action_url,  'user.email_action',  um.email_action_view_function)
@@ -57,7 +57,7 @@ def test_multiple_emails(app, db, client):
 
     # Register user
     response = client.post_valid_form(url_for('user.register'), email=EMAIL1, password=PASSWORD)
-    user_email1 = um.UserEmailModel.query.filter(um.UserEmailModel.email==EMAIL1).first()
+    user_email1 = um.UserEmailClass.query.filter(um.UserEmailClass.email==EMAIL1).first()
     assert user_email1 != None
 
     # Confirm email
@@ -75,7 +75,7 @@ def test_multiple_emails(app, db, client):
     response = client.post_valid_form(url_for('user.manage_emails'), email=EMAIL2)
     assert response.data.find(str.encode(EMAIL1)) >= 0
     assert response.data.find(str.encode(EMAIL2)) >= 0
-    user_email2 = um.UserEmailModel.query.filter(um.UserEmailModel.email==EMAIL2).first()
+    user_email2 = um.UserEmailClass.query.filter(um.UserEmailClass.email==EMAIL2).first()
     assert user_email2 != None
 
     # Confirm email
@@ -110,5 +110,5 @@ def test_multiple_emails(app, db, client):
     um.enable_multiple_emails = False
     um.enable_confirm_email = True
     um.enable_retype_password = True
-    um.UserEmailModel = None
+    um.UserEmailClass = None
 

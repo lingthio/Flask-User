@@ -62,12 +62,7 @@ class PasswordManager(object):
             user = password
             password = temp
 
-        # Hashed password is stored with the User model or the UserAuth model
-        user_manager = current_app.user_manager
-        if user_manager.UserAuthModel and hasattr(user_manager.UserModel, 'user_auth'):
-            hashed_password = user.user_auth.password
-        else:
-            hashed_password = user.password
+        hashed_password = user.password
 
         # Pre-generate SHA512 HMAC -- For compatibility with Flask-Security
         if self.password_hash_mode == 'Flask-Security':
@@ -78,10 +73,8 @@ class PasswordManager(object):
 
 
     def update_user_hashed_password(self, user, hashed_password):
-        # Hashed password is stored with the User model or the UserAuth model
         user_manager = current_app.user_manager
-        object = user.user_auth if user_manager.UserAuthModel and hasattr(user_manager.UserModel, 'user_auth') else user
-        user_manager.db_adapter.update_object(object, password=hashed_password)
+        user_manager.db_adapter.update_object(user, password=hashed_password)
         user_manager.db_adapter.commit()
 
 

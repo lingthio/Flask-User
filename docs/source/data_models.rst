@@ -26,38 +26,6 @@ In its simplest form, Flask-User makes use of a single User data-model class::
     # Setup Flask-User
     user_manager = UserManager(app, db, User)
 
-Optional UserAuth data-model
-----------------------------
-If desired, the authentication fields can be stored in a separate UserAuth data-model class::
-
-    # Define User data-model
-    class User(db.Model, UserMixin):
-        id = db.Column(db.Integer, primary_key=True)
-
-        # User fields
-        active = db.Column(db.Boolean()),
-        first_name = db.Column(db.String(50), nullable=False)
-        last_name = db.Column(db.String(50), nullable=False)
-
-
-    # Define UserAuth data-model
-    class UserAuth(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-
-        user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
-        user = db.relationship('User', uselist=False, foreign_keys=user_id)
-
-        # Authentication fields
-        email = db.Column(db.String(255), nullable=False, unique=True)
-        email_confirmed_at = db.Column(db.DateTime())
-        username = db.Column(db.String(50), nullable=False, unique=True)
-        password = db.Column(db.String(255), nullable=False)
-
-
-    # Setup Flask-User
-    user_manager = UserManager(app, User, UserAuthClass=UserAuth)
-
-
 Optional UserEmail data-model
 -----------------------------
 Flask-User can be configured to allow for multiple emails per users, pointing to the same user account
