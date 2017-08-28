@@ -8,7 +8,7 @@ class UserMixin(LoginUserMixin):
         """ Return a token string representing the user's ID """
         # Works in tandem with user_loader()
         user_manager = current_app.user_manager
-        user_token = user_manager.generate_token(self.id)
+        user_token = user_manager.token_manager.generate_token(self.id)
         # print("UserMixin.get_id: ID:", self.id, "token:", user_token)
         return user_token
 

@@ -353,7 +353,7 @@ Password hashing
 
 To hash a password, Flask-User:
 
-* calls ``user_manager.hash_password()``,
+* calls ``user_manager.password_manager.hash_password()``,
 * which calls ``user_manager.password_crypt_context``,
 * which is initialized to ``CryptContext(schemes=[app.config['USER_PASSWORD_HASH']])``,
 * where ``USER_PASSWORD_HASH = 'bcrypt'``.
@@ -369,7 +369,7 @@ Developers can customize the password hashing in the following ways:
 **By changing the crypt_context**::
 
     my_password_crypt_context = CryptContext(
-            schemes=['bcrypt', 'sha512_crypt', 'pbkdf2_sha512', 'plaintext'])
+            schemes=['bcrypt', 'sha512_crypt', 'pbkdf2_sha512'])
     user_manager = UserManager(db_adapter, app,
             password_crypt_context=my_password_crypt_context)
 
@@ -379,8 +379,8 @@ Developers can customize the password hashing in the following ways:
         def hash_password(self, password):
             return self.password
 
-        def verify_password(self, password, user)
-            return self.hash_password(password) == self.get_password(user)
+        def verify_user_password(self, user, password)
+            return self.password_manager.hash_password(password) == self.get_password(user)
 
 **Backward compatibility with Flask-Security**
 

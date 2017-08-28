@@ -11,14 +11,14 @@ from flask import current_app, render_template
 
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class.
-class SendEmailMixin(object):
+class EmailManager(object):
     """ SendEmailMixin provides email sending methods using Flask-Mail """
 
-    # *** Public methods ***
-
-    # Called by UserManager.init_app()
-    def init_email_mixin(self):
-        pass
+    def __init__(self, user_manager, send_email_function):
+        self.user_manager = user_manager
+        self.send_email_function = send_email_function
+        if not self.send_email_function:
+            self.send_email_function = self.send_email
 
     def send_email(self, recipient, subject, html_message, text_message):
         """ Send email from default sender to 'recipient' """
@@ -54,9 +54,8 @@ class SendEmailMixin(object):
 
     def send_email_confirm_email(self, user, user_email, confirm_email_link):
         # Verify certain conditions
-        user_manager =  current_app.user_manager
-        if not user_manager.enable_email: return
-        if not user_manager.send_registered_email and not user_manager.enable_confirm_email: return
+        if not self.user_manager.enable_email: return
+        if not self.user_manager.send_registered_email and not self.user_manager.enable_confirm_email: return
 
         # Retrieve email address from User or UserEmail object
         email = user_email.email if user_email else user.email
@@ -64,19 +63,18 @@ class SendEmailMixin(object):
 
         # Render subject, html message and text message
         subject, html_message, text_message = _render_email(
-                user_manager.confirm_email_email_template,
+                self.user_manager.confirm_email_email_template,
                 user=user,
-                app_name=user_manager.app_name,
+                app_name=self.user_manager.app_name,
                 confirm_email_link=confirm_email_link)
 
         # Send email message using Flask-Mail
-        user_manager.send_email_function(email, subject, html_message, text_message)
+        self.send_email_function(email, subject, html_message, text_message)
 
     def send_email_forgot_password(self, user, user_email, reset_password_link):
         # Verify certain conditions
-        user_manager =  current_app.user_manager
-        if not user_manager.enable_email: return
-        assert user_manager.enable_forgot_password
+        if not self.user_manager.enable_email: return
+        assert self.user_manager.enable_forgot_password
 
         # Retrieve email address from User or UserEmail object
         email = user_email.email if user_email else user.email
@@ -84,19 +82,18 @@ class SendEmailMixin(object):
 
         # Render subject, html message and text message
         subject, html_message, text_message = _render_email(
-                user_manager.forgot_password_email_template,
+                self.user_manager.forgot_password_email_template,
                 user=user,
-                app_name=user_manager.app_name,
+                app_name=self.user_manager.app_name,
                 reset_password_link=reset_password_link)
 
         # Send email message using Flask-Mail
-        user_manager.send_email_function(email, subject, html_message, text_message)
+        self.send_email_function(email, subject, html_message, text_message)
 
     def send_email_password_changed(self, user):
         # Verify certain conditions
-        user_manager =  current_app.user_manager
-        if not user_manager.enable_email: return
-        if not user_manager.send_password_changed_email: return
+        if not self.user_manager.enable_email: return
+        if not self.user_manager.send_password_changed_email: return
 
         # Retrieve email address from User or UserEmail object
         user_email = self.get_primary_user_email(user)
@@ -106,18 +103,17 @@ class SendEmailMixin(object):
 
         # Render subject, html message and text message
         subject, html_message, text_message = _render_email(
-                user_manager.password_changed_email_template,
+                self.user_manager.password_changed_email_template,
                 user=user,
-                app_name=user_manager.app_name)
+                app_name=self.user_manager.app_name)
 
         # Send email message using Flask-Mail
-        user_manager.send_email_function(email, subject, html_message, text_message)
+        self.send_email_function(email, subject, html_message, text_message)
 
     def send_email_registered(self, user, user_email, confirm_email_link):    # pragma: no cover
         # Verify certain conditions
-        user_manager =  current_app.user_manager
-        if not user_manager.enable_email: return
-        if not user_manager.send_registered_email: return
+        if not self.user_manager.enable_email: return
+        if not self.user_manager.send_registered_email: return
 
         # Retrieve email address from User or UserEmail object
         email = user_email.email if user_email else user.email
@@ -125,19 +121,18 @@ class SendEmailMixin(object):
 
         # Render subject, html message and text message
         subject, html_message, text_message = _render_email(
-                user_manager.registered_email_template,
+                self.user_manager.registered_email_template,
                 user=user,
-                app_name=user_manager.app_name,
+                app_name=self.user_manager.app_name,
                 confirm_email_link=confirm_email_link)
 
         # Send email message using Flask-Mail
-        user_manager.send_email_function(email, subject, html_message, text_message)
+        self.send_email_function(email, subject, html_message, text_message)
 
     def send_email_username_changed(self, user):  # pragma: no cover
         # Verify certain conditions
-        user_manager =  current_app.user_manager
-        if not user_manager.enable_email: return
-        if not user_manager.send_username_changed_email: return
+        if not self.user_manager.enable_email: return
+        if not self.user_manager.send_username_changed_email: return
 
         # Retrieve email address from User or UserEmail object
         user_email = self.get_primary_user_email(user)
@@ -147,38 +142,27 @@ class SendEmailMixin(object):
 
         # Render subject, html message and text message
         subject, html_message, text_message = _render_email(
-                user_manager.username_changed_email_template,
+                self.user_manager.username_changed_email_template,
                 user=user,
-                app_name=user_manager.app_name)
+                app_name=self.user_manager.app_name)
 
         # Send email message using Flask-Mail
-        user_manager.send_email_function(email, subject, html_message, text_message)
+        self.send_email_function(email, subject, html_message, text_message)
 
     def send_email_invite(self, user, accept_invite_link):
-        user_manager = current_app.user_manager
-        if not user_manager.enable_email: return
+        if not self.user_manager.enable_email: return
 
         # Render subject, html message and text message
         subject, html_message, text_message = _render_email(
-                user_manager.invite_email_template,
+                self.user_manager.invite_email_template,
                 user=user,
-                app_name=user_manager.app_name,
+                app_name=self.user_manager.app_name,
                 accept_invite_link=accept_invite_link)
 
         # Send email message using Flask-Mail
-        user_manager.send_email_function(user.email, subject, html_message, text_message)
+        self.send_email_function(user.email, subject, html_message, text_message)
 
 
-    def get_primary_user_email(self, user):
-        user_manager = current_app.user_manager
-        db_adapter = user_manager.db_adapter
-        if user_manager.UserEmailModel:
-            user_email = db_adapter.find_first_object(user_manager.UserEmailModel,
-                                                      user_id=user.id,
-                                                      is_primary=True)
-            return user_email
-        else:
-            return user
 
 
 def _render_email(filename, **kwargs):

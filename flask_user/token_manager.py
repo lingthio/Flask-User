@@ -12,24 +12,25 @@ from itsdangerous import BadSignature, SignatureExpired, TimestampSigner
 
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class.
-class TokenMixin(object):
+class TokenManager(object):
 
     # *** Public methods ***
 
     # Called by UserManager.init_app()
-    def init_token_mixin(self, secret):
+    def __init__(self, flask_secret_key):
         """ Create a cypher to encrypt IDs and a signer to sign tokens."""
+
         # Create cypher to encrypt IDs
         # and ensure >=16 characters
         trailer = b'0123456789abcdef'
-        if isinstance(secret, bytes):
-            key = secret + trailer
+        if isinstance(flask_secret_key, bytes):
+            key = flask_secret_key + trailer
         else:
-            key = secret.encode("utf-8") + trailer
+            key = flask_secret_key.encode("utf-8") + trailer
         self.cipher = AES.new(key[0:16], AES.MODE_ECB)
 
         # Create signer to sign tokens
-        self.signer = TimestampSigner(secret)
+        self.signer = TimestampSigner(flask_secret_key)
 
     def generate_token(self, id):
         """ Return token with id, timestamp and signature"""

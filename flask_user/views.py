@@ -38,7 +38,7 @@ def confirm_email(token):
     # Verify token
     user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter
-    is_valid, has_expired, object_id = user_manager.verify_token(
+    is_valid, has_expired, object_id = user_manager.token_manager.verify_token(
             token,
             user_manager.confirm_email_expiration)
 
@@ -102,10 +102,10 @@ def change_password():
     # Process valid POST
     if request.method=='POST' and form.validate():
         # Hash password
-        hashed_password = user_manager.hash_password(form.new_password.data)
+        hashed_password = user_manager.password_manager.hash_password(form.new_password.data)
 
         # Change password
-        user_manager.update_hashed_password(current_user, hashed_password)
+        user_manager.password_manager.update_user_hashed_password(current_user, hashed_password)
 
         # Send 'password_changed' email
         if user_manager.enable_email and user_manager.send_password_changed_email:
@@ -385,7 +385,7 @@ def register():
         for field_name, field_value in register_form.data.items():
             # Hash password field
             if field_name=='password':
-                hashed_password = user_manager.hash_password(field_value)
+                hashed_password = user_manager.password_manager.hash_password(field_value)
                 if user_manager.UserAuthModel:
                     user_auth_fields['password'] = hashed_password
                 else:
@@ -492,7 +492,7 @@ def invite():
                             })
         db_adapter.commit()
 
-        token = user_manager.generate_token(user_invite.id)
+        token = user_manager.token_manager.generate_token(user_invite.id)
         accept_invite_link = url_for('user.register',
                                      token=token,
                                      _external=True)
@@ -555,7 +555,7 @@ def reset_password(token):
     if _call_or_get(current_user.is_authenticated):
         logout_user()
 
-    is_valid, has_expired, user_id = user_manager.verify_token(
+    is_valid, has_expired, user_id = user_manager.token_manager.verify_token(
             token,
             user_manager.reset_password_expiration)
 
@@ -592,7 +592,7 @@ def reset_password(token):
             db_adapter.update_object(user, reset_password_token='')
 
         # Change password
-        hashed_password = user_manager.hash_password(form.new_password.data)
+        hashed_password = user_manager.password_manager.hash_password(form.new_password.data)
         user_auth = user.user_auth if user_manager.UserAuthModel and hasattr(user, 'user_auth') else user
         db_adapter.update_object(user_auth, password=hashed_password)
         db_adapter.commit()
@@ -664,7 +664,7 @@ def _send_registered_email(user, user_email, require_email_confirmation=True):
     if user_manager.enable_email and user_manager.enable_confirm_email:
         # Generate confirm email link
         object_id = user_email.id if user_email else user.id
-        token = user_manager.generate_token(object_id)
+        token = user_manager.token_manager.generate_token(object_id)
         confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
 
         # Send email
@@ -686,11 +686,11 @@ def _send_confirm_email(user, user_email):
     if user_manager.enable_email and user_manager.enable_confirm_email:
         # Generate confirm email link
         object_id = user_email.id if user_email else user.id
-        token = user_manager.generate_token(object_id)
+        token = user_manager.token_manager.generate_token(object_id)
         confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
 
         # Send email
-        user_manager.send_email_confirm_email(user, user_email, confirm_email_link)
+        user_manager.email_manager.send_email_confirm_email(user, user_email, confirm_email_link)
 
         # Prepare one-time system message
         email = user_email.email if user_email else user.email

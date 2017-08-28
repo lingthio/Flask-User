@@ -21,17 +21,10 @@ def cov():
     local('py.test --cov flask_user --cov-report term-missing --cov-config flask_user/tests/.coveragerc flask_user/tests/')
 
 @task
-def babel_update():
+def update_babel():
     local('pybabel extract -F flask_user/translations/babel.cfg -k lazy_gettext -c NOTE -o flask_user/translations/flask_user.pot flask_user flask_user')
     for code in ('de', 'en', 'es', 'fa', 'fi', 'fr', 'it', 'nl', 'ru', 'sv', 'tr', 'zh'):
         local('pybabel update -i flask_user/translations/flask_user.pot --domain=flask_user --output-dir flask_user/translations -l '+code)
-    local('pybabel compile -f --domain=flask_user --directory flask_user/translations')
-
-@task
-def babel_init():
-    local('pybabel extract -F flask_user/translations/babel.cfg -k lazy_gettext -c NOTE -o flask_user/translations/flask_user.pot flask_user flask_user')
-    for code in ('de', 'en', 'es', 'fa', 'fi', 'fr', 'it', 'nl', 'ru', 'sv', 'tr', 'zh'):
-        local('pybabel init -i flask_user/translations/flask_user.pot --domain=flask_user --output-dir flask_user/translations -l '+code)
     local('pybabel compile -f --domain=flask_user --directory flask_user/translations')
 
 @task
@@ -50,3 +43,18 @@ def rebuild_docs():
 def upload_to_pypi():
     local('python setup.py sdist')
     local('twine upload dist/*')
+
+# PyEnv: https://gist.github.com/Bouke/11261620
+# PyEnv and Tox: https://www.holger-peters.de/using-pyenv-and-tox.html
+# Available Python versions: pyenv install --list
+@task
+def setup_tox():
+    versions_str = '2.6.9 2.7.13 3.3.6 3.4.6 3.5.3 3.6.2'
+    versions = versions_str.split()
+    for version in versions:
+        local('pyenv install --skip-existing '+version)
+    local('pyenv global '+versions_str)
+
+@task
+def tox():
+    local('tox')

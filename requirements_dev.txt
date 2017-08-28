@@ -22,6 +22,4 @@ pytest==3.0.5
 pytest-cov==2.5.1
 Sphinx==1.6.3
 tox==2.5.0
-twine==1.8.1
-Flask-Sphinx-Themes==1.0.1
-
+twine==1.9.1

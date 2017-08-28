@@ -3,7 +3,7 @@ from .tst_app import Role
 
 def test_roles(db):
     um =  current_app.user_manager
-    hashed_password = um.hash_password('Password1')
+    hashed_password = um.password_manager.hash_password('Password1')
     User = um.UserModel
 
     # create users and roles

@@ -185,14 +185,14 @@ def init_app(app, test_config=None):                # For automated tests
     # Create regular 'member' user
     if not User.query.filter(User.username=='member').first():
         user = User(username='member', email='member@example.com',
-                password=user_manager.hash_password('Password1'), confirmed_at=datetime.datetime.utcnow())
+                password=user_manager.password_manager.hash_password('Password1'), confirmed_at=datetime.datetime.utcnow())
         db.session.add(user)
         user_manager.db_adapter.commit()
 
     # Create 'user007' user with 'secret' and 'agent' roles
     if not User.query.filter(User.username=='user007').first():
         user1 = User(username='user007', email='user007@example.com',
-                password=user_manager.hash_password('Password1'))
+                password=user_manager.password_manager.hash_password('Password1'))
         if ORM_type == 'SQLAlchemy':
             user1.roles.append(Role(name='secret'))
             user1.roles.append(Role(name='agent'))

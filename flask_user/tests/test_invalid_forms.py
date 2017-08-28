@@ -72,7 +72,7 @@ def test_init(db):
     # Tests have not been written with auto_login in mind
     um.auto_login = False
 
-    hashed_password = um.hash_password('Password1')
+    hashed_password = um.password_manager.hash_password('Password1')
     User = um.UserModel
     add_object = um.db_adapter.add_object
 
@@ -187,7 +187,7 @@ def test_invalid_confirm_email_page(client):
 
     # Generate valid token
     um = current_app.user_manager
-    token = um.generate_token(user1.id)
+    token = um.token_manager.generate_token(user1.id)
     url = url_for('user.confirm_email', token=token)
 
     # Test Expired token
@@ -372,7 +372,7 @@ def test_invalid_reset_password(client):
     # Set default values
     new_password = 'Password5'
     # Simulate a valid forgot password form
-    token = um.generate_token(user1.id)
+    token = um.token_manager.generate_token(user1.id)
 
     # Test invalid token
     url = url_for('user.reset_password', token='InvalidToken')

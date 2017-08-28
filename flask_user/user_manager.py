@@ -8,9 +8,9 @@
 from flask import Blueprint, current_app, Flask, url_for, render_template
 from flask_login import LoginManager, current_user
 
-from .password_mixin import PasswordMixin
-from .send_email_mixin import SendEmailMixin
-from .token_mixin import TokenMixin
+from .password_manager import PasswordManager
+from .email_manager import EmailManager
+from .token_manager import TokenManager
 from . import forms
 from . import signals
 from . import translations
@@ -35,7 +35,7 @@ def _flask_user_context_processor():
 
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class.
-class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
+class UserManager():
     """ This is the Flask-User object that manages the User management process."""
 
     # ***** Initialization methods *****
@@ -173,16 +173,14 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
         self._create_default_attr('send_email_function', send_email_function)
         self._create_default_attr('make_safe_url_function', make_safe_url_function)
 
-        # Initialize PasswordMixin
-        self.init_password_mixin()
+        # Setup PasswordManager
+        self.password_manager = PasswordManager(self.password_crypt_context, self.password_hash_scheme, self.password_hash_mode, self.password_salt)
 
-        # Initialize SendEmailMixin
-        if not self.send_email_function:
-            self.send_email_function = self.send_email
-            self.init_email_mixin()
+        # Setup EmailManager
+        self.email_manager = EmailManager(self, self.send_email_function)
 
-        # Setup default TokenManager
-        self.init_token_mixin(self.password_salt)
+        # Setup TokenManager
+        self.token_manager = TokenManager(app.config['SECRET_KEY'])
 
         # Setup default LoginManager using Flask-Login
         if not self.login_manager:
@@ -195,7 +193,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
             @self.login_manager.user_loader
             def load_user_by_user_token(user_token):
                 # decode token
-                is_valid, has_expired, user_id = self.verify_token(
+                is_valid, has_expired, user_id = self.token_manager.verify_token(
                     user_token,
                     3600)  # timeout in seconds
                 # print("load_user_by_user_token(): is_valid:", is_valid, "has_expired:", has_expired, "user_id:", user_id)
@@ -255,7 +253,7 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
         self._create_default_setting('confirm_email_expiration',   app, 2 * 24 * 3600)  # 2 days
         self._create_default_setting('invite_expiration',          app, 90 * 24 * 3600)  # 90 days
         self._create_default_setting('password_hash_mode',         app, 'passlib')
-        self._create_default_setting('password_hash',              app, 'bcrypt')
+        self._create_default_setting('password_hash_scheme',       app, 'bcrypt')
         self._create_default_setting('password_salt',              app, app.config['SECRET_KEY'])
         self._create_default_setting('reset_password_expiration',  app, 2 * 24 * 3600)  # 2 days
         self._create_default_setting('enable_invitation',          app, False)
@@ -467,11 +465,11 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
         user, user_email = self.find_user_by_email(email)
         if user:
             # Generate reset password link
-            token = self.generate_token(user.id)
+            token = self.token_manager.generate_token(user.id)
             reset_password_link = url_for('user.reset_password', token=token, _external=True)
 
             # Send forgot password email
-            self.send_email_forgot_password(user, user_email, reset_password_link)
+            self.email_manager.send_email_forgot_password(user, user_email, reset_password_link)
 
             # Store token
             if hasattr(user, 'reset_password_token'):
@@ -481,4 +479,13 @@ class UserManager(PasswordMixin, SendEmailMixin, TokenMixin):
             # Send forgot_password signal
             signals.user_forgot_password.send(current_app._get_current_object(), user=user)
 
+    def get_primary_user_email(self, user):
+        db_adapter = self.db_adapter
+        if self.UserEmailModel:
+            user_email = db_adapter.find_first_object(self.UserEmailModel,
+                                                      user_id=user.id,
+                                                      is_primary=True)
+            return user_email
+        else:
+            return user
 

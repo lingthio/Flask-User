@@ -99,7 +99,7 @@ def create_app(test_config=None):                   # For automated tests
         user1 = User(email='user007@example.com', first_name='James', last_name='Bond')
         db.session.add(user1)
         user_auth1 = UserAuth(user=user1, username='user007',
-                password=user_manager.hash_password('Password1')
+                password=user_manager.password_manager.hash_password('Password1')
                 )
         db.session.add(user_auth1)
         user1.roles.append(Role(name='secret'))
