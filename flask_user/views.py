@@ -434,12 +434,17 @@ def register():
             try:
                 # Send 'registered' email
                 _send_registered_email(user, user_email, require_email_confirmation)
+                if user_invite:
+                    db_adapter.delete_object(user_invite)
+                    db_adapter.commit()
             except Exception as e:
                 # delete new User object if send  fails
                 db_adapter.delete_object(user)
                 db_adapter.commit()
                 raise
-
+        if user_invite:
+            db_adapter.delete_object(user_invite)
+            db_adapter.commit()
         # Send user_registered signal
         signals.user_registered.send(current_app._get_current_object(),
                                      user=user,
@@ -475,6 +480,12 @@ def invite():
     invite_form = user_manager.invite_form(request.form)
 
     if request.method=='POST' and invite_form.validate():
+        if not hasattr(db_adapter.UserClass, 'invite_times'):
+            raise KeyError("SQLAlchemyAdapter Class '%s' has no field '%s'." % (db_adapter.UserClass, 'invite_times'))
+        invite_times = current_user.invite_times
+        if invite_times == 0 and invite_times != -1:
+            flash(_("Can't send invitation!"), "error")
+            return redirect(url_for('user.invite'))
         email = invite_form.email.data
 
         User = db_adapter.UserClass
@@ -513,7 +524,9 @@ def invite():
             db_adapter.delete_object(user_invite)
             db_adapter.commit()
             raise
-
+        if invite_times != -1:
+            db_adapter.update_object(current_user._get_current_object(), invite_times=invite_times - 1)
+            db_adapter.commit()
         signals \
             .user_sent_invitation \
             .send(current_app._get_current_object(), user_invite=user_invite,

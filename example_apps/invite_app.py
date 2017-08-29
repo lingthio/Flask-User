@@ -69,7 +69,8 @@ def create_app(test_config=None):                   # For automated tests
         is_enabled = db.Column(db.Boolean(), nullable=False, server_default='0')
         first_name = db.Column(db.String(100), nullable=False, server_default='')
         last_name = db.Column(db.String(100), nullable=False, server_default='')
-
+        # User invitation times,-1:can invite and unlimited, 0:can't invite, >0:can invite but has unlimited
+        invite_times = db.Column(db.Integer, nullable=False, server_default='-1')
     class UserInvitation(db.Model):
         __tablename__ = 'user_invite'
         id = db.Column(db.Integer, primary_key=True)
