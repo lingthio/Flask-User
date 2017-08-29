@@ -4,6 +4,8 @@
     :author: Ling Thio (ling.thio@gmail.com)
     :license: Simplified BSD License, see LICENSE.txt for more details."""
 
+
+from uuid import UUID
 from passlib.context import CryptContext
 from flask import Blueprint, current_app, url_for, render_template
 from flask_login import LoginManager, UserMixin as LoginUserMixin
@@ -191,8 +193,10 @@ class UserManager(object):
         # See https://flask-login.readthedocs.org/en/latest/#how-it-works
         @self.login_manager.user_loader
         def load_user_by_id(user_unicode_id):
-            user_id = int(user_unicode_id)
-            #print('load_user_by_id: user_id=', user_id)
+            try:
+                user_id = int(user_unicode_id)
+            except ValueError:
+                user_id = UUID(user_unicode_id)
             return self.get_user_by_id(user_id)
 
         self.login_manager.login_view = 'user.login'
