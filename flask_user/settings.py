@@ -83,6 +83,7 @@ def set_default_settings(user_manager, app_config):
     um.unconfirmed_email_endpoint          = sd('USER_UNCONFIRMED_EMAIL_ENDPOINT',          home_endpoint)
     um.unauthenticated_endpoint            = sd('USER_UNAUTHENTICATED_ENDPOINT',            login_endpoint)
     um.unauthorized_endpoint               = sd('USER_UNAUTHORIZED_ENDPOINT',               home_endpoint)
+    um.unsafe_redirect_endpoint            = sd('USER_UNSAFE_REDIRECT_ENDPOINT',            home_endpoint)
 
     # Set default template files
     um.change_password_template      = sd('USER_CHANGE_PASSWORD_TEMPLATE',  'flask_user/change_password.html')

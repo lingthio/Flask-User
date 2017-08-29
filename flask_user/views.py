@@ -7,10 +7,11 @@
 from datetime import datetime
 from flask import current_app, flash, redirect, request, url_for
 from flask_login import current_user, login_user, logout_user
-try: # Handle Python 2.x and Python 3.x
-    from urllib.parse import quote      # Python 3.x
-except ImportError:
-    from urllib import quote            # Python 2.x
+try:  # Python 3
+    from urllib.parse import quote, urljoin, urlparse
+except ImportError:  # Python 2
+    from urllib import quote
+    from urlparse import urljoin, urlparse
 from .decorators import confirm_email_required, login_required
 from . import emails
 from . import signals
@@ -19,6 +20,23 @@ from .translations import gettext as _
 
 def _call_or_get(function_or_property):
     return function_or_property() if callable(function_or_property) else function_or_property
+
+
+# From http://flask.pocoo.org/snippets/63/
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') \
+        and ref_url.netloc == test_url.netloc
+
+
+def safe_redirect(target):
+    """ Redirect to `target` or USER_UNSAFE_REDIRECT_ENDPOINT if it's unsafe."""
+    user_manager = current_app.user_manager
+    if is_safe_url(target):
+        return redirect(target)
+    else:
+        return redirect(_endpoint_url(user_manager.unsafe_redirect_endpoint))
 
 
 def render(*args, **kwargs):
@@ -107,7 +125,7 @@ def change_password():
         flash(_('Your password has been changed successfully.'), 'success')
 
         # Redirect to 'next' URL
-        return redirect(form.next.data)
+        return safe_redirect(form.next.data)
 
     # Process GET or invalid POST
     return render(user_manager.change_password_template, form=form)
@@ -143,7 +161,7 @@ def change_username():
         flash(_("Your username has been changed to '%(username)s'.", username=new_username), 'success')
 
         # Redirect to 'next' URL
-        return redirect(form.next.data)
+        return safe_redirect(form.next.data)
 
     # Process GET or invalid POST
     return render(user_manager.change_username_template, form=form)
@@ -226,7 +244,7 @@ def login():
 
     # Immediately redirect already logged in users
     if _call_or_get(current_user.is_authenticated) and user_manager.auto_login_at_login:
-        return redirect(next)
+        return safe_redirect(next)
 
     # Initialize form
     login_form = user_manager.login_form(request.form)          # for login.html
@@ -282,7 +300,7 @@ def logout():
 
     # Redirect to logout_next endpoint or '/'
     next = request.args.get('next', _endpoint_url(user_manager.after_logout_endpoint))  # Get 'next' query param
-    return redirect(next)
+    return safe_redirect(next)
 
 
 @login_required
@@ -448,7 +466,7 @@ def register():
         # Redirect if USER_ENABLE_CONFIRM_EMAIL is set
         if user_manager.enable_confirm_email and require_email_confirmation:
             next = request.args.get('next', _endpoint_url(user_manager.after_register_endpoint))
-            return redirect(next)
+            return safe_redirect(next)
 
         # Auto-login after register or redirect to login page
         next = request.args.get('next', _endpoint_url(user_manager.after_confirm_endpoint))
@@ -520,7 +538,7 @@ def invite():
                   form=invite_form)
 
         flash(_('Invitation has been sent.'), 'success')
-        return redirect(next)
+        return safe_redirect(next)
 
     return render(user_manager.invite_template, form=invite_form)
 
@@ -719,7 +737,7 @@ def _do_login_user(user, next, remember_me=False):
     flash(_('You have signed in successfully.'), 'success')
 
     # Redirect to 'next' URL
-    return redirect(next)
+    return safe_redirect(next)
 
 
 def _endpoint_url(endpoint):
