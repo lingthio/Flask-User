@@ -8,6 +8,7 @@ Flask-WTF>=0.9
 
 # Python packages
 bcrypt>=1.1
+cryptography==2.0.3
 itsdangerous>=0.17
 passlib>=1.6.4
-pycryptodome>=3.0
+#pycryptodome>=3.0

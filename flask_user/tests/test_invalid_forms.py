@@ -193,7 +193,7 @@ def test_invalid_confirm_email_page(client):
     # Test Expired token
     um.confirm_email_expiration = 1   # set 1 second expiration
     time.sleep(2)                     # wait for 2 seconds
-    client.get_invalid_page(url, 'Your confirmation token has expired')
+    client.get_invalid_page(url, 'Invalid confirmation token')
 
 
 def test_invalid_login_with_username_form(client):
@@ -383,7 +383,7 @@ def test_invalid_reset_password(client):
     url = url_for('user.reset_password', token=token)
     um.reset_password_expiration = 1    # set 1 second expiration
     time.sleep(2)                       # wait for 2 seconds
-    client.post_invalid_form(url, 'Your reset password token has expired',
+    client.post_invalid_form(url, 'Your reset password token is invalid',
             new_password=new_password, retype_password=new_password)
     um.reset_password_expiration = 2*24*3600  # 2 days
 

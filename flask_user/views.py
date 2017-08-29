@@ -38,19 +38,16 @@ def confirm_email(token):
     # Verify token
     user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter
-    is_valid, has_expired, object_id = user_manager.token_manager.verify_token(
+    data_items = user_manager.token_manager.verify_token(
             token,
             user_manager.confirm_email_expiration)
 
-    if has_expired:
-        flash(_('Your confirmation token has expired.'), 'error')
-        return redirect(url_for('user.login'))
-
-    if not is_valid:
+    if not data_items:
         flash(_('Invalid confirmation token.'), 'error')
         return redirect(url_for('user.login'))
 
     # Confirm email by setting User.email_confirmed_at=utcnow() or UserEmail.email_confirmed_at=utcnow()
+    object_id = data_items[0]
     user = None
     if user_manager.UserEmailClass:
         user_email = user_manager.get_user_email_by_id(object_id)
@@ -537,18 +534,16 @@ def reset_password(token):
     if _call_or_get(current_user.is_authenticated):
         logout_user()
 
-    is_valid, has_expired, user_id = user_manager.token_manager.verify_token(
+    data_items = user_manager.token_manager.verify_token(
             token,
             user_manager.reset_password_expiration)
 
-    if has_expired:
-        flash(_('Your reset password token has expired.'), 'error')
-        return redirect(_endpoint_url(user_manager.login_endpoint))
-
-    if not is_valid:
+    if not data_items:
         flash(_('Your reset password token is invalid.'), 'error')
         return redirect(_endpoint_url(user_manager.login_endpoint))
 
+    # Get User by user ID
+    user_id = data_items[0]
     user = user_manager.get_user_by_id(user_id)
 
     # Mark email as confirmed
@@ -636,7 +631,7 @@ def _send_registered_email(user, user_email, require_email_confirmation=True):
         confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
 
         # Send email
-        user_manager.send_email_registered(user, user_email, confirm_email_link)
+        user_manager.email_manager.send_email_registered(user, user_email, confirm_email_link)
 
         # Prepare one-time system message
         if user_manager.enable_confirm_email and require_email_confirmation:

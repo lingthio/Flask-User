@@ -129,19 +129,22 @@ accessible through the UserManager.email_manager attribute.
 
 TokenManager() changes
 ----------------------
-The v0.6 `_encode_id()` and `_decode_id()` assumed that IDs were limited to 16 digits.
-
+The v0.6 `token_manager.generate_token()` assumed that IDs were limited to 16 digits.
 This limitation has been removed in v1.0, to support Mongo ObjectIDs.
+
+In v1.0, we added the last 8 bytes of the hashed passwords to `token_manager.generate_token()`
+to invalidate tokens when a user changes their password.
 
 As a result, the generated tokens are different, which will affect two areas:
 
-- v0.6 user-sessions that were stored in a browser cookie, are no longer valid in v1.0
+- v0.6 user-session tokens, that were stored in a browser cookie, are no longer valid in v1.0
   and the user will be required to login again.
 
-- v0.6 password tokens that were sent in password reset emails are no longer valid in v1.0
+- v0.6 password-reset tokens, that were sent in password reset emails, are no longer valid in v1.0
   and the user will have to issue a new forgot-password email request.
   This effect is mitigated by the fact that these tokens are meant to expire relatively quickly.
 
+- user-session tokens and password-reset tokens become invalid if the user changes their password.
 
 UserAuth class
 --------------

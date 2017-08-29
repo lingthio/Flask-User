@@ -190,18 +190,18 @@ class UserManager():
             # See https://flask-login.readthedocs.org/en/latest/#how-it-works
             @self.login_manager.user_loader
             def load_user_by_user_token(user_token):
+                user = None
+
                 # decode token
-                is_valid, has_expired, user_id = self.token_manager.verify_token(
+                data_items = self.token_manager.verify_token(
                     user_token,
                     3600)  # timeout in seconds
-                # print("load_user_by_user_token(): is_valid:", is_valid, "has_expired:", has_expired, "user_id:", user_id)
 
-                # verify token
-                if not is_valid or has_expired:
-                    return None
+                # If token is valid and not expired: load user by user ID
+                if data_items:
+                    user_id = data_items[0]
+                    user = self.get_user_by_id(user_id)
 
-                # load user by user ID
-                user = self.get_user_by_id(user_id)
                 return user
 
 

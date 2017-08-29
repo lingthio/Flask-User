@@ -34,6 +34,9 @@ class ConfigClass(object):
     USER_ENABLE_EMAIL = True        # Enable email authentication
     USER_ENABLE_USERNAME = False    # Disable username authentication
 
+    USER_SEND_REGISTERED_EMAIL = False
+    USER_ENABLE_CONFIRM_EMAIL = False
+
 
 def create_app():
     """ Flask application factory """
