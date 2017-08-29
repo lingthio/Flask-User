@@ -14,7 +14,10 @@ except ImportError:
 from .decorators import confirm_email_required, login_required
 from . import emails
 from . import signals
-from .translations import gettext as _
+try:
+    from flask_babelex import gettext as _
+except ImportError:
+    from .translations import gettext as _
 
 
 def _call_or_get(function_or_property):
