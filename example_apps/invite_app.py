@@ -76,8 +76,6 @@ def create_app(test_config=None):                   # For automated tests
         email = db.Column(db.String(255), nullable=False)
         # save the user of the invitee
         invited_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-        # token used for registration page to identify user registering
-        token = db.Column(db.String(100), nullable=False, server_default='')
 
     # Create all database tables
     db.create_all()

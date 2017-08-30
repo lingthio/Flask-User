@@ -188,8 +188,6 @@ add_module_names = False    # Remove module paths from docs
 def skip_member_except_init(app, what, name, obj, skip, options):
     if name == '__init__':
         return False
-    if name == 'init_app':
-        return True
     return skip
 
 # Always show __init__() methods

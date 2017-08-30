@@ -19,10 +19,10 @@ from sys import version_info as py_version
 is_py2 = (py_version[0] == 2)     #: Python 2.x?
 is_py3 = (py_version[0] == 3)     #: Python 3.x?
 if is_py2:
-    from urlparse import urlsplit, urlunsplit
+    from urlparse import urlsplit
     from urllib import quote, unquote
 if is_py3:
-    from urllib.parse import urlsplit, urlunsplit
+    from urllib.parse import urlsplit
     from urllib.parse import quote, unquote
 
 
@@ -108,7 +108,7 @@ def change_password():
 
         # Send 'password_changed' email
         if user_manager.enable_email and user_manager.send_password_changed_email:
-            user_manager.send_email_password_changed(current_user)
+            user_manager.send_password_has_changed_email(current_user)
 
         # Send password_changed signal
         signals.user_changed_password.send(current_app._get_current_object(), user=current_user)
@@ -145,7 +145,7 @@ def change_username():
 
         # Send 'username_changed' email
         if user_manager.enable_email and user_manager.send_username_changed_email:
-            user_manager.send_email_username_changed(current_user)
+            user_manager.send_username_has_changed_email(current_user)
 
         # Send username_changed signal
         signals.user_changed_username.send(current_app._get_current_object(), user=current_user)
@@ -215,7 +215,12 @@ def forgot_password():
         user, user_email = user_manager.find_user_by_email(email)
 
         if user:
-            user_manager.send_reset_password_email(email)
+            if user:
+                # Send forgot password email
+                user_manager.email_manager.send_reset_password_email(user, user_email)
+
+                # Send forgot_password signal
+                signals.user_forgot_password.send(current_app._get_current_object(), user=user)
 
         # Prepare one-time system message
         flash(_("A reset password email has been sent to '%(email)s'. Open that email and follow the instructions to reset your password.", email=email), 'success')
@@ -473,19 +478,9 @@ def invite():
                             })
         db_adapter.commit()
 
-        token = user_manager.token_manager.generate_token(user_invite.id)
-        accept_invite_link = url_for('user.register',
-                                     token=token,
-                                     _external=True)
-
-        # Store token
-        if hasattr(user_manager.UserInvitationClass, 'token'):
-            db_adapter.update_object(user_invite, token=token)
-            db_adapter.commit()
-
         try:
             # Send 'invite' email
-            user_manager.send_email_invite(user_invite, accept_invite_link)
+            user_manager.send_user_invitation_email(user_invite)
         except Exception as e:
             # delete new User object if send fails
             db_adapter.delete_object(user_invite)
@@ -564,7 +559,7 @@ def reset_password(token):
 
         # Send 'password_changed' email
         if user_manager.enable_email and user_manager.send_password_changed_email:
-            user_manager.send_email_password_changed(user)
+            user_manager.send_password_has_changed_email(user)
 
         # Prepare one-time system message
         flash(_("Your password has been reset successfully."), 'success')
@@ -633,7 +628,7 @@ def _send_registered_email(user, user_email, require_email_confirmation=True):
         confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
 
         # Send email
-        user_manager.email_manager.send_email_registered(user, user_email, confirm_email_link)
+        user_manager.email_manager.send_user_has_registered_email(user, user_email, confirm_email_link)
 
         # Prepare one-time system message
         if user_manager.enable_confirm_email and require_email_confirmation:
@@ -649,13 +644,8 @@ def _send_confirm_email(user, user_email):
 
     # Send 'confirm_email' or 'registered' email
     if user_manager.enable_email and user_manager.enable_confirm_email:
-        # Generate confirm email link
-        object_id = user_email.id if user_email else user.id
-        token = user_manager.token_manager.generate_token(object_id)
-        confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
-
         # Send email
-        user_manager.email_manager.send_email_confirm_email(user, user_email, confirm_email_link)
+        user_manager.email_manager.send_email_confirmation_email(user, user_email)
 
         # Prepare one-time system message
         email = user_email.email if user_email else user.email

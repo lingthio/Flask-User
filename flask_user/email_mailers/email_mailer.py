@@ -16,14 +16,18 @@ class SendEmailError(Exception):
     pass
 
 
-class EmailAdapter(object):
-    """ Define the EmailAdapter interface to send emails through specific email mailers."""
+class EmailMailer(object):
+    """ Define the EmailMailer interface to send emails through specific email mailers."""
 
-    def __init__(self, app):
+    def __init__(self, app, sender_email=None, sender_name=None):
         """Setup an email mailer.
 
         Args:
             app: The Flask application instance.
+            sender_email: The sender's email address.
+            sender_name: The sender's name.
+
+        The from: field will appear as "{{sender_name}} <{{sender_email}}>".
         """
         pass
 

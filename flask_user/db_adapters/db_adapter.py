@@ -16,9 +16,9 @@ class DbAdapter(object):
     def __init__(self, db):
         """Specify the database object-mapper instance ``db``.
 
-        | Examples:
+        | Example:
         |     db = SQLAlchemy()
-        |     db_adapter = SQLAlchemyDbAdapter(db)
+        |     db_adapter = DbAdapterForSQLAlchemy(db)
         """
         self.db = db
 

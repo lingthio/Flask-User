@@ -7,14 +7,13 @@
 
 
 
-from flask import Blueprint, current_app, Flask, url_for, render_template
+from flask import Blueprint, current_app, Flask, render_template
 from flask_login import LoginManager, current_user
 
-from flask_user.managers.email_manager import EmailManager
-from flask_user.managers.password_manager import PasswordManager
-from flask_user.managers.token_manager import TokenManager
+from flask_user.email_manager import EmailManager
+from flask_user.password_manager import PasswordManager
+from flask_user.token_manager import TokenManager
 from . import forms
-from . import signals
 from . import translations
 from . import views
 from .translations import get_translations
@@ -92,9 +91,7 @@ class UserManager():
                  # Misc
                  login_manager = None,
                  password_crypt_context = None,
-                 send_email_function = None,
                  make_safe_url_function = views.make_safe_url):
-        """ Initialize UserManager,."""
 
         # See http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code
         # Perform Class type checking
@@ -106,17 +103,17 @@ class UserManager():
         # Configure a DbAdapter based on the class of the 'db' parameter
         from flask_sqlalchemy import SQLAlchemy
         if isinstance(db, SQLAlchemy):
-            from .db_adapters import SQLAlchemyDbAdapter
-            self.db_adapter = SQLAlchemyDbAdapter(db)
+            from .db_adapters import DbAdapterForSQLAlchemy
+            self.db_adapter = DbAdapterForSQLAlchemy(db)
 
         from flask_mongoalchemy import MongoAlchemy
         if isinstance(db, MongoAlchemy):
-            from .db_adapters import MongoAlchemyDbAdapter
-            self.db_adapter = MongoAlchemyDbAdapter(db)
+            from .db_adapters import DbAdapterForMongoAlchemy
+            self.db_adapter = DbAdapterForMongoAlchemy(db)
 
-        # Configure FlaskMailEmailAdapter as the defaule email mailer
-        from .email_adapters.flask_mail_email_adapter import FlaskMailEmailAdapter
-        self.email_adapter = FlaskMailEmailAdapter(app)
+        # Configure EmailMailerForFlaskMail as the defaule email mailer
+        from .email_mailers.email_mailer_for_flask_mail import EmailMailerForFlaskMail
+        self.email_mailer = EmailMailerForFlaskMail(app)
 
         # Start moving the Model attributes from db_adapter to user_manager
         self.db = db
@@ -184,14 +181,13 @@ class UserManager():
         # Misc
         self._create_default_attr('login_manager', login_manager)
         self._create_default_attr('password_crypt_context', password_crypt_context)
-        self._create_default_attr('send_email_function', send_email_function)
         self._create_default_attr('make_safe_url_function', make_safe_url_function)
 
         # Setup PasswordManager
         self.password_manager = PasswordManager(self.password_crypt_context, self.password_hash_scheme, self.password_hash_mode, self.password_salt)
 
         # Setup EmailManager
-        self.email_manager = EmailManager(self, self.send_email_function)
+        self.email_manager = EmailManager(self)
 
         # Setup TokenManager
         self.token_manager = TokenManager(app.config['SECRET_KEY'])
@@ -225,7 +221,7 @@ class UserManager():
 
 
     def customize(self, app):
-        """ Define custom Flask-User functionality
+        """ Override default Flask-User behavior with custom behavior.
 
         ::
 
@@ -447,20 +443,6 @@ class UserManager():
                 return True
         # See if new_username is available
         return self.find_user_by_username(new_username)==None
-
-    def send_reset_password_email(self, email):
-        # Find user by email
-        user, user_email = self.find_user_by_email(email)
-        if user:
-            # Generate reset password link
-            token = self.token_manager.generate_token(user.id)
-            reset_password_link = url_for('user.reset_password', token=token, _external=True)
-
-            # Send forgot password email
-            self.email_manager.send_email_forgot_password(user, user_email, reset_password_link)
-
-            # Send forgot_password signal
-            signals.user_forgot_password.send(current_app._get_current_object(), user=user)
 
     def get_primary_user_email(self, user):
         db_adapter = self.db_adapter

@@ -1,10 +1,11 @@
 Flask-User API
 ==============
 
-- UserManager_
-- DbAdapter_
-- EmailAdapter_
-- TokenManager_
+- :ref:`UserManager`
+- :ref:`EMailManager`
+- :ref:`TokenManager`
+- :ref:`DbAdapter`
+- :ref:`EmailMailer`
 
 .. define a newline macro
 .. |br| raw:: html
@@ -15,14 +16,55 @@ Flask-User API
 
 .. _UserManager:
 
-UserManager
------------
+UserManager class
+-----------------
 
 This is the main class that implements most of Flask-User's functionality.
 
 Flask-User can be customized by extending methods such as the ``customize()`` method
 
 .. autoclass:: flask_user.user_manager.UserManager
+    :members:
+    :inherited-members:
+    :undoc-members:
+
+--------
+
+.. _EmailManager:
+
+EmailManager class
+------------------
+
+The EmailManager manages the emails the Flask-User sends:
+
+- ‘email confirmation’ email.
+- ‘password has changed’ notification email.
+- ‘reset password’ email.
+- ‘user has registered’ notification email.
+- ‘user invitation’ email.
+- ‘username has changed’ notification email.
+
+.. autoclass:: flask_user.email_manager.EmailManager
+    :members:
+    :inherited-members:
+    :undoc-members:
+
+--------
+
+.. _TokenManager:
+
+TokenManager class
+------------------
+
+The TokenManager generates and verifies timestamped, signed and encrypted tokens.
+
+These tokens are used in the following places:
+
+* To securely store User IDs in the browser session cookie.
+* To provide secure tokens in email-confirmation emails.
+* To provide secure tokens in reset-password emails.
+
+.. autoclass:: flask_user.token_manager.TokenManager
     :members:
     :inherited-members:
     :undoc-members:
@@ -38,9 +80,10 @@ The DbAdapter class defines an interface to find, add, update and remove
 persistent database objects
 while shielding the Flask-User code from the underlying implementation.
 
-The :ref:`SQLAlchemyDbAdapter` class implements this interface for Flask-SQLAlchemy.
+Included implementations:
 
-The :ref:`MongoAlchemyDbAdapter` class implements this interface for Flask-MongoAlchemy.
+- :ref:`DbAdapterForSQLAlchemy`
+- :ref:`DbAdapterForMongoAlchemy`
 
 Other databases can be supported by adding additional interface implementation classes.
 
@@ -51,40 +94,23 @@ Other databases can be supported by adding additional interface implementation c
 
 --------
 
-.. _EmailAdapter:
+.. _EmailMailer:
 
-EmailAdapter interface
+EmailMailer interface
 ----------------------
-The EmailAdapter class defines an interface to send email messages
+The EmailMailer class defines an interface to send email messages
 while shielding the Flask-User code from the underlying implementation.
 
-The :ref:`FlaskMailEmailAdapter` class implements this interface for Flask-Mail.
+Included implementations:
 
-The :ref:`FlaskSendmailEmailAdapter` class implements this interface for Flask-Sendmail.
+- :ref:`EmailMailerForFlaskMail`
+- :ref:`EmailMailerForFlaskSendmail`
+- :ref:`EmailMailerForSendgrid`
 
 Other email mailers can be supported by adding additional interface implementation classes.
 
-.. autoclass:: flask_user.email_adapters.email_adapter.EmailAdapter
+.. autoclass:: flask_user.email_mailers.email_mailer.EmailMailer
     :members:
     :inherited-members:
     :undoc-members:
 
---------
-
-.. _TokenManager:
-
-TokenManager
-------------
-
-The TokenManager generates and verifies timestamped, signed and encrypted tokens.
-
-These tokens are used in the following places:
-
-* To securely store User IDs in the browser session cookie.
-* To provide secure tokens in email-confirmation emails.
-* To provide secure tokens in reset-password emails.
-
-.. autoclass:: flask_user.managers.token_manager.TokenManager
-    :members:
-    :inherited-members:
-    :undoc-members:

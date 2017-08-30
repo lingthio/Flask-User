@@ -51,7 +51,6 @@ UserManager()
             # Miscellaneous
             login_manager                   = LoginManager(),
             password_crypt_context          = None,
-            send_email_function             = emails.send_email,
             make_safe_url_function          = views.make_safe_url,
             token_manager                   = tokens.TokenManager(),
             )

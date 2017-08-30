@@ -10,16 +10,20 @@ from __future__ import print_function
 import smtplib
 import socket
 
-from .email_adapter import EmailAdapter, SendEmailError
+from .email_mailer import EmailMailer, SendEmailError
 
 
-class FlaskMailEmailAdapter(EmailAdapter):
-    """ Implements the EmailAdapter interface to send emails through Flask-Mail."""
-    def __init__(self, app):
+class EmailMailerForFlaskMail(EmailMailer):
+    """ Implements the EmailMailer interface to send emails with SMTP using Flask-Mail."""
+    def __init__(self, app, sender_email=None, sender_name=None):
         """Setup Flask-Mail.
 
         Args:
             app: The Flask application instance.
+            sender_email: The sender's email address.
+            sender_name: The sender's name.
+
+        The from: field will appear as "{{sender_name}} <{{sender_email}}>".
         """
 
         try:

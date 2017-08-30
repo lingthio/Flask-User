@@ -1,0 +1,207 @@
+"""Manager for generating and verifying tokens.
+
+This module contains a manager class to generate and verify tokens.
+
+:copyright: (c) 2013 by Ling Thio
+:author: Ling Thio (ling.thio@gmail.com)
+:license: Simplified BSD License, see LICENSE.txt for more details.
+"""
+
+import base64
+from cryptography.fernet import Fernet, InvalidToken
+import string
+
+class TokenManager(object):
+    """Generate and verify timestamped, signed and encrypted tokens. """
+
+    # *** Constants ***
+
+    # URL-safe characters are letters, digits, '-', '_', '.', '~'.
+    ALPHABET = string.ascii_uppercase + string.ascii_lowercase + string.digits + '-_'
+    ALPHABET_REVERSE = dict((c, i) for (i, c) in enumerate(ALPHABET))
+    BASE = len(ALPHABET)
+    SEPARATOR = '$'
+
+    # *** Public methods ***
+
+    def __init__(self, flask_secret_key):
+        """Initialize the TokenManager class
+
+        Args:
+            flask_secret_key (str): The secret key used to encrypt and decrypt tokens.
+                This is typically Flask's SECRET_KEY setting.
+                Preferably 32 bytes or longer, but spaces will be padded if needed.
+        """
+
+        # Generate a 32-byte base-64 key from the Flask SECRET_KEY
+        long_key = flask_secret_key.encode() + b' '*32    # Make sure the key is at least 32 bytes long
+        key32 = long_key[:32]
+        base64_key32 = base64.urlsafe_b64encode(key32)
+
+        # Create a Fernet cypher to encrypt data -- basically AES128 in CBC mode,
+        # Encrypt, timestamp, sign, and base64-encode
+        self.fernet = Fernet(base64_key32)
+
+    def generate_token(self, *args):
+        """ Converts a list of integers or strings, specified by ``*args``, into an encrypted, timestamped, and signed token.
+
+        Implemented as::
+
+            concatenated_str = self.encode_data_items(*args)
+            token = self.encrypt_string(concatenated_str)
+            return token
+
+        Example:
+
+        ::
+
+            # Combine User ID with 8 password bytes to invalidate tokens when passwords change.
+            user_id = user.id
+            password_ends_with = user.password[-8:0]
+            token = token_manager.generate_token(user_id, password_ends_with)
+        """
+        concatenated_str = self.encode_data_items(*args)
+        token = self.encrypt_string(concatenated_str)
+        return token
+
+    def verify_token(self, token, expiration_in_seconds):
+        """ Verify token signature, verify token expiration, and decrypt token.
+
+        | Returns None if token is expired or invalid.
+        | Returns a list of strings and integers on success.
+
+        Implemented as::
+
+            concatenated_str = self.decrypt_string(token, expiration_in_seconds)
+            data_items = self.decode_data_items(concatenated_str)
+            return data_items
+
+        Example:
+
+        ::
+
+            # Verify that a User with ``user_id`` has a password that ends in ``password_ends_with``.
+            token_is_valid = False
+            data_items = token_manager.verify(token, expiration_in_seconds)
+            if data_items:
+                user_id = data_items[0]
+                password_ends_with = data_items[1]
+                user = db_adapter.get_user_by_id(user_id)
+                token_is_valid = user and user.password[-8:]==password_ends_with
+        """
+
+        try:
+            concatenated_str = self.decrypt_string(token, expiration_in_seconds)
+            data_items = self.decode_data_items(concatenated_str)
+        except InvalidToken:
+            data_items = None
+
+        return data_items
+
+    def encrypt_string(self, concatenated_str):
+        """Timestamp, sign and encrypt a string into a token using ``cryptography.fernet.Fernet()``."""
+
+        # Convert string to bytes
+        concatenated_bytes = concatenated_str.encode()
+
+        # Encrypt, timestamp, sign, and base64-encode
+        encrypted_bytes = self.fernet.encrypt(concatenated_bytes)
+
+        # Convert bytes to string
+        encrypted_str = encrypted_bytes.decode('utf-8')
+
+        # Remove '=' padding if needed
+        token_str = encrypted_str.strip('=')
+        return token_str
+
+    def decrypt_string(self, token_str, expiration_in_seconds):
+        """Verify signature, verify timestamp, and decrypts a token using ``cryptography.fernet.Fernet()``."""
+
+        # Add '=' padding if needed
+        if len(token_str) % 4:
+            token_str += '=' * (4 - len(token_str) % 4)
+
+        # Convert string to bytes
+        encrypted_bytes = token_str.encode()
+
+        # Verify signature, verify expiration, and decrypt using ``cryptography.fernet.Fernet()``
+        concatenated_bytes = self.fernet.decrypt(encrypted_bytes, expiration_in_seconds)
+        concatenated_str = concatenated_bytes.decode('utf-8')
+
+        return concatenated_str
+
+    def encode_data_items(self, *args):
+        """ Encodes a list of integers and strings into a concatenated string.
+
+        - encode string items as-is
+        - encode integer items as a '#' character, followed by a base-64 representation
+        - concatenate encoded items with a '$' separator
+
+        Example:
+            ``encode_data_items('abc', 123, 'xyz')`` returns ``'abc$#B7$xyz'``
+        """
+        str_list = []
+        for arg in args:
+
+            # encode integer items as base-64 strings with a '#' character in front
+            if isinstance(arg, int):
+                str = '#' + self.encode_int(arg)
+
+            # encode string items as-is
+            else:
+                str = arg
+
+            str_list.append(str)
+
+        # Concatenate strings with '$' separators
+        concatenated_str = self.SEPARATOR.join(str_list)
+
+        return concatenated_str
+
+    def decode_data_items(self, concatenated_str):
+        """Decodes a concatenated string into a list of integers and strings.
+
+        Example:
+            ``decode_data_items('abc$#B7$xyz')`` returns ``['abc', 123, 'xyz']``
+        """
+        str_list = concatenated_str.split('$')
+
+        data_items = []
+        for str in str_list:
+
+            # '#base-64-strings' are decoded into integers.
+            if len(str)>=1 and str[0]=='#':
+                item = self.decode_int(str[1:])
+
+            # Strings are decoded as-is.
+            else:
+                item = str
+
+            data_items.append(item)
+
+        # Return list of data items
+        return data_items
+
+    def encode_int(self, n):
+        """ Encodes an integer into a short Base64 string.
+
+        Example:
+            ``encode_int(123)`` returns ``'B7'``.
+        """
+        str = []
+        while True:
+            n, r = divmod(n, self.BASE)
+            str.append(self.ALPHABET[r])
+            if n == 0: break
+        return ''.join(reversed(str))
+
+    def decode_int(self, str):
+        """ Decodes a short Base64 string into an integer.
+
+        Example:
+            ``decode_int('B7')`` returns ``123``.
+        """
+        n = 0
+        for c in str:
+            n = n * self.BASE + self.ALPHABET_REVERSE[c]
+        return n

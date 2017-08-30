@@ -5,36 +5,41 @@ class UserMixin(LoginUserMixin):
     """ This class adds methods to the User model class required by Flask-Login and Flask-User."""
 
     def get_id(self):
-        """ Converts a User ID and parts of a User password hash to a token """
+        """Converts a User ID and parts of a User password hash to a token."""
+
         # This function is used by Flask-Login to store a User ID securely as a browser cookie.
         # It encrypts
         # - the User ID (to retrieve the User later), and
         # - part of the User hashed password (to invalidate the token after a password change)
-        # It works in tandem with UserMixin.get_user_by_token()
+        # This function works in tandem with UserMixin.get_user_by_token()
         user_manager = current_app.user_manager
+        user_id = self.id
+        password_ends_with = self.password[-8:]
         user_token = user_manager.token_manager.generate_token(
-            self.id,              # User ID
-            self.password[-8:]    # Last 8 characters of user password
+            user_id,               # User ID
+            password_ends_with,    # Last 8 characters of user password
         )
         # print("UserMixin.get_id: ID:", self.id, "token:", user_token)
         return user_token
 
     @classmethod
     def get_user_by_token(cls, token, expiration_in_seconds):
+        # This function works in tandem with UserMixin.get_id()
+
         # Verifies a token and decrypts a User ID and parts of a User password hash
         user_manager = current_app.user_manager
         data_items = user_manager.token_manager.verify_token(token, expiration_in_seconds)
 
-        # If token is valid and not expired: load user by user ID
+        # Verify password_ends_with
+        token_is_valid = False
         if data_items:
             user_id = data_items[0]
-            partial_password = data_items[1]
+            password_ends_with = data_items[1]
             user = user_manager.get_user_by_id(user_id)
             # Make sure that last 8 characters of user password matches
-            if user and user.password[-8:]!=partial_password:
-                user = None
+            token_is_valid = user and user.password[-8:]==password_ends_with
 
-        return user
+        return user if token_is_valid else None
 
     def has_role(self, *specified_role_names):
         """ Return True if the user has one of the specified roles. Return False otherwise.
