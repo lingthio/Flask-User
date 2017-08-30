@@ -3,6 +3,7 @@ Flask-User API
 
 - UserManager_
 - DbAdapter_
+- EmailAdapter_
 - TokenManager_
 
 .. define a newline macro
@@ -19,23 +20,7 @@ UserManager
 
 This is the main class that implements most of Flask-User's functionality.
 
-Flask-User can be customized by extending methods such as the ``customize()`` method::
-
-    # Setup Flask
-    app = Flask(__name__)
-
-    # Setup SQLAlchemy
-    db = SQLAlchemy(app)
-
-    # Customize Flask-User
-    class MyCustomFlaskUser(FlaskUser):
-        def customize():
-            # Add customization here
-            self.token_manager = MyJwtTokenManager()
-            self.email_manager = MySendGridEmailManager()
-
-    # Setup Flask-User
-    user_manager = MyCustomFlaskUser(app, db, User)
+Flask-User can be customized by extending methods such as the ``customize()`` method
 
 .. autoclass:: flask_user.user_manager.UserManager
     :members:
@@ -46,19 +31,40 @@ Flask-User can be customized by extending methods such as the ``customize()`` me
 
 .. _DbAdapter:
 
-DbAdapter
----------
+DbAdapter interface
+-------------------
 
-The DbAdapter class defines an interface to find, add, update and remove persistent
-database objects while shielding the Flask-User code from the underlying implementation.
+The DbAdapter class defines an interface to find, add, update and remove
+persistent database objects
+while shielding the Flask-User code from the underlying implementation.
 
-The :ref:`SQLAlchemyDbAdapter` class implements the DbAdapter interface for SQLAlchemy.
+The :ref:`SQLAlchemyDbAdapter` class implements this interface for Flask-SQLAlchemy.
 
-The :ref:`MongoAlchemyDbAdapter` class implements the DbAdapter interface for MongoAlchemy.
+The :ref:`MongoAlchemyDbAdapter` class implements this interface for Flask-MongoAlchemy.
 
 Other databases can be supported by adding additional interface implementation classes.
 
 .. autoclass:: flask_user.db_adapters.db_adapter.DbAdapter
+    :members:
+    :inherited-members:
+    :undoc-members:
+
+--------
+
+.. _EmailAdapter:
+
+EmailAdapter interface
+----------------------
+The EmailAdapter class defines an interface to send email messages
+while shielding the Flask-User code from the underlying implementation.
+
+The :ref:`FlaskMailEmailAdapter` class implements this interface for Flask-Mail.
+
+The :ref:`FlaskSendmailEmailAdapter` class implements this interface for Flask-Sendmail.
+
+Other email mailers can be supported by adding additional interface implementation classes.
+
+.. autoclass:: flask_user.email_adapters.email_adapter.EmailAdapter
     :members:
     :inherited-members:
     :undoc-members:

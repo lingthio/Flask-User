@@ -3,7 +3,9 @@ from __future__ import print_function
 from .db_adapter import DbAdapter
 
 class MongoAlchemyDbAdapter(DbAdapter):
-    """ Shield code from MongoAlchemy specific ORM calls."""
+    """ Implements the DbAdapter interface to find, add, update and delete
+    database objects using Flask-MongoAlchemy.
+    """
 
     # Some methods are defined in the DbAdapter base class.
 

@@ -43,15 +43,10 @@ setup(
     install_requires=[
         'Flask>=0.9',
         'Flask-Login>=0.3',
-        'Flask-Babel>=0.9',
-        'Flask-Mail>=0.9',
-        'Flask-SQLAlchemy>=1.0',
-        'Flask-MongoAlchemy>=0.7',
         'Flask-WTF>=0.9',
         'bcrypt>=1.1',
         'cryptography>=2.0',
         'passlib>=1.6',
-        'speaklater>=1.3',
     ],
     test_suite="flask_user.tests.run_tests",
 )

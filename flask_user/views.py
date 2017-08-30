@@ -1,8 +1,10 @@
 """ This file contains view functions for Flask-User forms.
+"""
 
-    :copyright: (c) 2013 by Ling Thio
-    :author: Ling Thio (ling.thio@gmail.com)
-    :license: Simplified BSD License, see LICENSE.txt for more details."""
+# Copyright (c) 2013 by Ling Thio
+# Author: Ling Thio (ling.thio@gmail.com)
+# License: Simplified BSD License, see LICENSE.txt for more details.
+
 
 from datetime import datetime
 from flask import current_app, flash, redirect, request, url_for

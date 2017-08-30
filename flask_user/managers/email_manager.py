@@ -1,9 +1,11 @@
 """ This file contains email sending functions for Flask-User.
     It uses Jinja2 to render email subject and email message. It uses Flask-Mail to send email.
+"""
 
-    :copyright: (c) 2013 by Ling Thio
-    :author: Ling Thio (ling.thio@gmail.com)
-    :license: Simplified BSD License, see LICENSE.txt for more details."""
+# Copyright (c) 2013 by Ling Thio
+# Author: Ling Thio (ling.thio@gmail.com)
+# License: Simplified BSD License, see LICENSE.txt for more details.
+
 
 import smtplib
 import socket
@@ -21,36 +23,10 @@ class EmailManager(object):
             self.send_email_function = self.send_email
 
     def send_email(self, recipient, subject, html_message, text_message):
-        """ Send email from default sender to 'recipient' """
-
-        class SendEmailError(Exception):
-            pass
-
-        # Make sure that Flask-Mail has been installed
-        try:
-            from flask_mail import Message
-        except:
-            raise SendEmailError("Flask-Mail has not been installed. Use 'pip install Flask-Mail' to install Flask-Mail.")
-
-        # Make sure that Flask-Mail has been initialized
-        mail_engine = current_app.extensions.get('mail', None)
-        if not mail_engine:
-            raise SendEmailError('Flask-Mail has not been initialized. Initialize Flask-Mail or disable USER_SEND_PASSWORD_CHANGED_EMAIL, USER_SEND_REGISTERED_EMAIL and USER_SEND_USERNAME_CHANGED_EMAIL')
-
-        try:
-
-            # Construct Flash-Mail message
-            message = Message(subject,
-                    recipients=[recipient],
-                    html = html_message,
-                    body = text_message)
-            mail_engine.send(message)
-
-        # Print helpful error messages on exceptions
-        except (socket.gaierror, socket.error) as e:
-            raise SendEmailError('SMTP Connection error: Check your MAIL_SERVER and MAIL_PORT settings.')
-        except smtplib.SMTPAuthenticationError:
-            raise SendEmailError('SMTP Authentication error: Check your MAIL_USERNAME and MAIL_PASSWORD settings.')
+        # Send email using the configured EmailAdapter.
+        self.user_manager.email_adapter.send_email_message(
+            recipient, subject, html_message, text_message,
+        )
 
     def send_email_confirm_email(self, user, user_email, confirm_email_link):
         # Verify certain conditions
@@ -163,6 +139,47 @@ class EmailManager(object):
         self.send_email_function(user.email, subject, html_message, text_message)
 
 
+
+def send_email_via_flask_mail(recipient, subject, html_message, text_message):
+    """ Send email via Flask-Mail.
+
+    Args:
+        recipient: Email address or tuple of (Name, Email-address).
+        subject: Subject line.
+        html_message: The message body in HTML.
+        text_message: The message body in plain text.
+    """
+
+    # Define the SendMailError exception
+    class SendEmailError(Exception):
+        pass
+
+    # Make sure that Flask-Mail has been installed
+    try:
+        from flask_mail import Message
+    except:
+        raise SendEmailError("Flask-Mail has not been installed. Use 'pip install Flask-Mail' to install Flask-Mail.")
+
+    # Make sure that Flask-Mail has been initialized
+    mail_engine = current_app.extensions.get('mail', None)
+    if not mail_engine:
+        raise SendEmailError(
+            'Flask-Mail has not been initialized. Initialize Flask-Mail or disable USER_SEND_PASSWORD_CHANGED_EMAIL, USER_SEND_REGISTERED_EMAIL and USER_SEND_USERNAME_CHANGED_EMAIL')
+
+    try:
+
+        # Construct Flash-Mail message
+        message = Message(subject,
+                          recipients=[recipient],
+                          html=html_message,
+                          body=text_message)
+        mail_engine.send(message)
+
+    # Print helpful error messages on exceptions
+    except (socket.gaierror, socket.error) as e:
+        raise SendEmailError('SMTP Connection error: Check your MAIL_SERVER and MAIL_PORT settings.')
+    except smtplib.SMTPAuthenticationError:
+        raise SendEmailError('SMTP Authentication error: Check your MAIL_USERNAME and MAIL_PASSWORD settings.')
 
 
 def _render_email(filename, **kwargs):

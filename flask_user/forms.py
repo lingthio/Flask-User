@@ -1,8 +1,10 @@
 """ This file defines and validates Flask-User forms. Forms are based on the WTForms module.
+"""
 
-    :copyright: (c) 2013 by Ling Thio
-    :author: Ling Thio (ling.thio@gmail.com)
-    :license: Simplified BSD License, see LICENSE.txt for more details."""
+# Copyright (c) 2013 by Ling Thio
+# Author: Ling Thio (ling.thio@gmail.com)
+# License: Simplified BSD License, see LICENSE.txt for more details.
+
 
 import string
 from flask import current_app

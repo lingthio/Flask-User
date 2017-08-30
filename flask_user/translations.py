@@ -1,8 +1,10 @@
 """ This file contains functions to translate strings for Flask-User.
+"""
 
-    :copyright: (c) 2013 by Ling Thio
-    :author: Ling Thio (ling.thio@gmail.com)
-    :license: Simplified BSD License, see LICENSE.txt for more details."""
+# Copyright (c) 2013 by Ling Thio
+# Author: Ling Thio (ling.thio@gmail.com)
+# License: Simplified BSD License, see LICENSE.txt for more details.
+
 
 from flask import _request_ctx_stack, current_app
 

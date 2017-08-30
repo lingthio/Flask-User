@@ -2,7 +2,6 @@ import os
 import datetime
 from flask import Flask, render_template_string, request
 from flask_babel import Babel
-from flask_mail import Mail
 from flask_user import login_required, UserManager, UserMixin
 from flask_user import roles_required, confirm_email_required
 
@@ -158,7 +157,6 @@ def init_app(app, test_config=None):                # For automated tests
 
     # Initialize Flask extensions
     babel = Babel(app)                              # Initialize Flask-Babel
-    mail = Mail(app)                                # Initialize Flask-Mail
 
     # Reset all the database tables
     if ORM_type == 'SQLAlchemy':

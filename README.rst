@@ -45,20 +45,20 @@ Flask-User requires the following Python packages:
 
 - cryptography 2.0+
 - Flask 0.9+
-- Flask-Babel 0.9+
 - Flask-Login 0.3+
-- Flask-Mail 0.9+
-- Flask-SQLAlchemy 1.0+
-- Flask-MongoAlchemy 0.7+
 - Flask-WTF 0.9+
 - passlib 1.6+
-- speaklater 1.3+
 
 Optionally:
 
 - blinker 1.3+ -- for Event Notification
-- Flask-Sendmail
+- Flask-Babel 0.9+ -- for translations
+- Flask-Mail 0.9+ -- for sending mail with SMTP
+- Flask-MongoAlchemy 0.7+ -- for MongoAlchemy applications
+- Flask-Sendmail -- for sending mail with sendmail
+- Flask-SQLAlchemy 1.0+ -- for SQLAlchemy applications
 - py-bcript 0.4+ -- for fast bcrypt encryption
+- speaklater 1.3+ -- for translations
 
 Alternatives
 ------------

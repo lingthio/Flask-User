@@ -1,8 +1,10 @@
 """ Flask-User is a customizable user account management extension for Flask.
+"""
 
-    :copyright: (c) 2013 by Ling Thio
-    :author: Ling Thio (ling.thio@gmail.com)
-    :license: Simplified BSD License, see LICENSE.txt for more details."""
+# Copyright (c) 2013 by Ling Thio
+# Author: Ling Thio (ling.thio@gmail.com)
+# License: Simplified BSD License, see LICENSE.txt for more details.
+
 
 
 from flask import Blueprint, current_app, Flask, url_for, render_template
@@ -95,7 +97,13 @@ class UserManager():
         """ Initialize UserManager,."""
 
         # See http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code
+        # Perform Class type checking
+        if not isinstance(app, Flask):
+            raise TypeError("flask_user.UserManager.init_app(): Parameter 'app' is an instance of class '%s' "
+                            "instead of a subclass of class 'flask.Flask'."
+                            % app.__class__.__name__)
 
+        # Configure a DbAdapter based on the class of the 'db' parameter
         from flask_sqlalchemy import SQLAlchemy
         if isinstance(db, SQLAlchemy):
             from .db_adapters import SQLAlchemyDbAdapter
@@ -106,11 +114,9 @@ class UserManager():
             from .db_adapters import MongoAlchemyDbAdapter
             self.db_adapter = MongoAlchemyDbAdapter(db)
 
-        # Perform Class type checking
-        if not isinstance(app, Flask):
-            raise TypeError("flask_user.UserManager.init_app(): Parameter 'app' is an instance of class '%s' "
-                            "instead of a subclass of class 'flask.Flask'."
-                            % app.__class__.__name__)
+        # Configure FlaskMailEmailAdapter as the defaule email mailer
+        from .email_adapters.flask_mail_email_adapter import FlaskMailEmailAdapter
+        self.email_adapter = FlaskMailEmailAdapter(app)
 
         # Start moving the Model attributes from db_adapter to user_manager
         self.db = db
@@ -219,7 +225,21 @@ class UserManager():
 
 
     def customize(self, app):
-        """ This method can be overridden to set Flask-User settings """
+        """ Define custom Flask-User functionality
+
+        ::
+
+            # Customize Flask-User
+            class MyCustomFlaskUser(FlaskUser):
+                def customize():
+                    # Add customization here
+                    self.token_manager = MyJwtTokenManager()
+                    self.email_manager = MySendGridEmailManager()
+
+            # Setup Flask-User
+            user_manager = MyCustomFlaskUser(app, db, User)
+        """
+
         pass
     
     

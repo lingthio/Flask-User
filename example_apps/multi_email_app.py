@@ -1,6 +1,5 @@
 import os
 from flask import Flask, render_template_string
-from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import login_required, UserManager, UserMixin, SQLAlchemyAdapter
 
@@ -38,7 +37,6 @@ def create_app():
 
     # Initialize Flask extensions
     db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
-    mail = Mail(app)                                # Initialize Flask-Mail
 
     # Define the User data model. Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):

@@ -1,9 +1,11 @@
 """ This file creates event notification signals for Flask-User.
     Signals are based on Flask.signals which are based on the blinker signals.
+"""
 
-    :copyright: (c) 2013 by Ling Thio
-    :author: Ling Thio (ling.thio@gmail.com)
-    :license: Simplified BSD License, see LICENSE.txt for more details."""
+# Copyright (c) 2013 by Ling Thio
+# Author: Ling Thio (ling.thio@gmail.com)
+# License: Simplified BSD License, see LICENSE.txt for more details.
+
 
 from flask.signals import Namespace
 

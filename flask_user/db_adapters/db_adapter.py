@@ -1,13 +1,17 @@
 """ This file shields Flask-User code from database/ORM specific functions.
+"""
 
-    :copyright: (c) 2013 by Ling Thio
-    :author: Ling Thio (ling.thio@gmail.com)
-    :license: Simplified BSD License, see LICENSE.txt for more details."""
+# Copyright (c) 2013 by Ling Thio
+# Author: Ling Thio (ling.thio@gmail.com)
+# License: Simplified BSD License, see LICENSE.txt for more details.
+
 
 from __future__ import print_function
 
 class DbAdapter(object):
-    """ Shield Flask-User code from database specific calls."""
+    """ Define the DbAdapter interface to find, add, update and delete
+    database objects using a specific object-database mapper.
+    """
 
     def __init__(self, db):
         """Specify the database object-mapper instance ``db``.
