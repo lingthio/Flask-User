@@ -1,8 +1,9 @@
 """ Flask-User is a customizable user account management extension for Flask.
+"""
 
-    :copyright: (c) 2013 by Ling Thio
-    :author: Ling Thio (ling.thio@gmail.com)
-    :license: Simplified BSD License, see LICENSE.txt for more details."""
+# Copyright: (c) 2013 by Ling Thio
+# Author:    Ling Thio (ling.thio@gmail.com)
+# License:   Simplified BSD License, see LICENSE.txt for more details."""
 
 from .user_mixin import UserMixin
 from .user_manager import UserManager

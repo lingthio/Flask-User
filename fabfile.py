@@ -18,12 +18,6 @@ def update_babel():
     local('pybabel compile -f --domain=flask_user --directory flask_user/translations')
 
 @task
-def docs():
-    local('cp example_apps/*_app.py docs/source/includes/.')
-    local('sphinx-build -b html docs/source ../builds/flask_user1/docs')
-    local('cd ../builds/flask_user1/docs && zip -u -r flask_user1_docs *')
-
-@task
 def test():
     # Requires "pip install pytest"
     local('py.test flask_user/tests/')
@@ -34,10 +28,22 @@ def cov():
     local('py.test --cov flask_user --cov-report term-missing --cov-config flask_user/tests/.coveragerc flask_user/tests/')
 
 @task
+def docs(rebuild=False):
+    local('cp example_apps/*_app.py docs/source/includes/.')
+    options=''
+    if rebuild:
+        options += ' -E'
+    local('sphinx-build -b html -a {options} docs/source ../builds/flask_user1/docs'.format(options=options))
+    local('cd ../builds/flask_user1/docs && zip -u -r flask_user1_docs *')
+
+@task
 def rebuild_docs():
     local('cp example_apps/*_app.py docs/source/includes/.')
     local('sphinx-build -b html -a -E docs/source ../builds/flask_user1/docs')
     local('cd ../builds/flask_user1/docs && zip -u -r flask_user1_docs *')
+
+# sphinx-apidoc -f -o docs/source flask_user flask_user/tests flask_user/db_adapters
+# rm docs/source/flask_user.rst docs/source/modules.rst
 
 @task
 def upload_to_pypi():

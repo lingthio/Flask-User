@@ -23,7 +23,7 @@ Flask-User ships with the following languages:
 
 
 REQUIRED: Installing Flask-Babel
---------
+--------------------------------
 Flask-User relies on the Flask-Babel package to translate the account management forms.
 Without Flask-Babel installed, these forms WILL NOT BE translated.
 
@@ -35,7 +35,7 @@ Install Flask-Babel with
 
 
 REQUIRED: Initializing Flask-Babel
---------
+----------------------------------
 
 Flask-Babel must be initialized just after the Flask application has been initialized
 and after the application configuration has been read:
@@ -212,7 +212,7 @@ Point your browser to your app and your translated messages should appear.
 
 
 Troubleshooting
---------
+---------------
 If the code looks right, but the account management forms are not being translated:
 
 * Check to see if the 'Flask-Babel' package has been installed (try using ``pip freeze``).

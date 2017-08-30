@@ -38,7 +38,12 @@ Python data-model class names
 No known restrictions.
 
 Flask-User relies on a User class and optionally on a UserEmail, UserInvitation and Role class.
-The names of these classes can be anything you choose.
+The names of these classes can be anything you choose::
+
+    class Customer(db.Model, UserMixin):
+        ...
+
+    user_manager = UserManager(app, db, Customer)
 
 
 Python data-model attribute names
@@ -49,18 +54,19 @@ If a single User data-model class is specified, the following attribute names ar
     User.id
     User.password
 
-    User.email                 # If FLASK_USER_ENABLE_EMAIL is True
-    User.email_confirmed_at    # If FLASK_USER_ENABLE_EMAIL is True
+    # If FLASK_USER_ENABLE_EMAIL is True
+    User.email
+    User.email_confirmed_at
 
-    User.username              # If FLASK_USER_ENABLE_USERNAME is True
+    # If FLASK_USER_ENABLE_USERNAME is True
+    User.username
 
-    User.active        # Optional, to enable activation/deactivation of users
-
-    User.roles         # Optional, only for role-based authorization
-    Role.id            # Optional, only for role-based authorization
-    Role.name          # Optional, only for role-based authorization
-
-    User.user_emails   # Optional, only for multiple emails per user
+    # Optional
+    User.active
+    User.roles         # only for role-based authorization
+    Role.id            # only for role-based authorization
+    Role.name          # only for role-based authorization
+    User.user_emails   # only for multiple emails per user
 
 
 | If your existing code uses different attribute names you have two options:
@@ -89,12 +95,12 @@ such as UserEmail. These configurations will be discussed elsewhere.
 
 SQL table names
 ---------------
-No known restrictions
+No known restrictions when using SQLAlchemy.
 
 
 SQL column names
 ----------------
-No known restrictions.
+No known restrictions when using SQLAlchemy.
 
 Note: Even though some Python data-model attribute names are fixed,
 SQLAlchemy allows column names to be different from their corresponding attribute names.

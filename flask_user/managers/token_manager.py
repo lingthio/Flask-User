@@ -1,9 +1,11 @@
-""" This file contains functions to generate and verify tokens for Flask-User.
-    Tokens contain an encoded user ID and a signature. The signature is managed by the itsdangerous module.
+"""Manager for generating and verifying tokens.
 
-    :copyright: (c) 2013 by Ling Thio
-    :author: Ling Thio (ling.thio@gmail.com)
-    :license: Simplified BSD License, see LICENSE.txt for more details."""
+This module contains a manager class to generate and verify tokens.
+
+:copyright: (c) 2013 by Ling Thio
+:author: Ling Thio (ling.thio@gmail.com)
+:license: Simplified BSD License, see LICENSE.txt for more details.
+"""
 
 import base64
 from cryptography.fernet import Fernet, InvalidToken
@@ -17,11 +19,19 @@ BASE = len(ALPHABET)
 SEPARATOR = '$'
 
 class TokenManager(object):
-    """ This class generates and verifies encrypted, signed and timestamped tokens. """
+    """Generate and verify timestamped, signed and encrypted tokens. """
 
     # *** Public methods ***
 
     def __init__(self, flask_secret_key):
+        """Initialize the TokenManager class
+
+        Args:
+            flask_secret_key (str): The secret key used to encrypt and decrypt tokens.
+                This is typically Flask's SECRET_KEY setting.
+                Preferably 32 bytes or longer, but spaces will be padded if needed.
+        """
+
         # Generate a 32-byte base-64 key from the Flask SECRET_KEY
         long_key = flask_secret_key.encode() + b' '*32    # Make sure the key is at least 32 bytes long
         key32 = long_key[:32]
@@ -32,16 +42,26 @@ class TokenManager(object):
         self.fernet = Fernet(base64_key32)
 
     def generate_token(self, *args):
-        """ Converts a list of integers or strings (*args) into an encrypted, timestamped, and signed token. """
+        """ Converts a list of integers or strings, specified by ``*args``, into an encrypted, timestamped, and signed token.
+
+        The default implementation:
+
+        - encode string items as-is,
+        - encode integer items as base-64 strings with a '#' character in front,
+        - concatenate encoded items with a '$' separator, and
+        - use ``cryptograpy.fernet.Fernet()`` to timestamp, sign, and encrypt the concatenated string.
+
+        ``generate_token('abc', 123, 'xyz')`` encrypts the concatenated string ``'abc$#B7$xyz'``
+        into an encrypted token.
+        """
         token = self._encrypt_data_items(*args)
         return token
 
     def verify_token(self, token, expiration_in_seconds):
-        """ Verify token signature, verify token expiration, and decrypt token
-            Returns data_items on success.
-            Returns None on expired or invalid tokens."""
+        """ Verify token signature, verify token expiration, and decrypt token.
 
-        # Base-64-decode, verify signature, verify expiration, and decrypt
+            Returns None on expired or invalid tokens. Returns a list of strings and integers on success."""
+
         try:
             data_items = self._decrypt_data_items(token, expiration_in_seconds)
         except InvalidToken:

@@ -17,9 +17,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../../'))
 
 
 # -- General configuration ------------------------------------------------
@@ -31,8 +31,11 @@
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc',
-    'sphinx.ext.todo']
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.todo',
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -177,6 +180,21 @@ texinfo_documents = [
      author, 'Flask-User', 'One line description of project.',
      'Miscellaneous'),
 ]
+
+# -- Autodoc ---
+add_module_names = False    # Remove module paths from docs
+
+# Always show __init__() methods
+def skip_member_except_init(app, what, name, obj, skip, options):
+    if name == '__init__':
+        return False
+    if name == 'init_app':
+        return True
+    return skip
+
+# Always show __init__() methods
+def setup(app):
+    app.connect("autodoc-skip-member", skip_member_except_init)
 
 # -- Global substitutions
 rst_epilog = """

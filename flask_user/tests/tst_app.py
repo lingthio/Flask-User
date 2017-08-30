@@ -176,10 +176,12 @@ def init_app(app, test_config=None):                # For automated tests
         user_manager = CustomUserManager(app, db, User)
 
     # For debugging purposes
-    # id = int('59a2258f9ebea4e67d20596f', 16)
-    # encrypted_id = user_manager._encrypt_id(id)
-    # decrypted_id = user_manager._decrypt_id(encrypted_id)
-    # assert(decrypted_id==id)
+    token = user_manager.token_manager.generate_token('abc', 123, 'xyz')
+    data_items = user_manager.token_manager.verify_token(token)
+    assert data_items is not None
+    assert data_items[0] == 'abc'
+    assert data_items[1] == 123
+    assert data_items[2] == 'abc'
 
     # Create regular 'member' user
     if not User.query.filter(User.username=='member').first():

@@ -8,17 +8,14 @@
 from flask import Blueprint, current_app, Flask, url_for, render_template
 from flask_login import LoginManager, current_user
 
-from .password_manager import PasswordManager
-from .email_manager import EmailManager
-from .token_manager import TokenManager
+from flask_user.managers.email_manager import EmailManager
+from flask_user.managers.password_manager import PasswordManager
+from flask_user.managers.token_manager import TokenManager
 from . import forms
 from . import signals
 from . import translations
-from .translations import get_translations
 from . import views
-
-
-
+from .translations import get_translations
 
 __version__ = '0.9'
 
@@ -36,12 +33,23 @@ def _flask_user_context_processor():
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class.
 class UserManager():
-    """ This is the Flask-User object that manages the User management process."""
+    """ Customizable User Authentication and Management."""
 
     # ***** Initialization methods *****
 
     def __init__(self, app=None, db=None, UserClass=None, **kwargs):
-        """ Create UserManager, see http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code """
+        """
+        Args:
+            app(Flask): The Flask application instance.
+            db: An Object-Database Mapper instance such as SQLAlchemy or MongoAlchemy.
+            UserClass: The User data-model Class (*not* an instance!)
+        Keyword Args:
+            UserEmailClass: The optional UserEmail data-model Class (*not* an instance!).
+                Needed for the multiple emails per user feature.
+
+        """
+
+        #see http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code """
         self.app = app
         if app:
             self.init_app(app, db, UserClass, **kwargs)
@@ -84,16 +92,18 @@ class UserManager():
                  password_crypt_context = None,
                  send_email_function = None,
                  make_safe_url_function = views.make_safe_url):
-        """ Initialize UserManager, see http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code """
+        """ Initialize UserManager,."""
+
+        # See http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code
 
         from flask_sqlalchemy import SQLAlchemy
         if isinstance(db, SQLAlchemy):
-            from .db_adapters.alchemy_db_adapter import SQLAlchemyDbAdapter
+            from .db_adapters import SQLAlchemyDbAdapter
             self.db_adapter = SQLAlchemyDbAdapter(db)
 
         from flask_mongoalchemy import MongoAlchemy
         if isinstance(db, MongoAlchemy):
-            from .db_adapters.alchemy_db_adapter import MongoAlchemyDbAdapter
+            from .db_adapters import MongoAlchemyDbAdapter
             self.db_adapter = MongoAlchemyDbAdapter(db)
 
         # Perform Class type checking
@@ -190,18 +200,7 @@ class UserManager():
             # See https://flask-login.readthedocs.org/en/latest/#how-it-works
             @self.login_manager.user_loader
             def load_user_by_user_token(user_token):
-                user = None
-
-                # decode token
-                data_items = self.token_manager.verify_token(
-                    user_token,
-                    3600)  # timeout in seconds
-
-                # If token is valid and not expired: load user by user ID
-                if data_items:
-                    user_id = data_items[0]
-                    user = self.get_user_by_id(user_id)
-
+                user = self.UserClass.get_user_by_token(user_token, 3600)
                 return user
 
 
@@ -396,20 +395,8 @@ class UserManager():
     def get_user_by_id(self, user_id):
         return self.db_adapter.get_object(self.UserClass, user_id)
 
-    # NB: This backward compatibility function may be obsoleted in the future
-    # Use 'get_user_by_id() instead.
-    def find_user_by_id(self, user_id):
-        print('Warning: find_user_by_id() will be deprecated in the future. Use get_user_by_id() instead.')
-        return self.get_user_by_id(user_id)
-
     def get_user_email_by_id(self, user_email_id):
         return self.db_adapter.get_object(self.UserEmailClass, user_email_id)
-
-    # NB: This backward compatibility function may be obsoleted in the future
-    # Use 'get_user_email_by_id() instead.
-    def find_user_email_by_id(self, user_email_id):
-        print('Warning: find_user_email_by_id() will be deprecated in the future. Use get_user_email_by_id() instead.')
-        return self.get_user_email_by_id(user_email_id)
 
     def find_user_by_username(self, username):
         return self.db_adapter.ifind_first_object(self.UserClass, username=username)
