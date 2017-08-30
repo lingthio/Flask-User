@@ -183,16 +183,9 @@ texinfo_documents = [
 
 # -- Autodoc ---
 add_module_names = False    # Remove module paths from docs
-
-# Always show __init__() methods
-def skip_member_except_init(app, what, name, obj, skip, options):
-    if name == '__init__':
-        return False
-    return skip
-
-# Always show __init__() methods
-def setup(app):
-    app.connect("autodoc-skip-member", skip_member_except_init)
+autodoc_default_flags = ['members', 'undoc-members', 'inherited-members']
+autodoc_member_order = 'bysource'
+autoclass_content = 'both'   # Show class doc, but not __init__ doc
 
 # -- Global substitutions
 rst_epilog = """

@@ -43,6 +43,8 @@ setup(
     install_requires=[
         'Flask>=0.9',
         'Flask-Login>=0.3',
+        'Flask-Mail>=0.9',
+        'Flask-SQLAlchemy>=1.0',
         'Flask-WTF>=0.9',
         'bcrypt>=1.1',
         'cryptography>=2.0',

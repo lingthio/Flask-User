@@ -25,10 +25,9 @@ class TokenManager(object):
     # *** Public methods ***
 
     def __init__(self, flask_secret_key):
-        """Initialize the TokenManager class
-
+        """
         Args:
-            flask_secret_key (str): The secret key used to encrypt and decrypt tokens.
+            flask_secret_key(str): The secret key used to encrypt and decrypt tokens.
                 This is typically Flask's SECRET_KEY setting.
                 Preferably 32 bytes or longer, but spaces will be padded if needed.
         """
@@ -115,7 +114,7 @@ class TokenManager(object):
         return token_str
 
     def decrypt_string(self, token_str, expiration_in_seconds):
-        """Verify signature, verify timestamp, and decrypts a token using ``cryptography.fernet.Fernet()``."""
+        """Verify signature, verify timestamp, and decrypt a token using ``cryptography.fernet.Fernet()``."""
 
         # Add '=' padding if needed
         if len(token_str) % 4:

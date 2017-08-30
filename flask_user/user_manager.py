@@ -31,10 +31,17 @@ def _flask_user_context_processor():
         user_manager=current_app.user_manager,
         call_or_get=_call_or_get)
 
+
+# Define custom Exception
+class ConfigurationError(Exception):
+    pass
+
+
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class.
 class UserManager():
-    """ Customizable User Authentication and Management."""
+    """ Customizable User Authentication and Management.
+    """
 
     # ***** Initialization methods *****
 
@@ -43,11 +50,16 @@ class UserManager():
         Args:
             app(Flask): The Flask application instance.
             db: An Object-Database Mapper instance such as SQLAlchemy or MongoAlchemy.
-            UserClass: The User data-model Class (*not* an instance!)
-        Keyword Args:
-            UserEmailClass: The optional UserEmail data-model Class (*not* an instance!).
-                Needed for the multiple emails per user feature.
+            UserClass: The User class (*not* an instance!).
 
+        Keyword Args:
+            UserEmailClass: The optional UserEmail class (*not* an instance!).
+                Required for the 'multiple emails per user' feature.
+            UserInvitationClass: The optional UserInvitation class (*not* an instance!).
+                Required for the 'register by invitation' feature.
+
+        Example:
+            ``user_manager = UserManager(app, db, User)``
         """
 
         #see http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code """
@@ -101,15 +113,25 @@ class UserManager():
                             % app.__class__.__name__)
 
         # Configure a DbAdapter based on the class of the 'db' parameter
-        from flask_sqlalchemy import SQLAlchemy
-        if isinstance(db, SQLAlchemy):
-            from .db_adapters import DbAdapterForSQLAlchemy
-            self.db_adapter = DbAdapterForSQLAlchemy(db)
-
-        from flask_mongoalchemy import MongoAlchemy
-        if isinstance(db, MongoAlchemy):
-            from .db_adapters import DbAdapterForMongoAlchemy
-            self.db_adapter = DbAdapterForMongoAlchemy(db)
+        self.db_adapter = None
+        # Check if db is a SQLAlchemy instance
+        if self.db_adapter is None:
+            try:
+                from flask_sqlalchemy import SQLAlchemy
+                if isinstance(db, SQLAlchemy):
+                    from .db_adapters import DbAdapterForSQLAlchemy
+                    self.db_adapter = DbAdapterForSQLAlchemy(db)
+            except:
+                pass
+        # Check if db is a MongoAlchemy instance
+        if self.db_adapter is None:
+            try:
+                from flask_mongoalchemy import MongoAlchemy
+                if isinstance(db, MongoAlchemy):
+                    from .db_adapters import DbAdapterForMongoAlchemy
+                    self.db_adapter = DbAdapterForMongoAlchemy(db)
+            except:
+                pass
 
         # Configure EmailMailerForFlaskMail as the defaule email mailer
         from .email_mailers.email_mailer_for_flask_mail import EmailMailerForFlaskMail
@@ -359,9 +381,8 @@ class UserManager():
     def _check_settings(self):
         """ Verify config combinations. Produce a helpful error messages for inconsistent combinations."""
 
-        # Define custom Exception
-        class ConfigurationError(Exception):
-            pass
+        if self.db_adapter is None:
+            raise ConfigurationError('You must specify a DbAdapter interface or install Flask-SQLAlchemy or FlaskMongAlchemy.')
 
         # USER_ENABLE_REGISTER=True must have USER_ENABLE_USERNAME=True or USER_ENABLE_EMAIL=True or both.
         if self.enable_register and not (self.enable_username or self.enable_email):
@@ -409,15 +430,19 @@ class UserManager():
             app.add_url_rule(self.invite_url, 'user.invite', self.invite_view_function, methods=['GET', 'POST'])
 
     def get_user_by_id(self, user_id):
+        """Retrieve a User by ID."""
         return self.db_adapter.get_object(self.UserClass, user_id)
 
     def get_user_email_by_id(self, user_email_id):
+        """Retrieve a UserEmail by ID."""
         return self.db_adapter.get_object(self.UserEmailClass, user_email_id)
 
     def find_user_by_username(self, username):
+        """Retrieve a User by username."""
         return self.db_adapter.ifind_first_object(self.UserClass, username=username)
 
     def find_user_by_email(self, email):
+        """Retrieve a User by email."""
         if self.UserEmailClass:
             user_email = self.db_adapter.ifind_first_object(self.UserEmailClass, email=email)
             user = user_email.user if user_email else None
@@ -428,14 +453,22 @@ class UserManager():
         return (user, user_email)
 
     def email_is_available(self, new_email):
-        """ Return True if new_email does not exist.
-            Return False otherwise."""
+        """Check if ``new_email`` is available.
+
+        | Returns True if ``new_email`` does not exist or belongs to the current user.
+        | Return False otherwise.
+        """
+
         user, user_email = self.find_user_by_email(new_email)
         return (user==None)
 
     def username_is_available(self, new_username):
-        """ Return True if new_username does not exist or if new_username equals old_username.
-            Return False otherwise."""
+        """Check if ``new_username`` is available.
+
+        | Returns True if ``new_username`` does not exist or belongs to the current user.
+        | Return False otherwise.
+        """
+
         # Allow user to change username to the current username
         if _call_or_get(current_user.is_authenticated):
             current_username = current_user.username
@@ -445,6 +478,7 @@ class UserManager():
         return self.find_user_by_username(new_username)==None
 
     def get_primary_user_email(self, user):
+        """Retrieve the primary User email for the 'multiple emails per user' feature."""
         db_adapter = self.db_adapter
         if self.UserEmailClass:
             user_email = db_adapter.find_first_object(self.UserEmailClass,

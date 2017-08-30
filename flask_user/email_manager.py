@@ -17,6 +17,10 @@ class EmailManager(object):
     """ Send emails via the configured Email Mailer ``user_manager.email_mailer``. """
 
     def __init__(self, user_manager):
+        """
+        Args:
+            user_manager: The Flask-User instance.
+        """
         self.user_manager = user_manager
 
     def send_email_confirmation_email(self, user, user_email):

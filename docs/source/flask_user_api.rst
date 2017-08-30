@@ -19,14 +19,12 @@ Flask-User API
 UserManager class
 -----------------
 
-This is the main class that implements most of Flask-User's functionality.
+This class implements most of Flask-User's functionality.
 
-Flask-User can be customized by extending methods such as the ``customize()`` method
+Flask-User can be customized by implementing the ``customize()`` method.
 
 .. autoclass:: flask_user.user_manager.UserManager
-    :members:
-    :inherited-members:
-    :undoc-members:
+    :no-undoc-members:
 
 --------
 
@@ -35,19 +33,9 @@ Flask-User can be customized by extending methods such as the ``customize()`` me
 EmailManager class
 ------------------
 
-The EmailManager manages the emails the Flask-User sends:
-
-- ‘email confirmation’ email.
-- ‘password has changed’ notification email.
-- ‘reset password’ email.
-- ‘user has registered’ notification email.
-- ‘user invitation’ email.
-- ‘username has changed’ notification email.
+This class manages the sending of Flask-User emails.
 
 .. autoclass:: flask_user.email_manager.EmailManager
-    :members:
-    :inherited-members:
-    :undoc-members:
 
 --------
 
@@ -65,9 +53,7 @@ These tokens are used in the following places:
 * To provide secure tokens in reset-password emails.
 
 .. autoclass:: flask_user.token_manager.TokenManager
-    :members:
-    :inherited-members:
-    :undoc-members:
+    :no-undoc-members:
 
 --------
 
@@ -88,9 +74,6 @@ Included implementations:
 Other databases can be supported by adding additional interface implementation classes.
 
 .. autoclass:: flask_user.db_adapters.db_adapter.DbAdapter
-    :members:
-    :inherited-members:
-    :undoc-members:
 
 --------
 
@@ -110,7 +93,4 @@ Included implementations:
 Other email mailers can be supported by adding additional interface implementation classes.
 
 .. autoclass:: flask_user.email_mailers.email_mailer.EmailMailer
-    :members:
-    :inherited-members:
-    :undoc-members:
 
