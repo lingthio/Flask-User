@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-08-27 03:41-0700\n"
+"POT-Creation-Date: 2017-08-29 20:44-0700\n"
 "PO-Revision-Date: 2015-08-03 13:24-0800\n"
 "Last-Translator: Alexis Benoist <alexis.benoist@gmail.com>\n"
 "Language: fr\n"
@@ -213,28 +213,28 @@ msgstr "Profil"
 msgid "Special Page"
 msgstr "Page spéciale"
 
-#: flask_user/views.py:39
+#: flask_user/views.py:46
 msgid "Your confirmation token has expired."
 msgstr "Votre token de confirmation a expiré"
 
-#: flask_user/views.py:43 flask_user/views.py:63
+#: flask_user/views.py:50 flask_user/views.py:70
 msgid "Invalid confirmation token."
 msgstr "Token de confirmation invalide"
 
-#: flask_user/views.py:70
+#: flask_user/views.py:77
 msgid "Your email has been confirmed."
 msgstr "Votre email a été confirmé"
 
-#: flask_user/views.py:107
+#: flask_user/views.py:115
 msgid "Your password has been changed successfully."
 msgstr "Votre mot de passe a été changé"
 
-#: flask_user/views.py:143
+#: flask_user/views.py:153
 #, python-format
 msgid "Your username has been changed to '%(username)s'."
 msgstr "Votre pseudo est maintement  '%(username)s'."
 
-#: flask_user/views.py:210
+#: flask_user/views.py:221
 #, python-format
 msgid ""
 "A reset password email has been sent to '%(email)s'. Open that email and "
@@ -243,33 +243,33 @@ msgstr ""
 "Un mail de changement de mot de passe a été envoyé à '%(email)s'. Ouvrez "
 "le mail et suivez les instructions pour mettre à jour votre mot de passe."
 
-#: flask_user/views.py:281
+#: flask_user/views.py:293
 msgid "You have signed out successfully."
 msgstr "Vous êtes bien déconnecté."
 
-#: flask_user/views.py:522
+#: flask_user/views.py:534
 msgid "Invitation has been sent."
 msgstr ""
 
-#: flask_user/views.py:565
+#: flask_user/views.py:578
 msgid "Your reset password token has expired."
 msgstr "Votre code de changement de mot de passe a expiré."
 
-#: flask_user/views.py:569 flask_user/views.py:580
+#: flask_user/views.py:582
 msgid "Your reset password token is invalid."
 msgstr "Votre code de changement de mot de passe n'est pas valide."
 
-#: flask_user/views.py:607
+#: flask_user/views.py:609
 #, fuzzy
 msgid "Your password has been reset successfully."
 msgstr "Votre mot de passe a été changé"
 
-#: flask_user/views.py:624
+#: flask_user/views.py:626
 #, python-format
 msgid "You must confirm your email to access '%(url)s'."
 msgstr "Vous devez confirmer votre mail pour accéder à '%(url)s'."
 
-#: flask_user/views.py:635
+#: flask_user/views.py:638
 #, python-format
 msgid "You must be signed in to access '%(url)s'."
 msgstr "Vous devez être connecté pour accéder à %(url)s'."

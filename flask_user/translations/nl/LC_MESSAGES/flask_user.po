@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-08-27 03:41-0700\n"
+"POT-Creation-Date: 2017-08-29 20:44-0700\n"
 "PO-Revision-Date: 2017-08-27 03:39-0700\n"
 "Last-Translator: \n"
 "Language: nl\n"
@@ -206,28 +206,28 @@ msgstr "Profielpagina"
 msgid "Special Page"
 msgstr "Speciale Pagina"
 
-#: flask_user/views.py:39
+#: flask_user/views.py:46
 msgid "Your confirmation token has expired."
 msgstr "Uw bevestigingstoken is verlopen."
 
-#: flask_user/views.py:43 flask_user/views.py:63
+#: flask_user/views.py:50 flask_user/views.py:70
 msgid "Invalid confirmation token."
 msgstr "Onjust bevestigingstoken."
 
-#: flask_user/views.py:70
+#: flask_user/views.py:77
 msgid "Your email has been confirmed."
 msgstr "Uw E-mail is bevestigd."
 
-#: flask_user/views.py:107
+#: flask_user/views.py:115
 msgid "Your password has been changed successfully."
 msgstr "Uw Wachtwoord is gewijzigd."
 
-#: flask_user/views.py:143
+#: flask_user/views.py:153
 #, python-format
 msgid "Your username has been changed to '%(username)s'."
 msgstr "Uw gebruikersnaam is gewijzigd tot '%(username)s'."
 
-#: flask_user/views.py:210
+#: flask_user/views.py:221
 #, python-format
 msgid ""
 "A reset password email has been sent to '%(email)s'. Open that email and "
@@ -236,32 +236,32 @@ msgstr ""
 "Een reset wachtwoord E-mail is verstuurd naar '%(email)s'. Open deze "
 "E-mail en volg de instructies om uw wachtwoord opnieuw in the stellen."
 
-#: flask_user/views.py:281
+#: flask_user/views.py:293
 msgid "You have signed out successfully."
 msgstr "U ben met success afgemeld."
 
-#: flask_user/views.py:522
+#: flask_user/views.py:534
 msgid "Invitation has been sent."
 msgstr "Uitnodiging is verstuurd."
 
-#: flask_user/views.py:565
+#: flask_user/views.py:578
 msgid "Your reset password token has expired."
 msgstr "Your reset wachtwoord token is verlopern."
 
-#: flask_user/views.py:569 flask_user/views.py:580
+#: flask_user/views.py:582
 msgid "Your reset password token is invalid."
 msgstr "Uw reset wachtwoord token is ongeldig."
 
-#: flask_user/views.py:607
+#: flask_user/views.py:609
 msgid "Your password has been reset successfully."
 msgstr "Uw Wachtwoord is met succes gewijzigd."
 
-#: flask_user/views.py:624
+#: flask_user/views.py:626
 #, fuzzy, python-format
 msgid "You must confirm your email to access '%(url)s'."
 msgstr "Je moet zijn ingelogd om toegang te krijgen to %(url)s."
 
-#: flask_user/views.py:635
+#: flask_user/views.py:638
 #, python-format
 msgid "You must be signed in to access '%(url)s'."
 msgstr "Je moet zijn ingelogd om toegang te krijgen to %(url)s."
