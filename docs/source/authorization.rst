@@ -41,7 +41,7 @@ In the example below the current user is required to have the 'admin' role::
 Note: Comparison of role names is case sensitive, so 'Member' will NOT match 'member'.
 
 Multiple string arguments -- the AND operation
-~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The @roles_required decorator accepts multiple strings if the current_user is required to have
 **ALL** of these roles.
@@ -54,7 +54,7 @@ In the example below the current user is required to have the **ALL** of these r
 Multiple string arguments represent the 'AND' operation.
 
 Array arguments -- the OR operation
-~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The @roles_required decorator accepts an array (or a tuple) of roles.
 
@@ -65,7 +65,7 @@ In the example below the current user is required to have **One or more** of the
     # Array arguments require at least ONE of these roles.
 
 AND/OR operations
-~~~~~~~~
+~~~~~~~~~~~~~~~~~
 The potentially confusing syntax described above allows us to construct
 complex AND/OR operations.
 
@@ -83,7 +83,7 @@ Note: The nesting level only goes as deep as this example shows.
 
 
 Required Tables
---------------
+---------------
 
 For @login_required only the User model is required
 
