@@ -112,7 +112,8 @@ Documentation
 
 Revision History
 ----------------
-* v0.6.12 Added Russian translation. Added make_safe_url() to prevent cross-domain redirections.
+* v0.6.13 Added make_safe_url() to prevent cross-domain redirections.
+* v0.6.12 Added Russian translation.
 * v0.6.11 (Skipped)
 * v0.6.10 Added Spanish translation.
 * v0.6.9 Added support for Flask-Login v0.4+.

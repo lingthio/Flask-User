@@ -1,83 +1,66 @@
 Flask-User
 ==========
 
-.. image:: https://img.shields.io/pypi/v/Flask-User.svg
-    :target: https://pypi.python.org/pypi/Flask-User
+Customizable User Authentication & Management
+---------------------------------------------
 
-.. image:: https://img.shields.io/travis/lingthio/Flask-User.svg
-    :target: https://travis-ci.org/lingthio/Flask-User
-
-.. image:: https://img.shields.io/pypi/l/Flask-User.svg
-    :target: https://pypi.python.org/pypi/Flask-User
-
-
-Customizable User Account Management for Flask
-----------------------------------------------
-
-| So you're writing a Flask web application and would like to authenticate your users.
-| You start with a simple **Login** page, but soon enough you need to handle:
+| So, you're writing a Flask web application and would like to authenticate your users.
+| You start with a simple **Login** page, but soon enough you'll need to handle:
 
 * **Registrations** and **Email Confirmations**
 * **Change Usernames**, **Change Passwords**, and **Forgotten Passwords**
 
 And wouldn't it be nice to also offer:
 
+* **Added security**
+* **Increased reliability**
 * **Role-based Authorization**
-* **Remember-me cookies**
-* **Multiple emails per user**
 * **Internationalization**
+* **Support for multiple emails per user**
 
-| Flask-User offers these user features (and more) out-of-the-box
-| while also honoring the following developer needs:
+| Flask-User offers these features and more.
 
-* **Reliable** (Code coverage of over 95%)
-* **Secure** (Built on top of widely deployed Flask-Login)
-* **Ready to use** (Through sensible defaults)
-* **Largely configurable** (Through configuration settings)
-* **Fully customizable** (Through customizable functions and email templates)
-* **Well documented**
-* **Tested on Python 2.6, 2.7, 3.3, 3.4, 3.5 and 3.6**
-
-Status
-------
-
-| Flask-User v0.5 and v0.6 are quite stable and is used in production environments.
-| It is marked as a Beta release because the API is subject to small changes.
-| We appreciate it if you would enter issues and
-  enhancement requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
-
-
-Demo
-----
-The `Flask-User Demo <https://flask-user-demo.herokuapp.com/>`_ showcases Flask-User.
-To protect against spam mis-use, all email features have been disabled.
-(If you're the first visitor in the last hour, it may take a few seconds for Heroku to start this service)
-
-Documentation
--------------
-`Flask-User Documentation <https://pythonhosted.org/Flask-User/>`_
-
-Revision History
-----------------
-`Flask-User Revision History <http://pythonhosted.org//Flask-User/index.html#revision-history>`_
-
-Contact Information
+Secure and Reliable
 -------------------
-Ling Thio - ling.thio [at] gmail.com
+* **Secure** -- Built on top of widely deployed Passlib, PyCrypto, ItsDangerous.
+* **Reliable** -- Code coverage of over 95%
+* **Available** -- Tested on Python 2.6, 2.7 and 3.3-3.6
+* **Well documented**
 
-Acknowledgements
-----------------
-This project would not be possible without the use of the following amazing offerings:
+Fully customizable, yet Ready to use
+------------------------------------
+* **Largely configurable** -- Through configuration settings
+* **Fully customizable** -- Through customizable functions and email templates
+* **Ready to use** -- Through sensible defaults
+* Supports **SQL Databases** -- Through SQLAlchemy
+* **Event hooking** -- Through signals
 
-* `Flask <http://flask.pocoo.org/>`_
-* `Flask-Babel <http://babel.pocoo.org/>`_
-* `Flask-Login <https://flask-login.readthedocs.org/en/latest/>`_
-* `Flask-Mail <http://pythonhosted.org/flask-mail/>`_
-* `SQLAlchemy <http://www.sqlalchemy.org/>`_ and `Flask-SQLAlchemy <http://pythonhosted.org/Flask-SQLAlchemy/>`_
-* `WTForms <http://wtforms.readthedocs.org/en/latest/>`_ and `Flask-WTF <https://flask-wtf.readthedocs.org/en/latest/>`_
+Comes with translations
+-----------------------
+Chinese, Dutch, English, Farsi, Finnish, French, German, Italian, Russian, Spanish, Swedish, and Turkish
 
-Alternative Flask extensions
-----------------------------
+Requirements
+------------
+Flask-User requires the following Python packages:
+
+- cryptography 2.0+
+- Flask 0.9+
+- Flask-Babel 0.9+
+- Flask-Login 0.3+
+- Flask-Mail 0.9+
+- Flask-SQLAlchemy 1.0+
+- Flask-WTF 0.9+
+- passlib 1.6+
+- pycryptodome
+- speaklater 1.3+
+
+Optionally:
+
+- blinker 1.3+ -- for Event Notification
+- Flask-Sendmail
+- py-bcript 0.4+ -- for fast bcrypt encryption
+
+Alternatives
+------------
 * `Flask-Login <https://flask-login.readthedocs.org/en/latest/>`_
 * `Flask-Security <https://pythonhosted.org/Flask-Security/>`_
-
