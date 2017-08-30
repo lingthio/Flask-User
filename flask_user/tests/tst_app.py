@@ -177,11 +177,11 @@ def init_app(app, test_config=None):                # For automated tests
 
     # For debugging purposes
     token = user_manager.token_manager.generate_token('abc', 123, 'xyz')
-    data_items = user_manager.token_manager.verify_token(token)
+    data_items = user_manager.token_manager.verify_token(token, 3600)
     assert data_items is not None
     assert data_items[0] == 'abc'
     assert data_items[1] == 123
-    assert data_items[2] == 'abc'
+    assert data_items[2] == 'xyz'
 
     # Create regular 'member' user
     if not User.query.filter(User.username=='member').first():
