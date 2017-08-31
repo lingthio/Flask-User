@@ -187,6 +187,10 @@ autodoc_default_flags = ['members', 'undoc-members', 'inherited-members']
 autodoc_member_order = 'bysource'
 autoclass_content = 'both'   # Show class doc, but not __init__ doc
 
+def setup(app):
+    # Disable word hyphenation by HTML/CSS
+    app.add_stylesheet('custom.css')
+
 # -- Global substitutions
 rst_epilog = """
 .. |supported_python_versions_and| replace:: {supported_python_versions_and}

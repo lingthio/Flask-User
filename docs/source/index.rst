@@ -18,15 +18,16 @@ Table of Contents
     limitations
     data_models
     porting
-    changes
+    configure
+    customize
     flask_user_api
     authorization
     roles_required_app
     base_templates
-    customization
     signals
     recipes
     internationalization
     faq
+    changes
 
 

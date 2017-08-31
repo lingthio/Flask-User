@@ -73,7 +73,7 @@ Typical use:
                 # Customize the DB Adapter for SQLAlchemy with this User model
                 self.db_adapter = SQLAlchemyAdapter(db, User)
                 # Customize Flask-User settings
-                self.enable_email = True
+                self.USER_ENABLE_EMAIL = True
 
         # Setup Flask-User
         user_manager = CustomUserManager(app)
@@ -90,7 +90,7 @@ As an a alternative, user_manager.init_app(app) can be used::
             # Customize the DB Adapter for SQLAlchemy with this User model
             self.db_adapter = SQLAlchemyAdapter(db, User)
             # Customize Flask-User settings
-            self.enable_email = True
+            self.USER_ENABLE_EMAIL = True
 
     db = SQLAlchemy(app)                            # Setup SQLAlchemy
     user_manager = CustomUserManager(UserManager)   # Setup Flask-User

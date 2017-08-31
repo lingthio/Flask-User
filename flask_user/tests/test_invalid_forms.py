@@ -61,13 +61,13 @@ def test_init(db):
 
     # Enable all features
     um =  current_app.user_manager
-    um.enable_register = True
-    um.enable_change_username = True
-    um.enable_change_password = True
-    um.enable_confirm_email = True
+    um.USER_ENABLE_REGISTER = True
+    um.USER_ENABLE_CHANGE_USERNAME = True
+    um.USER_ENABLE_CHANGE_PASSWORD = True
+    um.USER_ENABLE_CONFIRM_EMAIL = True
     um.enable_reset_password = True
-    um.enable_email = True
-    um.enable_retype_password = True
+    um.USER_ENABLE_EMAIL = True
+    um.USER_ENABLE_RETYPE_PASSWORD = True
 
     # Tests have not been written with auto_login in mind
     um.auto_login = False
@@ -100,7 +100,7 @@ def test_invalid_register_with_username_form(client):
 
     # Choose config
     um =  current_app.user_manager
-    um.enable_username = True
+    um.USER_ENABLE_USERNAME = True
     User = um.UserClass
 
     # Set default values
@@ -144,7 +144,7 @@ def test_invalid_register_with_email_form(client):
 
     # Choose config
     um =  current_app.user_manager
-    um.enable_username = False
+    um.USER_ENABLE_USERNAME = False
     User = um.UserClass
 
     # Set default values
@@ -191,10 +191,10 @@ def test_invalid_confirm_email_page(client):
     url = url_for('user.confirm_email', token=token)
 
     # Test Expired token
-    orig_expiration = um.confirm_email_expiration    # Save old expiration
-    um.confirm_email_expiration = -1                 # Make it expire immediately
+    orig_expiration = um.USER_CONFIRM_EMAIL_EXPIRATION    # Save old expiration
+    um.USER_CONFIRM_EMAIL_EXPIRATION = -1                 # Make it expire immediately
     client.get_invalid_page(url, 'Invalid confirmation token')
-    um.confirm_email_expiration = orig_expiration    # Restors old expiration
+    um.USER_CONFIRM_EMAIL_EXPIRATION = orig_expiration    # Restors old expiration
 
 
 def test_invalid_login_with_username_form(client):
@@ -202,8 +202,8 @@ def test_invalid_login_with_username_form(client):
 
     # Choose config
     um = current_app.user_manager
-    um.enable_email = True
-    um.enable_username = True
+    um.USER_ENABLE_EMAIL = True
+    um.USER_ENABLE_USERNAME = True
 
     # Set default values
     url = url_for('user.login')
@@ -215,34 +215,40 @@ def test_invalid_login_with_username_form(client):
             username='', password=password)
 
     # Test incorrect username
-    um.show_username_email_does_not_exist = False
+    um.USER_SHOW_EMAIL_DOES_NOT_EXIST = False
+    um.USER_SHOW_USERNAME_DOES_NOT_EXIST = False
     client.post_invalid_form(url, 'Incorrect Username/Email and/or Password',
             username='Xuser1', password=password)
-    um.show_username_email_does_not_exist = True
+    um.USER_SHOW_EMAIL_DOES_NOT_EXIST = True
+    um.USER_SHOW_USERNAME_DOES_NOT_EXIST = True
     client.post_invalid_form(url, 'Username/Email does not exist',
             username='Xuser1', password=password)
-    um.show_username_email_does_not_exist = False
+    um.USER_SHOW_EMAIL_DOES_NOT_EXIST = False
+    um.USER_SHOW_USERNAME_DOES_NOT_EXIST = False
 
     # Test empty password
     client.post_invalid_form(url, 'Password is required',
             username=username, password='')
 
     # Test incorrect password
-    um.show_username_email_does_not_exist = False
+    um.USER_SHOW_EMAIL_DOES_NOT_EXIST = False
+    um.USER_SHOW_USERNAME_DOES_NOT_EXIST = False
     client.post_invalid_form(url, 'Incorrect Username/Email and/or Password',
             username=username, password='XPassword1')
-    um.show_username_email_does_not_exist = True
+    um.USER_SHOW_EMAIL_DOES_NOT_EXIST = True
+    um.USER_SHOW_USERNAME_DOES_NOT_EXIST = True
     client.post_invalid_form(url, 'Incorrect Password',
             username=username, password='XPassword1')
-    um.show_username_email_does_not_exist = False
+    um.USER_SHOW_EMAIL_DOES_NOT_EXIST = False
+    um.USER_SHOW_USERNAME_DOES_NOT_EXIST = False
 
 def test_invalid_login_with_email_form(client):
     print("test_invalid_login_with_email_form")
 
     # Choose config
     um = current_app.user_manager
-    um.enable_email = True
-    um.enable_username = False
+    um.USER_ENABLE_EMAIL = True
+    um.USER_ENABLE_USERNAME = False
 
     # Set default values
     url = url_for('user.login')
@@ -254,34 +260,41 @@ def test_invalid_login_with_email_form(client):
             email='', password=password)
 
     # Test incorrect email
-    um.show_username_email_does_not_exist = False
+    um.USER_SHOW_EMAIL_DOES_NOT_EXIST = False
+    um.USER_SHOW_USERNAME_DOES_NOT_EXIST = False
     client.post_invalid_form(url, 'Incorrect Email and/or Password',
             email='Xuser2@example.com', password=password)
-    um.show_username_email_does_not_exist = True
+    um.USER_SHOW_EMAIL_DOES_NOT_EXIST = True
+    um.USER_SHOW_USERNAME_DOES_NOT_EXIST = True
     client.post_invalid_form(url, 'Email does not exist',
             email='Xuser2@example.com', password=password)
-    um.show_username_email_does_not_exist = False
+    um.USER_SHOW_EMAIL_DOES_NOT_EXIST = False
+    um.USER_SHOW_USERNAME_DOES_NOT_EXIST = False
 
     # Test empty password
     client.post_invalid_form(url, 'Password is required',
             email=email, password='')
 
     # Test incorrect password
-    um.show_username_email_does_not_exist = False
+    um.USER_SHOW_EMAIL_DOES_NOT_EXIST = False
+    um.USER_SHOW_USERNAME_DOES_NOT_EXIST = False
     client.post_invalid_form(url, 'Incorrect Email and/or Password',
             email=email, password='XPassword1')
-    um.show_username_email_does_not_exist = True
+    um.USER_SHOW_EMAIL_DOES_NOT_EXIST = True
+    um.USER_SHOW_USERNAME_DOES_NOT_EXIST = True
     client.post_invalid_form(url, 'Incorrect Password',
             email=email, password='XPassword1')
-    um.show_username_email_does_not_exist = False
+    um.USER_SHOW_EMAIL_DOES_NOT_EXIST = False
+    um.USER_SHOW_USERNAME_DOES_NOT_EXIST = False
 
 def test_invalid_change_username_form(client):
     print("test_invalid_change_username_form")
 
     # Set user manager config
     um =  current_app.user_manager
-    um.enable_username = True
-    um.enable_email = False
+    um.USER_ENABLE_EMAIL = False
+    um.USER_ENABLE_USERNAME = True
+    um.USER_ENABLE_CHANGE_USERNAME = True
 
     # Set default values
     username = 'user1'
@@ -319,7 +332,7 @@ def test_invalid_change_password_form(client):
 
     # Set user manager config
     um =  current_app.user_manager
-    um.enable_username = False
+    um.USER_ENABLE_USERNAME = False
 
     # Set default values
     email = 'user2@example.com'
@@ -382,11 +395,11 @@ def test_invalid_reset_password(client):
 
     # Expired Token
     url = url_for('user.reset_password', token=token)
-    orig_expiration = um.reset_password_expiration    # Save old expiration
-    um.reset_password_expiration = -1                 # Make it expire immediately
+    orig_expiration = um.USER_PASSWORD_EXPIRATION    # Save old expiration
+    um.USER_PASSWORD_EXPIRATION = -1                 # Make it expire immediately
     client.post_invalid_form(url, 'Your reset password token is invalid',
             new_password=new_password, retype_password=new_password)
-    um.reset_password_expiration = orig_expiration    # Restore old expiration
+    um.USER_PASSWORD_EXPIRATION = orig_expiration    # Restore old expiration
 
     # Invalid retype password
     client.post_invalid_form(url, 'New Password and Retype Password did not match',
@@ -401,7 +414,7 @@ def test_valid_roles(client):
     if not user007: return
 
     print("test_valid_roles")
-    um.enable_username = True
+    um.USER_ENABLE_USERNAME = True
 
     client.login(username='user007', password='Password1')
     url = url_for('special_page')
@@ -418,7 +431,7 @@ def test_invalid_roles(client):
     if not user007: return
 
     print("test_invalid_roles")
-    um.enable_username = True
+    um.USER_ENABLE_USERNAME = True
 
     client.login(username='user1', password='Password1')
     url = url_for('special_page')
@@ -429,10 +442,10 @@ def test_login_without_confirm_email(client):
     print("test_login_without_confirm_email")
 
     um = current_app.user_manager
-    um.enable_username = False
-    um.enable_email = True
-    um.enable_confirm_email = True
-    um.enable_retype_password = False
+    um.USER_ENABLE_USERNAME = False
+    um.USER_ENABLE_EMAIL = True
+    um.USER_ENABLE_CONFIRM_EMAIL = True
+    um.USER_ENABLE_RETYPE_PASSWORD = False
 
     email = 'notconfirmed@example.com'
     password = 'Password1'

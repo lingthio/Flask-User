@@ -42,15 +42,17 @@ appropriate DbAdapter will be configured internally.
 
 Configuration settings changes
 ------------------------------
-we renamed the `PASSWORD_HASH` setting to `PASSWORD_HASH_SCHEME` to better reflect what this setting means.
+We split ``USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST`` into ``USER_SHOW_USERNAME_DOES_NOT_EXIST``
+and ``USER_SHOW_EMAIL_DOES_NOT_EXIST`` and set the default to False for increased security.
 
 Flask-User v0.6::
 
-    USER_PASSWORD_HASH = 'brcypt'
+    USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST = True
 
 Flask-User v1.0::
 
-    USER_PASSWORD_HASH_SCHEME = 'brcypt'
+    USER_SHOW_EMAIL_DOES_NOT_EXIST = False
+    USER_SHOW_USERNAME_DOES_NOT_EXIST = False
 
 
 Data-model changes
@@ -105,7 +107,7 @@ We changed the `verify_user_password()` parameter order to be consistent with th
 
 We renamed `update_password()` to `update_user_hashed_password()` to better reflect what this method does.
 
-we renamed the `PASSWORD_HASH` setting to `PASSWORD_HASH_SCHEME` to better reflect what this setting means.
+we renamed the `PASSWORD_HASH` setting to `PASSWORD_HASH` to better reflect what this setting means.
 
 Flask-User v0.6::
 

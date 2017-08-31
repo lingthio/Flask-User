@@ -30,7 +30,7 @@ Secure and Reliable
 Fully customizable, yet Ready to use
 ------------------------------------
 * **Largely configurable** -- Through configuration settings
-* **Fully customizable** -- Through customizable functions and email templates
+* **Almost fully customizable** -- Through customizable functions and email templates
 * **Ready to use** -- Through sensible defaults
 * Supports **SQL Databases** and **MongoDB Databases**
 * **Event hooking** -- Through signals

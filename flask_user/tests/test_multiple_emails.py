@@ -33,22 +33,22 @@ def test_multiple_emails(app, db, client):
 
     # Set Flask-User settings
     um = current_app.user_manager
-    um.enable_register = True
-    um.enable_username = False
-    um.enable_email = True
-    um.enable_confirm_email = True
-    um.enable_change_username = False
-    um.enable_change_password = False
-    um.enable_forgot_password = False
-    um.enable_multiple_emails = True
-    um.enable_retype_password = False
+    um.USER_ENABLE_REGISTER = True
+    um.USER_ENABLE_USERNAME = False
+    um.USER_ENABLE_EMAIL = True
+    um.USER_ENABLE_CONFIRM_EMAIL = True
+    um.USER_ENABLE_CHANGE_USERNAME = False
+    um.USER_ENABLE_CHANGE_PASSWORD = False
+    um.USER_ENABLE_FORGOT_PASSWORD = False
+    um.USER_ENABLE_MULTIPLE_EMAILS = True
+    um.USER_ENABLE_RETYPE_PASSWORD = False
 
     # Adjust DbAdapter settings
     um.UserEmailClass = app.UserEmailClass
 
     # Adjust URL routes
-    app.add_url_rule(um.email_action_url,  'user.email_action',  um.email_action_view_function)
-    app.add_url_rule(um.manage_emails_url, 'user.manage_emails', um.manage_emails_view_function, methods=['GET', 'POST'])
+    app.add_url_rule(um.USER_EMAIL_ACTION_URL,  'user.email_action',  um.email_action_view_function)
+    app.add_url_rule(um.USER_MANAGE_EMAILS_URL, 'user.manage_emails', um.manage_emails_view_function, methods=['GET', 'POST'])
 
     # constants
     EMAIL1 = 'email1@multi-email.com'
@@ -107,8 +107,8 @@ def test_multiple_emails(app, db, client):
     client.logout()
 
     # Restore settings
-    um.enable_multiple_emails = False
-    um.enable_confirm_email = True
-    um.enable_retype_password = True
+    um.USER_ENABLE_MULTIPLE_EMAILS = False
+    um.USER_ENABLE_CONFIRM_EMAIL = True
+    um.USER_ENABLE_RETYPE_PASSWORD = True
     um.UserEmailClass = None
 

@@ -27,8 +27,8 @@ class EmailManager(object):
         """Send the 'email confirmation' email."""
         
         # Verify email settings
-        if not self.user_manager.enable_email: return
-        if not self.user_manager.send_registered_email and not self.user_manager.enable_confirm_email: return
+        if not self.user_manager.USER_ENABLE_EMAIL: return
+        if not self.user_manager.USER_SEND_REGISTERED_EMAIL and not self.user_manager.USER_ENABLE_CONFIRM_EMAIL: return
 
         # Generate confirm email link
         object_id = user_email.id if user_email else user.id
@@ -41,9 +41,9 @@ class EmailManager(object):
 
         # Render subject, html message and text message
         subject, html_message, text_message = self._render_email(
-                self.user_manager.confirm_email_email_template,
+                self.user_manager.USER_CONFIRM_EMAIL_EMAIL_TEMPLATE,
                 user=user,
-                app_name=self.user_manager.app_name,
+                app_name=self.user_manager.USER_APP_NAME,
                 confirm_email_link=confirm_email_link)
 
         # Send email message using Flask-Mail
@@ -53,8 +53,8 @@ class EmailManager(object):
         """Send the 'password has changed' notification email."""
 
         # Verify email settings
-        if not self.user_manager.enable_email: return
-        if not self.user_manager.send_password_changed_email: return
+        if not self.user_manager.USER_ENABLE_EMAIL: return
+        if not self.user_manager.USER_SEND_PASSWORD_CHANGED_EMAIL: return
 
         # Retrieve email address from User or UserEmail object
         user_email = self.get_primary_user_email(user)
@@ -64,9 +64,9 @@ class EmailManager(object):
 
         # Render subject, html message and text message
         subject, html_message, text_message = self._render_email(
-                self.user_manager.password_changed_email_template,
+                self.user_manager.USER_PASSWORD_CHANGED_EMAIL_TEMPLATE,
                 user=user,
-                app_name=self.user_manager.app_name)
+                app_name=self.user_manager.USER_APP_NAME)
 
         # Send email message using Flask-Mail
         self._send_email_message(email, subject, html_message, text_message)
@@ -75,8 +75,8 @@ class EmailManager(object):
         """Send the 'reset password' email."""
 
         # Verify email settings
-        if not self.user_manager.enable_email: return
-        assert self.user_manager.enable_forgot_password
+        if not self.user_manager.USER_ENABLE_EMAIL: return
+        assert self.user_manager.USER_ENABLE_FORGOT_PASSWORD
 
         # Generate reset password link
         token = self.user_manager.token_manager.generate_token(user.id)
@@ -88,9 +88,9 @@ class EmailManager(object):
 
         # Render subject, html message and text message
         subject, html_message, text_message = self._render_email(
-            self.user_manager.forgot_password_email_template,
+            self.user_manager.USER_FORGOT_PASSWORD_EMAIL_TEMPLATE,
             user=user,
-            app_name=self.user_manager.app_name,
+            app_name=self.user_manager.USER_APP_NAME,
             reset_password_link=reset_password_link)
 
         # Send email message using Flask-Mail
@@ -107,9 +107,9 @@ class EmailManager(object):
 
         # Render subject, html message and text message
         subject, html_message, text_message = self._render_email(
-                self.user_manager.invite_email_template,
+                self.user_manager.USER_INVITE_EMAIL_TEMPLATE,
                 user=user,
-                app_name=self.user_manager.app_name,
+                app_name=self.user_manager.USER_APP_NAME,
                 accept_invite_link=accept_invite_link)
 
         # Send email message using Flask-Mail
@@ -119,8 +119,8 @@ class EmailManager(object):
         """Send the 'user has registered' notification email."""
 
         # Verify email settings
-        if not self.user_manager.enable_email: return
-        if not self.user_manager.send_registered_email: return
+        if not self.user_manager.USER_ENABLE_EMAIL: return
+        if not self.user_manager.USER_SEND_REGISTERED_EMAIL: return
 
         # Retrieve email address from User or UserEmail object
         email = user_email.email if user_email else user.email
@@ -128,9 +128,9 @@ class EmailManager(object):
 
         # Render subject, html message and text message
         subject, html_message, text_message = self._render_email(
-                self.user_manager.registered_email_template,
+                self.user_manager.USER_REGISTERED_EMAIL_TEMPLATE,
                 user=user,
-                app_name=self.user_manager.app_name,
+                app_name=self.user_manager.USER_APP_NAME,
                 confirm_email_link=confirm_email_link)
 
         # Send email message using Flask-Mail
@@ -140,8 +140,8 @@ class EmailManager(object):
         """Send the 'username has changed' notification email."""
 
         # Verify email settings
-        if not self.user_manager.enable_email: return
-        if not self.user_manager.send_username_changed_email: return
+        if not self.user_manager.USER_ENABLE_EMAIL: return
+        if not self.user_manager.USER_SEND_USERNAME_CHANGED_EMAIL: return
 
         # Retrieve email address from User or UserEmail object
         user_email = self.get_primary_user_email(user)
@@ -151,9 +151,9 @@ class EmailManager(object):
 
         # Render subject, html message and text message
         subject, html_message, text_message = self._render_email(
-                self.user_manager.username_changed_email_template,
+                self.user_manager.USER_USERNAME_CHANGED_EMAIL_TEMPLATE,
                 user=user,
-                app_name=self.user_manager.app_name)
+                app_name=self.user_manager.USER_APP_NAME)
 
         # Send email message using Flask-Mail
         self._send_email_message(email, subject, html_message, text_message)

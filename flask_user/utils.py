@@ -25,8 +25,8 @@ def user_is_authenticated(user):
 # Return False otherwise
 def user_has_confirmed_email(user):
     user_manager = current_app.user_manager
-    if not user_manager.enable_email: return True
-    if not user_manager.enable_confirm_email: return True
+    if not user_manager.USER_ENABLE_EMAIL: return True
+    if not user_manager.USER_ENABLE_CONFIRM_EMAIL: return True
 
     user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter

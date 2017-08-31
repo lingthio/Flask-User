@@ -97,7 +97,7 @@ class ChangePasswordForm(FlaskForm):
     def validate(self):
         # Use feature config to remove unused form fields
         user_manager =  current_app.user_manager
-        if not user_manager.enable_retype_password:
+        if not user_manager.USER_ENABLE_RETYPE_PASSWORD:
             delattr(self, 'retype_password')
 
         # Add custom password validator if needed
@@ -165,7 +165,7 @@ class ForgotPasswordForm(FlaskForm):
 
     def validate_email(form, field):
         user_manager =  current_app.user_manager
-        if user_manager.show_username_email_does_not_exist:
+        if user_manager.USER_SHOW_EMAIL_DOES_NOT_EXIST:
             user, user_email = user_manager.find_user_by_email(field.data)
             if not user:
                 raise ValidationError(_('%(username_or_email)s does not exist', username_or_email=_('Email')))
@@ -192,14 +192,14 @@ class LoginForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
         user_manager =  current_app.user_manager
-        if user_manager.enable_username and user_manager.enable_email:
+        if user_manager.USER_ENABLE_USERNAME and user_manager.USER_ENABLE_EMAIL:
             # Renamed 'Username' label to 'Username or Email'
             self.username.label.text = _('Username or Email')
 
     def validate(self):
         # Remove fields depending on configuration
         user_manager =  current_app.user_manager
-        if user_manager.enable_username:
+        if user_manager.USER_ENABLE_USERNAME:
             delattr(self, 'email')
         else:
             delattr(self, 'username')
@@ -211,12 +211,12 @@ class LoginForm(FlaskForm):
         # Find user by username and/or email
         user = None
         user_email = None
-        if user_manager.enable_username:
+        if user_manager.USER_ENABLE_USERNAME:
             # Find user by username
             user = user_manager.find_user_by_username(self.username.data)
 
             # Find user by email address (username field)
-            if not user and user_manager.enable_email:
+            if not user and user_manager.USER_ENABLE_EMAIL:
                 user, user_email = user_manager.find_user_by_email(self.username.data)
 
         else:
@@ -229,25 +229,28 @@ class LoginForm(FlaskForm):
 
         # Handle unsuccessful authentication
         # Email, Username or Email/Username depending on settings
-        if user_manager.enable_username and user_manager.enable_email:
+        if user_manager.USER_ENABLE_USERNAME and user_manager.USER_ENABLE_EMAIL:
             username_or_email_field = self.username
             username_or_email_text = (_('Username/Email'))
-        elif user_manager.enable_username:
+            show_does_not_exist = user_manager.USER_SHOW_EMAIL_DOES_NOT_EXIST or user_manager.USER_SHOW_USERNAME_DOES_NOT_EXIST
+        elif user_manager.USER_ENABLE_USERNAME:
             username_or_email_field = self.username
             username_or_email_text = (_('Username'))
+            show_does_not_exist = user_manager.USER_SHOW_USERNAME_DOES_NOT_EXIST
         else:
             username_or_email_field = self.email
             username_or_email_text = (_('Email'))
+            show_does_not_exist = user_manager.USER_SHOW_EMAIL_DOES_NOT_EXIST
 
-        # Show 'username/email does not exist error message
-        if user_manager.show_username_email_does_not_exist:
+        # Show 'username/email does not exist' or 'incorrect password' error message
+        if show_does_not_exist:
             if not user:
                 message = _('%(username_or_email)s does not exist', username_or_email=username_or_email_text)
                 username_or_email_field.errors.append(message)
             else:
                 self.password.errors.append(_('Incorrect Password'))
 
-        # Hide 'username/email does not exist error message for additional security
+        # Always show 'incorrect username/email or password' error message for additional security
         else:
             message = _('Incorrect %(username_or_email)s and/or Password', username_or_email=username_or_email_text)
             username_or_email_field.errors.append(message)
@@ -280,14 +283,14 @@ class RegisterForm(FlaskForm):
     def validate(self):
         # remove certain form fields depending on user manager config
         user_manager =  current_app.user_manager
-        if not user_manager.enable_username:
+        if not user_manager.USER_ENABLE_USERNAME:
             delattr(self, 'username')
-        if not user_manager.enable_email:
+        if not user_manager.USER_ENABLE_EMAIL:
             delattr(self, 'email')
-        if not user_manager.enable_retype_password:
+        if not user_manager.USER_ENABLE_RETYPE_PASSWORD:
             delattr(self, 'retype_password')
         # Add custom username validator if needed
-        if user_manager.enable_username:
+        if user_manager.USER_ENABLE_USERNAME:
             has_been_added = False
             for v in self.username.validators:
                 if v==user_manager.username_validator:
@@ -327,7 +330,7 @@ class ResetPasswordForm(FlaskForm):
     def validate(self):
         # Use feature config to remove unused form fields
         user_manager =  current_app.user_manager
-        if not user_manager.enable_retype_password:
+        if not user_manager.USER_ENABLE_RETYPE_PASSWORD:
             delattr(self, 'retype_password')
         # Add custom password validator if needed
         has_been_added = False

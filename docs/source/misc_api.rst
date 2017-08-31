@@ -4,7 +4,8 @@ Miscellaneous API
 - DbAdapterForSQLAlchemy_
 - DbAdapterForMongoAlchemy_
 - EmailMailerForFlaskMail_
-- SendmailEmailMailer_
+- EmailMailerForFlaskSendmail_
+- EmailMailerForSendgrid_
 
 --------
 

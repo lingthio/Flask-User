@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ user_manager.app_name }}</title>
+    <title>{{ user_manager.USER_APP_NAME }}</title>
 
     <!-- Bootstrap -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
@@ -29,7 +29,7 @@
 <body>
     {% block body %}
     <div id="header-div" class="clearfix with-margins">
-        <div class="pull-left"><a href="/"><h1 class="no-margins">{{ user_manager.app_name }}</h1></a></div>
+        <div class="pull-left"><a href="/"><h1 class="no-margins">{{ user_manager.USER_APP_NAME }}</h1></a></div>
         <div class="pull-right">
             {% if call_or_get(current_user.is_authenticated) %}
                 <a href="{{ url_for('user.profile') }}">{{ current_user.username or current_user.email }}</a>
@@ -71,7 +71,7 @@
     <br/>
     <hr class="no-margins"/>
     <div id="footer-div" class="clearfix with-margins">
-        <div class="pull-left">{{ user_manager.app_name }} v1.0</div>
+        <div class="pull-left">{{ user_manager.USER_APP_NAME }} v1.0</div>
         <div class="pull-right">&copy; 2014 MyCorp</div>
     </div>
     {% endblock %}

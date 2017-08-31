@@ -8,7 +8,7 @@
     {{ form.hidden_tag() }}
 
     {# Username or Email #}
-    {% set field = form.username if user_manager.enable_username else form.email %}
+    {% set field = form.username if user_manager.USER_ENABLE_USERNAME else form.email %}
     <div class="form-group {% if field.errors %}has-error{% endif %}">
         {# Label on left, "Already registered? Sign in." on right #}
         <div class="row">
@@ -16,7 +16,7 @@
                 <label for="{{ field.id }}" class="control-label">{{ field.label.text }}</label>
             </div>
             <div class="col-xs-6 text-right">
-                {% if user_manager.enable_register %}
+                {% if user_manager.USER_ENABLE_REGISTER %}
                     <a href="{{ url_for('user.login') }}" tabindex='290'>
                         {%trans%}Already registered? Sign in.{%endtrans%}</a>
                 {% endif %}
@@ -30,13 +30,13 @@
         {% endif %}
     </div>
 
-    {% if user_manager.enable_email and user_manager.enable_username %}
+    {% if user_manager.USER_ENABLE_EMAIL and user_manager.USER_ENABLE_USERNAME %}
         {{ render_field(form.email, tabindex=220) }}
     {% endif %}
 
     {{ render_field(form.password, tabindex=230) }}
 
-    {% if user_manager.enable_retype_password %}
+    {% if user_manager.USER_ENABLE_RETYPE_PASSWORD %}
         {{ render_field(form.retype_password, tabindex=240) }}
     {% endif %}
 

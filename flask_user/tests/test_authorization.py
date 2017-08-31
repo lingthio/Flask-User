@@ -33,11 +33,11 @@ def test_authorization(client):
     Test various authorization scenarios
     """
     um = current_app.user_manager
-    um.enable_register = True
-    um.enable_username = True
-    um.enable_email = False
-    um.enable_confirm_email = False
-    um.enable_retype_password = False
+    um.USER_ENABLE_REGISTER = True
+    um.USER_ENABLE_USERNAME = True
+    um.USER_ENABLE_EMAIL = False
+    um.USER_ENABLE_CONFIRM_EMAIL = False
+    um.USER_ENABLE_RETYPE_PASSWORD = False
 
     # Test as anonymous user
     client.get_valid_page(url_for('home_page'))

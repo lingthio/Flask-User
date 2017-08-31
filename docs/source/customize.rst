@@ -155,7 +155,7 @@ and define the confirmation specific messages in ``templates/flask_user/emails/c
 The email template files, along with available template variables listed below:
 
 * Template variables available in any email template
-    * ``user_manager`` - For example: ``{% if user_manager.enable_confirm_email %}``
+    * ``user_manager`` - For example: ``{% if user_manager.USER_ENABLE_CONFIRM_EMAIL %}``
     * ``user`` - For example: ``{{ user.email }}``
 * templates/flask_user/confirm_email_[subject.txt|message.html|message.txt]
     * ``confirm_email_link`` - For example: ``{{ confirm_email_link }}``

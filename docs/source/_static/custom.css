@@ -1,0 +1,6 @@
+/* Switch off word hyphenation */
+div.body p,
+div.body dd,
+div.body li {
+    hyphens: None;
+}

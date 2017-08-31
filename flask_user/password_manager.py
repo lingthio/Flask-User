@@ -7,17 +7,17 @@
 
 
 from __future__ import print_function
-from passlib.context import CryptContext
-import hashlib
-import hmac
-import base64
 
 from flask import current_app
+from passlib.context import CryptContext
 
 
-def generate_sha512_hmac(self, password_salt, password):
-    """ Generate SHA512 HMAC -- for compatibility with Flask-Security """
-    return base64.b64encode(hmac.new(password_salt, password.encode('utf-8'), hashlib.sha512).digest())
+# def generate_sha512_hmac(self, password_salt, password):
+#     """ Generate SHA512 HMAC -- for compatibility with Flask-Security """
+#     import hashlib
+#     import hmac
+#     import base64
+#     return base64.b64encode(hmac.new(password_salt, password.encode('utf-8'), hashlib.sha512).digest())
 
 
 # The UserManager is implemented across several source code files.
@@ -40,9 +40,9 @@ class PasswordManager(object):
     def hash_password(self, password):
         """ Generate hashed password using SHA512 HMAC and the USER_PASSWORD_HASH hash function."""
 
-        # Pre-generate SHA512 HMAC -- For compatibility with Flask-Security
-        if self.password_hash_mode == 'Flask-Security':
-            password = generate_sha512_hmac(self.password_salt, password)
+        # # Pre-generate SHA512 HMAC -- For compatibility with Flask-Security
+        # if self.password_hash_mode == 'Flask-Security':
+        #     password = generate_sha512_hmac(self.password_salt, password)
 
         # Use passlib's CryptContext to hash password
         hashed_password = self.password_crypt_context.encrypt(password)
@@ -55,7 +55,7 @@ class PasswordManager(object):
             Returns True on matching password.
             Returns False otherwise."""
 
-        # Perform some Python magic to allow for:
+        # Perform some Python magic to flip param order for v0.6-style calls:
         # - v0.6  verify_user_password(password, user), and
         # - v0.9+ verify_user_password(user, password) parameter order
         if isinstance(user, (b''.__class__, u''.__class__)):
@@ -66,9 +66,9 @@ class PasswordManager(object):
 
         hashed_password = user.password
 
-        # Pre-generate SHA512 HMAC -- For compatibility with Flask-Security
-        if self.password_hash_mode == 'Flask-Security':
-            password = generate_sha512_hmac(self.password_salt, password)
+        # # Pre-generate SHA512 HMAC -- For compatibility with Flask-Security
+        # if self.password_hash_mode == 'Flask-Security':
+        #     password = generate_sha512_hmac(self.password_salt, password)
 
         # Use passlib's CryptContext to verify
         return self.password_crypt_context.verify(password, hashed_password)

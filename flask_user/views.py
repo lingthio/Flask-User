@@ -42,7 +42,7 @@ def confirm_email(token):
     db_adapter = user_manager.db_adapter
     data_items = user_manager.token_manager.verify_token(
             token,
-            user_manager.confirm_email_expiration)
+            user_manager.USER_CONFIRM_EMAIL_EXPIRATION)
 
     if not data_items:
         flash(_('Invalid confirmation token.'), 'error')
@@ -79,8 +79,8 @@ def confirm_email(token):
     flash(_('Your email has been confirmed.'), 'success')
 
     # Auto-login after confirm or redirect to login page
-    safe_next = _get_safe_next_param('next', user_manager.after_confirm_endpoint)
-    if user_manager.auto_login_after_confirm:
+    safe_next = _get_safe_next_param('next', user_manager.USER_AFTER_CONFIRM_ENDPOINT)
+    if user_manager.USER_AUTO_LOGIN_AFTER_CONFIRM:
         return _do_login_user(user, safe_next)                       # auto-login
     else:
         return redirect(url_for('user.login')+'?next='+quote(safe_next))    # redirect to login page
@@ -95,7 +95,7 @@ def change_password():
 
     # Initialize form
     form = user_manager.change_password_form(request.form)
-    safe_next = _get_safe_next_param('next', user_manager.after_change_password_endpoint)
+    safe_next = _get_safe_next_param('next', user_manager.USER_AFTER_CHANGE_PASSWORD_ENDPOINT)
     form.next.data = safe_next
 
     # Process valid POST
@@ -107,7 +107,7 @@ def change_password():
         user_manager.password_manager.update_user_hashed_password(current_user, hashed_password)
 
         # Send 'password_changed' email
-        if user_manager.enable_email and user_manager.send_password_changed_email:
+        if user_manager.USER_ENABLE_EMAIL and user_manager.USER_SEND_PASSWORD_CHANGED_EMAIL:
             user_manager.send_password_has_changed_email(current_user)
 
         # Send password_changed signal
@@ -121,7 +121,7 @@ def change_password():
         return redirect(safe_next)
 
     # Process GET or invalid POST
-    return render(user_manager.change_password_template, form=form)
+    return render(user_manager.USER_CHANGE_PASSWORD_TEMPLATE, form=form)
 
 @login_required
 @confirm_email_required
@@ -132,7 +132,7 @@ def change_username():
 
     # Initialize form
     form = user_manager.change_username_form(request.form)
-    safe_next = _get_safe_next_param('next', user_manager.after_change_username_endpoint)
+    safe_next = _get_safe_next_param('next', user_manager.USER_AFTER_CHANGE_USERNAME_ENDPOINT)
     form.next.data = safe_next
 
     # Process valid POST
@@ -144,7 +144,7 @@ def change_username():
         db_adapter.commit()
 
         # Send 'username_changed' email
-        if user_manager.enable_email and user_manager.send_username_changed_email:
+        if user_manager.USER_ENABLE_EMAIL and user_manager.USER_SEND_USERNAME_CHANGED_EMAIL:
             user_manager.send_username_has_changed_email(current_user)
 
         # Send username_changed signal
@@ -158,7 +158,7 @@ def change_username():
         return redirect(safe_next)
 
     # Process GET or invalid POST
-    return render(user_manager.change_username_template, form=form)
+    return render(user_manager.USER_CHANGE_USERNAME_TEMPLATE, form=form)
 
 @login_required
 @confirm_email_required
@@ -226,10 +226,10 @@ def forgot_password():
         flash(_("A reset password email has been sent to '%(email)s'. Open that email and follow the instructions to reset your password.", email=email), 'success')
 
         # Redirect to the login page
-        return redirect(_endpoint_url(user_manager.after_forgot_password_endpoint))
+        return redirect(_endpoint_url(user_manager.USER_AFTER_FORGOT_PASSWORD_ENDPOINT))
 
     # Process GET or invalid POST
-    return render(user_manager.forgot_password_template, form=form)
+    return render(user_manager.USER_FORGOT_PASSWORD_TEMPLATE, form=form)
 
 
 def login():
@@ -237,11 +237,11 @@ def login():
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
 
-    safe_next = _get_safe_next_param('next', user_manager.after_login_endpoint)
-    safe_reg_next = _get_safe_next_param('reg_next', user_manager.after_register_endpoint)
+    safe_next = _get_safe_next_param('next', user_manager.USER_AFTER_LOGIN_ENDPOINT)
+    safe_reg_next = _get_safe_next_param('reg_next', user_manager.USER_AFTER_REGISTER_ENDPOINT)
 
     # Immediately redirect already logged in users
-    if _call_or_get(current_user.is_authenticated) and user_manager.auto_login_at_login:
+    if _call_or_get(current_user.is_authenticated) and user_manager.USER_AUTO_LOGIN_AT_LOGIN:
         return redirect(safe_next)
 
     # Initialize form
@@ -256,7 +256,7 @@ def login():
         # Retrieve User
         user = None
         user_email = None
-        if user_manager.enable_username:
+        if user_manager.USER_ENABLE_USERNAME:
             # Find user record by username
             user = user_manager.find_user_by_username(login_form.username.data)
             user_email = None
@@ -267,7 +267,7 @@ def login():
                         is_primary=True,
                         )
             # Find user record by email (with form.username)
-            if not user and user_manager.enable_email:
+            if not user and user_manager.USER_ENABLE_EMAIL:
                 user, user_email = user_manager.find_user_by_email(login_form.username.data)
         else:
             # Find user by email (with form.email)
@@ -279,7 +279,7 @@ def login():
             return _do_login_user(user, safe_next, login_form.remember_me.data)
 
     # Process GET or invalid POST
-    return render(user_manager.login_template,
+    return render(user_manager.USER_LOGIN_TEMPLATE,
             form=login_form,
             login_form=login_form,
             register_form=register_form)
@@ -298,7 +298,7 @@ def logout():
     flash(_('You have signed out successfully.'), 'success')
 
     # Redirect to logout_next endpoint or '/'
-    safe_next = _get_safe_next_param('next', user_manager.after_logout_endpoint)
+    safe_next = _get_safe_next_param('next', user_manager.USER_AFTER_LOGOUT_ENDPOINT)
     return redirect(safe_next)
 
 
@@ -320,7 +320,7 @@ def manage_emails():
         return redirect(url_for('user.manage_emails'))
 
     # Process GET or invalid POST request
-    return render(user_manager.manage_emails_template,
+    return render(user_manager.USER_MANAGE_EMAILS_TEMPLATE,
             user_emails=user_emails,
             form=form,
             )
@@ -331,8 +331,8 @@ def register():
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
 
-    safe_next = _get_safe_next_param('next', user_manager.after_login_endpoint)
-    safe_reg_next = _get_safe_next_param('reg_next', user_manager.after_register_endpoint)
+    safe_next = _get_safe_next_param('next', user_manager.USER_AFTER_LOGIN_ENDPOINT)
+    safe_reg_next = _get_safe_next_param('reg_next', user_manager.USER_AFTER_REGISTER_ENDPOINT)
 
     # Initialize form
     login_form = user_manager.login_form()                      # for login_or_register.html
@@ -342,7 +342,7 @@ def register():
     invite_token = request.values.get("token")
 
     # require invite without a token should disallow the user from registering
-    if user_manager.require_invitation and not invite_token:
+    if user_manager.USER_REQUIRE_INVITATION and not invite_token:
         flash("Registration is invite only", "error")
         return redirect(url_for('user.login'))
 
@@ -413,10 +413,10 @@ def register():
         db_adapter.commit()
 
         # Send 'registered' email and delete new User object if send fails
-        if user_manager.send_registered_email:
+        if user_manager.USER_SEND_REGISTERED_EMAIL:
             try:
                 # Send 'registered' email
-                _send_registered_email(user, user_email, require_email_confirmation)
+                _USER_SEND_REGISTERED_EMAIL(user, user_email, require_email_confirmation)
             except Exception as e:
                 # delete new User object if send  fails
                 db_adapter.delete_object(user)
@@ -429,7 +429,7 @@ def register():
                                      user_invite=user_invite)
 
         # Redirect if USER_ENABLE_CONFIRM_EMAIL is set
-        if user_manager.enable_confirm_email and require_email_confirmation:
+        if user_manager.USER_ENABLE_CONFIRM_EMAIL and require_email_confirmation:
             safe_reg_next = user_manager.make_safe_url_function(register_form.reg_next.data)
             return redirect(safe_reg_next)
 
@@ -437,14 +437,14 @@ def register():
         if 'reg_next' in request.args:
             safe_reg_next = user_manager.make_safe_url_function(register_form.reg_next.data)
         else:
-            safe_reg_next = _endpoint_url(user_manager.after_confirm_endpoint)
-        if user_manager.auto_login_after_register:
+            safe_reg_next = _endpoint_url(user_manager.USER_AFTER_CONFIRM_ENDPOINT)
+        if user_manager.USER_AUTO_LOGIN_AFTER_REGISTER:
             return _do_login_user(user, safe_reg_next)                     # auto-login
         else:
             return redirect(url_for('user.login')+'?next='+quote(safe_reg_next))  # redirect to login page
 
     # Process GET or invalid POST
-    return render(user_manager.register_template,
+    return render(user_manager.USER_REGISTER_TEMPLATE,
             form=register_form,
             login_form=login_form,
             register_form=register_form)
@@ -493,10 +493,10 @@ def invite():
                   form=invite_form)
 
         flash(_('Invitation has been sent.'), 'success')
-        safe_next = _get_safe_next_param('next', user_manager.after_invite_endpoint)
+        safe_next = _get_safe_next_param('next', user_manager.USER_AFTER_INVITE_ENDPOINT)
         return redirect(safe_next)
 
-    return render(user_manager.invite_template, form=invite_form)
+    return render(user_manager.USER_INVITE_TEMPLATE, form=invite_form)
 
 def resend_confirm_email():
     """Prompt for email and re-send email conformation email."""
@@ -516,10 +516,10 @@ def resend_confirm_email():
             _send_confirm_email(user, user_email)
 
         # Redirect to the login page
-        return redirect(_endpoint_url(user_manager.after_resend_confirm_email_endpoint))
+        return redirect(_endpoint_url(user_manager.USER_AFTER_RESEND_CONFIRM_EMAIL_ENDPOINT))
 
     # Process GET or invalid POST
-    return render(user_manager.resend_confirm_email_template, form=form)
+    return render(user_manager.USER_RESENT_CONFIRM_EMAIL_TEMPLATE, form=form)
 
 
 def reset_password(token):
@@ -533,7 +533,7 @@ def reset_password(token):
 
     data_items = user_manager.token_manager.verify_token(
             token,
-            user_manager.reset_password_expiration)
+            user_manager.USER_PASSWORD_EXPIRATION)
 
     if not data_items:
         flash(_('Your reset password token is invalid.'), 'error')
@@ -558,21 +558,21 @@ def reset_password(token):
         db_adapter.commit()
 
         # Send 'password_changed' email
-        if user_manager.enable_email and user_manager.send_password_changed_email:
+        if user_manager.USER_ENABLE_EMAIL and user_manager.USER_SEND_PASSWORD_CHANGED_EMAIL:
             user_manager.send_password_has_changed_email(user)
 
         # Prepare one-time system message
         flash(_("Your password has been reset successfully."), 'success')
 
         # Auto-login after reset password or redirect to login page
-        safe_next = _get_safe_next_param('next', user_manager.after_reset_password_endpoint)
-        if user_manager.auto_login_after_reset_password:
+        safe_next = _get_safe_next_param('next', user_manager.USER_AFTER_RESET_PASSWORD_ENDPOINT)
+        if user_manager.USER_AUTO_LOGIN_AFTER_RESET_PASSWORD:
             return _do_login_user(user, safe_next)                       # auto-login
         else:
             return redirect(url_for('user.login')+'?next='+quote(safe_next))    # redirect to login page
 
     # Process GET or invalid POST
-    return render(user_manager.reset_password_template, form=form)
+    return render(user_manager.USER_RESET_PASSWORD_TEMPLATE, form=form)
 
 
 def unconfirmed():
@@ -583,7 +583,7 @@ def unconfirmed():
 
     # Redirect to USER_UNCONFIRMED_EMAIL_ENDPOINT
     user_manager = current_app.user_manager
-    return redirect(_endpoint_url(user_manager.unconfirmed_email_endpoint))
+    return redirect(_endpoint_url(user_manager.USER_AFTER_UNCONFIRMED_EMAIL_ENDPOINT))
 
 
 def unauthenticated():
@@ -595,7 +595,7 @@ def unauthenticated():
 
     # Redirect to USER_UNAUTHENTICATED_ENDPOINT
     safe_next = user_manager.make_safe_url_function(url)
-    return redirect(_endpoint_url(user_manager.unauthenticated_endpoint)+'?next='+quote(safe_next))
+    return redirect(_endpoint_url(user_manager.USER_UNAUTHENTICATED_ENDPOINT)+'?next='+quote(safe_next))
 
 
 def unauthorized():
@@ -606,22 +606,22 @@ def unauthorized():
 
     # Redirect to USER_UNAUTHORIZED_ENDPOINT
     user_manager = current_app.user_manager
-    return redirect(_endpoint_url(user_manager.unauthorized_endpoint))
+    return redirect(_endpoint_url(user_manager.USER_UNAUTHORIZED_ENDPOINT))
 
 
 @login_required
 @confirm_email_required
 def user_profile():
     user_manager = current_app.user_manager
-    return render(user_manager.user_profile_template)
+    return render(user_manager.USER_PROFILE_TEMPLATE)
 
 
-def _send_registered_email(user, user_email, require_email_confirmation=True):
+def _USER_SEND_REGISTERED_EMAIL(user, user_email, require_email_confirmation=True):
     user_manager =  current_app.user_manager
     db_adapter = user_manager.db_adapter
 
     # Send 'confirm_email' or 'registered' email
-    if user_manager.enable_email and user_manager.enable_confirm_email:
+    if user_manager.USER_ENABLE_EMAIL and user_manager.USER_ENABLE_CONFIRM_EMAIL:
         # Generate confirm email link
         object_id = user_email.id if user_email else user.id
         token = user_manager.token_manager.generate_token(object_id)
@@ -631,7 +631,7 @@ def _send_registered_email(user, user_email, require_email_confirmation=True):
         user_manager.email_manager.send_user_has_registered_email(user, user_email, confirm_email_link)
 
         # Prepare one-time system message
-        if user_manager.enable_confirm_email and require_email_confirmation:
+        if user_manager.USER_ENABLE_CONFIRM_EMAIL and require_email_confirmation:
             email = user_email.email if user_email else user.email
             flash(_('A confirmation email has been sent to %(email)s with instructions to complete your registration.', email=email), 'success')
         else:
@@ -643,7 +643,7 @@ def _send_confirm_email(user, user_email):
     db_adapter = user_manager.db_adapter
 
     # Send 'confirm_email' or 'registered' email
-    if user_manager.enable_email and user_manager.enable_confirm_email:
+    if user_manager.USER_ENABLE_EMAIL and user_manager.USER_ENABLE_CONFIRM_EMAIL:
         # Send email
         user_manager.email_manager.send_email_confirmation_email(user, user_email)
 
@@ -663,8 +663,8 @@ def _do_login_user(user, safe_next, remember_me=False):
 
     # Check if user has a confirmed email address
     user_manager = current_app.user_manager
-    if user_manager.enable_email and user_manager.enable_confirm_email \
-            and not current_app.user_manager.enable_login_without_confirm_email \
+    if user_manager.USER_ENABLE_EMAIL and user_manager.USER_ENABLE_CONFIRM_EMAIL \
+            and not current_app.user_manager.USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL \
             and not user_has_confirmed_email(user):
         url = url_for('user.resend_confirm_email')
         flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email or <a href="%(url)s">Re-send confirmation email</a>.', url=url), 'error')
