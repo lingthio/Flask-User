@@ -26,11 +26,11 @@ class PasswordManager(object):
     """ PasswordMixin provides password management methods using passlib """
 
     # Called by UserManager.init_app()
-    def __init__(self, password_crypt_context, password_hash_scheme, password_hash_mode, password_salt):
+    def __init__(self, password_crypt_context, password_hash_scheme):
         self.password_crypt_context = password_crypt_context
         self.password_hash_scheme = password_hash_scheme
-        self.password_hash_mode = password_hash_mode
-        self.password_salt = password_salt
+        # self.password_hash_mode = password_hash_mode
+        # self.password_salt = password_salt
 
         # Create passlib's CryptContext if needed
         if not self.password_crypt_context:

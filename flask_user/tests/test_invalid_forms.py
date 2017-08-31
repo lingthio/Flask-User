@@ -395,11 +395,11 @@ def test_invalid_reset_password(client):
 
     # Expired Token
     url = url_for('user.reset_password', token=token)
-    orig_expiration = um.USER_PASSWORD_EXPIRATION    # Save old expiration
-    um.USER_PASSWORD_EXPIRATION = -1                 # Make it expire immediately
+    orig_expiration = um.USER_RESET_PASSWORD_EXPIRATION    # Save old expiration
+    um.USER_RESET_PASSWORD_EXPIRATION = -1                 # Make it expire immediately
     client.post_invalid_form(url, 'Your reset password token is invalid',
             new_password=new_password, retype_password=new_password)
-    um.USER_PASSWORD_EXPIRATION = orig_expiration    # Restore old expiration
+    um.USER_RESET_PASSWORD_EXPIRATION = orig_expiration    # Restore old expiration
 
     # Invalid retype password
     client.post_invalid_form(url, 'New Password and Retype Password did not match',

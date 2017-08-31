@@ -57,7 +57,7 @@ class EmailManager(object):
         if not self.user_manager.USER_SEND_PASSWORD_CHANGED_EMAIL: return
 
         # Retrieve email address from User or UserEmail object
-        user_email = self.get_primary_user_email(user)
+        user_email = self.user_manager.get_primary_user_email(user)
         assert(user_email)
         email = user_email.email
         assert(email)
