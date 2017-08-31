@@ -13,7 +13,7 @@ F.A.Q.
 Flask-Security has been around since at least March 2012
 and additionally offers Json/AJAX, MongoDB, Peewee, and Basic HTTP Authentication.
 
-Flask-User has been designed with :doc:`Full customization <customization>` in mind
+Flask-User has been designed with :doc:`Full customization <customize>` in mind
 and additionally offers Username login and Internationalization.
 It exists since December 2013 and contains 661 statements with a 98% test coverage.
 
@@ -35,7 +35,7 @@ It exists since December 2013 and contains 661 statements with a 98% test covera
 
 Flask-User shields itself from database operations through a DBAdapter.
 It ships with a SQLAlchemyAdapter, but the API is very simple, so other adapters
-can be easily added. See :ref:`sqlalchemyadapter`.
+can be easily added. See :ref:`DbAdapterForSQLAlchemy`.
 
 
 

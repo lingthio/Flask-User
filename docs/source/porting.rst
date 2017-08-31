@@ -92,8 +92,8 @@ The optional UserAuth class has been obsoleted. See below for a workaround.
 
 Flask-Login v0.3+ required
 --------------------------
-Since Flask-Login v0.3.0, `is_authenticated()`, `is_active()`, and `is_anonymous()`
-**methods** have been replaced by `is_authenticated`, `is_active`, and `is_anonymous` **properties**.
+Since Flask-Login v0.3.0, ``is_authenticated()``, ``is_active()``, and ``is_anonymous()``
+**methods** have been replaced by ``is_authenticated``, ``is_active``, and ``is_anonymous`` **properties**.
 
 
 PasswordManager() changes
@@ -101,26 +101,16 @@ PasswordManager() changes
 Password related methods have been moved from the UserManager class to a separate PasswordManager class,
 accessible through the UserManager.password_manager attribute.
 
-We renamed `verify_password()` to `verify_user_password()` to better reflect what this method does.
-
-We changed the `verify_user_password()` parameter order to be consistent with the parameter order of `update_user_hashed_password()`.
-
-We renamed `update_password()` to `update_user_hashed_password()` to better reflect what this method does.
-
-we renamed the `PASSWORD_HASH` setting to `PASSWORD_HASH` to better reflect what this setting means.
+We changed the ``verify_password()`` parameters to receive a ``hashed_password` parameter
+instead of the ``user`` parameter.
 
 Flask-User v0.6::
 
-    verify_password(password, user)    # v0.6 parameter order
-    update_password(user, hashed_password)
+    verify_password(password, user)
 
 Flask-User v1.0::
 
-    password_manager.verify_user_password(user, password)    # v0.6 parameter order
-    password_manager.update_user_hashed_password(user, hashed_password)
-
-As a courtesy, we allow both `verify_user_password()` parameter orders in v1.0, but a warning will
-be issued and the v0.6 style will be obsoleted in the future.
+    password_manager.verify_password(password, hashed_password)
 
 
 EmailManager() changes

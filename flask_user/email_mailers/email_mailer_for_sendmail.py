@@ -11,7 +11,7 @@ from __future__ import print_function
 from .email_mailer import EmailMailer, SendEmailError
 
 
-class EmailMailerForFlaskSendmail(EmailMailer):
+class EmailMailerForSendmail(EmailMailer):
     """ Implements the EmailMailer interface to send emails with sendmail using Flask-Sendmail."""
     def __init__(self, app, sender_email=None, sender_name=None):
         """Setup Flask-Sendemail.

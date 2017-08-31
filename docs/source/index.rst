@@ -1,7 +1,6 @@
 .. topic:: Attention
 
-    Flask-User v1.0 is under active development.
-
+    Flask-User v1.0 is under active development and not recommended for use at this time.
     Please use `Flask-User v0.6 <http://flask-user.readthedocs.io/en/v0.6/>`_ for now.
 
 .. include:: ../../README.rst
@@ -17,11 +16,19 @@ Table of Contents
     flask_user_starter_app
     limitations
     data_models
-    porting
+    authorization
     configure
     customize
-    flask_user_api
-    authorization
+    porting
+    api
+
+.. toctree::
+    :hidden:
+
+    api_db_adapters
+    api_email_mailers
+    api_user_manager
+    api_user_manager_settings
     roles_required_app
     base_templates
     signals
@@ -29,5 +36,5 @@ Table of Contents
     internationalization
     faq
     changes
-
-
+    old_api
+    misc

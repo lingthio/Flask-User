@@ -51,11 +51,11 @@ If you want to populate your database with User records with hashed passwords us
     db.session.add(user)
     db.session.commit()
 
-You can verify a password with ``user_manager.password_manager.verify_user_password()``:
+You can verify a password with ``user_manager.password_manager.verify_password()``:
 
 ::
 
-    does_match = user_manager.password_manager.verify_user_password(user, password)
+    does_match = user_manager.password_manager.verify_password(password, user.password)
 
 Account Tracking
 ----------------
@@ -80,6 +80,3 @@ Here's an example of tracking login_count and last_login_ip:
         user.last_login_ip = request.remote_addr
         db.session.commit()
 
-Up Next
--------
-:doc:`customization`

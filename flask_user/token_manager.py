@@ -20,7 +20,8 @@ class TokenManager(object):
     ALPHABET = string.ascii_uppercase + string.ascii_lowercase + string.digits + '-_'
     ALPHABET_REVERSE = dict((c, i) for (i, c) in enumerate(ALPHABET))
     BASE = len(ALPHABET)
-    SEPARATOR = '$'
+    INTEGER_PREFIX = '~'
+    SEPARATOR = '|'
 
     # *** Public methods ***
 
@@ -44,17 +45,15 @@ class TokenManager(object):
     def generate_token(self, *args):
         """ Converts a list of integers or strings, specified by ``*args``, into an encrypted, timestamped, and signed token.
 
-        Implemented as::
-
-            concatenated_str = self.encode_data_items(*args)
-            token = self.encrypt_string(concatenated_str)
-            return token
+        Note: strings may not contain any ``'|'`` characters, nor start with a ``'~'`` character
+        as these are used as separators and integer indicators for encoding.
 
         Example:
 
         ::
 
-            # Combine User ID with 8 password bytes to invalidate tokens when passwords change.
+            # Combine User ID with last 8 bytes of their password
+            # to invalidate tokens when passwords change.
             user_id = user.id
             password_ends_with = user.password[-8:0]
             token = token_manager.generate_token(user_id, password_ends_with)
@@ -132,19 +131,19 @@ class TokenManager(object):
     def encode_data_items(self, *args):
         """ Encodes a list of integers and strings into a concatenated string.
 
-        - encode string items as-is
-        - encode integer items as a '#' character, followed by a base-64 representation
-        - concatenate encoded items with a '$' separator
+        - encode string items as-is.
+        - encode integer items as base-64 with a ``'~'`` prefix.
+        - concatenate encoded items with a ``'|'`` separator.
 
         Example:
-            ``encode_data_items('abc', 123, 'xyz')`` returns ``'abc$#B7$xyz'``
+            ``encode_data_items('abc', 123, 'xyz')`` returns ``'abc|~B7|xyz'``
         """
         str_list = []
         for arg in args:
 
-            # encode integer items as base-64 strings with a '#' character in front
+            # encode integer items as base-64 strings with a '~' character in front
             if isinstance(arg, int):
-                str = '#' + self.encode_int(arg)
+                str = self.INTEGER_PREFIX + self.encode_int(arg)
 
             # encode string items as-is
             else:
@@ -152,7 +151,7 @@ class TokenManager(object):
 
             str_list.append(str)
 
-        # Concatenate strings with '$' separators
+        # Concatenate strings with '|' separators
         concatenated_str = self.SEPARATOR.join(str_list)
 
         return concatenated_str
@@ -161,15 +160,15 @@ class TokenManager(object):
         """Decodes a concatenated string into a list of integers and strings.
 
         Example:
-            ``decode_data_items('abc$#B7$xyz')`` returns ``['abc', 123, 'xyz']``
+            ``decode_data_items('abc|~B7|xyz')`` returns ``['abc', 123, 'xyz']``
         """
-        str_list = concatenated_str.split('$')
+        str_list = concatenated_str.split(self.SEPARATOR)
 
         data_items = []
         for str in str_list:
 
-            # '#base-64-strings' are decoded into integers.
-            if len(str)>=1 and str[0]=='#':
+            # '~base-64-strings' are decoded into integers.
+            if len(str)>=1 and str[0]==self.INTEGER_PREFIX:
                 item = self.decode_int(str[1:])
 
             # Strings are decoded as-is.

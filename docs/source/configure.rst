@@ -17,16 +17,30 @@ Flask-User default features and settings can overridden in one of two ways:
     class CustomUserManager(UserManager):
 
         def customize(self):
+
             # Customize Flask-User settings
             self.USER_ENABLE_EMAIL = True
             self.USER_ENABLE_USERNAME = False
 
-The :ref:`UserManager` documents all Flask-User settings (over 70 of them).
+    # Setup Flask-User
+    user_manager = CustomUserManager(app, db, User)
 
-If a setting is defined in both the application config file and in ``UserManager.customize()``,
-the ``UserManager.customize()`` setting will override the config file setting.
+``UserManager.customize()`` settings take precedence over the application config file settings.
+
+Flask-User settings
+-------------------
+
+Below is a complete list of configurable Flask-User settings.
+
+Note: Ignore the `__Settings` part of the class name.
+It's a trick we use to split the code and docs across several files.
+
+.. autoclass:: flask_user.user_manager_settings.UserManager__Settings
+    :private-members:
+    :noindex:
+
 
 To keep the code base simple and robust, we offer no easy way to change
-the '/user' base URL or the '/flask_user' base directory in bulk.
-Please copy them from the :ref:`UserManager` docs use your editor to find-and-replace these bases.
+the '/user' base URLs or the '/flask_user' base directories in bulk.
+Please copy them from this page, then use your editor to bulk-change these settings.
 

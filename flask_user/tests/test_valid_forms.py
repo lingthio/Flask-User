@@ -237,7 +237,7 @@ def check_valid_change_password_form(um, client):
 
     # Verify operations
     valid_user = um.db_adapter.get_object(um.UserClass, valid_user.id)
-    assert um.password_manager.verify_user_password(valid_user, new_password)
+    assert um.password_manager.verify_password(new_password, valid_user.password)
 
     # Change password back to old password for subsequent tests
     um.db_adapter.update_object(valid_user, password=old_hashed_password)
@@ -304,7 +304,7 @@ def check_valid_reset_password_page(um, client):
 
     # Verify operations
     valid_user = um.db_adapter.get_object(um.UserClass, valid_user.id)
-    assert um.password_manager.verify_user_password(valid_user, new_password)
+    assert um.password_manager.verify_password(new_password, valid_user.password)
 
     # Change password back to old password for subsequent tests
     valid_user.password = old_hashed_password

@@ -159,8 +159,9 @@ def change_password():
         # Hash password
         hashed_password = um.password_manager.hash_password(form.new_password.data)
 
-        # Change password
-        um.password_manager.update_user_hashed_password(current_user, hashed_password)
+        # Update user.password
+        um.db_adapter.update_object(current_user, password=hashed_password)
+        um.db_adapter.commit()
 
         # Send 'password_changed' email
         if um.USER_ENABLE_EMAIL and um.USER_SEND_PASSWORD_CHANGED_EMAIL:

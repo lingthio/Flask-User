@@ -1,10 +1,8 @@
-Customization
-=============
+Customize
+=========
 Flask-User has been designed with full customization in mind, and and here is a list of
 behaviors that can be customized as needed:
 
-* `Features`_
-* `Settings`_
 * `Emails`_
 * `Registration Form`_
 * `Labels and Messages`_
@@ -13,37 +11,8 @@ behaviors that can be customized as needed:
 * `View functions`_
 * `Password and Username validators`_
 * `Password hashing`_
-* `URLs`_
-* `Endpoints`_
-* `Email template filenames`_
-* `Form template filenames`_
 * `Token generation`_
 
-
-Features
---------
-The following Features can be customized through the application's config:
-
-.. include:: includes/config_features.txt
-
-The following config settings have been renamed and are now obsolete. Please rename to the new setting.
-
-::
-
-    # Obsoleted setting             # New setting
-    USER_ENABLE_EMAILS              USER_ENABLE_EMAIL
-    USER_ENABLE_USERNAMES           USER_ENABLE_USERNAME
-    USER_ENABLE_RETYPE_PASSWORDS    USER_ENABLE_RETYPE_PASSWORD
-    USER_LOGIN_WITH_USERNAME        USER_ENABLE_USERNAME
-    USER_REGISTER_WITH_EMAIL        USER_ENABLE_EMAIL
-    USER_RETYPE_PASSWORD            USER_ENABLE_RETYPE_PASSWORD
-
-
-Settings
---------
-The following Settings can be customized through the application's config:
-
-.. include:: includes/config_settings.txt
 
 Labels and Messages
 -------------------
@@ -379,8 +348,8 @@ Developers can customize the password hashing in the following ways:
         def hash_password(self, password):
             return self.password
 
-        def verify_user_password(self, user, password)
-            return self.password_manager.hash_password(password) == self.get_password(user)
+        def verify_password(self, password, hashed_password)
+            return self.password_manager.hash_password(password) == hashed_password
 
 **Backward compatibility with Flask-Security**
 
@@ -422,37 +391,6 @@ Custom view functions are specified by setting an attribute on the Flask-User's 
             reset_password_view_function       = my_view_function11,
             )
     user_manager.init_app(app)
-
-URLs
-----
-URLs can be customized through the application's config
-
-.. include:: includes/config_urls.txt
-
-
-Endpoints
----------
-Endpoints can be customized through the application's config
-
-.. include:: includes/config_endpoints.txt
-
-
-Email Template filenames
-------------------------
-Email template filenames can be customized through the application's config
-
-.. include:: includes/config_email_templates.txt
-
-These path settings are relative to the application's ``templates`` directory.
-
-
-Form Template filenames
------------------------
-Form template filenames can be customized through the application's config
-
-.. include:: includes/config_form_templates.txt
-
-These path settings are relative to the application's ``templates`` directory.
 
 Token Generation
 ----------------

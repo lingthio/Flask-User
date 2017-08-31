@@ -1,8 +1,6 @@
 Flask-User
 ==========
-
-Customizable User Authentication & Management
----------------------------------------------
+**Customizable User Authentication, User Management, and more.**
 
 | So, you're writing a Flask web application and would like to authenticate your users.
 | You start with a simple **Login** page, but soon enough you'll need to handle:
