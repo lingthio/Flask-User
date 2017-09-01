@@ -3,23 +3,23 @@
 Customizing forms
 =================
 
-The following Flask-User forms can be customized::
+The following Flask-User forms can be customized:
 
-:ref:`AddEmailForm`:
-:ref:`ChangeUsernameForm`:
-:ref:`EditUserProfileForm`:
-:ref:`ForgotPasswordForm`:
-:ref:`InviteUserForm`:
-:ref:`LoginForm`:
-:ref:`RegisterUserForm`:
-:ref:`ResendEmailConfirmationForm`:
-:ref:`ResetPasswordForm`:
+- :ref:`AddEmailForm`
+- :ref:`ChangeUsernameForm`
+- :ref:`EditUserProfileForm`
+- :ref:`ForgotPasswordForm`
+- :ref:`InviteUserForm`
+- :ref:`LoginForm`
+- :ref:`RegisterUserForm`
+- :ref:`ResendEmailConfirmationForm`
+- :ref:`ResetPasswordForm`
 
 For each form, you can customize the following:
 
-- The **Form** that defines the form fields,
-- The **View method** that prepares the form on an HTTP GET and processes the form data on an HTTP POST, and
-- The **HTML template** that renders the form.
+- The **HTML template** that renders the form,
+- The **Form** that defines the form fields, and
+- The **View method** that prepares the form on an HTTP GET and processes the form data on an HTTP POST.
 
 Copying HTML templates
 ----------------------

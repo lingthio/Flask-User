@@ -7,6 +7,9 @@ Below is a complete list of customizable Flask-User forms.
 
 .. _AddEmailForm:
 
+AddEmailForm
+------------
+
 .. autoclass:: flask_user.forms.AddEmailForm
     :no-undoc-members:
     :no-inherited-members:
@@ -14,6 +17,9 @@ Below is a complete list of customizable Flask-User forms.
 --------
 
 .. _ChangeUsernameForm:
+
+ChangeUsernameForm
+------------------
 
 .. autoclass:: flask_user.forms.ChangeUsernameForm
     :no-undoc-members:
@@ -23,6 +29,9 @@ Below is a complete list of customizable Flask-User forms.
 
 .. _EditUserProfileForm:
 
+EditUserProfileForm
+-------------------
+
 .. autoclass:: flask_user.forms.EditUserProfileForm
     :no-undoc-members:
     :no-inherited-members:
@@ -30,6 +39,9 @@ Below is a complete list of customizable Flask-User forms.
 --------
 
 .. _ForgotPasswordForm:
+
+ForgotPasswordForm
+------------------
 
 .. autoclass:: flask_user.forms.ForgotPasswordForm
     :no-undoc-members:
@@ -39,6 +51,9 @@ Below is a complete list of customizable Flask-User forms.
 
 .. _InviteUserForm:
 
+InviteUserForm
+--------------
+
 .. autoclass:: flask_user.forms.InviteUserForm
     :no-undoc-members:
     :no-inherited-members:
@@ -46,6 +61,9 @@ Below is a complete list of customizable Flask-User forms.
 --------
 
 .. _LoginForm:
+
+LoginForm
+---------
 
 .. autoclass:: flask_user.forms.LoginForm
     :no-undoc-members:
@@ -55,6 +73,9 @@ Below is a complete list of customizable Flask-User forms.
 
 .. _RegisterUserForm:
 
+RegisterUserForm
+----------------
+
 .. autoclass:: flask_user.forms.RegisterUserForm
     :no-undoc-members:
     :no-inherited-members:
@@ -63,6 +84,9 @@ Below is a complete list of customizable Flask-User forms.
 
 .. _ResendEmailConfirmationForm:
 
+ResendEmailConfirmationForm
+---------------------------
+
 .. autoclass:: flask_user.forms.ResendEmailConfirmationForm
     :no-undoc-members:
     :no-inherited-members:
@@ -70,6 +94,9 @@ Below is a complete list of customizable Flask-User forms.
 --------
 
 .. _ResetPasswordForm:
+
+ResetPasswordForm
+-----------------
 
 .. autoclass:: flask_user.forms.ResetPasswordForm
     :no-undoc-members:

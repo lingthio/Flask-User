@@ -43,10 +43,34 @@ def render(*args, **kwargs):
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class for ease of customization.
 class UserManager__Views(object):
-    """Flask-User view methods."""
+    """Flask-User views."""
+
+    def change_password_view(self):
+        pass
+
+    def change_username_view(self):
+        pass
+
+    def confirm_email_view(self):
+        pass
+
+    def edit_user_profile_view(self):
+        pass
+
+    def email_action_view(self):
+        pass
+
+    def forgot_password_view(self):
+        pass
+
+    def manage_emails_view(self):
+        pass
+
+    def invite_user_view(self):
+        pass
 
     def login_view(self):
-        """ Process the login form or the login-or-register form."""
+        """Prepare and process the login form."""
 
         # Authenticate username/email and login authenticated users.
         um = current_app.user_manager
@@ -99,6 +123,32 @@ class UserManager__Views(object):
                       login_form=login_form,
                       register_form=register_form)
 
+    def logout_view(self):
+        """Process the logout link."""
+        """ Sign the user out."""
+        um = current_app.user_manager
+
+        # Send user_logged_out signal
+        signals.user_logged_out.send(current_app._get_current_object(), user=current_user)
+
+        # Use Flask-Login to sign out user
+        logout_user()
+
+        # Prepare one-time system message
+        flash(_('You have signed out successfully.'), 'success')
+
+        # Redirect to logout_next endpoint or '/'
+        safe_next = _get_safe_next_param('next', um.USER_AFTER_LOGOUT_ENDPOINT)
+        return redirect(safe_next)
+
+    def register_view(self):
+        pass
+
+    def resend_email_confirmation_view(self):
+        pass
+
+    def reset_password_view(self):
+        pass
 
 def confirm_email(token):
     """ Verify email confirmation token and activate the user account."""
@@ -775,4 +825,5 @@ def _get_safe_next_param(param_name, default_endpoint):
 def _endpoint_url(endpoint):
     return url_for(endpoint) if endpoint else '/'
 
-
+def init_views(app, user_manager):
+    pass

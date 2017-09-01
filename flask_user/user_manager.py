@@ -19,7 +19,7 @@ from . import translations
 from . import user_manager_views
 from .translations import get_translations
 from .user_manager_settings import UserManager__Settings
-from .user_manager_views import UserManager__Views
+from .user_manager_views import UserManager__Views, init_views
 
 __version__ = '0.9'
 
@@ -50,7 +50,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
 
     # ***** Initialization methods *****
 
-    def __init__(self, app=None, db=None, UserClass=None, **kwargs):
+    def __init__(self, app, db, UserClass, **kwargs):
         """
         Args:
             app(Flask): The Flask application instance.
@@ -117,9 +117,10 @@ class UserManager(UserManager__Settings, UserManager__Views):
         self.UserEmailClass = UserEmailClass
         self.UserInvitationClass = UserInvitationClass
 
-        # Load settings from Config file. Use UserManager.USER_... as the attrib_name source.
-        for attrib_name, default_value in UserManager.__dict__.items():
+        # For each 'USER_...' property: load settings from application config.
+        for attrib_name in dir(self):
             if attrib_name[0:5] == 'USER_':
+                default_value = getattr(UserManager, attrib_name)
                 setattr(self, attrib_name, app.config.get(attrib_name, default_value))
 
         # Set default forms
@@ -175,6 +176,8 @@ class UserManager(UserManager__Settings, UserManager__Views):
         # Make sure the settings are valid -- raise ConfigurationError if not
         self._check_settings()
 
+        self.init_urls(app)
+
         # Validators
         self._create_default_attr('username_validator', username_validator)
         self._create_default_attr('password_validator', password_validator)
@@ -224,12 +227,14 @@ class UserManager(UserManager__Settings, UserManager__Views):
                 return user
 
 
-        # Add flask_user/templates directory using a Blueprint
-        blueprint = Blueprint('flask_user', 'flask_user', template_folder='templates')
+        # Even though we do not make use of this Blueprint, we must create and
+        # register one to tell Flask to include the app/template/flask_user directory
+        # when searching for template files.
+        blueprint = Blueprint('flask_user', __name__, template_folder='templates')
         app.register_blueprint(blueprint)
 
         # Add URL routes
-        self._add_url_routes(app)
+        init_views(app, self)
 
         # Add context processor
         app.context_processor(_flask_user_context_processor)
@@ -304,29 +309,6 @@ class UserManager(UserManager__Settings, UserManager__Views):
             self.USER_ENABLE_CHANGE_USERNAME = False
 
 
-    def _add_url_routes(self, app):
-        """ Add URL Routes"""
-        app.add_url_rule(self.USER_LOGIN_URL, 'user.login', local_login_view, methods=['GET', 'POST'])
-        app.add_url_rule(self.USER_LOGOUT_URL, 'user.logout', self.logout_view_function, methods=['GET', 'POST'])
-        if self.USER_ENABLE_CONFIRM_EMAIL:
-            app.add_url_rule(self.USER_CONFIRM_EMAIL_URL, 'user.confirm_email', self.confirm_email_view_function)
-            app.add_url_rule(self.USER_RESEND_EMAIL_CONFIRMATION_URL, 'user.resend_email_confirmation', self.resend_email_confirmation_view_function, methods=['GET', 'POST'])
-        if self.USER_ENABLE_CHANGE_PASSWORD:
-            app.add_url_rule(self.USER_CHANGE_PASSWORD_URL, 'user.change_password', self.change_password_view_function, methods=['GET', 'POST'])
-        if self.USER_ENABLE_CHANGE_USERNAME:
-            app.add_url_rule(self.USER_CHANGE_USERNAME_URL, 'user.change_username', self.change_username_view_function, methods=['GET', 'POST'])
-        if self.USER_ENABLE_FORGOT_PASSWORD:
-            app.add_url_rule(self.USER_FORGOT_PASSWORD_URL, 'user.forgot_password', self.forgot_password_view_function, methods=['GET', 'POST'])
-            app.add_url_rule(self.USER_RESET_PASSWORD_URL, 'user.reset_password', self.reset_password_view_function, methods=['GET', 'POST'])
-        if self.USER_ENABLE_REGISTER:
-            app.add_url_rule(self.USER_REGISTER_URL, 'user.register', self.register_view_function, methods=['GET', 'POST'])
-        if self.UserEmailClass:
-            app.add_url_rule(self.USER_EMAIL_ACTION_URL,  'user.email_action',  self.email_action_view_function)
-            app.add_url_rule(self.USER_MANAGE_EMAILS_URL, 'user.manage_emails', self.manage_emails_view_function, methods=['GET', 'POST'])
-        app.add_url_rule(self.USER_EDIT_USER_PROFILE_URL,  'user.edit_user_profile',  self.edit_user_profile_view_function,  methods=['GET', 'POST'])
-        if self.USER_ENABLE_INVITE_USER:
-            app.add_url_rule(self.USER_INVITE_USER_URL, 'user.invite_user', self.invite_user_view_function, methods=['GET', 'POST'])
-
     def get_user_by_id(self, user_id):
         """Retrieve a User by ID."""
         return self.db_adapter.get_object(self.UserClass, user_id)
@@ -386,6 +368,82 @@ class UserManager(UserManager__Settings, UserManager__Views):
         else:
             return user
 
-def local_login_view():
-    um = current_app.user_manager
-    return um.login_view()
+
+    def _add_url_routes(self, app):
+        """ Add URL Routes"""
+        app.add_url_rule(self.USER_LOGIN_URL, 'user.login', self.login_view_function, methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_LOGOUT_URL, 'user.logout', self.logout_view_function, methods=['GET', 'POST'])
+        if self.USER_ENABLE_CONFIRM_EMAIL:
+            app.add_url_rule(self.USER_CONFIRM_EMAIL_URL, 'user.confirm_email', self.confirm_email_view_function)
+            app.add_url_rule(self.USER_RESEND_EMAIL_CONFIRMATION_URL, 'user.resend_email_confirmation', self.resend_email_confirmation_view_function, methods=['GET', 'POST'])
+        if self.USER_ENABLE_CHANGE_PASSWORD:
+            app.add_url_rule(self.USER_CHANGE_PASSWORD_URL, 'user.change_password', self.change_password_view_function, methods=['GET', 'POST'])
+        if self.USER_ENABLE_CHANGE_USERNAME:
+            app.add_url_rule(self.USER_CHANGE_USERNAME_URL, 'user.change_username', self.change_username_view_function, methods=['GET', 'POST'])
+        if self.USER_ENABLE_FORGOT_PASSWORD:
+            app.add_url_rule(self.USER_FORGOT_PASSWORD_URL, 'user.forgot_password', self.forgot_password_view_function, methods=['GET', 'POST'])
+            app.add_url_rule(self.USER_RESET_PASSWORD_URL, 'user.reset_password', self.reset_password_view_function, methods=['GET', 'POST'])
+        if self.USER_ENABLE_REGISTER:
+            app.add_url_rule(self.USER_REGISTER_URL, 'user.register', self.register_view_function, methods=['GET', 'POST'])
+        if self.UserEmailClass:
+            app.add_url_rule(self.USER_EMAIL_ACTION_URL,  'user.email_action',  self.email_action_view_function)
+            app.add_url_rule(self.USER_MANAGE_EMAILS_URL, 'user.manage_emails', self.manage_emails_view_function, methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_EDIT_USER_PROFILE_URL,  'user.edit_user_profile',  self.edit_user_profile_view_function,  methods=['GET', 'POST'])
+        if self.USER_ENABLE_INVITE_USER:
+            app.add_url_rule(self.USER_INVITE_USER_URL, 'user.invite_user', self.invite_user_view_function, methods=['GET', 'POST'])
+
+    def init_urls(self, app):
+        # Stubs are needed because url_rules call functions (and not methods with the extra 'self' parameter)
+        def change_password_stub():
+            return self.change_password_view()
+
+        def change_username_stub():
+            return self.change_username_view()
+
+        def confirm_email_stub():
+            return self.confirm_email_view()
+
+        def edit_user_profile_stub():
+            return self.edit_user_profile_view()
+
+        def email_action_stub():
+            return self.email_action_view()
+
+        def forgot_password_stub():
+            return self.forgot_password_view()
+
+        def manage_emails_stub():
+            return self.manage_emails_view()
+
+        def invite_user_stub():
+            return self.invite_user_view()
+
+        def login_stub():
+            return self.login_view()
+
+        def logout_stub():
+            return self.logout_view()
+
+        def register_stub():
+            return self.register_view()
+
+        def resend_email_confirmation_stub():
+            return self.resend_email_confirmation_view()
+
+        def reset_password_stub():
+            return self.reset_password_view()
+
+        """ Add URL Routes"""
+        app.add_url_rule(self.USER_CHANGE_PASSWORD_URL, 'user.change_password', change_password_stub, methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_CHANGE_USERNAME_URL, 'user.change_username', change_username_stub, methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_CONFIRM_EMAIL_URL, 'user.confirm_email', confirm_email_stub)
+        app.add_url_rule(self.USER_EDIT_USER_PROFILE_URL, 'user.edit_user_profile', edit_user_profile_stub, methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_EMAIL_ACTION_URL, 'user.email_action', email_action_stub)
+        app.add_url_rule(self.USER_FORGOT_PASSWORD_URL, 'user.forgot_password', forgot_password_stub, methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_INVITE_USER_URL, 'user.invite_user', invite_user_stub, methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_LOGIN_URL, 'user.login', login_stub, methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_LOGOUT_URL, 'user.logout', logout_stub, methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_MANAGE_EMAILS_URL, 'user.manage_emails', manage_emails_stub, methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_REGISTER_URL, 'user.register', register_stub, methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_RESEND_EMAIL_CONFIRMATION_URL, 'user.resend_email_confirmation', resend_email_confirmation_stub, methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_RESET_PASSWORD_URL, 'user.reset_password', reset_password_stub, methods=['GET', 'POST'])

@@ -1,9 +1,9 @@
 .. _UserManager__Views:
 
-UserManager view methods
-========================
+UserManager views
+=================
 
-Below is a complete list of customizable Flask-User view methods.
+Below is a complete list of customizable Flask-User views.
 
 Note: Customization happens on the ``UserManager`` class.
 The `UserManager__Views` class is mixed into the `UserManager` class,
