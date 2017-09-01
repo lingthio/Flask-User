@@ -31,6 +31,7 @@ Table of Contents
     api_user_manager_forms
     api_user_manager_views
     configure_settings
+    customize_forms
     roles_required_app
     base_templates
     signals

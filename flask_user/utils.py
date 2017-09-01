@@ -31,7 +31,7 @@ def user_has_confirmed_email(user):
     user_manager = current_app.user_manager
     db_adapter = user_manager.db_adapter
 
-    # Handle multiple emails per user: Find at least one confirmed email
+    # Handle multiple email_templates per user: Find at least one confirmed email
     if user_manager.UserEmailClass:
         has_confirmed_email = False
         user_emails = db_adapter.find_objects(user_manager.UserEmailClass, user_id=user.id)

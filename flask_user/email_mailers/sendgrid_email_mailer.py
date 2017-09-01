@@ -14,7 +14,7 @@ from .email_mailer import EmailMailer, SendEmailError
 
 
 class SendgridEmailMailer(EmailMailer):
-    """ Implements the EmailMailer interface to send emails with SendGrid Web API v3 using sendgrid-python."""
+    """ Implements the EmailMailer interface to send email_templates with SendGrid Web API v3 using sendgrid-python."""
     def __init__(self, app, sender_email=None, sender_name=None):
         """Setup SendGrid Web API v3.
 

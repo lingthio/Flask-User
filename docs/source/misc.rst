@@ -118,7 +118,7 @@ The built-in Email template files can be copied like so::
 
     cd ~/path/to/YOURAPP/YOURAPP
     mkdir -p templates/flask_user/emails
-    cp ~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/flask_user/templates/flask_user/emails/* templates/flask_user/emails/.
+    cp ~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/flask_user/templates/flask_user/email_templates/* templates/flask_user/email_templates/.
 
 Flask-User currently offers the following email messages::
 
@@ -126,7 +126,7 @@ Flask-User currently offers the following email messages::
                       # - Requires USER_ENABLE_EMAIL = True
                       # - Requires USER_ENABLE_CONFIRM_EMAIL = True
 
-    forgot_password   # Sent after a user submitted a forgot password form
+    request_password_reset   # Sent after a user submitted a forgot password form
                       # - Requires USER_ENABLE_EMAIL = True
                       # - Requires USER_ENABLE_FORGOT_PASSWORD = True
 
@@ -148,15 +148,15 @@ Flask-User currently offers the following email messages::
 Each email type has three email template files.
 The 'registered' email for example has the following files::
 
-    templates/flask_user/emails/registered_subject.txt   # The email subject line
-    templates/flask_user/emails/registered_message.html  # The email message in HTML format
-    templates/flask_user/emails/registered_message.txt   # The email message in Text format
+    templates/flask_user/email_templates/registered_subject.txt   # The email subject line
+    templates/flask_user/email_templates/registered_message.html  # The email message in HTML format
+    templates/flask_user/email_templates/registered_message.txt   # The email message in Text format
 
 Each file is extended from the base template file::
 
-    templates/flask_user/emails/base_subject.txt
-    templates/flask_user/emails/base_message.html
-    templates/flask_user/emails/base_message.txt
+    templates/flask_user/email_templates/base_subject.txt
+    templates/flask_user/email_templates/base_message.html
+    templates/flask_user/email_templates/base_message.txt
 
 The base template files are used to define email elements that are similar in all types of email messages.
 
@@ -164,7 +164,7 @@ The base template files are used to define email elements that are similar in al
 | - Set the background color and padding,
 | - Start with a logo and salutation, and
 | - End with a signature,
-| you can define ``templates/flask_user/emails/base_message.html`` like so
+| you can define ``templates/flask_user/email_templates/base_message.html`` like so
 
 ::
 
@@ -176,9 +176,9 @@ The base template files are used to define email elements that are similar in al
         The Flask-User Team</p>
     </div>
 
-and define the confirmation specific messages in ``templates/flask_user/emails/confirm_email_message.html`` like so::
+and define the confirmation specific messages in ``templates/flask_user/email_templates/confirm_email_message.html`` like so::
 
-    {% extends "flask_user/emails/base_message.html" %}
+    {% extends "flask_user/email_templates/base_message.html" %}
 
     {% block message %}
     <p>Thank you for registering with Flask-User.</p>
@@ -194,7 +194,7 @@ The email template files, along with available template variables listed below:
     * ``user`` - For example: ``{{ user.email }}``
 * templates/flask_user/confirm_email_[subject.txt|message.html|message.txt]
     * ``confirm_email_link`` - For example: ``{{ confirm_email_link }}``
-* templates/flask_user/forgot_password_[subject.txt|message.html|message.txt]
+* templates/flask_user/request_password_reset_[subject.txt|message.html|message.txt]
     * ``reset_password_link`` - For example: ``{{ reset_password_link }}``
 * templates/flask_user/password_changed_[subject.txt|message.html|message.txt]
     * n/a
@@ -234,14 +234,14 @@ Extra fields must be defined in the User model::
 
     db_adapter = SQLAlchemyAdapter(db, UserClass=User)
 
-A custom RegisterForm must be defined with field names
+A custom RegisterUserForm must be defined with field names
 **exactly matching** the names of the model fields::
 
-    class MyRegisterForm(RegisterForm):
+    class MyRegisterUserForm(RegisterUserForm):
         first_name = StringField('First name', validators=[DataRequired('First name is required')])
         last_name  = StringField('Last name',  validators=[DataRequired('Last name is required')])
 
-    user_manager = UserManager(db_adapter, app, register_form=MyRegisterForm)
+    user_manager = UserManager(db_adapter, app, register_form=MyRegisterUserForm)
 
 A custom ``templates/flask_user/register.html`` file must be copied and defined with the extra fields.
 See :ref:`customizingformtemplates`.
@@ -255,10 +255,10 @@ will be stored in the corresponding User field.
 **Extra registration fields in UserProfile model**
 
 * Add extra fields to the User data model
-* Extend a custom MyRegisterForm class from the built-in flask_user.forms.RegisterForm class.
+* Extend a custom MyRegisterUserForm class from the built-in flask_user.forms.RegisterUserForm class.
   See :ref:`customizingformclasses`.
 * Add extra fields to the form **using identical field names**.
-* Specify your custom registration form: ``user_manager = UserManager(db_adapter, app, register_form=MyRegisterForm)``
+* Specify your custom registration form: ``user_manager = UserManager(db_adapter, app, register_form=MyRegisterUserForm)``
 * Copy the built-in ``templates/flask_user/register.html`` to your application's templates/flask_user directory.
   See :ref:`customizingformtemplates`.
 * Add the extra form fields to register.html
@@ -274,21 +274,21 @@ Forms can be customized by sub-classing one of the following built-in Form class
     flask_user.forms.AddEmailForm
     flask_user.forms.ChangeUsernameForm
     flask_user.forms.ChangePasswordForm
-    flask_user.forms.ForgotPasswordForm
+    flask_user.forms.RequestPasswordResetForm
     flask_user.forms.LoginForm
-    flask_user.forms.RegisterForm
+    flask_user.forms.RegisterUserForm
     flask_user.forms.ResetPasswordForm
 
 and specifying the custom form in the call to UserManager()::
 
-    from flask_user.forms import RegisterForm
+    from flask_user.forms import RegisterUserForm
 
-    class MyRegisterForm(RegisterForm):
+    class MyRegisterUserForm(RegisterUserForm):
         first_name = StringField('First name')
         last_name = StringField('Last name')
 
     user_manager = UserManager(db_adapter, app,
-            register_form = MyRegisterForm)
+            register_form = MyRegisterUserForm)
 
 See also :ref:`customizingformtemplates`.
 
@@ -330,19 +330,19 @@ The following form template files resides in the ``templates`` directory and can
 
     base.html                             # root template
 
-    flask_user/member_base.html           # extends base.html
-    flask_user/change_password.html       # extends flask_user/member_base.html
-    flask_user/change_username.html       # extends flask_user/member_base.html
-    flask_user/manage_emails.html         # extends flask_user/member_base.html
-    flask_user/user_profile.html          # extends flask_user/member_base.html
+    flask_user/_authorized_base.html           # extends base.html
+    flask_user/change_password.html       # extends flask_user/_authorized_base.html
+    flask_user/change_username.html       # extends flask_user/_authorized_base.html
+    flask_user/manage_emails.html         # extends flask_user/_authorized_base.html
+    flask_user/edit_user_profile.html          # extends flask_user/_authorized_base.html
 
-    flask_user/public_base.html           # extends base.html
-    flask_user/forgot_password.html       # extends flask_user/public_base.html
-    flask_user/login.html                 # extends flask_user/public_base.html
-    flask_user/login_or_register.html     # extends flask_user/public_base.html
-    flask_user/register.html              # extends flask_user/public_base.html
-    flask_user/resend_confirm_email.html  # extends flask_user/public_base.html
-    flask_user/reset_password.html        # extends flask_user/public_base.html
+    flask_user/_public_base.html           # extends base.html
+    flask_user/request_password_reset.html       # extends flask_user/_public_base.html
+    flask_user/login.html                 # extends flask_user/_public_base.html
+    flask_user/login_or_register.html     # extends flask_user/_public_base.html
+    flask_user/register.html              # extends flask_user/_public_base.html
+    flask_user/request_email_confirmation.html  # extends flask_user/_public_base.html
+    flask_user/reset_password.html        # extends flask_user/_public_base.html
 
 If you'd like the Login form and the Register form to appear on one page,
 you can use the following application config settings::
@@ -448,7 +448,7 @@ Custom view functions are specified by setting an attribute on the Flask-User's 
             change_username_view_function      = my_view_function2,
             confirm_email_view_function        = my_view_function3,
             email_action_view_function         = my_view_function4,
-            forgot_password_view_function      = my_view_function5,
+            request_password_reset_view_function      = my_view_function5,
             login_view_function                = my_view_function6,
             logout_view_function               = my_view_function7,
             manage_emails_view_function        = my_view_function8,

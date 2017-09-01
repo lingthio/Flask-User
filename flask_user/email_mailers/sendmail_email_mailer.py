@@ -12,7 +12,7 @@ from .email_mailer import EmailMailer, SendEmailError
 
 
 class SendmailEmailMailer(EmailMailer):
-    """ Implements the EmailMailer interface to send emails with sendmail using Flask-Sendmail."""
+    """ Implements the EmailMailer interface to send email_templates with sendmail using Flask-Sendmail."""
     def __init__(self, app, sender_email=None, sender_name=None):
         """Setup Flask-Sendemail.
 

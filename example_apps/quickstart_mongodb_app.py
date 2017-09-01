@@ -91,7 +91,7 @@ def create_app():
     def home_page():
         # String-based templates
         return render_template_string("""
-            {% extends "base.html" %}
+            {% extends "flask_user_layout.html" %}
             {% block content %}
                 <h2>Home page</h2>
                 <p>This page can be accessed by anyone.</p><br/>
@@ -106,7 +106,7 @@ def create_app():
     def members_page():
         # String-based templates
         return render_template_string("""
-            {% extends "base.html" %}
+            {% extends "flask_user_layout.html" %}
             {% block content %}
                 <h2>Members page</h2>
                 <p>This page can only be accessed by authenticated users.</p><br/>

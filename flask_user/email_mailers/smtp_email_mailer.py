@@ -14,7 +14,7 @@ from .email_mailer import EmailMailer, SendEmailError
 
 
 class SMTPEmailMailer(EmailMailer):
-    """ Implements the EmailMailer interface to send emails with SMTP using Flask-Mail."""
+    """ Implements the EmailMailer interface to send email_templates with SMTP using Flask-Mail."""
     def __init__(self, app, sender_email=None, sender_name=None):
         """Setup Flask-Mail.
 

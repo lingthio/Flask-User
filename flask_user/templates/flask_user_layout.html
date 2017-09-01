@@ -32,7 +32,7 @@
         <div class="pull-left"><a href="/"><h1 class="no-margins">{{ user_manager.USER_APP_NAME }}</h1></a></div>
         <div class="pull-right">
             {% if call_or_get(current_user.is_authenticated) %}
-                <a href="{{ url_for('user.profile') }}">{{ current_user.username or current_user.email }}</a>
+                <a href="{{ url_for('user.edit_user_profile') }}">{{ current_user.username or current_user.email }}</a>
                 &nbsp; | &nbsp;
                 <a href="{{ url_for('user.logout') }}">Sign out</a>
             {% else %}
@@ -44,7 +44,7 @@
     <div id="menu-div" class="with-margins">
         <a href="/">Home</a>
         {% if call_or_get(current_user.is_authenticated) %}
-            &nbsp; | &nbsp; <a href="{{ url_for('user.profile') }}">User profile</a>
+            &nbsp; | &nbsp; <a href="{{ url_for('user.edit_user_profile') }}">User profile</a>
         {% endif %}
     </div>
     {% endblock %}
@@ -65,7 +65,9 @@
         {%- endwith %}
     {% endblock %}
 
-    {% block main %}{% block content %}{% endblock %}{% endblock %}
+    {% block main %}
+        {% block content %}{% endblock %}
+    {% endblock %}
     </div>
 
     <br/>

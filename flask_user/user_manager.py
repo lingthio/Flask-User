@@ -59,7 +59,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
 
         Keyword Args:
             UserEmailClass: The optional UserEmail class (*not* an instance!).
-                Required for the 'multiple emails per user' feature.
+                Required for the 'multiple email_templates per user' feature.
             UserInvitationClass: The optional UserInvitation class (*not* an instance!).
                 Required for the 'register by invitation' feature.
 
@@ -75,15 +75,6 @@ class UserManager(UserManager__Settings, UserManager__Views):
     def init_app(self, app, db, UserClass,
                  UserInvitationClass=None,
                  UserEmailClass=None,
-                 add_email_form=forms.AddEmailForm,
-                 change_password_form=forms.ChangePasswordForm,
-                 change_username_form=forms.ChangeUsernameForm,
-                 forgot_password_form=forms.ForgotPasswordForm,
-                 login_form=forms.LoginForm,
-                 register_form=forms.RegisterForm,
-                 resend_confirm_email_form=forms.ResendConfirmEmailForm,
-                 reset_password_form=forms.ResetPasswordForm,
-                 invite_form=forms.InviteForm,
                  # Validators
                 username_validator=forms.username_validator,
                  password_validator=forms.password_validator,
@@ -93,7 +84,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
                  change_username_view_function=user_manager_views.change_username,
                  confirm_email_view_function=user_manager_views.confirm_email,
                  email_action_view_function=user_manager_views.email_action,
-                 forgot_password_view_function=user_manager_views.forgot_password,
+                 request_password_reset_view_function=user_manager_views.request_password_reset,
                  login_view_function=user_manager_views.login,
                  logout_view_function=user_manager_views.logout,
                  manage_emails_view_function=user_manager_views.manage_emails,
@@ -130,6 +121,18 @@ class UserManager(UserManager__Settings, UserManager__Views):
         for attrib_name, default_value in UserManager.__dict__.items():
             if attrib_name[0:5] == 'USER_':
                 setattr(self, attrib_name, app.config.get(attrib_name, default_value))
+
+        # Set default forms
+        self.add_email_form = forms.AddEmailForm
+        self.change_password_form = forms.ChangePasswordForm
+        self.change_username_form = forms.ChangeUsernameForm
+        self.edit_user_profile_form = forms.EditUserProfileForm
+        self.login_form = forms.LoginForm
+        self.register_form = forms.RegisterUserForm
+        self.request_password_reset_form = forms.RequestPasswordResetForm
+        self.request_email_confirmation_form = forms.RequestEmailConfirmationForm
+        self.reset_password_form = forms.ResetPasswordForm
+        self.invite_user_form = forms.InviteUserForm
 
         # Configure a DbAdapter based on the class of the 'db' parameter
         self.db_adapter = None
@@ -172,16 +175,6 @@ class UserManager(UserManager__Settings, UserManager__Views):
         # Make sure the settings are valid -- raise ConfigurationError if not
         self._check_settings()
 
-        # Forms
-        self._create_default_attr('add_email_form', add_email_form)
-        self._create_default_attr('change_password_form', change_password_form)
-        self._create_default_attr('change_username_form', change_username_form)
-        self._create_default_attr('forgot_password_form', forgot_password_form)
-        self._create_default_attr('login_form', login_form)
-        self._create_default_attr('register_form', register_form)
-        self._create_default_attr('resend_confirm_email_form', resend_confirm_email_form)
-        self._create_default_attr('reset_password_form', reset_password_form)
-        self._create_default_attr('invite_form', invite_form)
         # Validators
         self._create_default_attr('username_validator', username_validator)
         self._create_default_attr('password_validator', password_validator)
@@ -191,7 +184,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
         self._create_default_attr('change_username_view_function', change_username_view_function)
         self._create_default_attr('confirm_email_view_function', confirm_email_view_function)
         self._create_default_attr('email_action_view_function', email_action_view_function)
-        self._create_default_attr('forgot_password_view_function', forgot_password_view_function)
+        self._create_default_attr('request_password_reset_view_function', request_password_reset_view_function)
         self._create_default_attr('login_view_function', login_view_function)
         self._create_default_attr('logout_view_function', logout_view_function)
         self._create_default_attr('manage_emails_view_function', manage_emails_view_function)
@@ -317,22 +310,22 @@ class UserManager(UserManager__Settings, UserManager__Views):
         app.add_url_rule(self.USER_LOGOUT_URL, 'user.logout', self.logout_view_function, methods=['GET', 'POST'])
         if self.USER_ENABLE_CONFIRM_EMAIL:
             app.add_url_rule(self.USER_CONFIRM_EMAIL_URL, 'user.confirm_email', self.confirm_email_view_function)
-            app.add_url_rule(self.USER_RESEND_CONFIRM_EMAIL_URL, 'user.resend_confirm_email', self.resend_confirm_email_view_function, methods=['GET', 'POST'])
+            app.add_url_rule(self.USER_REQUEST_EMAIL_CONFIRMATION_EMAIL_URL, 'user.resend_confirm_email', self.resend_confirm_email_view_function, methods=['GET', 'POST'])
         if self.USER_ENABLE_CHANGE_PASSWORD:
             app.add_url_rule(self.USER_CHANGE_PASSWORD_URL, 'user.change_password', self.change_password_view_function, methods=['GET', 'POST'])
         if self.USER_ENABLE_CHANGE_USERNAME:
             app.add_url_rule(self.USER_CHANGE_USERNAME_URL, 'user.change_username', self.change_username_view_function, methods=['GET', 'POST'])
         if self.USER_ENABLE_FORGOT_PASSWORD:
-            app.add_url_rule(self.USER_FORGOT_PASSWORD_URL, 'user.forgot_password', self.forgot_password_view_function, methods=['GET', 'POST'])
+            app.add_url_rule(self.USER_REQUEST_PASSWORD_RESET_URL, 'user.request_password_reset', self.request_password_reset_view_function, methods=['GET', 'POST'])
             app.add_url_rule(self.USER_RESET_PASSWORD_URL, 'user.reset_password', self.reset_password_view_function, methods=['GET', 'POST'])
         if self.USER_ENABLE_REGISTER:
             app.add_url_rule(self.USER_REGISTER_URL, 'user.register', self.register_view_function, methods=['GET', 'POST'])
         if self.UserEmailClass:
             app.add_url_rule(self.USER_EMAIL_ACTION_URL,  'user.email_action',  self.email_action_view_function)
             app.add_url_rule(self.USER_MANAGE_EMAILS_URL, 'user.manage_emails', self.manage_emails_view_function, methods=['GET', 'POST'])
-        app.add_url_rule(self.USER_USER_PROFILE_URL,  'user.profile',  self.user_profile_view_function,  methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_EDIT_USER_PROFILE_URL,  'user.edit_user_profile',  self.user_profile_view_function,  methods=['GET', 'POST'])
         if self.USER_ENABLE_INVITATION:
-            app.add_url_rule(self.USER_INVITE_URL, 'user.invite', self.invite_view_function, methods=['GET', 'POST'])
+            app.add_url_rule(self.USER_INVITE_USER_URL, 'user.invite_user', self.invite_view_function, methods=['GET', 'POST'])
 
     def get_user_by_id(self, user_id):
         """Retrieve a User by ID."""
@@ -383,7 +376,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
         return self.find_user_by_username(new_username)==None
 
     def get_primary_user_email(self, user):
-        """Retrieve the primary User email for the 'multiple emails per user' feature."""
+        """Retrieve the primary User email for the 'multiple email_templates per user' feature."""
         db_adapter = self.db_adapter
         if self.UserEmailClass:
             user_email = db_adapter.find_first_object(self.UserEmailClass,

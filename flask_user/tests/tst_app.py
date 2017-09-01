@@ -202,7 +202,7 @@ def init_app(app, test_config=None):                # For automated tests
     @app.route('/')
     def home_page():
         return render_template_string("""
-            {% extends "base.html" %}
+            {% extends "flask_user_layout.html" %}
             {% block content %}
             <h2>{%trans%}Home Page{%endtrans%}</h2>
             <p><a href="{{ url_for('user.login') }}">{%trans%}Sign in{%endtrans%}</a></p>
@@ -215,7 +215,7 @@ def init_app(app, test_config=None):                # For automated tests
     @confirm_email_required
     def user_profile_page():
         return render_template_string("""
-            {% extends "base.html" %}
+            {% extends "flask_user_layout.html" %}
             {% block content %}
             <h2>{%trans%}Profile Page{%endtrans%}</h2>
             <p> {%trans%}Hello{%endtrans%}
@@ -224,7 +224,7 @@ def init_app(app, test_config=None):                # For automated tests
                 {%trans%}Change username{%endtrans%}</a></p>
             <p> <a href="{{ url_for('user.change_password') }}">
                 {%trans%}Change password{%endtrans%}</a></p>
-            <p> <a href="{{ url_for('user.invite') }}">
+            <p> <a href="{{ url_for('user.invite_user') }}">
                 {%trans%}Invite User{%endtrans%}</a></p>
             <p> <a href="{{ url_for('user.logout') }}?next={{ url_for('user.login') }}">
                 {%trans%}Sign out{%endtrans%}</a></p>
@@ -236,7 +236,7 @@ def init_app(app, test_config=None):                # For automated tests
     @roles_required('secret', ['sauce', 'agent'])   # Use of @roles_required decorator
     def special_page():
         return render_template_string("""
-            {% extends "base.html" %}
+            {% extends "flask_user_layout.html" %}
             {% block content %}
             <h2>{%trans%}Special Page{%endtrans%}</h2>
             {% endblock %}

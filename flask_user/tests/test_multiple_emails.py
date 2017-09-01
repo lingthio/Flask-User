@@ -28,7 +28,7 @@ user1 = None
 
 def test_multiple_emails(app, db, client):
     """
-    Test 'multiple emails per user' feature
+    Test 'multiple email_templates per user' feature
     """
 
     # Set Flask-User settings
@@ -67,7 +67,7 @@ def test_multiple_emails(app, db, client):
     # Log in using email1
     client.login(email=EMAIL1, password=PASSWORD)
 
-    # Visit manage emails page
+    # Visit manage email_templates page
     response = client.get_valid_page(url_for('user.manage_emails'))
     assert response.data.find(str.encode(EMAIL1)) >= 0
 

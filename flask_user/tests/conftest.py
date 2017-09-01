@@ -11,7 +11,7 @@ def app(request):
         TESTING=True,            # Propagate exceptions (don't show 500 error page)
         WTF_CSRF_ENABLED=False,  # Disable CSRF token in Flask-Wtf
         LOGIN_DISABLED=False,    # Enable @register_required while app.testing=True
-        MAIL_SUPPRESS_SEND=True, # Suppress the sending of emails
+        MAIL_SUPPRESS_SEND=True, # Suppress the sending of email_templates
         SERVER_NAME='localhost'  # Enable url_for() without request context
     )
 

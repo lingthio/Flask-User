@@ -14,7 +14,7 @@ from flask import render_template, url_for
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class.
 class EmailManager(object):
-    """ Send emails via the configured Email Mailer ``user_manager.email_mailer``. """
+    """ Send email_templates via the configured Email Mailer ``user_manager.email_mailer``. """
 
     def __init__(self, user_manager):
         """
@@ -88,7 +88,7 @@ class EmailManager(object):
 
         # Render subject, html message and text message
         subject, html_message, text_message = self._render_email(
-            self.user_manager.USER_FORGOT_PASSWORD_EMAIL_TEMPLATE,
+            self.user_manager.USER_RESET_PASSWORD_EMAIL_TEMPLATE,
             user=user,
             app_name=self.user_manager.USER_APP_NAME,
             reset_password_link=reset_password_link)
@@ -107,7 +107,7 @@ class EmailManager(object):
 
         # Render subject, html message and text message
         subject, html_message, text_message = self._render_email(
-                self.user_manager.USER_INVITE_EMAIL_TEMPLATE,
+                self.user_manager.USER_INVITE_USER_EMAIL_TEMPLATE,
                 user=user,
                 app_name=self.user_manager.USER_APP_NAME,
                 accept_invite_link=accept_invite_link)

@@ -96,7 +96,7 @@ def create_app(test_config=None):                   # For automated tests
     @app.route('/')
     def home_page():
         return render_template_string("""
-            {% extends "base.html" %}
+            {% extends "flask_user_layout.html" %}
             {% block content %}
                 <h2>{%trans%}Home Pages{%endtrans%}</h2>
                 {% if call_or_get(current_user.is_authenticated) %}
@@ -121,7 +121,7 @@ def create_app(test_config=None):                   # For automated tests
     @confirm_email_required
     def user_profile_page():
         return render_template_string("""
-            {% extends "base.html" %}
+            {% extends "flask_user_layout.html" %}
             {% block content %}
                 <h2>{%trans%}Profile Page{%endtrans%}</h2>
                 <p> {%trans%}Hello{%endtrans%}
@@ -132,7 +132,7 @@ def create_app(test_config=None):                   # For automated tests
                     {%trans%}Change username{%endtrans%}</a></p>
                 <p> <a href="{{ url_for('user.change_password') }}">
                     {%trans%}Change password{%endtrans%}</a></p>
-                <p> <a href="{{ url_for('user.invite') }}">
+                <p> <a href="{{ url_for('user.invite_user') }}">
                     {%trans%}Invite User{%endtrans%}</a></p>
                 <p> <a href="{{ url_for('user.logout') }}">
                     {%trans%}Sign out{%endtrans%}</a></p>

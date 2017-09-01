@@ -7,43 +7,9 @@ Flask-User is designed to be **largely configurable**,
 
 and **almost fully customizable**.
 
-- :ref:`CustomizeFormsAndViews`
+- :ref:`CustomizeForms`
 - :ref:`CustomizeManagers`
 
-.. _CustomizeFormsAndViews:
-
-Customizing forms and view methods
-----------------------------------
-
-Custom settings, forms and view methods can be configured as follows::
-
-    # Customize a form:
-    from flask_user.user_manager_forms import LoginForm
-    class CustomLoginForm(LoginForm):
-        pass
-
-    # Customize Flask-User
-    class CustomUserManager(UserManager):
-
-        def customize(self):
-
-            # Customize a form
-            self.login_form = CustomLoginForm()
-
-        # customize a view function
-        def login_view_function(self):
-            pass
-
-    # Setup Flask-User
-    user_manager = CustomUserManager(app, db, User)
-
-.. seealso::
-
-    | :ref:`UserManager__Forms` for a complete list of customizable forms.
-    | :ref:`UserManager__Views` for a complete list of customizable view methods.
-
-
--------
 
 .. _CustomizeManagers:
 

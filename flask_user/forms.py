@@ -74,6 +74,7 @@ def unique_email_validator(form, field):
 # ***********
 
 class AddEmailForm(FlaskForm):
+    """Add an email address form."""
     email = StringField(_('Email'), validators=[
         validators.DataRequired(_('Email is required')),
         validators.Email(_('Invalid Email')),
@@ -82,6 +83,7 @@ class AddEmailForm(FlaskForm):
 
 
 class ChangePasswordForm(FlaskForm):
+    """Change password form."""
     old_password = PasswordField(_('Old Password'), validators=[
         validators.DataRequired(_('Old Password is required')),
         ])
@@ -122,6 +124,7 @@ class ChangePasswordForm(FlaskForm):
 
 
 class ChangeUsernameForm(FlaskForm):
+    """Change username form."""
     new_username = StringField(_('New Username'), validators=[
         validators.DataRequired(_('Username is required')),
         unique_username_validator,
@@ -156,22 +159,17 @@ class ChangeUsernameForm(FlaskForm):
         return True
 
 
-class ForgotPasswordForm(FlaskForm):
-    email = StringField(_('Your email address'), validators=[
-        validators.DataRequired(_('Email address is required')),
-        validators.Email(_('Invalid Email address')),
-        ])
-    submit = SubmitField(_('Send reset password email'))
+class EditUserProfileForm(FlaskForm):
+    """Edit user profile form."""
 
-    def validate_email(form, field):
-        user_manager =  current_app.user_manager
-        if user_manager.USER_SHOW_EMAIL_DOES_NOT_EXIST:
-            user, user_email = user_manager.find_user_by_email(field.data)
-            if not user:
-                raise ValidationError(_('%(username_or_email)s does not exist', username_or_email=_('Email')))
+    first_name = StringField(_('Username'), validators=[validators.DataRequired()])
+    last_name = StringField(_('Username'), validators=[validators.DataRequired()])
+
+    submit = SubmitField(_('Update'))
 
 
 class LoginForm(FlaskForm):
+    """Login form."""
     next = HiddenField()         # for login.html
     reg_next = HiddenField()     # for login_or_register.html
 
@@ -259,7 +257,8 @@ class LoginForm(FlaskForm):
         return False                                # Unsuccessful authentication
 
 
-class RegisterForm(FlaskForm):
+class RegisterUserForm(FlaskForm):
+    """Register new user form."""
     password_validator_added = False
 
     next = HiddenField()        # for login_or_register.html
@@ -305,13 +304,30 @@ class RegisterForm(FlaskForm):
         if not has_been_added:
             self.password.validators.append(user_manager.password_validator)
         # Validate field-validators
-        if not super(RegisterForm, self).validate():
+        if not super(RegisterUserForm, self).validate():
             return False
         # All is well
         return True
 
 
-class ResendConfirmEmailForm(FlaskForm):
+class RequestPasswordResetForm(FlaskForm):
+    """Forgot password form."""
+    email = StringField(_('Your email address'), validators=[
+        validators.DataRequired(_('Email address is required')),
+        validators.Email(_('Invalid Email address')),
+        ])
+    submit = SubmitField(_('Send reset password email'))
+
+    def validate_email(form, field):
+        user_manager =  current_app.user_manager
+        if user_manager.USER_SHOW_EMAIL_DOES_NOT_EXIST:
+            user, user_email = user_manager.find_user_by_email(field.data)
+            if not user:
+                raise ValidationError(_('%(username_or_email)s does not exist', username_or_email=_('Email')))
+
+
+class RequestEmailConfirmationForm(FlaskForm):
+    """Resend email confirmation form."""
     email = StringField(_('Your email address'), validators=[
         validators.DataRequired(_('Email address is required')),
         validators.Email(_('Invalid Email address')),
@@ -320,6 +336,7 @@ class ResendConfirmEmailForm(FlaskForm):
 
 
 class ResetPasswordForm(FlaskForm):
+    """Reset password form."""
     new_password = PasswordField(_('New Password'), validators=[
         validators.DataRequired(_('New Password is required'))])
     retype_password = PasswordField(_('Retype New Password'), validators=[
@@ -346,7 +363,8 @@ class ResetPasswordForm(FlaskForm):
         return True
 
 
-class InviteForm(FlaskForm):
+class InviteUserForm(FlaskForm):
+    """Invite new user form."""
     email = StringField(_('Email'), validators=[
         validators.DataRequired(_('Email is required')),
         validators.Email(_('Invalid Email'))])

@@ -5,10 +5,39 @@ UserManager forms
 
 Below is a complete list of customizable Flask-User forms.
 
-Note: Customization happens on the ``UserManager`` class.
-The `UserManager__Forms` class is mixed into the `UserManager` class,
-allowing us to split the code and docs across several files.
-
-.. autoclass:: flask_user.user_manager_forms.UserManager__Forms
+.. autoclass:: flask_user.forms.AddEmailForm
     :no-undoc-members:
+    :no-inherited-members:
+
+.. autoclass:: flask_user.forms.ChangeUsernameForm
+    :no-undoc-members:
+    :no-inherited-members:
+
+.. autoclass:: flask_user.forms.EditUserProfileForm
+    :no-undoc-members:
+    :no-inherited-members:
+
+.. autoclass:: flask_user.forms.LoginForm
+    :no-undoc-members:
+    :no-inherited-members:
+
+.. autoclass:: flask_user.forms.RegisterUserForm
+    :no-undoc-members:
+    :no-inherited-members:
+
+.. autoclass:: flask_user.forms.RequestEmailConfirmationForm
+    :no-undoc-members:
+    :no-inherited-members:
+
+.. autoclass:: flask_user.forms.RequestPasswordResetForm
+    :no-undoc-members:
+    :no-inherited-members:
+
+.. autoclass:: flask_user.forms.ResetPasswordForm
+    :no-undoc-members:
+    :no-inherited-members:
+
+.. autoclass:: flask_user.forms.InviteUserForm
+    :no-undoc-members:
+    :no-inherited-members:
 

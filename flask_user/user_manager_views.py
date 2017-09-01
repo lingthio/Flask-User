@@ -250,7 +250,7 @@ def email_action(id, action):
         db_adapter.commit()
 
     elif action=='make-primary':
-        # Disable previously primary emails
+        # Disable previously primary email_templates
         user_emails = db_adapter.find_objects(um.UserEmailClass, user_id=current_user.id)
         for other_user_email in user_emails:
             if other_user_email.is_primary:
@@ -267,13 +267,13 @@ def email_action(id, action):
 
     return redirect(url_for('user.manage_emails'))
 
-def forgot_password():
+def request_password_reset():
     """Prompt for email and send reset password email."""
     um =  current_app.user_manager
     db_adapter = um.db_adapter
 
     # Initialize form
-    form = um.forgot_password_form(request.form)
+    form = um.request_password_reset_form(request.form)
 
     # Process valid POST
     if request.method=='POST' and form.validate():
@@ -285,8 +285,8 @@ def forgot_password():
                 # Send forgot password email
                 um.email_manager.send_reset_password_email(user, user_email)
 
-                # Send forgot_password signal
-                signals.user_forgot_password.send(current_app._get_current_object(), user=user)
+                # Send request_password_reset signal
+                signals.user_request_password_reset.send(current_app._get_current_object(), user=user)
 
         # Prepare one-time system message
         flash(_("A reset password email has been sent to '%(email)s'. Open that email and follow the instructions to reset your password.", email=email), 'success')
@@ -521,10 +521,10 @@ def invite():
     um = current_app.user_manager
     db_adapter = um.db_adapter
 
-    invite_form = um.invite_form(request.form)
+    invite_user_form = um.invite_user_form(request.form)
 
-    if request.method=='POST' and invite_form.validate():
-        email = invite_form.email.data
+    if request.method=='POST' and invite_user_form.validate():
+        email = invite_user_form.email.data
 
         User = um.UserClass
         user_class_fields = User.__dict__
@@ -535,7 +535,7 @@ def invite():
         user, user_email = um.find_user_by_email(email)
         if user:
             flash("User with that email has already registered", "error")
-            return redirect(url_for('user.invite'))
+            return redirect(url_for('user.invite_user'))
         else:
             user_invite = db_adapter \
                             .add_object(um.UserInvitationClass, **{
@@ -556,13 +556,13 @@ def invite():
         signals \
             .user_sent_invitation \
             .send(current_app._get_current_object(), user_invite=user_invite,
-                  form=invite_form)
+                  form=invite_user_form)
 
         flash(_('Invitation has been sent.'), 'success')
         safe_next = _get_safe_next_param('next', um.USER_AFTER_INVITE_ENDPOINT)
         return redirect(safe_next)
 
-    return render(um.USER_INVITE_TEMPLATE, form=invite_form)
+    return render(um.USER_INVITE_TEMPLATE, form=invite_user_form)
 
 def resend_confirm_email():
     """Prompt for email and re-send email conformation email."""
@@ -570,7 +570,7 @@ def resend_confirm_email():
     db_adapter = um.db_adapter
 
     # Initialize form
-    form = um.resend_confirm_email_form(request.form)
+    form = um.request_email_confirmation_form(request.form)
 
     # Process valid POST
     if request.method=='POST' and form.validate():
@@ -679,7 +679,7 @@ def unauthorized():
 @confirm_email_required
 def user_profile():
     um = current_app.user_manager
-    return render(um.USER_USER_PROFILE_TEMPLATE)
+    return render(um.USER_EDIT_USER_PROFILE_TEMPLATE)
 
 
 def _USER_SEND_REGISTERED_EMAIL(user, user_email, require_email_confirmation=True):

@@ -17,7 +17,7 @@ class SendEmailError(Exception):
 
 
 class EmailMailer(object):
-    """ Define the EmailMailer interface to send emails through specific email mailers."""
+    """ Define the EmailMailer interface to send email_templates through specific email mailers."""
 
     def __init__(self, app, sender_email=None, sender_name=None):
         """Setup an email mailer.

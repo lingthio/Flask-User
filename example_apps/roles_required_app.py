@@ -85,7 +85,7 @@ def create_app(test_config=None):                   # For automated tests
     @app.route('/')
     def home_page():
         return render_template_string("""
-            {% extends "base.html" %}
+            {% extends "flask_user_layout.html" %}
             {% block content %}
                 <h2>Home page</h2>
                 <p>This page can be accessed by anyone.</p><br/>
@@ -100,7 +100,7 @@ def create_app(test_config=None):                   # For automated tests
     @login_required                                 # Use of @login_required decorator
     def members_page():
         return render_template_string("""
-            {% extends "base.html" %}
+            {% extends "flask_user_layout.html" %}
             {% block content %}
                 <h2>Members page</h2>
                 <p>This page can only be accessed by authenticated users.</p><br/>
@@ -115,7 +115,7 @@ def create_app(test_config=None):                   # For automated tests
     @roles_required('secret', ['sauce', 'agent'])   # Use of @roles_required decorator
     def special_page():
         return render_template_string("""
-            {% extends "base.html" %}
+            {% extends "flask_user_layout.html" %}
             {% block content %}
                 <h2>Special Page</h2>
                 <p>This page can only be accessed by user007.</p><br/>
