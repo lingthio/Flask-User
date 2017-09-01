@@ -2,7 +2,7 @@ from __future__ import print_function
 
 from .db_adapter import DbAdapter
 
-class DbAdapterForSQLAlchemy(DbAdapter):
+class SQLAlchemyDbAdapter(DbAdapter):
     """ Implements the DbAdapter interface to find, add, update and delete
     database objects using Flask-SQLAlchemy.
     """
@@ -14,7 +14,7 @@ class DbAdapterForSQLAlchemy(DbAdapter):
 
         | Example:
         |    db = SQLAlchemy()
-        |    db_adapter = DbAdapterForSQLAlchemy(db)
+        |    db_adapter = SQLAlchemyDbAdapter(db)
         """
-        super(DbAdapterForSQLAlchemy, self).__init__(db)
+        super(SQLAlchemyDbAdapter, self).__init__(db)
 

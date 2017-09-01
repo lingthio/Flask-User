@@ -1,3 +1,3 @@
-from .email_mailer_for_smtp import EmailMailerForSMTP
-from .email_mailer_for_sendmail import EmailMailerForSendmail
-from .email_mailer_for_sendgrid import EmailMailerForSendgrid
+from .smtp_email_mailer import SMTPEmailMailer
+from .sendmail_email_mailer import SendmailEmailMailer
+from .sendgrid_email_mailer import SendgridEmailMailer

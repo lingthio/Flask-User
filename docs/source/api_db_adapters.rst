@@ -9,8 +9,8 @@ while shielding the Flask-User code from the underlying implementation.
 
 Included implementations:
 
-- :ref:`DbAdapterForSQLAlchemy`
-- :ref:`DbAdapterForMongoAlchemy`
+- :ref:`SQLAlchemyDbAdapter`
+- :ref:`MongoAlchemyDbAdapter`
 
 Other databases can be supported by writing your own :ref:`CustomDbAdapter`.
 
@@ -18,15 +18,15 @@ Other databases can be supported by writing your own :ref:`CustomDbAdapter`.
 
 --------
 
-.. _DbAdapterForSQLAlchemy:
+.. _SQLAlchemyDbAdapter:
 
-DbAdapterForSQLAlchemy
-----------------------
+SQLAlchemyDbAdapter
+-------------------
 
-.. autoclass:: flask_user.db_adapters.db_adapter_for_sqlalchemy.DbAdapterForSQLAlchemy
+.. autoclass:: flask_user.db_adapters.sqlalchemy_db_adapter.SQLAlchemyDbAdapter
     :member-order: alphabetical
 
-Flask-User ships with DbAdapterForSQLAlchemy and installs Flask-SQLAlchemy.
+Flask-User ships with SQLAlchemyDbAdapter and installs Flask-SQLAlchemy.
 
 Simply supply a SQLAlchemy instance as the ``db`` parameter of UserManager()::
 
@@ -35,15 +35,15 @@ Simply supply a SQLAlchemy instance as the ``db`` parameter of UserManager()::
 
 --------
 
-.. _DbAdapterForMongoAlchemy:
+.. _MongoAlchemyDbAdapter:
 
-DbAdapterForMongoAlchemy
-------------------------
+MongoAlchemyDbAdapter
+---------------------
 
-.. autoclass:: flask_user.db_adapters.db_adapter_for_mongoalchemy.DbAdapterForMongoAlchemy
+.. autoclass:: flask_user.db_adapters.mongoalchemy_db_adapter.MongoAlchemyDbAdapter
     :member-order: alphabetical
 
-Flask-User ships with DbAdapterForMongoAlchemy, but you will need
+Flask-User ships with MongoAlchemyDbAdapter, but you will need
 to manually install Flask-MongoAlchemy::
 
     pip install Flask-MongoAlchemy

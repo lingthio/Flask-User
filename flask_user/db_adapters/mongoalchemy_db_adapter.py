@@ -2,7 +2,7 @@ from __future__ import print_function
 
 from .db_adapter import DbAdapter
 
-class DbAdapterForMongoAlchemy(DbAdapter):
+class MongoAlchemyDbAdapter(DbAdapter):
     """ Implements the DbAdapter interface to find, add, update and delete
     database objects using Flask-MongoAlchemy.
     """
@@ -14,9 +14,9 @@ class DbAdapterForMongoAlchemy(DbAdapter):
 
         | Example:
         |    db = MongoAlchemy()
-        |    db_adapter = DbAdapterForMongoAlchemy(db)
+        |    db_adapter = MongoAlchemyDbAdapter(db)
         """
-        super(DbAdapterForMongoAlchemy, self).__init__(db)
+        super(MongoAlchemyDbAdapter, self).__init__(db)
 
     def get_object(self, ObjectClass, id):
         """ Retrieve object of type ``ObjectClass`` by ``id``."""
@@ -47,7 +47,7 @@ class DbAdapterForMongoAlchemy(DbAdapter):
     def update_object(self, object, **kwargs):
         """ Update an existing object, specified by ``object``,
         with the fields and values specified in ``**kwargs``. """
-        super(DbAdapterForMongoAlchemy, self).update_object(object, **kwargs)
+        super(MongoAlchemyDbAdapter, self).update_object(object, **kwargs)
         # Save changes to DB
         object.save()
 

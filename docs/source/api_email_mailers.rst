@@ -8,9 +8,9 @@ while shielding the Flask-User code from the underlying implementation.
 
 Included implementations:
 
-- :ref:`EmailMailerForSMTP`
-- :ref:`EmailMailerForSendmail`
-- :ref:`EmailMailerForSendgrid`
+- :ref:`SMTPEmailMailer`
+- :ref:`SendmailEmailMailer`
+- :ref:`SendgridEmailMailer`
 - :ref:`CustomEmailMailer`
 
 Other email mailers can be supported by adding additional interface implementation classes.
@@ -19,26 +19,26 @@ Other email mailers can be supported by adding additional interface implementati
 
 --------
 
-.. _EmailMailerForSMTP:
+.. _SMTPEmailMailer:
 
-EmailMailerForSMTP
------------------------
+SMTP EmailMailer
+----------------
 
-.. autoclass:: flask_user.email_mailers.email_mailer_for_smtp.EmailMailerForSMTP
+.. autoclass:: flask_user.email_mailers.smtp_email_mailer.SMTPEmailMailer
 
-Flask-User ships with ``EmailMailerForSMTP``,installs ``Flask-Mail``,
+Flask-User ships with ``SMTPEmailMailer``,installs ``Flask-Mail``,
 and uses as the default email mailer (no customization required).
 
 --------
 
-.. _EmailMailerForSendmail:
+.. _SendmailEmailMailer:
 
-EmailMailerForSendmail
----------------------------
+Sendmail EmailMailer
+--------------------
 
-.. autoclass:: flask_user.email_mailers.email_mailer_for_sendmail.EmailMailerForSendmail
+.. autoclass:: flask_user.email_mailers.sendmail_email_mailer.SendmailEmailMailer
 
-Flask-User ships with ``EmailMailerForSendmail``, but you will need to install ``Flask-Sendmail`` manually::
+Flask-User ships with ``SendmailEmailMailer``, but you will need to install ``Flask-Sendmail`` manually::
 
     pip install Flask-Sendmail
 
@@ -50,8 +50,8 @@ then customize Flask-User like so::
         def customize():
 
             # Configure the email mailer
-            from flask_user.email_mailers import EmailMailerForSendMail
-            self.email_mailer = EmailMailerForSendmail(
+            from flask_user.email_mailers import SendmailEmailMailer
+            self.email_mailer = SendmailEmailMailer(
                 self.email_sender_email, self.email_sender_name)
 
     # Setup Flask-User
@@ -59,14 +59,14 @@ then customize Flask-User like so::
 
 --------
 
-.. _EmailMailerForSendgrid:
+.. _SendgridEmailMailer:
 
-EmailMailerForSendgrid
-----------------------
+Sendgrid EmailMailer
+--------------------
 
-.. autoclass:: flask_user.email_mailers.email_mailer_for_sendgrid.EmailMailerForSendgrid
+.. autoclass:: flask_user.email_mailers.sendgrid_email_mailer.SendgridEmailMailer
 
-Flask-User ships with ``EmailMailerForSendgrid``, but you will need to install ``sendgrid-python`` manually::
+Flask-User ships with ``SendgridEmailMailer``, but you will need to install ``sendgrid-python`` manually::
 
     pip install sendgrid-python
 
@@ -78,8 +78,8 @@ then customize Flask-User like so::
         def customize():
 
             # Configure the email mailer
-            from flask_user.email_mailers import EmailMailerForSendgrid
-            self.email_mailer = EmailMailerForSendmail(
+            from flask_user.email_mailers import SendgridEmailMailer
+            self.email_mailer = SendmailEmailMailer(
                 self.email_sender_email, self.email_sender_name)
 
     # Setup Flask-User
@@ -89,10 +89,10 @@ then customize Flask-User like so::
 
 .. _CustomEmailMailer:
 
-EmailMailerForSendgrid
-----------------------
+Custom EmailMailer
+------------------
 
-.. autoclass:: flask_user.email_mailers.email_mailer_for_sendgrid.EmailMailerForSendgrid
+.. autoclass:: flask_user.email_mailers.sendgrid_email_mailer.SendgridEmailMailer
 
 You can configure Flask-User to use a custom email mailer like so::
 

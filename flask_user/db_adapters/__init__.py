@@ -1,2 +1,2 @@
-from .db_adapter_for_sqlalchemy import DbAdapterForSQLAlchemy
-from .db_adapter_for_mongoalchemy import DbAdapterForMongoAlchemy
+from .sqlalchemy_db_adapter import SQLAlchemyDbAdapter
+from .mongoalchemy_db_adapter import MongoAlchemyDbAdapter

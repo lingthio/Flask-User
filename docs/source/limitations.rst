@@ -125,7 +125,7 @@ Without customization, the primary key of the User, UserEmail, UserInvitation an
 - may not be a compound key.
 
 Customization may offer a way to use primary keys named other than ``id``. As an example,
-the :ref:`DbAdapterForMongoAlchemy` accepts primary keys named ``_id`` of type ObjectID.
+the :ref:`MongoAlchemyDbAdapter` accepts primary keys named ``_id`` of type ObjectID.
 
 
 

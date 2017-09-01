@@ -18,7 +18,7 @@ class DbAdapter(object):
 
         | Example:
         |     db = SQLAlchemy()
-        |     db_adapter = DbAdapterForSQLAlchemy(db)
+        |     db_adapter = SQLAlchemyDbAdapter(db)
         """
         self.db = db
 

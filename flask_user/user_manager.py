@@ -138,8 +138,8 @@ class UserManager(UserManager__Settings, UserManager__Views):
             try:
                 from flask_sqlalchemy import SQLAlchemy
                 if isinstance(db, SQLAlchemy):
-                    from .db_adapters import DbAdapterForSQLAlchemy
-                    self.db_adapter = DbAdapterForSQLAlchemy(db)
+                    from .db_adapters import SQLAlchemyDbAdapter
+                    self.db_adapter = SQLAlchemyDbAdapter(db)
             except:
                 pass
         # Check if db is a MongoAlchemy instance
@@ -147,14 +147,14 @@ class UserManager(UserManager__Settings, UserManager__Views):
             try:
                 from flask_mongoalchemy import MongoAlchemy
                 if isinstance(db, MongoAlchemy):
-                    from .db_adapters import DbAdapterForMongoAlchemy
-                    self.db_adapter = DbAdapterForMongoAlchemy(db)
+                    from .db_adapters import MongoAlchemyDbAdapter
+                    self.db_adapter = MongoAlchemyDbAdapter(db)
             except:
                 pass
 
-        # Configure EmailMailerForSMTP as the default email mailer
-        from .email_mailers.email_mailer_for_smtp import EmailMailerForSMTP
-        self.email_mailer = EmailMailerForSMTP(app)
+        # Configure SMTPEmailMailer as the default email mailer
+        from .email_mailers.smtp_email_mailer import SMTPEmailMailer
+        self.email_mailer = SMTPEmailMailer(app)
 
         # Initialize Translations -- Only if Flask-Babel has been installed
         if hasattr(app.jinja_env, 'install_gettext_callables'):
