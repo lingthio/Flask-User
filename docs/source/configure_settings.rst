@@ -1,7 +1,7 @@
-Configure
-=========
+.. _ConfigureSettings:
 
-Flask-User is designed to be **largely configurable** and **almost fully customizable**.
+Configure settings
+==================
 
 Flask-User default features and settings can overridden in one of two ways:
 

@@ -1,9 +1,15 @@
-""" This file contains view functions for Flask-User forms.
+"""
+UserManager__Views is a Mixin for UserManager that holds all Flask-User view methods.
+
+We code the behaviour into the Usermanager methods to allow the developer
+to override or extend this behaviour.
+
+Because the view methods have an additional 'self' parameter,
+URLs are first mapped to to view-stub functions, which call UserManager view methods.
 """
 
-# Copyright (c) 2013 by Ling Thio
-# Author: Ling Thio (ling.thio@gmail.com)
-# License: Simplified BSD License, see LICENSE.txt for more details.
+# The UserManager is implemented across several source code files.
+# Mixins are used to aggregate all member functions into the one UserManager class.
 
 
 from datetime import datetime
@@ -36,10 +42,13 @@ def render(*args, **kwargs):
 
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class for ease of customization.
-class ViewsMixin(object):
+class UserManager__Views(object):
+    """Flask-User view methods."""
 
     def login_view(self):
-        """ Authenticate username/email and login authenticated users."""
+        """ Process the login form or the login-or-register form."""
+
+        # Authenticate username/email and login authenticated users.
         um = current_app.user_manager
         db_adapter = um.db_adapter
 

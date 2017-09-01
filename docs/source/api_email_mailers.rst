@@ -94,11 +94,11 @@ EmailMailerForSendgrid
 
 .. autoclass:: flask_user.email_mailers.email_mailer_for_sendgrid.EmailMailerForSendgrid
 
-You can configure Flask-User to use a custom email mailer like so:
+You can configure Flask-User to use a custom email mailer like so::
 
     # Write your own custom email mailer
     class CustomEmailMailer(object):
-        ...
+        pass
 
     # Customize Flask-User
     class CustomUserManager(UserManager):

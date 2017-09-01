@@ -16,9 +16,10 @@ from flask_user.token_manager import TokenManager
 
 from . import forms
 from . import translations
-from . import views
+from . import user_manager_views
 from .translations import get_translations
 from .user_manager_settings import UserManager__Settings
+from .user_manager_views import UserManager__Views
 
 __version__ = '0.9'
 
@@ -43,7 +44,7 @@ class ConfigurationError(Exception):
 
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class for ease of customization.
-class UserManager(UserManager__Settings, views.ViewsMixin):
+class UserManager(UserManager__Settings, UserManager__Views):
     """ Customizable User Authentication and Management.
     """
 
@@ -74,7 +75,7 @@ class UserManager(UserManager__Settings, views.ViewsMixin):
     def init_app(self, app, db, UserClass,
                  UserInvitationClass=None,
                  UserEmailClass=None,
-                add_email_form=forms.AddEmailForm,
+                 add_email_form=forms.AddEmailForm,
                  change_password_form=forms.ChangePasswordForm,
                  change_username_form=forms.ChangeUsernameForm,
                  forgot_password_form=forms.ForgotPasswordForm,
@@ -88,26 +89,26 @@ class UserManager(UserManager__Settings, views.ViewsMixin):
                  password_validator=forms.password_validator,
                  # View functions
                 render_function=render_template,
-                 change_password_view_function=views.change_password,
-                 change_username_view_function=views.change_username,
-                 confirm_email_view_function=views.confirm_email,
-                 email_action_view_function=views.email_action,
-                 forgot_password_view_function=views.forgot_password,
-                 login_view_function=views.login,
-                 logout_view_function=views.logout,
-                 manage_emails_view_function=views.manage_emails,
-                 register_view_function=views.register,
-                 resend_confirm_email_view_function = views.resend_confirm_email,
-                 reset_password_view_function = views.reset_password,
-                 unconfirmed_email_view_function = views.unconfirmed,
-                 unauthenticated_view_function = views.unauthenticated,
-                 unauthorized_view_function = views.unauthorized,
-                 user_profile_view_function = views.user_profile,
-                 invite_view_function = views.invite,
+                 change_password_view_function=user_manager_views.change_password,
+                 change_username_view_function=user_manager_views.change_username,
+                 confirm_email_view_function=user_manager_views.confirm_email,
+                 email_action_view_function=user_manager_views.email_action,
+                 forgot_password_view_function=user_manager_views.forgot_password,
+                 login_view_function=user_manager_views.login,
+                 logout_view_function=user_manager_views.logout,
+                 manage_emails_view_function=user_manager_views.manage_emails,
+                 register_view_function=user_manager_views.register,
+                 resend_confirm_email_view_function = user_manager_views.resend_confirm_email,
+                 reset_password_view_function = user_manager_views.reset_password,
+                 unconfirmed_email_view_function = user_manager_views.unconfirmed,
+                 unauthenticated_view_function = user_manager_views.unauthenticated,
+                 unauthorized_view_function = user_manager_views.unauthorized,
+                 user_profile_view_function = user_manager_views.user_profile,
+                 invite_view_function = user_manager_views.invite,
                  # Misc
                  login_manager = None,
                  password_crypt_context = None,
-                 make_safe_url_function = views.make_safe_url):
+                 make_safe_url_function = user_manager_views.make_safe_url):
 
         # See http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code
         # Perform Class type checking

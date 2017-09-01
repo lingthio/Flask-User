@@ -1,16 +1,15 @@
 """
-UserManager__SettingsMixin is a Mixin for UserManager that holds its settings
-and docstrings for Spinx autodoc.
+UserManager__Settings is a Mixin for UserManager that holds all Flask-User settings.
 """
 
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class.
 
-# This SettingsMixin documents all Flask-User settings through docstrings.
+# This Settings Mixin documents all Flask-User settings through docstrings.
 # Sphinx Autodoc builds the documentation from these docstrings.
 
 class UserManager__Settings(object):
-    """UserManager settings and their defaults.
+    """Flask-User settings and their defaults.
 
     .. note:: Feature settings and their defaults
     """

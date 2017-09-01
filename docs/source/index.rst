@@ -17,7 +17,6 @@ Table of Contents
     limitations
     data_models
     authorization
-    configure
     customize
     porting
     api
@@ -29,6 +28,9 @@ Table of Contents
     api_email_mailers
     api_user_manager
     api_user_manager_settings
+    api_user_manager_forms
+    api_user_manager_views
+    configure_settings
     roles_required_app
     base_templates
     signals
