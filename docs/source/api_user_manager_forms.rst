@@ -5,39 +5,73 @@ UserManager forms
 
 Below is a complete list of customizable Flask-User forms.
 
+.. _AddEmailForm:
+
 .. autoclass:: flask_user.forms.AddEmailForm
     :no-undoc-members:
     :no-inherited-members:
+
+--------
+
+.. _ChangeUsernameForm:
 
 .. autoclass:: flask_user.forms.ChangeUsernameForm
     :no-undoc-members:
     :no-inherited-members:
 
+--------
+
+.. _EditUserProfileForm:
+
 .. autoclass:: flask_user.forms.EditUserProfileForm
     :no-undoc-members:
     :no-inherited-members:
+
+--------
+
+.. _ForgotPasswordForm:
+
+.. autoclass:: flask_user.forms.ForgotPasswordForm
+    :no-undoc-members:
+    :no-inherited-members:
+
+--------
+
+.. _InviteUserForm:
+
+.. autoclass:: flask_user.forms.InviteUserForm
+    :no-undoc-members:
+    :no-inherited-members:
+
+--------
+
+.. _LoginForm:
 
 .. autoclass:: flask_user.forms.LoginForm
     :no-undoc-members:
     :no-inherited-members:
 
+--------
+
+.. _RegisterUserForm:
+
 .. autoclass:: flask_user.forms.RegisterUserForm
     :no-undoc-members:
     :no-inherited-members:
 
-.. autoclass:: flask_user.forms.RequestEmailConfirmationForm
+--------
+
+.. _ResendEmailConfirmationForm:
+
+.. autoclass:: flask_user.forms.ResendEmailConfirmationForm
     :no-undoc-members:
     :no-inherited-members:
 
-.. autoclass:: flask_user.forms.RequestPasswordResetForm
-    :no-undoc-members:
-    :no-inherited-members:
+--------
+
+.. _ResetPasswordForm:
 
 .. autoclass:: flask_user.forms.ResetPasswordForm
-    :no-undoc-members:
-    :no-inherited-members:
-
-.. autoclass:: flask_user.forms.InviteUserForm
     :no-undoc-members:
     :no-inherited-members:
 

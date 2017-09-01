@@ -310,7 +310,7 @@ class RegisterUserForm(FlaskForm):
         return True
 
 
-class RequestPasswordResetForm(FlaskForm):
+class ForgotPasswordForm(FlaskForm):
     """Forgot password form."""
     email = StringField(_('Your email address'), validators=[
         validators.DataRequired(_('Email address is required')),
@@ -326,7 +326,7 @@ class RequestPasswordResetForm(FlaskForm):
                 raise ValidationError(_('%(username_or_email)s does not exist', username_or_email=_('Email')))
 
 
-class RequestEmailConfirmationForm(FlaskForm):
+class ResendEmailConfirmationForm(FlaskForm):
     """Resend email confirmation form."""
     email = StringField(_('Your email address'), validators=[
         validators.DataRequired(_('Email address is required')),

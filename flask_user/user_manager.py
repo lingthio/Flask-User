@@ -84,18 +84,18 @@ class UserManager(UserManager__Settings, UserManager__Views):
                  change_username_view_function=user_manager_views.change_username,
                  confirm_email_view_function=user_manager_views.confirm_email,
                  email_action_view_function=user_manager_views.email_action,
-                 request_password_reset_view_function=user_manager_views.request_password_reset,
+                 forgot_password_view_function=user_manager_views.forgot_password,
                  login_view_function=user_manager_views.login,
                  logout_view_function=user_manager_views.logout,
                  manage_emails_view_function=user_manager_views.manage_emails,
                  register_view_function=user_manager_views.register,
-                 resend_confirm_email_view_function = user_manager_views.resend_confirm_email,
+                 resend_email_confirmation_view_function = user_manager_views.resend_email_confirmation,
                  reset_password_view_function = user_manager_views.reset_password,
                  unconfirmed_email_view_function = user_manager_views.unconfirmed,
                  unauthenticated_view_function = user_manager_views.unauthenticated,
                  unauthorized_view_function = user_manager_views.unauthorized,
-                 user_profile_view_function = user_manager_views.user_profile,
-                 invite_view_function = user_manager_views.invite,
+                 edit_user_profile_view_function = user_manager_views.edit_user_profile,
+                 invite_user_view_function = user_manager_views.invite_user,
                  # Misc
                  login_manager = None,
                  password_crypt_context = None,
@@ -127,12 +127,12 @@ class UserManager(UserManager__Settings, UserManager__Views):
         self.change_password_form = forms.ChangePasswordForm
         self.change_username_form = forms.ChangeUsernameForm
         self.edit_user_profile_form = forms.EditUserProfileForm
+        self.forgot_password_form = forms.ForgotPasswordForm
+        self.invite_user_form = forms.InviteUserForm
         self.login_form = forms.LoginForm
         self.register_form = forms.RegisterUserForm
-        self.request_password_reset_form = forms.RequestPasswordResetForm
-        self.request_email_confirmation_form = forms.RequestEmailConfirmationForm
+        self.resend_email_confirmation_form = forms.ResendEmailConfirmationForm
         self.reset_password_form = forms.ResetPasswordForm
-        self.invite_user_form = forms.InviteUserForm
 
         # Configure a DbAdapter based on the class of the 'db' parameter
         self.db_adapter = None
@@ -184,18 +184,18 @@ class UserManager(UserManager__Settings, UserManager__Views):
         self._create_default_attr('change_username_view_function', change_username_view_function)
         self._create_default_attr('confirm_email_view_function', confirm_email_view_function)
         self._create_default_attr('email_action_view_function', email_action_view_function)
-        self._create_default_attr('request_password_reset_view_function', request_password_reset_view_function)
+        self._create_default_attr('forgot_password_view_function', forgot_password_view_function)
         self._create_default_attr('login_view_function', login_view_function)
         self._create_default_attr('logout_view_function', logout_view_function)
         self._create_default_attr('manage_emails_view_function', manage_emails_view_function)
         self._create_default_attr('register_view_function', register_view_function)
-        self._create_default_attr('resend_confirm_email_view_function', resend_confirm_email_view_function)
+        self._create_default_attr('resend_email_confirmation_view_function', resend_email_confirmation_view_function)
         self._create_default_attr('reset_password_view_function', reset_password_view_function)
         self._create_default_attr('unconfirmed_email_view_function', unconfirmed_email_view_function)
         self._create_default_attr('unauthenticated_view_function', unauthenticated_view_function)
         self._create_default_attr('unauthorized_view_function', unauthorized_view_function)
-        self._create_default_attr('user_profile_view_function', user_profile_view_function)
-        self._create_default_attr('invite_view_function', invite_view_function)
+        self._create_default_attr('edit_user_profile_view_function', edit_user_profile_view_function)
+        self._create_default_attr('invite_user_view_function', invite_user_view_function)
         # Misc
         self._create_default_attr('login_manager', login_manager)
         self._create_default_attr('password_crypt_context', password_crypt_context)
@@ -279,9 +279,9 @@ class UserManager(UserManager__Settings, UserManager__Views):
         if self.db_adapter is None:
             raise ConfigurationError('You must specify a DbAdapter interface or install Flask-SQLAlchemy or FlaskMongAlchemy.')
 
-        if self.USER_ENABLE_INVITATION and not self.UserInvitationClass:
+        if self.USER_ENABLE_INVITE_USER and not self.UserInvitationClass:
             raise ConfigurationError(
-                'Missing UserInvitationClass with USER_ENABLE_INVITATION=True setting.')
+                'Missing UserInvitationClass with USER_ENABLE_INVITE_USER=True setting.')
 
         # Disable settings that rely on a feature setting that's not enabled
 
@@ -306,26 +306,26 @@ class UserManager(UserManager__Settings, UserManager__Views):
 
     def _add_url_routes(self, app):
         """ Add URL Routes"""
-        app.add_url_rule(self.USER_LOGIN_URL,  'user.login',  local_login_view,  methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_LOGIN_URL, 'user.login', local_login_view, methods=['GET', 'POST'])
         app.add_url_rule(self.USER_LOGOUT_URL, 'user.logout', self.logout_view_function, methods=['GET', 'POST'])
         if self.USER_ENABLE_CONFIRM_EMAIL:
             app.add_url_rule(self.USER_CONFIRM_EMAIL_URL, 'user.confirm_email', self.confirm_email_view_function)
-            app.add_url_rule(self.USER_REQUEST_EMAIL_CONFIRMATION_EMAIL_URL, 'user.resend_confirm_email', self.resend_confirm_email_view_function, methods=['GET', 'POST'])
+            app.add_url_rule(self.USER_RESEND_EMAIL_CONFIRMATION_URL, 'user.resend_email_confirmation', self.resend_email_confirmation_view_function, methods=['GET', 'POST'])
         if self.USER_ENABLE_CHANGE_PASSWORD:
             app.add_url_rule(self.USER_CHANGE_PASSWORD_URL, 'user.change_password', self.change_password_view_function, methods=['GET', 'POST'])
         if self.USER_ENABLE_CHANGE_USERNAME:
             app.add_url_rule(self.USER_CHANGE_USERNAME_URL, 'user.change_username', self.change_username_view_function, methods=['GET', 'POST'])
         if self.USER_ENABLE_FORGOT_PASSWORD:
-            app.add_url_rule(self.USER_REQUEST_PASSWORD_RESET_URL, 'user.request_password_reset', self.request_password_reset_view_function, methods=['GET', 'POST'])
+            app.add_url_rule(self.USER_FORGOT_PASSWORD_URL, 'user.forgot_password', self.forgot_password_view_function, methods=['GET', 'POST'])
             app.add_url_rule(self.USER_RESET_PASSWORD_URL, 'user.reset_password', self.reset_password_view_function, methods=['GET', 'POST'])
         if self.USER_ENABLE_REGISTER:
             app.add_url_rule(self.USER_REGISTER_URL, 'user.register', self.register_view_function, methods=['GET', 'POST'])
         if self.UserEmailClass:
             app.add_url_rule(self.USER_EMAIL_ACTION_URL,  'user.email_action',  self.email_action_view_function)
             app.add_url_rule(self.USER_MANAGE_EMAILS_URL, 'user.manage_emails', self.manage_emails_view_function, methods=['GET', 'POST'])
-        app.add_url_rule(self.USER_EDIT_USER_PROFILE_URL,  'user.edit_user_profile',  self.user_profile_view_function,  methods=['GET', 'POST'])
-        if self.USER_ENABLE_INVITATION:
-            app.add_url_rule(self.USER_INVITE_USER_URL, 'user.invite_user', self.invite_view_function, methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_EDIT_USER_PROFILE_URL,  'user.edit_user_profile',  self.edit_user_profile_view_function,  methods=['GET', 'POST'])
+        if self.USER_ENABLE_INVITE_USER:
+            app.add_url_rule(self.USER_INVITE_USER_URL, 'user.invite_user', self.invite_user_view_function, methods=['GET', 'POST'])
 
     def get_user_by_id(self, user_id):
         """Retrieve a User by ID."""

@@ -267,13 +267,13 @@ def email_action(id, action):
 
     return redirect(url_for('user.manage_emails'))
 
-def request_password_reset():
+def forgot_password():
     """Prompt for email and send reset password email."""
     um =  current_app.user_manager
     db_adapter = um.db_adapter
 
     # Initialize form
-    form = um.request_password_reset_form(request.form)
+    form = um.forgot_password_form(request.form)
 
     # Process valid POST
     if request.method=='POST' and form.validate():
@@ -285,8 +285,8 @@ def request_password_reset():
                 # Send forgot password email
                 um.email_manager.send_reset_password_email(user, user_email)
 
-                # Send request_password_reset signal
-                signals.user_request_password_reset.send(current_app._get_current_object(), user=user)
+                # Send forgot_password signal
+                signals.user_forgot_password.send(current_app._get_current_object(), user=user)
 
         # Prepare one-time system message
         flash(_("A reset password email has been sent to '%(email)s'. Open that email and follow the instructions to reset your password.", email=email), 'success')
@@ -516,7 +516,7 @@ def register():
             register_form=register_form)
 
 @login_required
-def invite():
+def invite_user():
     """ Allows users to send invitations to register an account """
     um = current_app.user_manager
     db_adapter = um.db_adapter
@@ -564,13 +564,13 @@ def invite():
 
     return render(um.USER_INVITE_TEMPLATE, form=invite_user_form)
 
-def resend_confirm_email():
+def resend_email_confirmation():
     """Prompt for email and re-send email conformation email."""
     um =  current_app.user_manager
     db_adapter = um.db_adapter
 
     # Initialize form
-    form = um.request_email_confirmation_form(request.form)
+    form = um.resend_email_confirmation_form(request.form)
 
     # Process valid POST
     if request.method=='POST' and form.validate():
@@ -582,7 +582,7 @@ def resend_confirm_email():
             _send_confirm_email(user, user_email)
 
         # Redirect to the login page
-        return redirect(_endpoint_url(um.USER_AFTER_RESEND_CONFIRM_EMAIL_ENDPOINT))
+        return redirect(_endpoint_url(um.USER_AFTER_resend_email_confirmation_ENDPOINT))
 
     # Process GET or invalid POST
     return render(um.USER_RESENT_CONFIRM_EMAIL_TEMPLATE, form=form)
@@ -677,7 +677,7 @@ def unauthorized():
 
 @login_required
 @confirm_email_required
-def user_profile():
+def edit_user_profile():
     um = current_app.user_manager
     return render(um.USER_EDIT_USER_PROFILE_TEMPLATE)
 
@@ -732,7 +732,7 @@ def _do_login_user(user, safe_next, remember_me=False):
     if um.USER_ENABLE_EMAIL and um.USER_ENABLE_CONFIRM_EMAIL \
             and not current_app.user_manager.USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL \
             and not user_has_confirmed_email(user):
-        url = url_for('user.resend_confirm_email')
+        url = url_for('user.resend_email_confirmation')
         flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email or <a href="%(url)s">Re-send confirmation email</a>.', url=url), 'error')
         return redirect(url_for('user.login'))
 
@@ -773,9 +773,6 @@ def _get_safe_next_param(param_name, default_endpoint):
 
 
 def _endpoint_url(endpoint):
-    url = '/'
-    if endpoint:
-        url = url_for(endpoint)
-    return url
+    return url_for(endpoint) if endpoint else '/'
 
 

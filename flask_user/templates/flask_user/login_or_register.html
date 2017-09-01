@@ -30,7 +30,7 @@
     {% if user_manager.USER_ENABLE_FORGOT_PASSWORD %}
         <p>
             <br/>
-            <a href="{{ url_for('user.request_password_reset') }}" tabindex='190'>
+            <a href="{{ url_for('user.forgot_password') }}" tabindex='190'>
             {%trans%}Forgot your Password?{%endtrans%}</a>
         </p>
     {% endif %}

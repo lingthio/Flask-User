@@ -92,7 +92,7 @@ def do_test_all_possible_config_combinations(client, db):
               for um.USER_ENABLE_CHANGE_PASSWORD in (True, False):
                 for um.USER_ENABLE_CHANGE_USERNAME in (True, False):
                   for um.USER_ENABLE_FORGOT_PASSWORD in (True, False):
-                    for um.USER_ENABLE_INVITATION in (True, False):
+                    for um.USER_ENABLE_INVITE_USER in (True, False):
                         check_all_valid_forms(um, client, db)
 
 # **************************
@@ -117,8 +117,8 @@ def check_all_valid_forms(um, client):
     check_valid_change_password_form(um, client)
     check_valid_change_username_form(um, client)
     check_valid_logout_link(um, client)
-    check_valid_request_email_confirmation_form(um, client)
-    check_valid_request_password_reset_form(um, client)
+    check_valid_resend_email_confirmation_form(um, client)
+    check_valid_forgot_password_form(um, client)
     check_valid_reset_password_page(um, client)
     check_valid_invite_email(um, client)
     #check_valid_invite_registration_different_email(um, client)
@@ -167,16 +167,16 @@ def check_valid_register_form(um, client, db):
         um.db_adapter.commit()
         assert valid_user
 
-def check_valid_request_email_confirmation_form(um, client):
+def check_valid_resend_email_confirmation_form(um, client):
     # Skip test for certain config combinations
     if not um.USER_ENABLE_REGISTER: return
     if not um.USER_ENABLE_EMAIL: return
     if not um.USER_ENABLE_CONFIRM_EMAIL: return
 
-    print("test_valid_request_email_confirmation_form")
+    print("test_valid_resend_email_confirmation_form")
 
     # Submit form and verify that response has no errors
-    client.post_valid_form(url_for('user.resend_confirm_email'), email=VALID_EMAIL)
+    client.post_valid_form(url_for('user.resend_email_confirmation'), email=VALID_EMAIL)
 
 def check_valid_confirm_email_page(um, client):
     # Skip test for certain config combinations
@@ -266,15 +266,15 @@ def check_valid_logout_link(um, client):
     # Retrieve page and verify that response has no errors
     client.get_valid_page(url_for('user.logout'))
 
-def check_valid_request_password_reset_form(um, client):
+def check_valid_forgot_password_form(um, client):
     # Skip test for certain config combinations
     if not um.USER_ENABLE_EMAIL: return
     if not um.USER_ENABLE_FORGOT_PASSWORD: return
 
-    print("test_valid_request_password_reset_form")
+    print("test_valid_forgot_password_form")
 
     # Submit form and verify that response has no errors
-    client.post_valid_form(url_for('user.request_password_reset'), email=VALID_EMAIL)
+    client.post_valid_form(url_for('user.forgot_password'), email=VALID_EMAIL)
 
 def check_valid_reset_password_page(um, client):
     # Skip test for certain config combinations
@@ -312,7 +312,7 @@ def check_valid_reset_password_page(um, client):
 def check_valid_invite_email(um, client):
     """ If a valid email is submitted using the invite form,
     then it should generate the proper email and response """
-    if not um.USER_ENABLE_INVITATION: return
+    if not um.USER_ENABLE_INVITE_USER: return
     # Submit form and verify that response has no errors
     global valid_user_invite
     UserInvite = um.UserInvitationClass

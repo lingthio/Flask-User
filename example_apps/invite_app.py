@@ -27,7 +27,7 @@ class ConfigClass(object):
 
     # Flask-User settings
     USER_APP_NAME        = "AppName"                # Used by email templates
-    USER_ENABLE_INVITATION = True
+    USER_ENABLE_INVITE_USER = True
     USER_REQUIRE_INVITATION = True
 
 def create_app(test_config=None):                   # For automated tests

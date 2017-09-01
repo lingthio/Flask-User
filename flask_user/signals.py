@@ -28,7 +28,7 @@ user_changed_username = _signals.signal('user.user_changed_username')
 user_confirmed_email = _signals.signal('user.user_confirmed_email')
 
 # Sent when a user submitted a password reset request
-user_request_password_reset = _signals.signal('user.request_password_reset')
+user_forgot_password = _signals.signal('user.forgot_password')
 
 # Sent when a user logged in
 user_logged_in = _signals.signal('user.user_logged_in')

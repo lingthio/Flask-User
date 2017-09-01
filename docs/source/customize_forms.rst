@@ -3,7 +3,17 @@
 Customizing forms
 =================
 
-:ref:`UserManager__Forms` documents the complete list of customizable FLask-User forms.
+The following Flask-User forms can be customized::
+
+:ref:`AddEmailForm`:
+:ref:`ChangeUsernameForm`:
+:ref:`EditUserProfileForm`:
+:ref:`ForgotPasswordForm`:
+:ref:`InviteUserForm`:
+:ref:`LoginForm`:
+:ref:`RegisterUserForm`:
+:ref:`ResendEmailConfirmationForm`:
+:ref:`ResetPasswordForm`:
 
 For each form, you can customize the following:
 
@@ -110,6 +120,21 @@ Optionally, if you need to add fields to a Flask-User form, you will need to cus
 
     # Setup Flask-User
     user_manager = CustomUserManager(app, db, User)
+
+These are the UserManager form attributes that can be configured along with their defaults::
+
+    from flask_user import forms
+    self.add_email_form         = forms.AddEmailForm
+    self.change_password_form   = forms.ChangePasswordForm
+    self.change_username_form   = forms.ChangeUsernameForm
+    self.edit_user_profile_form = forms.EditUserProfileForm
+    self.forgot_password_form   = forms.ForgotPasswordForm
+    self.login_form             = forms.LoginForm
+    self.register_form          = forms.RegisterUserForm
+    self.resend_email_confirmation_form = forms.ResendEmailConfirmationForm
+    self.reset_password_form    = forms.ResetPasswordForm
+    self.invite_user_form       = forms.InviteUserForm
+
 
 .. seealso::
 

@@ -72,7 +72,6 @@ behaviors that can be customized as needed:
 * `Emails`_
 * `Registration Form`_
 * `Labels and Messages`_
-* `Form Classes`_
 * `Form Templates`_
 * `View functions`_
 * `Password and Username validators`_
@@ -126,7 +125,7 @@ Flask-User currently offers the following email messages::
                       # - Requires USER_ENABLE_EMAIL = True
                       # - Requires USER_ENABLE_CONFIRM_EMAIL = True
 
-    request_password_reset   # Sent after a user submitted a forgot password form
+    forgot_password   # Sent after a user submitted a forgot password form
                       # - Requires USER_ENABLE_EMAIL = True
                       # - Requires USER_ENABLE_FORGOT_PASSWORD = True
 
@@ -194,7 +193,7 @@ The email template files, along with available template variables listed below:
     * ``user`` - For example: ``{{ user.email }}``
 * templates/flask_user/confirm_email_[subject.txt|message.html|message.txt]
     * ``confirm_email_link`` - For example: ``{{ confirm_email_link }}``
-* templates/flask_user/request_password_reset_[subject.txt|message.html|message.txt]
+* templates/flask_user/forgot_password_[subject.txt|message.html|message.txt]
     * ``reset_password_link`` - For example: ``{{ reset_password_link }}``
 * templates/flask_user/password_changed_[subject.txt|message.html|message.txt]
     * n/a
@@ -256,41 +255,11 @@ will be stored in the corresponding User field.
 
 * Add extra fields to the User data model
 * Extend a custom MyRegisterUserForm class from the built-in flask_user.forms.RegisterUserForm class.
-  See :ref:`customizingformclasses`.
 * Add extra fields to the form **using identical field names**.
 * Specify your custom registration form: ``user_manager = UserManager(db_adapter, app, register_form=MyRegisterUserForm)``
 * Copy the built-in ``templates/flask_user/register.html`` to your application's templates/flask_user directory.
-  See :ref:`customizingformtemplates`.
 * Add the extra form fields to register.html
 
-
-.. _customizingformclasses:
-
-Form Classes
-------------
-
-Forms can be customized by sub-classing one of the following built-in Form classes::
-
-    flask_user.forms.AddEmailForm
-    flask_user.forms.ChangeUsernameForm
-    flask_user.forms.ChangePasswordForm
-    flask_user.forms.RequestPasswordResetForm
-    flask_user.forms.LoginForm
-    flask_user.forms.RegisterUserForm
-    flask_user.forms.ResetPasswordForm
-
-and specifying the custom form in the call to UserManager()::
-
-    from flask_user.forms import RegisterUserForm
-
-    class MyRegisterUserForm(RegisterUserForm):
-        first_name = StringField('First name')
-        last_name = StringField('Last name')
-
-    user_manager = UserManager(db_adapter, app,
-            register_form = MyRegisterUserForm)
-
-See also :ref:`customizingformtemplates`.
 
 
 .. _customizingformtemplates:
@@ -337,7 +306,7 @@ The following form template files resides in the ``templates`` directory and can
     flask_user/edit_user_profile.html          # extends flask_user/_authorized_base.html
 
     flask_user/_public_base.html           # extends base.html
-    flask_user/request_password_reset.html       # extends flask_user/_public_base.html
+    flask_user/forgot_password.html       # extends flask_user/_public_base.html
     flask_user/login.html                 # extends flask_user/_public_base.html
     flask_user/login_or_register.html     # extends flask_user/_public_base.html
     flask_user/register.html              # extends flask_user/_public_base.html
@@ -353,7 +322,6 @@ you can use the following application config settings::
     USER_REGISTER_TEMPLATE                  = 'flask_user/login_or_register.html'
 
 
-See also :ref:`customizingformclasses`.
 
 
 Password and Username Validators
@@ -448,12 +416,12 @@ Custom view functions are specified by setting an attribute on the Flask-User's 
             change_username_view_function      = my_view_function2,
             confirm_email_view_function        = my_view_function3,
             email_action_view_function         = my_view_function4,
-            request_password_reset_view_function      = my_view_function5,
+            forgot_password_view_function      = my_view_function5,
             login_view_function                = my_view_function6,
             logout_view_function               = my_view_function7,
             manage_emails_view_function        = my_view_function8,
             register_view_function             = my_view_function9,
-            resend_confirm_email_view_function = my_view_function10,
+            resend_email_confirmation_view_function = my_view_function10,
             reset_password_view_function       = my_view_function11,
             )
     user_manager.init_app(app)

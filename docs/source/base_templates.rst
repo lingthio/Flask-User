@@ -15,7 +15,7 @@ Use ``{% block content %}{% endblock %}`` as a placeholder for the forms.
 
 Public forms are forms that do not require a logged-in user:
 
-* ``templates/flask_user/request_password_reset.html``,
+* ``templates/flask_user/forgot_password.html``,
 * ``templates/flask_user/login.html``,
 * ``templates/flask_user/login_or_register.html``,
 * ``templates/flask_user/register.html``,
@@ -60,7 +60,7 @@ The following template files reside in the ``templates`` directory::
     flask_user/manage_emails.html         # extends flask_user/_authorized_base.html
 
     flask_user/_public_base.html           # extends base.html
-    flask_user/request_password_reset.html       # extends flask_user/_public_base.html
+    flask_user/forgot_password.html       # extends flask_user/_public_base.html
     flask_user/login.html                 # extends flask_user/_public_base.html
     flask_user/login_or_register.html     # extends flask_user/_public_base.html
     flask_user/register.html              # extends flask_user/_public_base.html

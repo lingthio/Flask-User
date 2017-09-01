@@ -41,7 +41,7 @@ class EmailManager(object):
 
         # Render subject, html message and text message
         subject, html_message, text_message = self._render_email(
-                self.user_manager.USER_CONFIRM_EMAIL_EMAIL_TEMPLATE,
+                self.user_manager.USER_CONFIRM_EMAIL_TEMPLATE,
                 user=user,
                 app_name=self.user_manager.USER_APP_NAME,
                 confirm_email_link=confirm_email_link)

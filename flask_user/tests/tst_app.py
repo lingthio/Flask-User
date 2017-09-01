@@ -224,8 +224,6 @@ def init_app(app, test_config=None):                # For automated tests
                 {%trans%}Change username{%endtrans%}</a></p>
             <p> <a href="{{ url_for('user.change_password') }}">
                 {%trans%}Change password{%endtrans%}</a></p>
-            <p> <a href="{{ url_for('user.invite_user') }}">
-                {%trans%}Invite User{%endtrans%}</a></p>
             <p> <a href="{{ url_for('user.logout') }}?next={{ url_for('user.login') }}">
                 {%trans%}Sign out{%endtrans%}</a></p>
             {% endblock %}

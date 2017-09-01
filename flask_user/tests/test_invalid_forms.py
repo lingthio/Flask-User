@@ -367,10 +367,10 @@ def test_invalid_change_password_form(client):
     client.logout()
 
 
-def test_invalid_request_password_reset_form(client):
-    print("test_invalid_request_password_reset_form")
+def test_invalid_forgot_password_form(client):
+    print("test_invalid_forgot_password_form")
 
-    url = url_for('user.request_password_reset')
+    url = url_for('user.forgot_password')
 
     # Test invalid email
     client.post_invalid_form(url, 'Invalid Email',
