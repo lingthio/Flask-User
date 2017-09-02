@@ -14,7 +14,7 @@ from .token_manager import TokenManager
 # Export Flask-Login's current user
 from flask_login import current_user            # pass through Flask-Login's current_user
 
-# Export login_required, roles_required, roles_accepted, confirm_email_required
+# Export login_required, roles_required, roles_accepted, confirmed_email_required
 from .decorators import *
 
 # Export Flask-User signals

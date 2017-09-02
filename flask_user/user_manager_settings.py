@@ -27,7 +27,7 @@ class UserManager__Settings(object):
 
     #: | Allow users to login without a confirmed email address.
     #: | Depends on USER_ENABLE_EMAIL=True.
-    #: | Make sure to protect vulnerable views using @confirm_email_required.
+    #: | Make sure to protect vulnerable views using @confirmed_email_required.
     USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL = False
 
 

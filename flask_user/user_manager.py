@@ -80,22 +80,6 @@ class UserManager(UserManager__Settings, UserManager__Views):
                  password_validator=forms.password_validator,
                  # View functions
                 render_function=render_template,
-                 change_password_view_function=user_manager_views.change_password,
-                 change_username_view_function=user_manager_views.change_username,
-                 confirm_email_view_function=user_manager_views.confirm_email,
-                 email_action_view_function=user_manager_views.email_action,
-                 forgot_password_view_function=user_manager_views.forgot_password,
-                 login_view_function=user_manager_views.login,
-                 logout_view_function=user_manager_views.logout,
-                 manage_emails_view_function=user_manager_views.manage_emails,
-                 register_view_function=user_manager_views.register,
-                 resend_email_confirmation_view_function = user_manager_views.resend_email_confirmation,
-                 reset_password_view_function = user_manager_views.reset_password,
-                 unconfirmed_email_view_function = user_manager_views.unconfirmed,
-                 unauthenticated_view_function = user_manager_views.unauthenticated,
-                 unauthorized_view_function = user_manager_views.unauthorized,
-                 edit_user_profile_view_function = user_manager_views.edit_user_profile,
-                 invite_user_view_function = user_manager_views.invite_user,
                  # Misc
                  login_manager = None,
                  password_crypt_context = None,
@@ -183,22 +167,6 @@ class UserManager(UserManager__Settings, UserManager__Views):
         self._create_default_attr('password_validator', password_validator)
         # View functions
         self._create_default_attr('render_function', render_function)
-        self._create_default_attr('change_password_view_function', change_password_view_function)
-        self._create_default_attr('change_username_view_function', change_username_view_function)
-        self._create_default_attr('confirm_email_view_function', confirm_email_view_function)
-        self._create_default_attr('email_action_view_function', email_action_view_function)
-        self._create_default_attr('forgot_password_view_function', forgot_password_view_function)
-        self._create_default_attr('login_view_function', login_view_function)
-        self._create_default_attr('logout_view_function', logout_view_function)
-        self._create_default_attr('manage_emails_view_function', manage_emails_view_function)
-        self._create_default_attr('register_view_function', register_view_function)
-        self._create_default_attr('resend_email_confirmation_view_function', resend_email_confirmation_view_function)
-        self._create_default_attr('reset_password_view_function', reset_password_view_function)
-        self._create_default_attr('unconfirmed_email_view_function', unconfirmed_email_view_function)
-        self._create_default_attr('unauthenticated_view_function', unauthenticated_view_function)
-        self._create_default_attr('unauthorized_view_function', unauthorized_view_function)
-        self._create_default_attr('edit_user_profile_view_function', edit_user_profile_view_function)
-        self._create_default_attr('invite_user_view_function', invite_user_view_function)
         # Misc
         self._create_default_attr('login_manager', login_manager)
         self._create_default_attr('password_crypt_context', password_crypt_context)
@@ -400,14 +368,14 @@ class UserManager(UserManager__Settings, UserManager__Views):
         def change_username_stub():
             return self.change_username_view()
 
-        def confirm_email_stub():
-            return self.confirm_email_view()
+        def confirm_email_stub(token):
+            return self.confirm_email_view(token)
 
         def edit_user_profile_stub():
             return self.edit_user_profile_view()
 
-        def email_action_stub():
-            return self.email_action_view()
+        def email_action_stub(id, action):
+            return self.email_action_view(id, action)
 
         def forgot_password_stub():
             return self.forgot_password_view()
@@ -430,8 +398,17 @@ class UserManager(UserManager__Settings, UserManager__Views):
         def resend_email_confirmation_stub():
             return self.resend_email_confirmation_view()
 
-        def reset_password_stub():
-            return self.reset_password_view()
+        def reset_password_stub(token):
+            return self.reset_password_view(token)
+
+        def unconfirmed_email_stub():
+            return self.unconfirmed_email_view()
+
+        def unauthenticated_stub():
+            return self.unconfirmed_email_view()
+
+        def unauthorized_stub():
+            return self.unconfirmed_email_view()
 
         """ Add URL Routes"""
         app.add_url_rule(self.USER_CHANGE_PASSWORD_URL, 'user.change_password', change_password_stub, methods=['GET', 'POST'])

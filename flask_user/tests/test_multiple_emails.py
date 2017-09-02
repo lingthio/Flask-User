@@ -46,10 +46,6 @@ def test_multiple_emails(app, db, client):
     # Adjust DbAdapter settings
     um.UserEmailClass = app.UserEmailClass
 
-    # Adjust URL routes
-    app.add_url_rule(um.USER_EMAIL_ACTION_URL,  'user.email_action',  um.email_action_view_function)
-    app.add_url_rule(um.USER_MANAGE_EMAILS_URL, 'user.manage_emails', um.manage_emails_view_function, methods=['GET', 'POST'])
-
     # constants
     EMAIL1 = 'email1@multi-email.com'
     EMAIL2 = 'email2@multi-email.com'

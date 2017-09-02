@@ -49,7 +49,7 @@ Create ~/dev/example/roles_required_app.py with the content below.
 
 Highlighted lines shows the lines added to the Basic App to produce the Roles Required App
 
-.. literalinclude:: includes/roles_required_app.py
+.. literalinclude:: ../../example_apps/roles_required_app.py
    :language: python
    :linenos:
    :emphasize-lines: 5, 19-21, 53-66, 75-82, 115

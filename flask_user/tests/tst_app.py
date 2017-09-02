@@ -3,7 +3,7 @@ import datetime
 from flask import Flask, render_template_string, request
 from flask_babel import Babel
 from flask_user import login_required, UserManager, UserMixin
-from flask_user import roles_required, confirm_email_required
+from flask_user import roles_required, confirmed_email_required
 
 ORM_type = 'SQLAlchemy'   # SQLAlchemy  or MongoAlchemy
 
@@ -212,7 +212,7 @@ def init_app(app, test_config=None):                # For automated tests
     # The '/profile' page requires a logged-in user
     @app.route('/user/profile')
     @login_required                                 # Use of @login_required decorator
-    @confirm_email_required
+    @confirmed_email_required
     def user_profile_page():
         return render_template_string("""
             {% extends "flask_user_layout.html" %}

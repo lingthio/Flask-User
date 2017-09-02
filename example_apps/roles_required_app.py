@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template_string, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
+from flask_user import login_required, UserManager, UserMixin
 from flask_user import roles_required
 
 

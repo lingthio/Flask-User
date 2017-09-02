@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template_string
 from flask_sqlalchemy import SQLAlchemy
-from flask_user import login_required, UserManager, UserMixin, SQLAlchemyAdapter
+from flask_user import login_required, UserManager, UserMixin
 
 
 # Use a Class-based config to avoid needing a 2nd file

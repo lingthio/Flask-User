@@ -31,7 +31,7 @@ Create ~/dev/my_app/quickstart_app.py with the content below.
 
 Highlighted lines shows the lines added to a basic Flask application.
 
-.. literalinclude:: includes/quickstart_app.py
+.. literalinclude:: ../../example_apps/quickstart_app.py
    :language: python
    :linenos:
    :emphasize-lines: 9, 32-35, 65-66, 84
