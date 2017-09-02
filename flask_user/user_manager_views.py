@@ -13,7 +13,7 @@ URLs are first mapped to to view-stub functions, which call UserManager view met
 
 
 from datetime import datetime
-from flask import current_app, flash, redirect, request, url_for
+from flask import current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_user, logout_user
 from .decorators import confirmed_email_required, login_required
 from . import signals
@@ -25,20 +25,14 @@ from sys import version_info as py_version
 is_py2 = (py_version[0] == 2)     #: Python 2.x?
 is_py3 = (py_version[0] == 3)     #: Python 3.x?
 if is_py2:
-    from urlparse import urlsplit
     from urllib import quote, unquote
 if is_py3:
-    from urllib.parse import urlsplit
     from urllib.parse import quote, unquote
 
 
 def _call_or_get(function_or_property):
     return function_or_property() if callable(function_or_property) else function_or_property
 
-
-def render(*args, **kwargs):
-    um = current_app.user_manager
-    return um.render_function(*args, **kwargs)
 
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class for ease of customization.
@@ -77,11 +71,11 @@ class UserManager__Views(object):
             flash(_('Your password has been changed successfully.'), 'success')
 
             # Redirect to 'next' URL
-            safe_next = um.make_safe_url_function(form.next.data)
+            safe_next = um.make_safe_url(form.next.data)
             return redirect(safe_next)
 
         # Process GET or invalid POST
-        return render(um.USER_CHANGE_PASSWORD_TEMPLATE, form=form)
+        return render_template(um.USER_CHANGE_PASSWORD_TEMPLATE, form=form)
 
 
     @login_required
@@ -115,11 +109,11 @@ class UserManager__Views(object):
             flash(_("Your username has been changed to '%(username)s'.", username=new_username), 'success')
 
             # Redirect to 'next' URL
-            safe_next = um.make_safe_url_function(form.next.data)
+            safe_next = um.make_safe_url(form.next.data)
             return redirect(safe_next)
 
         # Process GET or invalid POST
-        return render(um.USER_CHANGE_USERNAME_TEMPLATE, form=form)
+        return render_template(um.USER_CHANGE_USERNAME_TEMPLATE, form=form)
 
 
     def confirm_email_view(self, token):
@@ -178,7 +172,7 @@ class UserManager__Views(object):
     @confirmed_email_required
     def edit_user_profile_view(self):
         um = current_app.user_manager
-        return render(um.USER_EDIT_USER_PROFILE_TEMPLATE)
+        return render_template(um.USER_EDIT_USER_PROFILE_TEMPLATE)
 
     @login_required
     @confirmed_email_required
@@ -252,7 +246,7 @@ class UserManager__Views(object):
             return redirect(_endpoint_url(um.USER_AFTER_FORGOT_PASSWORD_ENDPOINT))
 
         # Process GET or invalid POST
-        return render(um.USER_FORGOT_PASSWORD_TEMPLATE, form=form)
+        return render_template(um.USER_FORGOT_PASSWORD_TEMPLATE, form=form)
 
     @login_required
     @confirmed_email_required
@@ -272,7 +266,7 @@ class UserManager__Views(object):
             return redirect(url_for('user.manage_emails'))
 
         # Process GET or invalid POST request
-        return render(um.USER_MANAGE_EMAILS_TEMPLATE,
+        return render_template(um.USER_MANAGE_EMAILS_TEMPLATE,
                       user_emails=user_emails,
                       form=form,
                       )
@@ -325,7 +319,7 @@ class UserManager__Views(object):
             safe_next = _get_safe_next_param('next', um.USER_AFTER_INVITE_ENDPOINT)
             return redirect(safe_next)
 
-        return render(um.USER_INVITE_TEMPLATE, form=invite_user_form)
+        return render_template(um.USER_INVITE_TEMPLATE, form=invite_user_form)
 
 
     def login_view(self):
@@ -373,11 +367,11 @@ class UserManager__Views(object):
 
             if user:
                 # Log user in
-                safe_next = um.make_safe_url_function(login_form.next.data)
+                safe_next = um.make_safe_url(login_form.next.data)
                 return _do_login_user(user, safe_next, login_form.remember_me.data)
 
         # Process GET or invalid POST
-        return render(um.USER_LOGIN_TEMPLATE,
+        return render_template(um.USER_LOGIN_TEMPLATE,
                       form=login_form,
                       login_form=login_form,
                       register_form=register_form)
@@ -505,12 +499,12 @@ class UserManager__Views(object):
 
             # Redirect if USER_ENABLE_CONFIRM_EMAIL is set
             if um.USER_ENABLE_CONFIRM_EMAIL and require_email_confirmation:
-                safe_reg_next = um.make_safe_url_function(register_form.reg_next.data)
+                safe_reg_next = um.make_safe_url(register_form.reg_next.data)
                 return redirect(safe_reg_next)
 
             # Auto-login after register or redirect to login page
             if 'reg_next' in request.args:
-                safe_reg_next = um.make_safe_url_function(register_form.reg_next.data)
+                safe_reg_next = um.make_safe_url(register_form.reg_next.data)
             else:
                 safe_reg_next = _endpoint_url(um.USER_AFTER_CONFIRM_ENDPOINT)
             if um.USER_AUTO_LOGIN_AFTER_REGISTER:
@@ -519,7 +513,7 @@ class UserManager__Views(object):
                 return redirect(url_for('user.login') + '?next=' + quote(safe_reg_next))  # redirect to login page
 
         # Process GET or invalid POST
-        return render(um.USER_REGISTER_TEMPLATE,
+        return render_template(um.USER_REGISTER_TEMPLATE,
                       form=register_form,
                       login_form=login_form,
                       register_form=register_form)
@@ -546,7 +540,7 @@ class UserManager__Views(object):
             return redirect(_endpoint_url(um.USER_AFTER_resend_email_confirmation_ENDPOINT))
 
         # Process GET or invalid POST
-        return render(um.USER_RESENT_CONFIRM_EMAIL_TEMPLATE, form=form)
+        return render_template(um.USER_RESENT_CONFIRM_EMAIL_TEMPLATE, form=form)
 
 
     def reset_password_view(self, token):
@@ -599,7 +593,7 @@ class UserManager__Views(object):
                 return redirect(url_for('user.login') + '?next=' + quote(safe_next))  # redirect to login page
 
         # Process GET or invalid POST
-        return render(um.USER_RESET_PASSWORD_TEMPLATE, form=form)
+        return render_template(um.USER_RESET_PASSWORD_TEMPLATE, form=form)
 
     def unauthenticated_view(self):
         """ Prepare a Flash message and redirect to USER_UNAUTHENTICATED_ENDPOINT"""
@@ -609,7 +603,7 @@ class UserManager__Views(object):
         flash(_("You must be signed in to access '%(url)s'.", url=url), 'error')
 
         # Redirect to USER_UNAUTHENTICATED_ENDPOINT
-        safe_next = um.make_safe_url_function(url)
+        safe_next = um.make_safe_url(url)
         return redirect(_endpoint_url(um.USER_UNAUTHENTICATED_ENDPOINT)+'?next='+quote(safe_next))
 
 
@@ -702,22 +696,13 @@ def _do_login_user(user, safe_next, remember_me=False):
     return redirect(safe_next)
 
 
-# Turns an usafe absolute URL into a safe relative URL by removing the scheme and the hostname
-# Example: make_safe_url('http://hostname/path1/path2?q1=v1&q2=v2#fragment')
-#          returns: '/path1/path2?q1=v1&q2=v2#fragment
-def make_safe_url(url):
-    parts = urlsplit(url)
-    safe_url = parts.path+parts.query+parts.fragment
-    return safe_url
-
-
 # 'next' and 'reg_next' query parameters contain quoted (URL-encoded) URLs
 # that may contain unsafe hostnames.
 # Return the query parameter as a safe, unquoted URL
 def _get_safe_next_param(param_name, default_endpoint):
     if param_name in request.args:
         # return safe unquoted query parameter value
-        safe_next = current_app.user_manager.make_safe_url_function(unquote(request.args[param_name]))
+        safe_next = current_app.user_manager.make_safe_url(unquote(request.args[param_name]))
     else:
         # return URL of default endpoint
         safe_next = _endpoint_url(default_endpoint)

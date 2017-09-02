@@ -25,7 +25,7 @@ from .translations import lazy_gettext as _
 # **************************
 
 def password_validator(form, field):
-    """ Password must have one lowercase letter, one uppercase letter and one digit. """
+    """Ensure that passwords have one lowercase letter, one uppercase letter and one digit."""
     # Convert string to list of characters
     password = list(field.data)
     password_length = len(password)
@@ -44,7 +44,7 @@ def password_validator(form, field):
 
 
 def username_validator(form, field):
-    """ Username must cont at least 3 alphanumeric characters long"""
+    """Ensure that Usernames contains at least 3 alphanumeric characters."""
     username = field.data
     if len(username) < 3:
         raise ValidationError(_('Username must be at least 3 characters long'))
@@ -56,14 +56,14 @@ def username_validator(form, field):
 
 
 def unique_username_validator(form, field):
-    """ Username must be unique"""
+    """ Ensure that Username is unique. This validator may NOT be customized."""
     user_manager =  current_app.user_manager
     if not user_manager.username_is_available(field.data):
         raise ValidationError(_('This Username is already in use. Please try another one.'))
 
 
 def unique_email_validator(form, field):
-    """ Username must be unique"""
+    """ Username must be unique. This validator may NOT be customized."""
     user_manager =  current_app.user_manager
     if not user_manager.email_is_available(field.data):
         raise ValidationError(_('This Email is already in use. Please try another one.'))

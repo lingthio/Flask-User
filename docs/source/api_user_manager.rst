@@ -11,6 +11,7 @@ Flask-User can be customized by implementing the ``customize()`` method.
 
 .. autoclass:: flask_user.user_manager.UserManager
     :no-undoc-members:
+    :no-inherited-members:
 
 --------
 
