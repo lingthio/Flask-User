@@ -16,9 +16,9 @@ def test_roles(db):
 
     # user0 has no roles
     # TODO: For some reason, MongoAlchemy uses the roles of the previous user if not specified
-    user0 = db_adapter.add_object(User, username='user0', email='user0@example.com', password=hashed_password, roles=[])
-    user1 = db_adapter.add_object(User, username='user1', email='user1@example.com', password=hashed_password, roles=[])
-    user2 = db_adapter.add_object(User, username='user2', email='user2@example.com', password=hashed_password, roles=[])
+    user0 = db_adapter.add_object(User, username='user0', email='user0@example.com', password=hashed_password)
+    user1 = db_adapter.add_object(User, username='user1', email='user1@example.com', password=hashed_password)
+    user2 = db_adapter.add_object(User, username='user2', email='user2@example.com', password=hashed_password)
 
     # user1 has only role1
     db_adapter.add_user_role(user1, 'Role 1', RoleClass=RoleClass)

@@ -130,7 +130,8 @@ if ORM_type == 'MongoAlchemy':
         last_name = db.StringField(default='')
 
         # Relationships
-        roles = db.ListField(db.StringField(), required=False, default=[])
+        # roles = db.ListField(db.StringField(), required=False, default_empty=True)
+        roles = db.ListField(db.StringField(), default=[])
 
 
 # Define custom UserManager class

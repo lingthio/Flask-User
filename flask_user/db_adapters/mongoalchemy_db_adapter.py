@@ -87,8 +87,9 @@ class MongoAlchemyDbAdapter(SQLAlchemyDbAdapter):
         with the fields and values specified in ``**kwargs``.
         """
         super(MongoAlchemyDbAdapter, self).update_object(object, **kwargs)
-        # Save changes to DB
+        # self.db.session.add(object)
         object.save()
+
 
     def delete_object(self, object):
         """ Delete object specified by ``object``. """
@@ -105,8 +106,12 @@ class MongoAlchemyDbAdapter(SQLAlchemyDbAdapter):
 
     def add_user_role(self, user, role_name, RoleClass=None):
         """ Add a ``role_name`` role to ``user``."""
-        user.roles.append(role_name)
-        user.save()
+        # MongoAlchemy has a bug where
+        #    user.roles.append(role_name)
+        # appends role_name to Field.default (instead of user.roles)
+        # As a workaround, we need to create a new list
+        user.roles = user.roles + [role_name]
+        self.db.session.add(user)
 
     def get_user_roles(self, user):
         """ Retrieve a list of user role names.

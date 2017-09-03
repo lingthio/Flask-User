@@ -76,21 +76,20 @@ def test_init(db):
     User = um.UserClass
     add_object = um.db_adapter.add_object
 
-    # TODO: For some reason, MongoAlchemy uses the roles of the previous user if not specified
     # Create user1 with username and email
-    user1 = add_object(User, username='user1', email='user1@example.com', password=hashed_password, roles=[])
+    user1 = add_object(User, username='user1', email='user1@example.com', password=hashed_password)
     assert user1
 
     # Create user1 with email only
-    user2 = add_object(User, email='user2@example.com', password=hashed_password, roles=[])
+    user2 = add_object(User, email='user2@example.com', password=hashed_password)
     assert user2
 
     # Create user3 with username and email
-    user3 = add_object(User, username='user3', email='user3@example.com', password=hashed_password, roles=[])
+    user3 = add_object(User, username='user3', email='user3@example.com', password=hashed_password)
     assert user3
 
     # Create user4 with email only
-    user4 = add_object(User, email='user4@example.com', password=hashed_password, roles=[])
+    user4 = add_object(User, email='user4@example.com', password=hashed_password)
     assert user4
 
     um.db_adapter.commit()
