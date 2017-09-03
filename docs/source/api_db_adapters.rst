@@ -24,7 +24,6 @@ SQLAlchemyDbAdapter
 -------------------
 
 .. autoclass:: flask_user.db_adapters.sqlalchemy_db_adapter.SQLAlchemyDbAdapter
-    :member-order: alphabetical
 
 Flask-User ships with SQLAlchemyDbAdapter and installs Flask-SQLAlchemy.
 
@@ -41,7 +40,6 @@ MongoAlchemyDbAdapter
 ---------------------
 
 .. autoclass:: flask_user.db_adapters.mongoalchemy_db_adapter.MongoAlchemyDbAdapter
-    :member-order: alphabetical
 
 Flask-User ships with MongoAlchemyDbAdapter, but you will need
 to manually install Flask-MongoAlchemy::

@@ -14,11 +14,16 @@ class DbAdapter(object):
     """
 
     def __init__(self, db):
-        """Specify the database object-mapper instance ``db``.
+        """Args:
+            db: The object-database mapper instance.
 
         | Example:
         |     db = SQLAlchemy()
         |     db_adapter = SQLAlchemyDbAdapter(db)
+
+        .. note::
+
+            Object-class agnostic methods.
         """
         self.db = db
 
@@ -28,7 +33,8 @@ class DbAdapter(object):
 
     def find_objects(self, ObjectClass, **kwargs):
         """ Retrieve all objects of type ``ObjectClass``,
-        matching the filters specified in ``**kwargs`` -- case sensitive. """
+        matching the filters specified in ``**kwargs`` -- case sensitive.
+        """
 
         raise NotImplementedError
 
@@ -52,23 +58,48 @@ class DbAdapter(object):
 
     def add_object(self, ObjectClass, **kwargs):
         """ Add a new object of type ``ObjectClass``,
-        with fields and values specified in ``**kwargs``. """
+        with fields and values specified in ``**kwargs``.
+        """
         raise NotImplementedError
 
     def update_object(self, object, **kwargs):
         """ Update an existing object, specified by ``object``,
-        with the fields and values specified in ``**kwargs``. """
+        with the fields and values specified in ``**kwargs``.
+        """
         raise NotImplementedError
 
     def delete_object(self, object):
-        """ Delete object specified by ``object``. """
+        """ Delete object specified by ``object``."""
         raise NotImplementedError
 
     def commit(self):
-        """Save modified objects in the database session."""
+        """Save modified objects in the database session.
+
+        .. note::
+
+            User-class specific utility methods.
+        """
         raise NotImplementedError
 
-    def get_user_role_names(self, user):
-        """ Retrieve a list of user role names."""
+    def add_user_role(self, user, role_name, RoleClass=None):
+        """ Add a ``role_name`` role to ``user``."""
         raise NotImplementedError
+
+    def get_user_roles(self, user):
+        """Retrieve a list of user role names.
+
+        .. note::
+
+            Database specific utility methods.
+        """
+        raise NotImplementedError
+
+    def create_all_tables(self):
+        """Create database tables for all known database data-models."""
+
+    def drop_all_tables(self):
+        """Drop all tables.
+
+        .. warning:: ALL DATA WILL BE LOST. Use only for automated testing.
+        """
 

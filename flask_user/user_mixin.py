@@ -55,7 +55,7 @@ class UserMixin(LoginUserMixin):
 
         # Translates a list of role objects to a list of role_names
         user_manager = current_app.user_manager
-        role_names = user_manager.db_adapter.get_user_role_names(self)
+        role_names = user_manager.db_adapter.get_user_roles(self)
 
         # Return True if one of the role_names matches
         for role_name in specified_role_names:
@@ -86,7 +86,7 @@ class UserMixin(LoginUserMixin):
 
         # Translates a list of role objects to a list of role_names
         user_manager = current_app.user_manager
-        role_names = user_manager.db_adapter.get_user_role_names(self)
+        role_names = user_manager.db_adapter.get_user_roles(self)
 
         # has_role() accepts a list of requirements
         for requirement in requirements:

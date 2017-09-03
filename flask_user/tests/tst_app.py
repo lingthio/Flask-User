@@ -155,21 +155,18 @@ def init_app(app, test_config=None):                # For automated tests
     # Initialize Flask extensions
     babel = Babel(app)                              # Initialize Flask-Babel
 
-    # Reset all the database tables
-    if ORM_type == 'SQLAlchemy':
-        db.drop_all()
-        db.create_all()
-
-    if ORM_type == 'MongoAlchemy':
-        # Drop existing table
-        db.session.db.connection.drop_database(app.config.get('MONGOALCHEMY_DATABASE', ''))
-
-
     # Setup Flask-User
     if ORM_type == 'SQLAlchemy':
         user_manager = CustomUserManager(app, db, User, UserInvitationClass=UserInvitation)
+        RoleClass = Role
     else:
         user_manager = CustomUserManager(app, db, User)
+        RoleClass = None
+
+    # Reset database by dropping, then creating all tables
+    db_adapter = user_manager.db_adapter
+    db_adapter.drop_all_tables()
+    db_adapter.create_all_tables()
 
     # For debugging purposes
     token = user_manager.token_manager.generate_token('abc', 123, 'xyz')
@@ -180,23 +177,16 @@ def init_app(app, test_config=None):                # For automated tests
     assert data_items[2] == 'xyz'
 
     # Create regular 'member' user
-    if not User.query.filter(User.username=='member').first():
-        user = User(username='member', email='member@example.com',
-                password=user_manager.password_manager.hash_password('Password1'), email_confirmed_at=datetime.datetime.utcnow())
-        db.session.add(user)
-        user_manager.db_adapter.commit()
+    user = db_adapter.add_object(User, username='member', email='member@example.com',
+            password=user_manager.password_manager.hash_password('Password1'), email_confirmed_at=datetime.datetime.utcnow())
+    db_adapter.commit()
 
     # Create 'user007' user with 'secret' and 'agent' roles
-    if not User.query.filter(User.username=='user007').first():
-        user1 = User(username='user007', email='user007@example.com',
-                password=user_manager.password_manager.hash_password('Password1'))
-        if ORM_type == 'SQLAlchemy':
-            user1.roles.append(Role(name='secret'))
-            user1.roles.append(Role(name='agent'))
-        if ORM_type == 'MongoAlchemy':
-            user1.roles = ['secret', 'agent']
-        db.session.add(user1)
-        user_manager.db_adapter.commit()
+    user = db_adapter.add_object(User, username='user007', email='user007@example.com',
+            password=user_manager.password_manager.hash_password('Password1'))
+    db_adapter.add_user_role(user, 'secret', RoleClass=RoleClass)
+    db_adapter.add_user_role(user, 'agent', RoleClass=RoleClass)
+    db_adapter.commit()
 
     # The '/' page is accessible to anyone
     @app.route('/')

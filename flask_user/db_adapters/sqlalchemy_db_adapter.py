@@ -10,12 +10,18 @@ class SQLAlchemyDbAdapter(DbAdapter):
     # Almost all methods are defined in the DbAdapter base class.
 
     def __init__(self, db):
-        """Specify the SQLAlchemy instance ``db``.
+        """Args:
+            db(SQLAlchemy): The SQLAlchemy object-database mapper instance.
 
         | Example:
-        |    db = SQLAlchemy()
-        |    db_adapter = SQLAlchemyDbAdapter(db)
+        |     db = SQLAlchemy()
+        |     db_adapter = SQLAlchemyDbAdapter(db)
+
+        .. note::
+
+            Object-class agnostic methods.
         """
+        # This no-op method is defined only for Sphinx autodocs 'bysource' order
         super(SQLAlchemyDbAdapter, self).__init__(db)
 
     def get_object(self, ObjectClass, id):
@@ -24,7 +30,8 @@ class SQLAlchemyDbAdapter(DbAdapter):
 
     def find_objects(self, ObjectClass, **kwargs):
         """ Retrieve all objects of type ``ObjectClass``,
-        matching the filters specified in ``**kwargs`` -- case sensitive. """
+        matching the filters specified in ``**kwargs`` -- case sensitive.
+        """
 
         # Convert each name/value pair in '**kwargs' into a filter
         query = ObjectClass.query
@@ -90,14 +97,16 @@ class SQLAlchemyDbAdapter(DbAdapter):
 
     def add_object(self, ObjectClass, **kwargs):
         """ Add a new object of type ``ObjectClass``,
-        with fields and values specified in ``**kwargs``. """
+        with fields and values specified in ``**kwargs``.
+        """
         object=ObjectClass(**kwargs)
         self.db.session.add(object)
         return object
 
     def update_object(self, object, **kwargs):
         """ Update an existing object, specified by ``object``,
-        with the fields and values specified in ``**kwargs``. """
+        with the fields and values specified in ``**kwargs``.
+        """
         for key,value in kwargs.items():
             if hasattr(object, key):
                 setattr(object, key, value)
@@ -105,14 +114,42 @@ class SQLAlchemyDbAdapter(DbAdapter):
                 raise KeyError("Object '%s' has no field '%s'." % (type(object), key))
 
     def delete_object(self, object):
-        """ Delete object specified by ``object``. """
+        """ Delete object specified by ``object``."""
         self.db.session.delete(object)
 
     def commit(self):
-        """Save modified objects in the database session."""
+        """Save modified objects in the database session.
+
+        .. note::
+
+            User-class specific utility methods.
+        """
         self.db.session.commit()
 
-    def get_user_role_names(self, user):
-        """ Retrieve a list of user role names."""
+    def add_user_role(self, user, role_name, RoleClass=None):
+        """ Add a ``role_name`` role to ``user``."""
+        # Get or add role
+        role = self.find_first_object(RoleClass, name=role_name)
+        if not role:
+            role = self.add_object(RoleClass, name=role_name)
+        user.roles.append(role)
+
+    def get_user_roles(self, user):
+        """ Retrieve a list of user role names.
+
+        .. note::
+
+            Database specific utility methods.
+        """
         return [role.name for role in user.roles]
 
+    def create_all_tables(self):
+        """Create database tables for all known database data-models."""
+        self.db.create_all()
+
+    def drop_all_tables(self):
+        """Drop all tables of the database.
+
+        .. warning:: ALL DATA WILL BE LOST. Use only for automated testing.
+        """
+        self.db.drop_all()
