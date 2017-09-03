@@ -6,7 +6,7 @@ Note: The code examples below assume the use of Flask-SQLAlchemy
 
 User data-model
 ---------------
-In its simplest form, Flask-User makes use of a single User data-model class::
+In its simplest form, Flask-User makes use of a single data-model class called User::
 
     # Define User data-model
     class User(db.Model, UserMixin):
@@ -25,6 +25,13 @@ In its simplest form, Flask-User makes use of a single User data-model class::
 
     # Setup Flask-User
     user_manager = UserManager(app, db, User)
+
+.. note::
+
+    | The atribute names must be named as shown above.
+    | The class name ``User`` can be anything you choose.
+    | The database column names can be anything you choose.
+    | See also: :ref:`limitations`
 
 Optional UserEmail data-model
 -----------------------------

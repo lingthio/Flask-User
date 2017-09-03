@@ -1,13 +1,15 @@
 from __future__ import print_function
 
-from .db_adapter import DbAdapter
+from .sqlalchemy_db_adapter import SQLAlchemyDbAdapter
 
-class MongoAlchemyDbAdapter(DbAdapter):
+class MongoAlchemyDbAdapter(SQLAlchemyDbAdapter):
     """ Implements the DbAdapter interface to find, add, update and delete
     database objects using Flask-MongoAlchemy.
     """
 
-    # Some methods are defined in the DbAdapter base class.
+    # Since MongoAlchemy is similar to SQLAlchemy, we extend
+    # MongoAlchemyDbAdapter from SQLAlchemyDbAdapter
+    # and re-use most of its methods.
 
     def __init__(self, db):
         """Specify the MongoAlchemy instance ``db``.
@@ -58,3 +60,7 @@ class MongoAlchemyDbAdapter(DbAdapter):
     def commit(self):
         """Flush modified objects in the database session."""
         self.db.session.flush()
+
+    def get_user_role_names(self, user):
+        """ Retrieve a list of user role names."""
+        return user.roles

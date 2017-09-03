@@ -25,34 +25,11 @@ from .translations import lazy_gettext as _
 # **************************
 
 def password_validator(form, field):
-    """Ensure that passwords have one lowercase letter, one uppercase letter and one digit."""
-    # Convert string to list of characters
-    password = list(field.data)
-    password_length = len(password)
-
-    # Count lowercase, uppercase and numbers
-    lowers = uppers = digits = 0
-    for ch in password:
-        if ch.islower(): lowers+=1
-        if ch.isupper(): uppers+=1
-        if ch.isdigit(): digits+=1
-
-    # Password must have one lowercase letter, one uppercase letter and one digit
-    is_valid = password_length>=6 and lowers and uppers and digits
-    if not is_valid:
-        raise ValidationError(_('Password must have at least 6 characters with one lowercase letter, one uppercase letter and one number'))
+    current_app.user_manager.password_validator(form, field)
 
 
 def username_validator(form, field):
-    """Ensure that Usernames contains at least 3 alphanumeric characters."""
-    username = field.data
-    if len(username) < 3:
-        raise ValidationError(_('Username must be at least 3 characters long'))
-    valid_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._'
-    chars = list(username)
-    for char in chars:
-        if char not in valid_chars:
-            raise ValidationError(_("Username may only contain letters, numbers, '-', '.' and '_'"))
+    current_app.user_manager.username_validator(form, field)
 
 
 def unique_username_validator(form, field):
@@ -89,6 +66,7 @@ class ChangePasswordForm(FlaskForm):
         ])
     new_password = PasswordField(_('New Password'), validators=[
         validators.DataRequired(_('New Password is required')),
+        password_validator,
         ])
     retype_password = PasswordField(_('Retype New Password'), validators=[
         validators.EqualTo('new_password', message=_('New Password and Retype Password did not match'))
@@ -102,13 +80,13 @@ class ChangePasswordForm(FlaskForm):
         if not user_manager.USER_ENABLE_RETYPE_PASSWORD:
             delattr(self, 'retype_password')
 
-        # Add custom password validator if needed
-        has_been_added = False
-        for v in self.new_password.validators:
-            if v==user_manager.password_validator:
-                has_been_added = True
-        if not has_been_added:
-            self.new_password.validators.append(user_manager.password_validator)
+        # # Add custom password validator if needed
+        # has_been_added = False
+        # for v in self.new_password.validators:
+        #     if v==user_manager.password_validator:
+        #         has_been_added = True
+        # if not has_been_added:
+        #     self.new_password.validators.append(user_manager.password_validator)
 
         # Validate field-validators
         if not super(ChangePasswordForm, self).validate():
@@ -127,6 +105,7 @@ class ChangeUsernameForm(FlaskForm):
     """Change username form."""
     new_username = StringField(_('New Username'), validators=[
         validators.DataRequired(_('Username is required')),
+        username_validator,
         unique_username_validator,
     ])
     old_password = PasswordField(_('Old Password'), validators=[
@@ -138,13 +117,13 @@ class ChangeUsernameForm(FlaskForm):
     def validate(self):
         user_manager =  current_app.user_manager
 
-        # Add custom username validator if needed
-        has_been_added = False
-        for v in self.new_username.validators:
-            if v==user_manager.username_validator:
-                has_been_added = True
-        if not has_been_added:
-            self.new_username.validators.append(user_manager.username_validator)
+        # # Add custom username validator if needed
+        # has_been_added = False
+        # for v in self.new_username.validators:
+        #     if v==user_manager.username_validator:
+        #         has_been_added = True
+        # if not has_been_added:
+        #     self.new_username.validators.append(user_manager.username_validator)
 
         # Validate field-validators
         if not super(ChangeUsernameForm, self).validate():
@@ -266,13 +245,15 @@ class RegisterUserForm(FlaskForm):
 
     username = StringField(_('Username'), validators=[
         validators.DataRequired(_('Username is required')),
+        username_validator,
         unique_username_validator])
     email = StringField(_('Email'), validators=[
         validators.DataRequired(_('Email is required')),
         validators.Email(_('Invalid Email')),
         unique_email_validator])
     password = PasswordField(_('Password'), validators=[
-        validators.DataRequired(_('Password is required'))])
+        validators.DataRequired(_('Password is required')),
+        password_validator])
     retype_password = PasswordField(_('Retype Password'), validators=[
         validators.EqualTo('password', message=_('Password and Retype Password did not match'))])
     invite_token = HiddenField(_('Token'))
@@ -288,21 +269,21 @@ class RegisterUserForm(FlaskForm):
             delattr(self, 'email')
         if not user_manager.USER_ENABLE_RETYPE_PASSWORD:
             delattr(self, 'retype_password')
-        # Add custom username validator if needed
-        if user_manager.USER_ENABLE_USERNAME:
-            has_been_added = False
-            for v in self.username.validators:
-                if v==user_manager.username_validator:
-                    has_been_added = True
-            if not has_been_added:
-                self.username.validators.append(user_manager.username_validator)
-        # Add custom password validator if needed
-        has_been_added = False
-        for v in self.password.validators:
-            if v==user_manager.password_validator:
-                has_been_added = True
-        if not has_been_added:
-            self.password.validators.append(user_manager.password_validator)
+        # # Add custom username validator if needed
+        # if user_manager.USER_ENABLE_USERNAME:
+        #     has_been_added = False
+        #     for v in self.username.validators:
+        #         if v==user_manager.username_validator:
+        #             has_been_added = True
+        #     if not has_been_added:
+        #         self.username.validators.append(user_manager.username_validator)
+        # # Add custom password validator if needed
+        # has_been_added = False
+        # for v in self.password.validators:
+        #     if v==user_manager.password_validator:
+        #         has_been_added = True
+        # if not has_been_added:
+        #     self.password.validators.append(user_manager.password_validator)
         # Validate field-validators
         if not super(RegisterUserForm, self).validate():
             return False
@@ -338,7 +319,9 @@ class ResendEmailConfirmationForm(FlaskForm):
 class ResetPasswordForm(FlaskForm):
     """Reset password form."""
     new_password = PasswordField(_('New Password'), validators=[
-        validators.DataRequired(_('New Password is required'))])
+        validators.DataRequired(_('New Password is required')),
+        password_validator,
+        ])
     retype_password = PasswordField(_('Retype New Password'), validators=[
         validators.EqualTo('new_password', message=_('New Password and Retype Password did not match'))])
     next = HiddenField()
@@ -349,13 +332,13 @@ class ResetPasswordForm(FlaskForm):
         user_manager =  current_app.user_manager
         if not user_manager.USER_ENABLE_RETYPE_PASSWORD:
             delattr(self, 'retype_password')
-        # Add custom password validator if needed
-        has_been_added = False
-        for v in self.new_password.validators:
-            if v==user_manager.password_validator:
-                has_been_added = True
-        if not has_been_added:
-            self.new_password.validators.append(user_manager.password_validator)
+        # # Add custom password validator if needed
+        # has_been_added = False
+        # for v in self.new_password.validators:
+        #     if v==user_manager.password_validator:
+        #         has_been_added = True
+        # if not has_been_added:
+        #     self.new_password.validators.append(user_manager.password_validator)
         # Validate field-validators
         if not super(ResetPasswordForm, self).validate():
             return False

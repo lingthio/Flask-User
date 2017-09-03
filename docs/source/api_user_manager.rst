@@ -3,11 +3,11 @@
 UserManager class
 =================
 
-This class implements most of Flask-User's functionality.
+The UserManager class implements most of the Flask-User functionality.
 
-Flask-User can be configured by changing the :ref:`UserManager__Settings`.
+Flask-User can be customized by extending or overriding any of the methods listed below.
 
-Flask-User can be customized by implementing the ``customize()`` method.
+.. seealso:: :ref:`UserManager__Settings` to configure Flask-User settings.
 
 .. autoclass:: flask_user.user_manager.UserManager
     :no-undoc-members:

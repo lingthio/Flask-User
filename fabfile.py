@@ -60,3 +60,7 @@ def setup_tox():
 @task
 def tox():
     local('tox')
+
+@task
+def start_mongodb():
+    local('mongod -dbpath ~/mongodb/data/db')

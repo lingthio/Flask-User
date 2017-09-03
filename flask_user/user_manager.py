@@ -14,6 +14,7 @@ if is_py2:
 if is_py3:
     from urllib.parse import urlsplit
 
+from wtforms import ValidationError
 
 from flask import abort, Blueprint, current_app, Flask
 from flask_login import LoginManager, current_user
@@ -24,7 +25,7 @@ from flask_user.token_manager import TokenManager
 
 from . import forms
 from . import translations
-from .translations import get_translations
+from .translations import get_translations, lazy_gettext as _
 from .user_manager_settings import UserManager__Settings
 from .user_manager_views import UserManager__Views, init_views
 
@@ -72,6 +73,11 @@ class UserManager(UserManager__Settings, UserManager__Views):
 
         Example:
             ``user_manager = UserManager(app, db, User)``
+
+        .. note::
+
+            Any of the UserManager methods listed below can be extended or overridden
+            to customize Flask-User behavior.
         """
 
         #see http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code """
@@ -163,9 +169,9 @@ class UserManager(UserManager__Settings, UserManager__Views):
 
         # Validators
         #: Username validator
-        self.username_validator = forms.username_validator
+        # self.username_validator = forms.username_validator
         #: Password validator
-        self.password_validator = forms.password_validator
+        # self.password_validator = forms.password_validator
 
         # Setup PasswordManager
         self.password_manager = PasswordManager(self.USER_PASSWORD_HASH)
@@ -206,7 +212,12 @@ class UserManager(UserManager__Settings, UserManager__Views):
 
 
     def customize(self, app):
-        """ Override this method to configure custom Flask-User behavior.
+        """ Override this method to customize settings or to configure:
+
+        - a custom EmailManager
+        - a custom TokenManager
+        - a custom PasswordManager
+        - a custom EmailMailer
 
         ::
 
@@ -215,64 +226,20 @@ class UserManager(UserManager__Settings, UserManager__Views):
 
                 def customize():
 
-                    # Add custom settings here
-                    # Note: This can also be set in the application config file.
+                    # Customize settings
+                    # (Can also be set in the application config)
                     self.USER_ENABLE_EMAIL = True
                     self.USER_ENABLE_USERNAME = False
 
-                    # Add custom behavior here
-                    from some.path import CustomJwtTokenManager
-                    self.token_manager = CustomJwtTokenManager()
-                    from some.path import CustomEmailMailer
+                    # Add custom managers and email mailers here
+                    self.email_manager = CustomEmailManager()
+                    self.password_manager = CustomPasswordManager()
+                    self.token_manager = CustomTokenManager()
                     self.email_mailer = CustomEmailMailer()
 
             # Setup Flask-User
             user_manager = CustomUserManager(app, db, User)
         """
-
-    def email_is_available(self, new_email):
-        """Check if ``new_email`` is available.
-
-        | Returns True if ``new_email`` does not exist or belongs to the current user.
-        | Return False otherwise.
-        """
-
-        user, user_email = self.find_user_by_email(new_email)
-        return (user == None)
-
-    def find_user_by_username(self, username):
-        """Retrieve a User by username."""
-        return self.db_adapter.ifind_first_object(self.UserClass, username=username)
-
-    def find_user_by_email(self, email):
-        """Retrieve a User by email."""
-        if self.UserEmailClass:
-            user_email = self.db_adapter.ifind_first_object(self.UserEmailClass, email=email)
-            user = user_email.user if user_email else None
-        else:
-            user_email = None
-            user = self.db_adapter.ifind_first_object(self.UserClass, email=email)
-
-        return (user, user_email)
-
-    def get_primary_user_email(self, user):
-        """Retrieve the primary User email for the 'multiple email_templates per user' feature."""
-        db_adapter = self.db_adapter
-        if self.UserEmailClass:
-            user_email = db_adapter.find_first_object(self.UserEmailClass,
-                                                      user_id=user.id,
-                                                      is_primary=True)
-            return user_email
-        else:
-            return user
-
-    def get_user_by_id(self, user_id):
-        """Retrieve a User by ID."""
-        return self.db_adapter.get_object(self.UserClass, user_id)
-
-    def get_user_email_by_id(self, user_email_id):
-        """Retrieve a UserEmail by ID."""
-        return self.db_adapter.get_object(self.UserEmailClass, user_email_id)
 
     def make_safe_url(self, url):
         """Makes a URL safe by removing optional hostname and port.
@@ -291,22 +258,121 @@ class UserManager(UserManager__Settings, UserManager__Views):
         safe_url = parts.path + parts.query + parts.fragment
         return safe_url
 
-    def username_is_available(self, new_username):
-        """Check if ``new_username`` is available.
 
-        | Returns True if ``new_username`` does not exist or belongs to the current user.
+        # Password must have one lowercase letter, one uppercase letter and one digit
+        is_valid = password_length >= 6 and lowers and uppers and digits
+        if not is_valid:
+            raise ValidationError(_(
+                'Password must have at least 6 characters with one lowercase letter, one uppercase letter and one number'))
+
+
+    def password_validator(self, form, field):
+        """Ensure that passwords have one lowercase letter, one uppercase letter and one digit.
+
+        Override this method to customize the password validator.
+        """
+
+        # Convert string to list of characters
+        password = list(field.data)
+        password_length = len(password)
+
+        # Count lowercase, uppercase and numbers
+        lowers = uppers = digits = 0
+        for ch in password:
+            if ch.islower(): lowers += 1
+            if ch.isupper(): uppers += 1
+            if ch.isdigit(): digits += 1
+
+        # Password must have one lowercase letter, one uppercase letter and one digit
+        is_valid = password_length >= 6 and lowers and uppers and digits
+        if not is_valid:
+            raise ValidationError(_(
+                'Password must have at least 6 characters with one lowercase letter, one uppercase letter and one number'))
+
+
+    def username_validator(self, form, field):
+        """Ensure that Usernames contains at least 3 alphanumeric characters.
+
+        Override this method to customize the username validator.
+
+        .. note::
+
+            Utility methods that are used by the form views.
+            There is usually no need to override these methods.
+        """
+        username = field.data
+        if len(username) < 3:
+            raise ValidationError(_('Username must be at least 3 characters long'))
+        valid_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._'
+        chars = list(username)
+        for char in chars:
+            if char not in valid_chars:
+                raise ValidationError(_("Username may only contain letters, numbers, '-', '.' and '_'"))
+
+    def email_is_available(self, new_email):
+        """Check if ``new_email`` is available.
+
+        | Returns True if ``new_email`` does not exist or belongs to the current user.
         | Return False otherwise.
         """
 
-        # Allow user to change username to the current username
+        user, user_email = self.find_user_by_email(new_email)
+        return (user == None)
+
+    def find_user_by_username(self, username):
+        """Retrieve a User by username (case insensitively)."""
+        return self.db_adapter.ifind_first_object(self.UserClass, username=username)
+
+    def find_user_by_email(self, email):
+        """Retrieve a User by email."""
+        if self.UserEmailClass:
+            user_email = self.db_adapter.ifind_first_object(self.UserEmailClass, email=email)
+            user = user_email.user if user_email else None
+        else:
+            user_email = None
+            user = self.db_adapter.ifind_first_object(self.UserClass, email=email)
+
+        return (user, user_email)
+
+    def get_primary_user_email(self, user):
+        """Retrieve the email from User object or the primary UserEmail object (if multiple emails
+        per user are enabled)."""
+        db_adapter = self.db_adapter
+        if self.UserEmailClass:
+            user_email = db_adapter.find_first_object(self.UserEmailClass,
+                                                      user_id=user.id,
+                                                      is_primary=True)
+            return user_email
+        else:
+            return user
+
+    def get_user_by_id(self, user_id):
+        """Retrieve a User object by ID."""
+        return self.db_adapter.get_object(self.UserClass, user_id)
+
+    def get_user_email_by_id(self, user_email_id):
+        """Retrieve a UserEmail object by ID."""
+        return self.db_adapter.get_object(self.UserEmailClass, user_email_id)
+
+    def username_is_available(self, new_username):
+        """Check if ``new_username`` is still available.
+
+        | Returns True if ``new_username`` does not exist or belongs to the current user.
+        | Return False otherwise.
+
+        .. note::
+
+            Flask-User validators.
+        """
+
+        # Return True if new_username equals current user's username
         if _call_or_get(current_user.is_authenticated):
-            current_username = current_user.username
-            if new_username == current_username:
+            if new_username == current_user.username:
                 return True
-        # See if new_username is available
+
+        # Return True if new_username does not exist,
+        # Return False otherwise.
         return self.find_user_by_username(new_username) == None
-
-
 
     # ***** Private methods *****
 

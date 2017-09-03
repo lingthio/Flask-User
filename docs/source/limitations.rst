@@ -1,3 +1,5 @@
+.. _limitations:
+
 ===========
 Limitations
 ===========
@@ -40,10 +42,10 @@ No known restrictions.
 Flask-User relies on a User class and optionally on a UserEmail, UserInvitation and Role class.
 The names of these classes can be anything you choose::
 
-    class Customer(db.Model, UserMixin):
+    class Client(db.Model, UserMixin):
         ...
 
-    user_manager = UserManager(app, db, Customer)
+    user_manager = UserManager(app, db, Client)
 
 
 Python data-model attribute names
@@ -121,11 +123,16 @@ Primary keys
 Without customization, the primary key of the User, UserEmail, UserInvitation and Role tables:
 
 - must be named ``id``
-- must be an Integer
+- must be of type ``int``
 - may not be a compound key.
 
-Customization may offer a way to use primary keys named other than ``id``. As an example,
-the :ref:`MongoAlchemyDbAdapter` accepts primary keys named ``_id`` of type ObjectID.
+Customization may offer a way to use primary keys named other than ``id``.
+
+Customization may offer a way to use primary keys of types other than ``int``
+as long as they can be converted into an ``int``.
+
+As an example, the :ref:`MongoAlchemyDbAdapter` accepts primary keys named ``_id`` of type ObjectID.
+Since a MongoDB ObjectId represents a 12-byte number, this can be converted to an ``int``.
 
 
 

@@ -6,6 +6,8 @@ from flask_user import login_required, UserManager, UserMixin
 from flask_user import roles_required, confirmed_email_required
 
 ORM_type = 'SQLAlchemy'   # SQLAlchemy  or MongoAlchemy
+# ORM_type = 'MongoAlchemy'   # SQLAlchemy  or MongoAlchemy
+# Use "mongod -dbpath ~/mongodb/data/db" to start the MongoDB deamon
 
 app = Flask(__name__)
 
@@ -20,7 +22,7 @@ class ConfigClass(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False    # Avoids SQLAlchemy warning
 
     # Flask-MongoAlchemy settings
-    MONGOALCHEMY_DATABASE = 'flask_user_quickstart_db'
+    MONGOALCHEMY_DATABASE = 'flask_user_tst_app_db'
 
     # Flask-Mail settings
     MAIL_USERNAME =           os.getenv('MAIL_USERNAME',        'email@example.com')
@@ -101,11 +103,6 @@ if ORM_type == 'MongoAlchemy':
     db = MongoAlchemy(app)
 
 
-    class Role(db.Document):
-        name = db.StringField()
-        label = db.StringField(default='')
-
-
     # Define the User data model.
     # NB: Make sure to add flask_user UserMixin !!!
     class User(db.Document, UserMixin):
@@ -133,7 +130,7 @@ if ORM_type == 'MongoAlchemy':
         last_name = db.StringField(default='')
 
         # Relationships
-        roles = db.ListField(db.DocumentField(Role), required=False, default=[])
+        roles = db.ListField(db.StringField(), required=False, default=[])
 
 
 # Define custom UserManager class
@@ -160,6 +157,7 @@ def init_app(app, test_config=None):                # For automated tests
 
     # Reset all the database tables
     if ORM_type == 'SQLAlchemy':
+        db.drop_all()
         db.create_all()
 
     if ORM_type == 'MongoAlchemy':
@@ -195,6 +193,8 @@ def init_app(app, test_config=None):                # For automated tests
         if ORM_type == 'SQLAlchemy':
             user1.roles.append(Role(name='secret'))
             user1.roles.append(Role(name='agent'))
+        if ORM_type == 'MongoAlchemy':
+            user1.roles = ['secret', 'agent']
         db.session.add(user1)
         user_manager.db_adapter.commit()
 
