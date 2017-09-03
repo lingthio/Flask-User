@@ -31,15 +31,19 @@ def app(request):
 
 @pytest.fixture(scope='session')
 def db(app, request):
-    """Session-wide test database."""
-    # def teardown():
-    #     if hasattr(app.db, 'drop_all'):
-    #         app.db.drop_all()
-    #
-    # if hasattr(app.db, 'create_all'):
-    #     app.db.create_all()
-    #
-    # request.addfinalizer(teardown)
+    # Retrieve db_adapter through App
+    db_adapter = app.user_manager.db_adapter
+
+    # Create all tables
+    db_adapter.create_all_tables()
+
+    # Define a teardown() function to drop all tables at end of test
+    def teardown():
+        db_adapter.drop_all_tables()
+
+    # Register teardown function
+    request.addfinalizer(teardown)
+
     return app.db
 
 

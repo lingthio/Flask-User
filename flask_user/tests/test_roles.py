@@ -83,7 +83,7 @@ def test_roles(db):
         role1 = db_adapter.find_first_object(RoleClass, name='Role 1')
         db_adapter.delete_object(role1)
         role2 = db_adapter.find_first_object(RoleClass, name='Role 2')
-        db_adapter.delete_object(role1)
+        db_adapter.delete_object(role2)
 
     db_adapter.commit()
 
