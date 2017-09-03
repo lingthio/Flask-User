@@ -13,6 +13,7 @@ class UserMixin(LoginUserMixin):
         # - part of the User hashed password (to invalidate the token after a password change)
         # This function works in tandem with UserMixin.get_user_by_token()
         user_manager = current_app.user_manager
+
         user_id = self.id
         password_ends_with = self.password[-8:]
         user_token = user_manager.token_manager.generate_token(
@@ -33,9 +34,17 @@ class UserMixin(LoginUserMixin):
         # Verify password_ends_with
         token_is_valid = False
         if data_items:
+
+            # Load user by User ID
             user_id = data_items[0]
             password_ends_with = data_items[1]
-            user = user_manager.get_user_by_id(user_id)
+            try:
+                user = user_manager.get_user_by_id(user_id)
+            except:
+                print('get_user_by_token failed. user_id=', user_id)
+                user = None
+
+
             # Make sure that last 8 characters of user password matches
             token_is_valid = user and user.password[-8:]==password_ends_with
 

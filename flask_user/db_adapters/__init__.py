@@ -1,2 +1,3 @@
 from .sqlalchemy_db_adapter import SQLAlchemyDbAdapter
 from .mongoalchemy_db_adapter import MongoAlchemyDbAdapter
+from .mongoengine_db_adapter import MongoEngineDbAdapter

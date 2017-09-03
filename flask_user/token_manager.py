@@ -141,15 +141,19 @@ class TokenManager(object):
         str_list = []
         for arg in args:
 
-            # encode integer items as base-64 strings with a '~' character in front
-            if isinstance(arg, int):
-                str = self.INTEGER_PREFIX + self.encode_int(arg)
-
             # encode string items as-is
-            else:
-                str = arg
+            if isinstance(arg, str):
+                arg_str = arg
 
-            str_list.append(str)
+            # encode integer items as base-64 strings with a '~' character in front
+            elif isinstance(arg, int):
+                arg_str = self.INTEGER_PREFIX + self.encode_int(arg)
+
+            # convert other types to string
+            else:
+                arg_str = str(arg)
+
+            str_list.append(arg_str)
 
         # Concatenate strings with '|' separators
         concatenated_str = self.SEPARATOR.join(str_list)

@@ -10,7 +10,7 @@ while shielding the Flask-User code from the underlying implementation.
 Included implementations:
 
 - :ref:`SQLAlchemyDbAdapter`
-- :ref:`MongoAlchemyDbAdapter`
+- :ref:`MongoEngineDbAdapter`
 
 Other databases can be supported by writing your own :ref:`CustomDbAdapter`.
 
@@ -34,21 +34,22 @@ Simply supply a SQLAlchemy instance as the ``db`` parameter of UserManager()::
 
 --------
 
-.. _MongoAlchemyDbAdapter:
+.. _MongoEngineDbAdapter:
 
-MongoAlchemyDbAdapter
+MongoEngineDbAdapter
 ---------------------
 
-.. autoclass:: flask_user.db_adapters.mongoalchemy_db_adapter.MongoAlchemyDbAdapter
+.. autoclass:: flask_user.db_adapters.mongoengine_db_adapter.MongoEngineDbAdapter
 
-Flask-User ships with MongoAlchemyDbAdapter, but you will need
-to manually install Flask-MongoAlchemy::
+Flask-User ships with MongoEngineDbAdapter, but you will need
+to manually install Flask-MongoEngine::
 
-    pip install Flask-MongoAlchemy
+    pip install Flask-MongoEngine
 
-and supply a MongoAlchemy instance as the ``db`` parameter of UserManager()::
+and supply a MongoEngine instance as the ``db`` parameter of UserManager()::
 
-    db = MongoAlchemy(app)
+    from flask_mongoengine import MongoEngine
+    db = MongoEngine(app)
     user_manager = UserManager(app, db, User)
 
 --------

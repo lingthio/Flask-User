@@ -5,8 +5,9 @@ from flask_babel import Babel
 from flask_user import login_required, UserManager, UserMixin
 from flask_user import roles_required, confirmed_email_required
 
-ORM_type = 'SQLAlchemy'   # SQLAlchemy  or MongoAlchemy
-# ORM_type = 'MongoAlchemy'   # SQLAlchemy  or MongoAlchemy
+ORM_type = 'SQLAlchemy'   # SQLAlchemy  or MongoEngine
+# ORM_type = 'MongoEngine'   # SQLAlchemy  or MongoEngine
+
 # Use "mongod -dbpath ~/mongodb/data/db" to start the MongoDB deamon
 
 app = Flask(__name__)
@@ -22,7 +23,13 @@ class ConfigClass(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False    # Avoids SQLAlchemy warning
 
     # Flask-MongoAlchemy settings
-    MONGOALCHEMY_DATABASE = 'flask_user_tst_app_db'
+    MONGOALCHEMY_DATABASE = 'tst_app'
+
+    # Flask-MongoEngine settings
+    MONGODB_SETTINGS = {
+        'db': 'tst_app',
+        'host': 'mongodb://localhost/tst_app'
+    }
 
     # Flask-Mail settings
     MAIL_USERNAME =           os.getenv('MAIL_USERNAME',        'email@example.com')
@@ -41,7 +48,7 @@ class ConfigClass(object):
 app.config.from_object(__name__+'.ConfigClass')
 
 if ORM_type=='SQLAlchemy':
-    # Initialize Flask-SQLAlchemy
+    # Initialize Flask-SQLAlchemy, using SQLALCHEMY_DATABASE_URI setting
     from flask_sqlalchemy import SQLAlchemy
     db = SQLAlchemy(app)
 
@@ -97,27 +104,15 @@ if ORM_type=='SQLAlchemy':
         role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
 
 
-if ORM_type == 'MongoAlchemy':
-    # Initialize Flask-MongoAlchemy
-    from flask_mongoalchemy import MongoAlchemy
-    db = MongoAlchemy(app)
+if ORM_type == 'MongoEngine':
+    # Initialize Flask-MongoEngine, using MONGODB_SETTINGS setting
+    from flask_mongoengine import MongoEngine
 
+    db = MongoEngine(app)
 
     # Define the User data model.
     # NB: Make sure to add flask_user UserMixin !!!
     class User(db.Document, UserMixin):
-        # Map MongoAlchemy's mongod_id to Flask-User's id - getter
-        @property
-        def id(self):
-            # Convert MongoDB hexadecimal string to Flask-User Integer
-            id = int(str(self.mongo_id), 16)
-            return id
-
-        # # Map MongoDB's _id to Flask-User's id - setter
-        # @id.setter
-        # def id(self, value):
-        #     # Convert Flask-User Integer to MongoDB hexadecimal string
-        #     self._id = format(value, 'x')
 
         # User authentication information
         username = db.StringField(default='')
@@ -130,7 +125,7 @@ if ORM_type == 'MongoAlchemy':
         last_name = db.StringField(default='')
 
         # Relationships
-        # roles = db.ListField(db.StringField(), required=False, default_empty=True)
+        # roles = ListField(StringField(), required=False, default_empty=True)
         roles = db.ListField(db.StringField(), default=[])
 
 

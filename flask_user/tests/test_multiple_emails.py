@@ -55,7 +55,7 @@ def test_multiple_emails(app, db, client):
 
         # Register user
         response = client.post_valid_form(url_for('user.register'), email=EMAIL1, password=PASSWORD)
-        user_email1 = um.UserEmailClass.query.filter(um.UserEmailClass.email==EMAIL1).first()
+        user_email1 = um.db_adapter.find_first_object(um.UserEmailClass, email=EMAIL1)
         assert user_email1 != None
 
         # Confirm email

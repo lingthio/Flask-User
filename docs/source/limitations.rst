@@ -129,10 +129,10 @@ Without customization, the primary key of the User, UserEmail, UserInvitation an
 Customization may offer a way to use primary keys named other than ``id``.
 
 Customization may offer a way to use primary keys of types other than ``int``
-as long as they can be converted into an ``int``.
+as long as they can be converted into an ``str``.
 
-As an example, the :ref:`MongoAlchemyDbAdapter` accepts primary keys named ``_id`` of type ObjectID.
-Since a MongoDB ObjectId represents a 12-byte number, this can be converted to an ``int``.
+As an example, the :ref:`MongoEngineDbAdapter` accepts primary keys of type ObjectID,
+which can be converted to a string with ``str(id)``.
 
 
 

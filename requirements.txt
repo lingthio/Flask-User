@@ -1,14 +1,25 @@
-# Flask & Flask Extensions
-Flask>=0.9
-Flask-BabelEx>=0.9
-Flask-Login>=0.2
-Flask-Mail>=0.7.3
-Flask-SQLAlchemy>=1.0
-Flask-WTF>=0.9
-
 # Python packages
 bcrypt>=1.1
 cryptography==2.0.3
-itsdangerous>=0.17
 passlib>=1.6.4
-#pycryptodome>=3.0
+
+# Flask & Flask Extensions
+Flask==0.12.2
+Flask-Babel==0.11.2
+Flask-Login==0.4.0
+Flask-Mail==0.9.1
+Flask-WTF==0.14.2
+
+# SQLAlchemy testing
+Flask-SQLAlchemy==2.2
+
+# Mongo DB testing
+Flask-MongoEngine==0.9.3
+Flask-MongoAlchemy==0.7.2
+
+# Development packages
+pytest==3.0.5
+pytest-cov==2.5.1
+Sphinx==1.6.3
+tox==2.5.0
+twine==1.9.1

@@ -150,9 +150,10 @@ def check_valid_register_form(um, client, db):
         client.post_valid_form(url_for('user.register'), **kwargs)
 
         if um.USER_ENABLE_USERNAME:
-            valid_user = User.query.filter(User.username==VALID_USERNAME).first()
+            valid_user = um.db_adapter.find_first_object(User, username=VALID_USERNAME)
+
         else:
-            valid_user = User.query.filter(User.email==VALID_EMAIL).first()
+            valid_user = um.db_adapter.find_first_object(User, email=VALID_EMAIL)
         assert valid_user
 
     else:
@@ -318,7 +319,7 @@ def check_valid_invite_email(um, client):
     UserInvite = um.UserInvitationClass
     client.login(username='member', email='member@example.com', password='Password1')
     client.post_valid_form(url_for('user.invite_user'), email=INVITE_USER_EMAIL)
-    valid_user_invite = UserInvite.query.filter(UserInvite.email==INVITE_USER_EMAIL).first()
+    valid_user_invite = um.db_adapter.find_first_object(UserInvite, email=INVITE_USER_EMAIL)
     assert valid_user_invite
 
 def delete_valid_user(db):

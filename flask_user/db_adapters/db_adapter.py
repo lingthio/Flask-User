@@ -66,7 +66,12 @@ class DbAdapter(object):
         """ Update an existing object, specified by ``object``,
         with the fields and values specified in ``**kwargs``.
         """
-        raise NotImplementedError
+        # Convert name=value kwargs to object.name=value
+        for key,value in kwargs.items():
+            if hasattr(object, key):
+                setattr(object, key, value)
+            else:
+                raise KeyError("Object '%s' has no field '%s'." % (type(object), key))
 
     def delete_object(self, object):
         """ Delete object specified by ``object``."""

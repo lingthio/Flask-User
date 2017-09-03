@@ -21,7 +21,7 @@ class SQLAlchemyDbAdapter(DbAdapter):
 
             Object-class agnostic methods.
         """
-        # This no-op method is defined only for Sphinx autodocs 'bysource' order
+        # This no-op method is defined to show it in Sphinx docs in order 'bysource'
         super(SQLAlchemyDbAdapter, self).__init__(db)
 
     def get_object(self, ObjectClass, id):
@@ -107,11 +107,8 @@ class SQLAlchemyDbAdapter(DbAdapter):
         """ Update an existing object, specified by ``object``,
         with the fields and values specified in ``**kwargs``.
         """
-        for key,value in kwargs.items():
-            if hasattr(object, key):
-                setattr(object, key, value)
-            else:
-                raise KeyError("Object '%s' has no field '%s'." % (type(object), key))
+        # Convert name=value kwargs to object.name=value
+        super(SQLAlchemyDbAdapter, self).update_object(object, **kwargs)
 
     def delete_object(self, object):
         """ Delete object specified by ``object``."""

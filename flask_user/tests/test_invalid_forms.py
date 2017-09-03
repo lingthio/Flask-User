@@ -410,7 +410,7 @@ def test_valid_roles(client):
     User = um.UserClass
 
     # Perform only for roles_required_app
-    user007 = User.query.filter(User.username=='user007').first()
+    user007 = um.db_adapter.find_first_object(User, username='user007')
     if not user007: return
 
     print("test_valid_roles")
@@ -427,7 +427,7 @@ def test_invalid_roles(client):
     User = um.UserClass
 
     # Perform only for roles_required_app
-    user007 = User.query.filter(User.username=='user007').first()
+    user007 = um.db_adapter.find_first_object(User, username='user007')
     if not user007: return
 
     print("test_invalid_roles")

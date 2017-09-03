@@ -134,6 +134,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
                     self.db_adapter = SQLAlchemyDbAdapter(db)
             except:
                 pass
+
         # Check if db is a MongoAlchemy instance
         if self.db_adapter is None:
             try:
@@ -141,6 +142,17 @@ class UserManager(UserManager__Settings, UserManager__Views):
                 if isinstance(db, MongoAlchemy):
                     from .db_adapters import MongoAlchemyDbAdapter
                     self.db_adapter = MongoAlchemyDbAdapter(db)
+            except:
+                pass
+
+
+        # Check if db is a MongoEngine instance
+        if self.db_adapter is None:
+            try:
+                from flask_mongoengine import MongoEngine
+                if isinstance(db, MongoEngine):
+                    from .db_adapters import MongoEngineDbAdapter
+                    self.db_adapter = MongoEngineDbAdapter(db)
             except:
                 pass
 
