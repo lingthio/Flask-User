@@ -23,22 +23,29 @@ class MongoEngineDbAdapter(DbAdapter):
 
         .. note::
 
-            Object-class agnostic methods.
+            Generic methods.
         """
         # This no-op method is defined to show it in Sphinx docs in order 'bysource'
         super(MongoEngineDbAdapter, self).__init__(db)
 
     def get_object(self, ObjectClass, id):
-        """ Retrieve object of type ``ObjectClass`` by ``id``."""
+        """ Retrieve object of type ``ObjectClass`` by ``id``.
 
-        return ObjectClass.objects.get(id=id)
+        | Returns object on success.
+        | Returns None otherwise.
+        """
+        try:
+            object = ObjectClass.objects.get(id=id)
+        except (ObjectClass.DoesNotExist, ObjectClass.MultipleObjectsReturned):
+            object = None
+        return object
 
     def find_objects(self, ObjectClass, **kwargs):
         """ Retrieve all objects of type ``ObjectClass``,
         matching the filters specified in ``**kwargs`` -- case sensitive.
         """
 
-        # Retrieve first object
+        # Retrieve all matching objects
         return ObjectClass.objects(**kwargs).all()
 
     def find_first_object(self, ObjectClass, **kwargs):

@@ -36,10 +36,6 @@ class ConfigClass(object):
     MAIL_PORT =           int(os.getenv('MAIL_PORT',            '465'))
     MAIL_USE_SSL =            os.getenv('MAIL_USE_SSL',         True)
 
-    # Disable email sending
-    USER_SEND_PASSWORD_CHANGED_EMAIL=False
-    USER_SEND_REGISTERED_EMAIL=False
-    USER_SEND_USERNAME_CHANGED_EMAIL=False
 
 # Read config from ConfigClass defined above
 app.config.from_object(__name__+'.ConfigClass')

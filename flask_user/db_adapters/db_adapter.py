@@ -23,12 +23,16 @@ class DbAdapter(object):
 
         .. note::
 
-            Object-class agnostic methods.
+            Generic methods.
         """
         self.db = db
 
     def get_object(self, ObjectClass, id):
-        """ Retrieve object of type ``ObjectClass`` by ``id``."""
+        """ Retrieve object of type ``ObjectClass`` by ``id``.
+
+        | Returns object on success.
+        | Returns None otherwise.
+        """
         raise NotImplementedError
 
     def find_objects(self, ObjectClass, **kwargs):

@@ -22,28 +22,17 @@ def get_translations():
 
     # If App has not initialized Flask-Babel: return None
     app_has_initalized_flask_babel = 'babel' in current_app.extensions
-    if not app_has_initalized_flask_babel:  # pragma no cover
+    if not app_has_initalized_flask_babel:  # pragma: no cover
         ctx.flask_user_translations = None
         return ctx.flask_user_translations
 
-    # Prepare search properties
+    # Load translations from <flask_user_dir>/translations/
     import os
-    import gettext as python_gettext
     from flask_babel import get_locale, support
+    flask_user_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'translations')
     domain = 'flask_user'
     locales = [get_locale()]
-    languages = [str(locale) for locale in locales]
-
-    # See if translations exists in Application dir
-    app_dir = os.path.join(current_app.root_path, 'translations')
-    filename = python_gettext.find(domain, app_dir, languages)
-    if filename:
-        ctx.flask_user_translations = support.Translations.load(app_dir, locales, domain=domain)
-
-    # See if translations exists in Flask-User dir
-    else:
-        flask_user_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'translations')
-        ctx.flask_user_translations = support.Translations.load(flask_user_dir, locales, domain=domain)
+    ctx.flask_user_translations = support.Translations.load(flask_user_dir, locales, domain=domain)
 
     import flask_babel
     return ctx.flask_user_translations.merge(flask_babel.get_translations())
@@ -53,7 +42,7 @@ def gettext(string, **variables):
     translations = get_translations()
     if translations:
         return translations.ugettext(string) % variables
-    return string % variables
+    return string % variables    # pragma: no cover
 
 # def ngettext(singular, plural, num, **variables):
 #     """ Translate a singular/plural string based on the number 'num'."""

@@ -15,7 +15,7 @@ from flask_login import current_user
 def user_is_authenticated(user):
     # Flask-Login prior to v0.3 uses a method.
     # Flask-Login v0.3+ uses an attribute.
-    if callable(user.is_authenticated):
+    if callable(user.is_authenticated):   # pragma: no cover
         return user.is_authenticated()
     else:
         return user.is_authenticated

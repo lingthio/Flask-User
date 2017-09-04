@@ -27,34 +27,38 @@ def login_required(func):
     return decorated_view
 
 
-def roles_accepted(*role_names):
-    """ This decorator ensures that the current user one of the specified roles.
-        Calls the unauthorized_view() when requirements fail.
-        See also: UserMixin.has_role()
-    """
-    def wrapper(func):
-        @wraps(func)
-        def decorated_view(*args, **kwargs):
-            # User must be logged
-            if not user_is_authenticated(current_user):
-                # Redirect to the unauthenticated page
-                return current_app.user_manager.unauthenticated_view()
-
-            # User must have the required roles
-            if not current_user.has_role(*role_names):
-                # Redirect to the unauthorized page
-                return current_app.user_manager.unauthorized_view()
-
-            # Call the actual view
-            return func(*args, **kwargs)
-        return decorated_view
-    return wrapper
+# def roles_accepted(*role_names):
+#     """ This decorator ensures that the current user one of the specified roles.
+#         Calls the unauthorized_view() when requirements fail.
+#         See also: UserMixin.has_role()
+#     """
+#     def wrapper(func):
+#         @wraps(func)
+#         def decorated_view(*args, **kwargs):
+#             # User must be logged
+#             if not user_is_authenticated(current_user):
+#                 # Redirect to the unauthenticated page
+#                 return current_app.user_manager.unauthenticated_view()
+#
+#             # User must have the required roles
+#             if not current_user.has_role(*role_names):
+#                 # Redirect to the unauthorized page
+#                 return current_app.user_manager.unauthorized_view()
+#
+#             # Call the actual view
+#             return func(*args, **kwargs)
+#         return decorated_view
+#     return wrapper
 
 
 def roles_required(*role_names):
-    """ This decorator ensures that the current user has all of the specified roles.
-        Calls the unauthorized_view() when requirements fail.
-        See also: UserMixin.has_roles()
+    """ This decorator ensures that the current user has the required roles.
+
+    | Returns the result of unauthorized_view() when the user is not logged in.
+    | Returns the result of unauthorized_view() when the user does not have the required roles.
+    | Returns the result of the decorated view otherwise.
+
+    See also: UserMixin.has_roles()
     """
     def wrapper(func):
         @wraps(func)
@@ -77,7 +81,11 @@ def roles_required(*role_names):
 
 def confirmed_email_required(func):
     """ This decorator ensures that the current user is logged in and has confirmed their email.
-        Calls the unauthorized_view() when the user is not logged in."""
+
+    | Returns the result of unauthorized_view() when the user is not logged in.
+    | Returns the result of unconfimed_view() when the use has not confirmed their email.
+    | Returns the result of the decorated view otherwise.
+    """
     @wraps(func)
     def decorated_view(*args, **kwargs):
         # User must be authenticated

@@ -29,7 +29,7 @@ class EmailMailer(object):
 
         The from: field will appear as "{{sender_name}} <{{sender_email}}>".
         """
-        pass
+        raise NotImplementedError
 
     def send_email_message(self, recipient, subject, html_message, text_message):
         """ Send email message via an email mailer.
@@ -40,3 +40,4 @@ class EmailMailer(object):
             html_message: The message body in HTML.
             text_message: The message body in plain text.
         """
+        raise NotImplementedError

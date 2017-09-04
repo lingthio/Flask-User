@@ -166,9 +166,9 @@ class TokenManager(object):
         Example:
             ``decode_data_items('abc|~B7|xyz')`` returns ``['abc', 123, 'xyz']``
         """
-        str_list = concatenated_str.split(self.SEPARATOR)
 
         data_items = []
+        str_list = concatenated_str.split(self.SEPARATOR)
         for str in str_list:
 
             # '~base-64-strings' are decoded into integers.

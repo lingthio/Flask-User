@@ -19,13 +19,17 @@ class SQLAlchemyDbAdapter(DbAdapter):
 
         .. note::
 
-            Object-class agnostic methods.
+            Generic methods.
         """
         # This no-op method is defined to show it in Sphinx docs in order 'bysource'
         super(SQLAlchemyDbAdapter, self).__init__(db)
 
     def get_object(self, ObjectClass, id):
-        """ Retrieve object of type ``ObjectClass`` by ``id``."""
+        """ Retrieve object of type ``ObjectClass`` by ``id``.
+
+        | Returns object on success.
+        | Returns None otherwise.
+        """
         return ObjectClass.query.get(id)
 
     def find_objects(self, ObjectClass, **kwargs):

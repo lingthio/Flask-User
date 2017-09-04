@@ -260,13 +260,6 @@ class UserManager(UserManager__Settings, UserManager__Views):
         return safe_url
 
 
-        # Password must have one lowercase letter, one uppercase letter and one digit
-        is_valid = password_length >= 6 and lowers and uppers and digits
-        if not is_valid:
-            raise ValidationError(_(
-                'Password must have at least 6 characters with one lowercase letter, one uppercase letter and one number'))
-
-
     def password_validator(self, form, field):
         """Ensure that passwords have one lowercase letter, one uppercase letter and one digit.
 

@@ -8,9 +8,8 @@ class UserMixin(LoginUserMixin):
         """Converts a User ID and parts of a User password hash to a token."""
 
         # This function is used by Flask-Login to store a User ID securely as a browser cookie.
-        # It encrypts
-        # - the User ID (to retrieve the User later), and
-        # - part of the User hashed password (to invalidate the token after a password change)
+        # The last part of the password is included to invalidate tokens when password change.
+        # user_id and password_ends_with are encrypted, timestamped and signed.
         # This function works in tandem with UserMixin.get_user_by_token()
         user_manager = current_app.user_manager
 
@@ -26,6 +25,8 @@ class UserMixin(LoginUserMixin):
     @classmethod
     def get_user_by_token(cls, token, expiration_in_seconds):
         # This function works in tandem with UserMixin.get_id()
+        # Token signatures and timestamps are verified.
+        # user_id and password_ends_with are decrypted.
 
         # Verifies a token and decrypts a User ID and parts of a User password hash
         user_manager = current_app.user_manager
@@ -38,11 +39,7 @@ class UserMixin(LoginUserMixin):
             # Load user by User ID
             user_id = data_items[0]
             password_ends_with = data_items[1]
-            try:
-                user = user_manager.get_user_by_id(user_id)
-            except:
-                print('get_user_by_token failed. user_id=', user_id)
-                user = None
+            user = user_manager.get_user_by_id(user_id)
 
 
             # Make sure that last 8 characters of user password matches

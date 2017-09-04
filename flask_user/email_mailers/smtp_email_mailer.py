@@ -28,7 +28,7 @@ class SMTPEmailMailer(EmailMailer):
 
         try:
             from flask_mail import Mail
-        except:
+        except :
             raise SendEmailError(
                 "Flask-Mail has not been installed. Install Flask-Mail or use a different mailer package.")
         self.mail = Mail(app)
