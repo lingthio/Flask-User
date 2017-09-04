@@ -4,7 +4,7 @@
 
 <p>Thank you for registering with {{ app_name }}.</p>
 
-{% if user_manager.enable_confirm_email and not user.confirmed_at %}
+{% if user_manager.enable_confirm_email and not user.confirmed_at -%}
 <p>You will need to confirm your email next.</p>
 
 <p>If you initiated this registration, please click on the link below:<br/>

@@ -1,8 +1,14 @@
-Flask-User
-==========
+Flask-User v0.6 (stable)
+========================
+**Customizable User Authentication & Management**
 
-Customizable User Authentication & Management
----------------------------------------------
+.. topic:: Attention
+
+    IMPORTANT: Flask-User v0.9 is under development and breaks
+    backward compatibility with Flask-User v0.6.
+
+    To avoid disruption, please take the time to pin your Flask-User version
+    in your ``requirements.txt`` to the latest v0.6 version: ``Flask-User==0.6.13``
 
 | So, you're writing a Flask web application and would like to authenticate your users.
 | You start with a simple **Login** page, but soon enough you'll need to handle:
@@ -25,7 +31,11 @@ Secure and Reliable
 * **Secure** -- Built on top of widely deployed Passlib, PyCrypto, ItsDangerous.
 * **Reliable** -- Code coverage of over 95%
 * **Available** -- Tested on Python 2.6, 2.7 and 3.3-3.6
-* **Well documented**
+
+Well documented
+---------------
+- `Flask-User v0.6 documentation <http://flask-user.readthedocs.io/en/v0.6/>`_
+- `Flask-User v0.5 documentation <http://flask-user.readthedocs.io/en/v0.5/>`_
 
 Fully customizable, yet Ready to use
 ------------------------------------
@@ -43,7 +53,6 @@ Requirements
 ------------
 Flask-User requires the following Python packages:
 
-- cryptography 2.0+
 - Flask 0.9+
 - Flask-Babel 0.9+
 - Flask-Login 0.3+
@@ -57,7 +66,7 @@ Flask-User requires the following Python packages:
 Optionally:
 
 - blinker 1.3+ -- for Event Notification
-- Flask-Sendmail
+- Flask-Sendmail -- for sending emails via ``sendmail``
 - py-bcript 0.4+ -- for fast bcrypt encryption
 
 Alternatives

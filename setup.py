@@ -1,13 +1,17 @@
 from __future__ import print_function
 from setuptools import setup
 
+# Import version number from source code
+from flask_user import __version__ as flask_user_version
+
+# Read long description from README.rst file
 def load_readme():
     with open('README.rst') as f:
         return f.read()
 
 setup(
     name='Flask-User',
-    version='0.6.13',
+    version=flask_user_version,
     url='http://github.com/lingthio/Flask-User',
     license='BSD License',
     author='Ling Thio',
