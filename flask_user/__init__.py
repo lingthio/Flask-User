@@ -11,6 +11,8 @@ from .email_manager import EmailManager
 from .password_manager import PasswordManager
 from .token_manager import TokenManager
 
+__version__ = '0.9.0'
+
 # Export Flask-Login's current user
 from flask_login import current_user            # pass through Flask-Login's current_user
 

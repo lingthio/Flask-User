@@ -1,12 +1,16 @@
 from setuptools import setup
 
+# Import version number from source code
+from flask_user import __version__ as flask_user_version
+
+# Read long description from README.rst file
 def load_readme():
     with open('README.rst') as f:
         return f.read()
 
 setup(
     name='Flask-User',
-    version='1.0.0',
+    version=flask_user_version,
     description='Customizable User Authorization and Management: Register, Confirm email, Login, Change username, Change password, Forgot password and more.',
     long_description=load_readme(),
     url='http://github.com/lingthio/Flask-User',

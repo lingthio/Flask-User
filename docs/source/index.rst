@@ -1,8 +1,3 @@
-.. topic:: Attention
-
-    Flask-User v1.0 is under active development and not recommended for use at this time.
-    Please use `Flask-User v0.6 <http://flask-user.readthedocs.io/en/v0.6/>`_ for now.
-
 .. include:: ../../README.rst
 
 Table of Contents

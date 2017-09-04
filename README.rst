@@ -1,6 +1,12 @@
-Flask-User
-==========
+Flask-User v0.9 (pre-alpha)
+===========================
 **Customizable User Authentication, User Management, and more.**
+
+.. topic:: Attention
+
+    Flask-User v0.9 (pre-alpha) is under active development and not recommended for production use at this time.
+    Please use `Flask-User v0.6 <http://flask-user.readthedocs.io/en/v0.6/>`_ (stable) for now.
+
 
 | So, you're writing a Flask web application and would like to authenticate your users.
 | You start with a simple **Login** page, but soon enough you'll need to handle:
@@ -23,7 +29,11 @@ Secure and Reliable
 * **Secure** -- Built on top of widely deployed Passlib, PyCrypto, ItsDangerous.
 * **Reliable** -- Code coverage of over 95%
 * **Available** -- Tested on Python 2.6, 2.7 and 3.3-3.6
-* **Well documented**
+
+Well documented
+---------------
+- `Flask-User v0.6 documentation <http://flask-user.readthedocs.io/en/v0.6/>`_
+- `Flask-User v0.5 documentation <http://flask-user.readthedocs.io/en/v0.5/>`_
 
 Fully customizable, yet Ready to use
 ------------------------------------

@@ -4,13 +4,13 @@
 
 <p>Thank you for registering with {{ app_name }}.</p>
 
-{% if user_manager.USER_ENABLE_CONFIRM_EMAIL and not user.email_confirmed_at %}
+{% if user_manager.USER_ENABLE_CONFIRM_EMAIL and not user.email_confirmed_at -%}
 <p>You will need to confirm your email next.</p>
 
 <p>If you initiated this registration, please click on the link below:<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ confirm_email_link }}">Confirm your email</a>.</p>
 
 <p>If you did not initiate this registration, you may safely ignore this email.</p>
-{% endif %}
+{%- endif %}
 
 {% endblock %}
