@@ -51,7 +51,7 @@ def create_app():
     # Initialize MongoDB
     db = MongoAlchemy(app)
 
-    # Define the User data model.
+    # Define the User data-model.
     # NB: Make sure to add flask_user UserMixin !!!
     class User(db.Document, UserMixin):
         # Map MongoAlchemy's mongod_id to Flask-User's id - getter
@@ -76,7 +76,7 @@ def create_app():
         first_name = db.StringField(default='')
         last_name = db.StringField(default='')
 
-    # Setup Flask-User and specify the User database model
+    # Setup Flask-User and specify the User data-model
     user_manager = UserManager(app, db, User)
 
     # # For debugging only

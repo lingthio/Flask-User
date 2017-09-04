@@ -14,6 +14,7 @@ class UserManager__Settings(object):
     .. note:: Feature settings and their defaults
     """
 
+
     #: | Allow users to login and register with an email address
     USER_ENABLE_EMAIL = True
 
@@ -30,7 +31,6 @@ class UserManager__Settings(object):
     #: | Make sure to protect vulnerable views using @confirmed_email_required.
     USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL = False
 
-
     #: | Allow users to login and register with a username
     USER_ENABLE_USERNAME = True
 
@@ -38,17 +38,12 @@ class UserManager__Settings(object):
     #: | Depends on USER_ENABLE_USERNAME=True.
     USER_ENABLE_CHANGE_USERNAME = True
 
-
     #: | Allow users to change their password.
     USER_ENABLE_CHANGE_PASSWORD = True
 
     #: | Allow users to reset their passwords.
     #: | Depends on USER_ENABLE_EMAIL=True.
     USER_ENABLE_FORGOT_PASSWORD = True
-
-    #: | Require users to retype their password.
-    #: | Affects registration, change password and reset password forms.
-    USER_ENABLE_RETYPE_PASSWORD = True
 
     #: | Allow unregistered users to be invited.
     USER_ENABLE_INVITE_USER = False
@@ -62,9 +57,9 @@ class UserManager__Settings(object):
     USER_ENABLE_REMEMBER_ME = True
 
 
+
     #: The application name displayed in email templates and page template footers.
     USER_APP_NAME = 'USER_APP_NAME'
-
 
     #: Automatic sign-in if the user session has not expired.
     USER_AUTO_LOGIN = True
@@ -100,6 +95,10 @@ class UserManager__Settings(object):
     #: | Only invited users may register.
     #: | Depends on USER_ENABLE_EMAIL=True.
     USER_REQUIRE_INVITATION = False
+
+    #: | Require users to retype their password.
+    #: | Affects registration, change password and reset password forms.
+    USER_REQUIRE_RETYPE_PASSWORD = True
 
     #: | Show 'Email does not exist' message instead of 'Incorrect Email or password'.
     #: | Depends on USER_ENABLE_EMAIL=True.
@@ -162,7 +161,7 @@ class UserManager__Settings(object):
     USER_AFTER_CONFIRM_ENDPOINT = '' #:
     USER_AFTER_FORGOT_PASSWORD_ENDPOINT = '' #:
     USER_AFTER_LOGIN_ENDPOINT = '' #:
-    USER_AFTER_LOGOUT_ENDPOINT = 'user.login' #:
+    USER_AFTER_LOGOUT_ENDPOINT = '' #:
     USER_AFTER_REGISTER_ENDPOINT = '' #:
     USER_AFTER_resend_email_confirmation_ENDPOINT = '' #:
     USER_AFTER_RESET_PASSWORD_ENDPOINT = '' #:

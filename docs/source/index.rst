@@ -8,7 +8,6 @@ Table of Contents
     introduction
     installation
     quickstart
-    flask_user_starter_app
     limitations
     data_models
     authorization
@@ -19,6 +18,10 @@ Table of Contents
 .. toctree::
     :hidden:
 
+    quickstart_app
+    basic_app
+    mongodb_app
+    flask_user_starter_app
     api_db_adapters
     api_email_mailers
     api_user_manager
@@ -27,6 +30,8 @@ Table of Contents
     api_user_manager_views
     configure_settings
     customize_forms
+    customize_db_adapter
+    customize_email_mailer
     roles_required_app
     base_templates
     signals

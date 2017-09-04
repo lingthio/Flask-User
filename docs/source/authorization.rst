@@ -9,14 +9,15 @@ Flask-User offers role based authorization through the use of function decorator
 
 @login_required
 ---------------
-Decorate a view function with @login_required to ensure that
-the user is logged in before accessing that particular page:
+Decorate a view function with ``@login_required`` decorator to ensure that
+the user is logged in before accessing that particular page
+or an 'Unauthorized' error message will be shown.
 
 ::
 
     from flask_user import login_required
 
-    @route('/profile')                   # @route() must always be the outer-most decorator
+    @route('/profile')    # @route() must always be the outer-most decorator
     @login_required
     def profile_page():
         # render the user profile page
@@ -26,89 +27,70 @@ the user is logged in before accessing that particular page:
 
 @roles_required
 ---------------
-Decorate a view function with @roles_required to ensure that
-the user is logged in and has sufficient role-based access rights that particular page.
+If a view function is decorated with the ``@roles_required`` decorator,
+the use must be logged in to access that page
+or an 'Unauthorized' error message will be shown.
 
-In the example below the current user is required to have the 'admin' role::
+In the example below the current user is required to have a role named 'Admin'::
 
     from flask_user import roles_required
 
-    @route('/admin/dashboard')           # @route() must always be the outer-most decorator
-    @roles_required('admin')
+    @route('/admin/dashboard')    # @route() must always be the outer-most decorator
+    @roles_required('Admin')
     def admin_dashboard():
         # render the admin dashboard
 
-Note: Comparison of role names is case sensitive, so 'Member' will NOT match 'member'.
+Note: Comparison of role names is case sensitive, so ``'Admin'`` will NOT match ``'admin'``.
 
-Multiple string arguments -- the AND operation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Simple AND/OR operations
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-The @roles_required decorator accepts multiple strings if the current_user is required to have
-**ALL** of these roles.
+The @roles_required decorator accepts one or more role names.
+At this level, if multiple role names are specified,
+the user is required to have **all** the specified roles.
+This is the AND operation.
 
-In the example below the current user is required to have the **ALL** of these roles::
+Each list item at the previous level may be either a role name or a list or role names.
+At this level, if a list of role names is specified,
+the use is may have **any one** of the specified roles to gain access.
+This is the OR operation.
 
-    @roles_required('dark', 'tall', 'handsome')
-    # Multiple string arguments require ALL of these roles
+In the example below, the user must always have the ``'Starving'`` role,
+plus either the ``'Artist'`` role or the ``'Programmer'`` role::
 
-Multiple string arguments represent the 'AND' operation.
-
-Array arguments -- the OR operation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The @roles_required decorator accepts an array (or a tuple) of roles.
-
-In the example below the current user is required to have **One or more** of these roles::
-
-    @roles_required(['funny', 'witty', 'hilarious'])
-    # Notice the usage of square brackets representing an array.
-    # Array arguments require at least ONE of these roles.
-
-AND/OR operations
-~~~~~~~~~~~~~~~~~
-The potentially confusing syntax described above allows us to construct
-complex AND/OR operations.
-
-| In the example below the current user is required to have
-| either (the 'starving' AND the 'artist' roles)
-| OR (the 'starving AND the 'programmer' roles)
-
-::
-
-    @roles_required('starving', ['artist', 'programmer'])
-    # Ensures that the user is ('starving' AND (an 'artist' OR a 'programmer'))
+    # Ensures that the user is ('Starving' AND (an 'Artist' OR a 'Programmer'))
+    @roles_required('Starving', ['Artist', 'Programmer'])
 
 Note: The nesting level only goes as deep as this example shows.
-
 
 
 Required Tables
 ---------------
 
-For @login_required only the User model is required
+For @login_required only the User data-model is required
 
-For @roles_required, the database must have the following models:
+For @roles_required, the database must have the following data-models:
 
-* The usual User model with an additional 'roles' relationship field
-* A Role model with at least one string field called 'name'
-* A UserRoles association model with a 'user_id' field and a 'role_id' field
+* The usual User data-model with an additional 'roles' relationship field
+* A Role data-model with at least one string field called 'name'
+* A UserRoles association data-model with a 'user_id' field and a 'role_id' field
 
 Here's a SQLAlchemy example::
 
-    # Define User model
+    # Define User data-model
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
         username = db.Column(db.String(50), nullable=True, unique=True)
         ...
-        roles = db.relationship('Role', secondary='user_roles',
-                backref=db.backref('users', lazy='dynamic'))
+        # Define the relationship to Role via UserRoles
+        roles = db.relationship('Role', secondary='user_roles')
 
-    # Define Role model
+    # Define Role data-model
     class Role(db.Model):
         id = db.Column(db.Integer(), primary_key=True)
         name = db.Column(db.String(50), unique=True)
 
-    # Define UserRoles model
+    # Define UserRoles data-model
     class UserRoles(db.Model):
         id = db.Column(db.Integer(), primary_key=True)
         user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
@@ -136,10 +118,4 @@ binding a User to one or more Roles.
     # Store user and roles
     db.session.add(user1)
     db.session.commit()
-
-Up Next
--------
-:doc:`roles_required_app`
-
-
 

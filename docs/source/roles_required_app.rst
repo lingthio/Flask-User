@@ -1,58 +1,41 @@
-==================
+.. _RolesRequiredApp:
+
 Roles Required App
 ==================
-The Roles Required App builds on the features of :doc:`quickstart`:
+The Roles Required App demonstrate the use of the ``@roles_required`` decorator
+to add role-based authorization.
 
-* Register form
-* Login form
-* Logout link
-* Authorize pages that require a logged in user
-* Change username form
-* Change password form
+Install Flask-User
+------------------
 
-And adds the following:
+We recommend making use of virtualenv and virtualenvwrapper::
 
-* Role-based Authorization
+    # Create virtual env
+    mkvirtualenv my_app
+    workon my_app
 
+    # Create working directory
+    mkdir -p ~dev/my_app           # or  mkdir C:\dev\my_app
+    cd ~/dev/my_app                # or  cd C:\dev\my_app
 
-Single-file techniques
-----------------------
-| To keep the examples simple, we are using some unusual single-file techniques:
-| - Using class based configuration instead of file based configuration
-| - Using ``render_template_string()`` instead of ``render_template()``
-| - Placing everything in one file
-
-*None of these techniques are recommended for use outside of tutorial.*
-
-
-Setup a development environment
--------------------------------
-These tutorials assume that you are working with virtualenv and virtualenvwrapper
-and that the code resides in ~/dev/example::
-
-    # Create virtualenv 'example'
-    mkvirtualenv example
-
-    # Install required Python packages in the 'example' virtualenv
-    workon example
+    # Install Flask-User
     pip install flask-user
 
-    # Change working directory
-    mkdir -p ~dev/example
-    cd ~/dev/example                # or C:\dev\example on Windows
 
+Create the roles_required_app.py file
+-------------------------------------
 
-Create roles_required_app.py
-----------------------------
-
-Create ~/dev/example/roles_required_app.py with the content below.
-
-Highlighted lines shows the lines added to the Basic App to produce the Roles Required App
+- Open your favorite editor,
+- Copy the example below, and
+- Save it as ``~/dev/my_app/roles_required_app.py``
 
 .. literalinclude:: ../../example_apps/roles_required_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 5, 19-21, 53-66, 75-82, 115
+   :emphasize-lines: 9, 23-27, 41-42, 54-55, 57-60, 62-66, 71-72, 101, 118
+
+Highlighted lines shows the few additional Flask-User code lines.
+
 
 Run the Roles Required App
 --------------------------

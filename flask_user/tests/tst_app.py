@@ -28,7 +28,7 @@ class ConfigClass(object):
     # Flask-MongoEngine settings
     MONGODB_SETTINGS = {
         'db': 'tst_app',
-        'host': 'mongodb://localhost/tst_app'
+        'host': 'mongodb://localhost:27017/tst_app'
     }
 
     # Flask-Mail settings
@@ -52,7 +52,7 @@ if ORM_type=='SQLAlchemy':
     from flask_sqlalchemy import SQLAlchemy
     db = SQLAlchemy(app)
 
-    # Define the User data model. Make sure to add flask_user UserMixin!!
+    # Define the User data-model. Make sure to add flask_user UserMixin!!
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
 
@@ -92,12 +92,12 @@ if ORM_type=='SQLAlchemy':
         # token used for registration page to identify user registering
         token = db.Column(db.String(100), nullable=False, server_default='')
 
-    # Define the Role data model
+    # Define the Role data-model
     class Role(db.Model):
         id = db.Column(db.Integer(), primary_key=True)
         name = db.Column(db.String(50), unique=True)
 
-    # Define the UserRoles data model
+    # Define the UserRoles data-model
     class UserRoles(db.Model):
         id = db.Column(db.Integer(), primary_key=True)
         user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
@@ -110,7 +110,7 @@ if ORM_type == 'MongoEngine':
 
     db = MongoEngine(app)
 
-    # Define the User data model.
+    # Define the User document.
     # NB: Make sure to add flask_user UserMixin !!!
     class User(db.Document, UserMixin):
 

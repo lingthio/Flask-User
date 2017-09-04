@@ -17,14 +17,25 @@ class ConfigClass(object):
     SECRET_KEY = 'THIS IS AN INSECURE SECRET'
 
     # Flask-SQLAlchemy settings
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///quickstart_app.sqlite'    # File-based SQL database
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///basic_app.sqlite'    # File-based SQL database
     SQLALCHEMY_TRACK_MODIFICATIONS = False    # Avoids SQLAlchemy warning
 
+    # Flask-Mail SMTP server settings
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USE_TLS = False
+
+    # Flask-Mail SMTP account settings
+    MAIL_USERNAME = 'email@example.com'
+    MAIL_PASSWORD = 'password'
+
     # Flask-User settings
-    USER_APP_NAME = "Flask-User QuickStart App"      # Shown in and email templates and page footers
-    USER_ENABLE_EMAIL = False      # Disable email authentication
-    USER_ENABLE_USERNAME = True    # Enable username authentication
-    USER_REQUIRE_RETYPE_PASSWORD = False    # Simplify register form
+    USER_APP_NAME = "Flask-User Basic App"      # Shown in and email templates and page footers
+    USER_ENABLE_EMAIL = True        # Enable email authentication
+    USER_ENABLE_USERNAME = False    # Disable username authentication
+    USER_EMAIL_SENDER_NAME = USER_APP_NAME
+    USER_EMAIL_SENDER_EMAIL = "noreply@example.com"
 
 
 def create_app():
@@ -43,7 +54,7 @@ def create_app():
         id = db.Column(db.Integer, primary_key=True)
 
         # User authentication information
-        username = db.Column(db.String(100), nullable=False, unique=True)
+        email = db.Column(db.String(255), nullable=False, unique=True)
         password = db.Column(db.String(255), nullable=False, server_default='')
         email_confirmed_at = db.Column(db.DateTime())
 

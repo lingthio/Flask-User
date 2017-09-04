@@ -36,7 +36,7 @@
 
     {{ render_field(form.password, tabindex=230) }}
 
-    {% if user_manager.USER_ENABLE_RETYPE_PASSWORD %}
+    {% if user_manager.USER_REQUIRE_RETYPE_PASSWORD %}
         {{ render_field(form.retype_password, tabindex=240) }}
     {% endif %}
 

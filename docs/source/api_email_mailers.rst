@@ -1,4 +1,4 @@
-.. _EmailMailers:
+.. _EmailMailerInterface:
 
 EmailMailer interface
 =====================
@@ -13,16 +13,14 @@ Included implementations:
 - :ref:`SendgridEmailMailer`
 - :ref:`CustomEmailMailer`
 
-Other email mailers can be supported by adding additional interface implementation classes.
-
 .. autoclass:: flask_user.email_mailers.email_mailer.EmailMailer
 
 --------
 
 .. _SMTPEmailMailer:
 
-SMTP EmailMailer
-----------------
+SMTPEmailMailer
+---------------
 
 .. autoclass:: flask_user.email_mailers.smtp_email_mailer.SMTPEmailMailer
 
@@ -33,8 +31,8 @@ and uses as the default email mailer (no customization required).
 
 .. _SendmailEmailMailer:
 
-Sendmail EmailMailer
---------------------
+SendmailEmailMailer
+-------------------
 
 .. autoclass:: flask_user.email_mailers.sendmail_email_mailer.SendmailEmailMailer
 
@@ -61,8 +59,8 @@ then customize Flask-User like so::
 
 .. _SendgridEmailMailer:
 
-Sendgrid EmailMailer
---------------------
+SendgridEmailMailer
+-------------------
 
 .. autoclass:: flask_user.email_mailers.sendgrid_email_mailer.SendgridEmailMailer
 
@@ -85,29 +83,4 @@ then customize Flask-User like so::
     # Setup Flask-User
     user_manager = CustomUserManager(app, db, User)
 
---------
 
-.. _CustomEmailMailer:
-
-Custom EmailMailer
-------------------
-
-.. autoclass:: flask_user.email_mailers.sendgrid_email_mailer.SendgridEmailMailer
-
-You can configure Flask-User to use a custom email mailer like so::
-
-    # Write your own custom email mailer
-    class CustomEmailMailer(object):
-        pass
-
-    # Customize Flask-User
-    class CustomUserManager(UserManager):
-
-        def customize():
-
-            # Configure the email mailer
-            self.email_mailer = CustomEmailMailer(
-                self.email_sender_email, self.email_sender_name)
-
-    # Setup Flask-User
-    user_manager = CustomUserManager(app, db, User)

@@ -215,16 +215,16 @@ Some Websites, however, do want to ask for additional information in the registr
 
 Flask-User (v0.4.5 and up) has the capability to store extra registration fields in the User or the UserProfile records.
 
-**Extra registration fields in the User model**
+**Extra registration fields in the User data-model**
 
-Extra fields must be defined in the User model::
+Extra fields must be defined in the User data-model::
 
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
         is_enabled = db.Column(db.Boolean(), nullable=False, default=False)
         email = db.Column(db.String(255), nullable=False, default='')
         password = db.Column(db.String(255), nullable=False, default='')
-        # Extra model fields
+        # Extra data-model fields
         first_name = db.Column(db.String(50), nullable=False, default='')
         last_name  = db.Column(db.String(50), nullable=False, default='')
 
@@ -234,7 +234,7 @@ Extra fields must be defined in the User model::
     db_adapter = SQLAlchemyAdapter(db, UserClass=User)
 
 A custom RegisterUserForm must be defined with field names
-**exactly matching** the names of the model fields::
+**exactly matching** the names of the data-model fields::
 
     class MyRegisterUserForm(RegisterUserForm):
         first_name = StringField('First name', validators=[DataRequired('First name is required')])
@@ -246,14 +246,14 @@ A custom ``templates/flask_user/register.html`` file must be copied and defined 
 See :ref:`customizingformtemplates`.
 
 When a new user submits the Register form, Flask-User examines the field names of the
-form and the User model. For each matching field name, the form field value
+form and the User data-model. For each matching field name, the form field value
 will be stored in the corresponding User field.
 
 `See Github repository; example_apps/register_form_app <https://github.com/lingthio/Flask-User/tree/master/example_apps/register_form_app>`_
 
-**Extra registration fields in UserProfile model**
+**Extra registration fields in UserProfile data-model**
 
-* Add extra fields to the User data model
+* Add extra fields to the User data-model
 * Extend a custom MyRegisterUserForm class from the built-in flask_user.forms.RegisterUserForm class.
 * Add extra fields to the form **using identical field names**.
 * Specify your custom registration form: ``user_manager = UserManager(db_adapter, app, register_form=MyRegisterUserForm)``

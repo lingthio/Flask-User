@@ -8,8 +8,8 @@ Flask-User API
 - :ref:`EMailManager`
 - :ref:`PasswordManager`
 - :ref:`TokenManager`
-- :ref:`DbAdapters`
-- :ref:`EmailMailers`
+- :ref:`DbAdapterInterface`
+- :ref:`EmailMailerInterface`
 
 --------
 

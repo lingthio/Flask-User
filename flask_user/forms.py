@@ -77,7 +77,7 @@ class ChangePasswordForm(FlaskForm):
     def validate(self):
         # Use feature config to remove unused form fields
         user_manager =  current_app.user_manager
-        if not user_manager.USER_ENABLE_RETYPE_PASSWORD:
+        if not user_manager.USER_REQUIRE_RETYPE_PASSWORD:
             delattr(self, 'retype_password')
 
         # # Add custom password validator if needed
@@ -267,7 +267,7 @@ class RegisterUserForm(FlaskForm):
             delattr(self, 'username')
         if not user_manager.USER_ENABLE_EMAIL:
             delattr(self, 'email')
-        if not user_manager.USER_ENABLE_RETYPE_PASSWORD:
+        if not user_manager.USER_REQUIRE_RETYPE_PASSWORD:
             delattr(self, 'retype_password')
         # # Add custom username validator if needed
         # if user_manager.USER_ENABLE_USERNAME:
@@ -330,7 +330,7 @@ class ResetPasswordForm(FlaskForm):
     def validate(self):
         # Use feature config to remove unused form fields
         user_manager =  current_app.user_manager
-        if not user_manager.USER_ENABLE_RETYPE_PASSWORD:
+        if not user_manager.USER_REQUIRE_RETYPE_PASSWORD:
             delattr(self, 'retype_password')
         # # Add custom password validator if needed
         # has_been_added = False

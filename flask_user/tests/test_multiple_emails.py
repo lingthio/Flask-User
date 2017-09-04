@@ -43,7 +43,7 @@ def test_multiple_emails(app, db, client):
         um.USER_ENABLE_CHANGE_PASSWORD = False
         um.USER_ENABLE_FORGOT_PASSWORD = False
         um.USER_ENABLE_MULTIPLE_EMAILS = True
-        um.USER_ENABLE_RETYPE_PASSWORD = False
+        um.USER_REQUIRE_RETYPE_PASSWORD = False
 
         # Adjust DbAdapter settings
         um.UserEmailClass = app.UserEmailClass
@@ -107,6 +107,6 @@ def test_multiple_emails(app, db, client):
         # Restore settings
         um.USER_ENABLE_MULTIPLE_EMAILS = False
         um.USER_ENABLE_CONFIRM_EMAIL = True
-        um.USER_ENABLE_RETYPE_PASSWORD = True
+        um.USER_REQUIRE_RETYPE_PASSWORD = True
         um.UserEmailClass = None
 

@@ -45,14 +45,20 @@ Configuration settings changes
 We split ``USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST`` into ``USER_SHOW_USERNAME_DOES_NOT_EXIST``
 and ``USER_SHOW_EMAIL_DOES_NOT_EXIST`` and set the default to False for increased security.
 
+We renamed ``USER_REQUIRE_RETYPE_PASSWORD`` to ``USER_REQUIRE_RETYPE_PASSWORD`` to better reflect what this setting does.
+
 Flask-User v0.6::
 
     USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST = True
+
+    USER_REQUIRE_RETYPE_PASSWORD = True
 
 Flask-User v1.0::
 
     USER_SHOW_EMAIL_DOES_NOT_EXIST = False
     USER_SHOW_USERNAME_DOES_NOT_EXIST = False
+
+    USER_REQUIRE_RETYPE_PASSWORD = True
 
 
 Data-model changes
@@ -147,7 +153,7 @@ If you are using SQLAlchemy and choose to separate the uer authorization fields
 from the user profile fields, you can use the workaround recipe below::
 
 
-    # Define the UserAuth data model.
+    # Define the UserAuth data-model.
     class UserAuth(db.Model):
         id = db.Column(db.Integer, primary_key=True)
 
@@ -160,7 +166,7 @@ from the user profile fields, you can use the workaround recipe below::
         password = db.Column(db.String(255), nullable=False, server_default='')
 
 
-    # Define the User data model. Make sure to add flask_user UserMixin!!
+    # Define the User data-model. Make sure to add flask_user UserMixin!!
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
 

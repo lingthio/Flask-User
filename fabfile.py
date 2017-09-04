@@ -8,7 +8,7 @@ def runserver():
 
 @task
 def runapp(appname):
-    local('PYTHONPATH=. python example_apps/'+appname+'_app.py')
+    local('PYTHONPATH=. python example_apps/'+appname+'.py')
 
 @task
 def update_babel():

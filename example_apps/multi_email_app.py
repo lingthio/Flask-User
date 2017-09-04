@@ -38,7 +38,7 @@ def create_app():
     # Initialize Flask extensions
     db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
 
-    # Define the User data model. Make sure to add flask_user UserMixin !!!
+    # Define the User data-model. Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
 
@@ -73,7 +73,7 @@ def create_app():
     db.create_all()
 
     # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db, User, UserEmailClass=UserEmail)        # Register the User model
+    db_adapter = SQLAlchemyAdapter(db, User, UserEmailClass=UserEmail)        # Register the User data-model
     user_manager = UserManager(db_adapter, app)     # Initialize Flask-User
 
     # The Home page is accessible to anyone

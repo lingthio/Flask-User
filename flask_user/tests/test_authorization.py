@@ -37,7 +37,7 @@ def test_authorization(client):
     um.USER_ENABLE_USERNAME = True
     um.USER_ENABLE_EMAIL = False
     um.USER_ENABLE_CONFIRM_EMAIL = False
-    um.USER_ENABLE_RETYPE_PASSWORD = False
+    um.USER_REQUIRE_RETYPE_PASSWORD = False
 
     # Test as anonymous user
     client.get_valid_page(url_for('home_page'))

@@ -47,7 +47,7 @@ def test_with_email(client):
     um.USER_ENABLE_CHANGE_PASSWORD = True
     um.USER_ENABLE_FORGOT_PASSWORD = True
     um.USER_ENABLE_MULTIPLE_EMAILS = False
-    um.USER_ENABLE_RETYPE_PASSWORD = True
+    um.USER_REQUIRE_RETYPE_PASSWORD = True
 
     check_all_valid_forms(um, client)
 
@@ -67,7 +67,7 @@ def test_with_username(client):
     um.USER_ENABLE_CHANGE_PASSWORD = True
     um.USER_ENABLE_FORGOT_PASSWORD = False
     um.USER_ENABLE_MULTIPLE_EMAILS = False
-    um.USER_ENABLE_RETYPE_PASSWORD = True
+    um.USER_REQUIRE_RETYPE_PASSWORD = True
 
     check_all_valid_forms(um, client)
 
@@ -86,7 +86,7 @@ def do_test_all_possible_config_combinations(client, db):
 
     for um.USER_ENABLE_REGISTER in (True, False):
       for um.USER_ENABLE_EMAIL in (True, False):
-        for um.USER_ENABLE_RETYPE_PASSWORD in (True, False):
+        for um.USER_REQUIRE_RETYPE_PASSWORD in (True, False):
           for um.USER_ENABLE_CONFIRM_EMAIL in (True, False):
             for um.USER_ENABLE_USERNAME in (True, False):
               for um.USER_ENABLE_CHANGE_PASSWORD in (True, False):
@@ -143,7 +143,7 @@ def check_valid_register_form(um, client, db):
         print("test_valid_register_form")
 
         # Create User by submitting a form
-        if um.USER_ENABLE_RETYPE_PASSWORD:
+        if um.USER_REQUIRE_RETYPE_PASSWORD:
             kwargs['retype_password'] = VALID_PASSWORD
 
         # Submit form and verify that response has no errors
@@ -230,7 +230,7 @@ def check_valid_change_password_form(um, client):
     kwargs = {}
     kwargs['old_password'] = VALID_PASSWORD
     kwargs['new_password'] = new_password
-    if um.USER_ENABLE_RETYPE_PASSWORD:
+    if um.USER_REQUIRE_RETYPE_PASSWORD:
         kwargs['retype_password'] = new_password
 
     # Submit form and verify that response has no errors
@@ -297,7 +297,7 @@ def check_valid_reset_password_page(um, client):
     # Build variable argument list depending on config settings
     kwargs = {}
     kwargs['new_password'] = new_password
-    if um.USER_ENABLE_RETYPE_PASSWORD:
+    if um.USER_REQUIRE_RETYPE_PASSWORD:
         kwargs['retype_password'] = new_password
 
     # Submit form and verify that response has no errors

@@ -2,7 +2,7 @@ from flask import current_app
 from flask_login import UserMixin as LoginUserMixin
 
 class UserMixin(LoginUserMixin):
-    """ This class adds methods to the User model class required by Flask-Login and Flask-User."""
+    """ This class adds methods to the User data-model class required by Flask-Login and Flask-User."""
 
     def get_id(self):
         """Converts a User ID and parts of a User password hash to a token."""

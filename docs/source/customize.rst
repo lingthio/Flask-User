@@ -8,13 +8,15 @@ Flask-User is designed to be **largely configurable**,
 and **almost fully customizable**.
 
 - :ref:`CustomizeForms`
+- :ref:`CustomizeDbAdapter`
+- :ref:`CustomizeEmailMailer`
 - :ref:`CustomizeManagers`
 
 
 .. _CustomizeManagers:
 
-Customizing EmailManager, PasswordManager and TokenManager
-----------------------------------------------------------
+Customizing the EmailManager, PasswordManager or TokenManager
+-------------------------------------------------------------
 
 Developers can customize the EmailManager PasswordManager and TokenManager as follows::
 

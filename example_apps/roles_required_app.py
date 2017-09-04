@@ -1,83 +1,82 @@
-import os
-from flask import Flask, render_template_string, request
+# This file contains an example Flask-User application.
+# To keep the example simple, we are applying some unusual techniques:
+# - Placing everything in one file
+# - Using class-based configuration (instead of file-based configuration)
+# - Using string-based templates (instead of file-based templates)
+
+from flask import Flask, render_template_string
 from flask_sqlalchemy import SQLAlchemy
-from flask_user import login_required, UserManager, UserMixin
-from flask_user import roles_required
+from flask_user import login_required, roles_required, UserManager, UserMixin
 
 
-# Use a Class-based config to avoid needing a 2nd file
-# os.getenv() enables configuration through OS environment variables
+# Class-based application configuration
 class ConfigClass(object):
+    """ Flask application config """
+
     # Flask settings
-    SECRET_KEY =              os.getenv('SECRET_KEY',       'THIS IS AN INSECURE SECRET')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///roles_required_app.sqlite')
-    CSRF_ENABLED = True
+    SECRET_KEY = 'THIS IS AN INSECURE SECRET'
 
     # Flask-SQLAlchemy settings
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///quickstart_app.sqlite'  # File-based SQL database
+    SQLALCHEMY_TRACK_MODIFICATIONS = False  # Avoids SQLAlchemy warning
 
     # Flask-User settings
-    USER_APP_NAME = "RolesRequired"                 # Used in base and email templates
-    USER_ENABLE_EMAIL = False                       # Disable email functionality
+    USER_APP_NAME = "Flask-User roles_required App"  # Shown in and email templates and page footers
+    USER_ENABLE_EMAIL = False  # Disable email authentication
+    USER_ENABLE_USERNAME = True  # Enable username authentication
+    USER_REQUIRE_RETYPE_PASSWORD = False  # Simplify register form
 
 
-def create_app(test_config=None):                   # For automated tests
-    # Setup Flask and read config from ConfigClass defined above
+def create_app():
+    """ Flask application factory """
+
+    # Create Flask app load app.config
     app = Flask(__name__)
-    app.config.from_object(__name__+'.ConfigClass')
+    app.config.from_object(__name__ + '.ConfigClass')
 
-    # Load local_settings.py if file exists         # For automated tests
-    try: app.config.from_object('local_settings')
-    except: pass
+    # Initialize Flask-SQLAlchemy
+    db = SQLAlchemy(app)
 
-    # Load optional test_config                     # For automated tests
-    if test_config:
-        app.config.update(test_config)
-
-    # Initialize Flask extensions
-    db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
-
-    # Define the User data model. Make sure to add flask_user UserMixin!!
+    # Define the User data-model.
+    # NB: Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
 
         # User authentication information
-        username = db.Column(db.String(50), nullable=False, unique=True)
+        username = db.Column(db.String(100), nullable=False, unique=True)
         password = db.Column(db.String(255), nullable=False, server_default='')
+        email_confirmed_at = db.Column(db.DateTime())
 
         # User information
-        active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
         first_name = db.Column(db.String(100), nullable=False, server_default='')
         last_name = db.Column(db.String(100), nullable=False, server_default='')
 
-        # Relationships
-        roles = db.relationship('Role', secondary='user_roles',
-                backref=db.backref('users', lazy='dynamic'))
+        # Define the relationship to Role via UserRoles
+        roles = db.relationship('Role', secondary='user_roles')
 
-    # Define the Role data model
+    # Define the Role data-model
     class Role(db.Model):
         id = db.Column(db.Integer(), primary_key=True)
         name = db.Column(db.String(50), unique=True)
 
-    # Define the UserRoles data model
+    # Define the UserRoles association table
     class UserRoles(db.Model):
         id = db.Column(db.Integer(), primary_key=True)
         user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
         role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
 
-    # Reset all the database tables
+    # Create all database tables
     db.create_all()
 
-    # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db, User)        # Specify SQLAlchemy DB with User model
-    user_manager = UserManager(app, db_adapter)     # Initialize Flask-User
+    # Setup Flask-User and specify the User data-model
+    user_manager = UserManager(app, db, User)
 
-    # Create 'user007' user with 'secret' and 'agent' roles
+    # Create 'user007' user with 'Secret' and 'Agent' roles
     if not User.query.filter(User.username=='user007').first():
         user1 = User(username='user007',
                 password=user_manager.password_manager.hash_password('password'))
-        user1.roles.append(Role(name='secret'))
-        user1.roles.append(Role(name='agent'))
+        user1.roles.append(Role(name='Secret'))
+        user1.roles.append(Role(name='Agent'))
         db.session.add(user1)
         db.session.commit()
 
@@ -88,40 +87,46 @@ def create_app(test_config=None):                   # For automated tests
             {% extends "flask_user_layout.html" %}
             {% block content %}
                 <h2>Home page</h2>
-                <p>This page can be accessed by anyone.</p><br/>
-                <p><a href={{ url_for('home_page') }}>Home page</a> (anyone)</p>
-                <p><a href={{ url_for('members_page') }}>Members page</a> (login required)</p>
+                <p><a href={{ url_for('user.register') }}>Register</a></p>
+                <p><a href={{ url_for('user.login') }}>Sign in</a></p>
+                <p><a href={{ url_for('home_page') }}>Home page</a> (accessible to anyone)</p>
+                <p><a href={{ url_for('members_page') }}>Members only page</a> (login required)</p>
                 <p><a href={{ url_for('special_page') }}>Special page</a> (login with username 'user007' and password 'password')</p>
+                <p><a href={{ url_for('user.logout') }}>Sign out</a></p>
             {% endblock %}
             """)
 
     # The Members page is only accessible to authenticated users
     @app.route('/members')
-    @login_required                                 # Use of @login_required decorator
+    @login_required    # Use of @login_required decorator
     def members_page():
         return render_template_string("""
             {% extends "flask_user_layout.html" %}
             {% block content %}
                 <h2>Members page</h2>
-                <p>This page can only be accessed by authenticated users.</p><br/>
-                <p><a href={{ url_for('home_page') }}>Home page</a> (anyone)</p>
-                <p><a href={{ url_for('members_page') }}>Members page</a> (login required)</p>
+                <p><a href={{ url_for('user.register') }}>Register</a></p>
+                <p><a href={{ url_for('user.login') }}>Sign in</a></p>
+                <p><a href={{ url_for('home_page') }}>Home page</a> (accessible to anyone)</p>
+                <p><a href={{ url_for('members_page') }}>Members only page</a> (login required)</p>
                 <p><a href={{ url_for('special_page') }}>Special page</a> (login with username 'user007' and password 'password')</p>
+                <p><a href={{ url_for('user.logout') }}>Sign out</a></p>
             {% endblock %}
             """)
 
-    # The Special page requires a user with 'secret' and 'sauce' roles or with 'secret' and 'agent' roles.
+    # The Special page requires ('Secret' AND ('Sauce' or 'Agent')).
     @app.route('/special')
-    @roles_required('secret', ['sauce', 'agent'])   # Use of @roles_required decorator
+    @roles_required('Secret', ['Sauce', 'Agent'])    # Use of @roles_required decorator
     def special_page():
         return render_template_string("""
             {% extends "flask_user_layout.html" %}
             {% block content %}
                 <h2>Special Page</h2>
-                <p>This page can only be accessed by user007.</p><br/>
-                <p><a href={{ url_for('home_page') }}>Home page</a> (anyone)</p>
-                <p><a href={{ url_for('members_page') }}>Members page</a> (login required)</p>
+                <p><a href={{ url_for('user.register') }}>Register</a></p>
+                <p><a href={{ url_for('user.login') }}>Sign in</a></p>
+                <p><a href={{ url_for('home_page') }}>Home page</a> (accessible to anyone)</p>
+                <p><a href={{ url_for('members_page') }}>Members only page</a> (login required)</p>
                 <p><a href={{ url_for('special_page') }}>Special page</a> (login with username 'user007' and password 'password')</p>
+                <p><a href={{ url_for('user.logout') }}>Sign out</a></p>
             {% endblock %}
             """)
 

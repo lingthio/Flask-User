@@ -67,7 +67,7 @@ def test_init(db):
     um.USER_ENABLE_CONFIRM_EMAIL = True
     um.enable_reset_password = True
     um.USER_ENABLE_EMAIL = True
-    um.USER_ENABLE_RETYPE_PASSWORD = True
+    um.USER_REQUIRE_RETYPE_PASSWORD = True
 
     # Tests have not been written with auto_login in mind
     um.auto_login = False
@@ -445,7 +445,7 @@ def test_login_without_confirm_email(client):
     um.USER_ENABLE_USERNAME = False
     um.USER_ENABLE_EMAIL = True
     um.USER_ENABLE_CONFIRM_EMAIL = True
-    um.USER_ENABLE_RETYPE_PASSWORD = False
+    um.USER_REQUIRE_RETYPE_PASSWORD = False
 
     email = 'notconfirmed@example.com'
     password = 'Password1'

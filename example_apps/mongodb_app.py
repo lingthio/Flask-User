@@ -5,7 +5,7 @@
 # - Using string-based templates (instead of file-based templates)
 
 from flask import Flask, render_template_string
-from flask_sqlalchemy import SQLAlchemy
+from flask_mongoengine import MongoEngine
 from flask_user import login_required, UserManager, UserMixin
 
 
@@ -16,12 +16,14 @@ class ConfigClass(object):
     # Flask settings
     SECRET_KEY = 'THIS IS AN INSECURE SECRET'
 
-    # Flask-SQLAlchemy settings
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///quickstart_app.sqlite'    # File-based SQL database
-    SQLALCHEMY_TRACK_MODIFICATIONS = False    # Avoids SQLAlchemy warning
+    # Flask-MongoEngine settings
+    MONGODB_SETTINGS = {
+        'db': 'tst_app',
+        'host': 'mongodb://localhost:27017/tst_app'
+    }
 
     # Flask-User settings
-    USER_APP_NAME = "Flask-User QuickStart App"      # Shown in and email templates and page footers
+    USER_APP_NAME = "Flask-User MongoDB App"      # Shown in and email templates and page footers
     USER_ENABLE_EMAIL = False      # Disable email authentication
     USER_ENABLE_USERNAME = True    # Enable username authentication
     USER_REQUIRE_RETYPE_PASSWORD = False    # Simplify register form
@@ -30,29 +32,36 @@ class ConfigClass(object):
 def create_app():
     """ Flask application factory """
     
-    # Create Flask app load app.config
+    # Setup Flask and load app.config
     app = Flask(__name__)
     app.config.from_object(__name__+'.ConfigClass')
 
-    # Initialize Flask-SQLAlchemy
-    db = SQLAlchemy(app)
+    # Setup Flask-MongoEngine
+    db = MongoEngine(app)
 
-    # Define the User data-model.
+    # Define the User document.
     # NB: Make sure to add flask_user UserMixin !!!
-    class User(db.Model, UserMixin):
-        id = db.Column(db.Integer, primary_key=True)
+    class User(db.Document, UserMixin):
 
         # User authentication information
-        username = db.Column(db.String(100), nullable=False, unique=True)
-        password = db.Column(db.String(255), nullable=False, server_default='')
-        email_confirmed_at = db.Column(db.DateTime())
+        username = db.StringField(default='')
+        email = db.StringField(default='')
+        password = db.StringField()
+        email_confirmed_at = db.DateTimeField(default=None)
 
         # User information
-        first_name = db.Column(db.String(100), nullable=False, server_default='')
-        last_name = db.Column(db.String(100), nullable=False, server_default='')
+        first_name = db.StringField(default='')
+        last_name = db.StringField(default='')
 
-    # Create all database tables
-    db.create_all()
+        # Relationships
+        # roles = ListField(StringField(), required=False, default_empty=True)
+        roles = db.ListField(db.StringField(), default=[])
+
+    # Customize Flask-User to use the provided MongoEngineDbAdapter
+    class CustomUserManager(UserManager):
+        def customize(self):
+            from flask_user.db_adapters import MongoEngineDbAdapter
+            self.db_adapter = MongoEngineDbAdapter(db)
 
     # Setup Flask-User and specify the User data-model
     user_manager = UserManager(app, db, User)
