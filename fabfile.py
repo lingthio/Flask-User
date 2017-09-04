@@ -28,6 +28,12 @@ def cov():
     local('py.test --cov flask_user --cov-report term-missing --cov-config flask_user/tests/.coveragerc flask_user/tests/')
 
 @task
+def profiling():
+    # Requires "pip install pytest-profiling"
+    local('py.test --profile flask_user/tests/')
+
+
+@task
 def docs(rebuild=False):
     # local('cp example_apps/*_app.py docs/source/includes/.')
     options=''
@@ -42,7 +48,6 @@ def docs(rebuild=False):
 @task
 def upload_to_pypi():
     update_babel()
-    rebuild_docs()
     local('python setup.py sdist')
     local('twine upload dist/*')
 

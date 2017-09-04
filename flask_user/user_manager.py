@@ -62,7 +62,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
         """
         Args:
             app(Flask): The Flask application instance.
-            db: An Object-Database Mapper instance such as SQLAlchemy or MongoAlchemy.
+            db: An Object-Database Mapper instance such as SQLAlchemy or MongoEngine.
             UserClass: The User class (*not* an instance!).
 
         Keyword Args:
@@ -134,17 +134,6 @@ class UserManager(UserManager__Settings, UserManager__Views):
                     self.db_adapter = SQLAlchemyDbAdapter(db)
             except:
                 pass
-
-        # Check if db is a MongoAlchemy instance
-        if self.db_adapter is None:
-            try:
-                from flask_mongoalchemy import MongoAlchemy
-                if isinstance(db, MongoAlchemy):
-                    from .db_adapters import MongoAlchemyDbAdapter
-                    self.db_adapter = MongoAlchemyDbAdapter(db)
-            except:
-                pass
-
 
         # Check if db is a MongoEngine instance
         if self.db_adapter is None:

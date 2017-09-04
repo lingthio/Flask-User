@@ -141,8 +141,7 @@ class UserManager__Settings(object):
     USER_CHANGE_USERNAME_TEMPLATE = 'flask_user/change_username.html' #:
     USER_EDIT_USER_PROFILE_TEMPLATE = 'flask_user/edit_user_profile.html' #:
     USER_FORGOT_PASSWORD_TEMPLATE = 'flask_user/forgot_password.html' #:
-    USER_INVITE_TEMPLATE = 'flask_user/invite_user.html' #:
-    USER_INVITE_ACCEPT_TEMPLATE = 'flask_user/register.html' #:
+    USER_INVITE_USER_TEMPLATE = 'flask_user/invite_user.html' #:
     USER_LOGIN_TEMPLATE = 'flask_user/login.html' #:
     USER_MANAGE_EMAILS_TEMPLATE = 'flask_user/manage_emails.html' #:
     USER_REGISTER_TEMPLATE = 'flask_user/register.html' #:

@@ -24,7 +24,7 @@ from .utils import user_has_confirmed_email
 from sys import version_info as py_version
 is_py2 = (py_version[0] == 2)     #: Python 2.x?
 is_py3 = (py_version[0] == 3)     #: Python 3.x?
-if is_py2:
+if is_py2:    # pragma: no cover
     from urllib import quote, unquote
 if is_py3:
     from urllib.parse import quote, unquote
@@ -187,12 +187,12 @@ class UserManager__Views(object):
 
         # Users may only change their own UserEmails
         if not user_email or user_email.user_id != current_user.id:
-            return unauthorized()
+            return self.unauthorized_view()
 
         if action == 'delete':
             # Primary UserEmail can not be deleted
             if user_email.is_primary:
-                return unauthorized()
+                return self.unauthorized_view()
             # Delete UserEmail
             db_adapter.delete_object(user_email)
             db_adapter.commit()
@@ -211,7 +211,7 @@ class UserManager__Views(object):
             _send_confirm_email(user_email.user, user_email)
 
         else:
-            return unauthorized()
+            return self.unauthorized_view()
 
         return redirect(url_for('user.manage_emails'))
 
@@ -294,7 +294,7 @@ class UserManager__Views(object):
                 flash("User with that email has already registered", "error")
                 return redirect(url_for('user.invite_user'))
             else:
-                user_invite = db_adapter \
+                user_invitation = db_adapter \
                     .add_object(um.UserInvitationClass, **{
                     "email": email,
                     "invited_by_user_id": current_user.id
@@ -303,23 +303,23 @@ class UserManager__Views(object):
 
             try:
                 # Send 'invite' email
-                um.send_user_invitation_email(user_invite)
+                um.send_user_invitation_email(user_invitation)
             except Exception as e:
                 # delete new User object if send fails
-                db_adapter.delete_object(user_invite)
+                db_adapter.delete_object(user_invitation)
                 db_adapter.commit()
                 raise
 
             signals \
                 .user_sent_invitation \
-                .send(current_app._get_current_object(), user_invite=user_invite,
+                .send(current_app._get_current_object(), user_invitation=user_invitation,
                       form=invite_user_form)
 
             flash(_('Invitation has been sent.'), 'success')
             safe_next = _get_safe_next_param('next', um.USER_AFTER_INVITE_ENDPOINT)
             return redirect(safe_next)
 
-        return render_template(um.USER_INVITE_TEMPLATE, form=invite_user_form)
+        return render_template(um.USER_INVITE_USER_TEMPLATE, form=invite_user_form)
 
 
     def login_view(self):
@@ -415,10 +415,10 @@ class UserManager__Views(object):
             flash("Registration is invite only", "error")
             return redirect(url_for('user.login'))
 
-        user_invite = None
+        user_invitation = None
         if invite_token and um.UserInvitationClass:
-            user_invite = db_adapter.find_first_object(um.UserInvitationClass, token=invite_token)
-            if user_invite:
+            user_invitation = db_adapter.find_first_object(um.UserInvitationClass, token=invite_token)
+            if user_invitation:
                 register_form.invite_token.data = invite_token
             else:
                 flash("Invalid invitation token", "error")
@@ -427,8 +427,8 @@ class UserManager__Views(object):
         if request.method != 'POST':
             login_form.next.data = register_form.next.data = safe_next
             login_form.reg_next.data = register_form.reg_next.data = safe_reg_next
-            if user_invite:
-                register_form.email.data = user_invite.email
+            if user_invitation:
+                register_form.email.data = user_invitation.email
 
         # Process valid POST
         if request.method == 'POST' and register_form.validate():
@@ -474,8 +474,8 @@ class UserManager__Views(object):
                 user_email = None
 
             require_email_confirmation = True
-            if user_invite:
-                if user_invite.email == register_form.email.data:
+            if user_invitation:
+                if user_invitation.email == register_form.email.data:
                     require_email_confirmation = False
                     db_adapter.update_object(user, email_confirmed_at=datetime.utcnow())
 
@@ -484,8 +484,8 @@ class UserManager__Views(object):
             # Send 'registered' email and delete new User object if send fails
             if um.USER_SEND_REGISTERED_EMAIL:
                 try:
-                    # Send 'registered' email
-                    _USER_SEND_REGISTERED_EMAIL(user, user_email, require_email_confirmation)
+                    # Send 'confirm email' or 'registered' email
+                    _send_confirm_or_registered_email(user, user_email, require_email_confirmation)
                 except Exception as e:
                     # delete new User object if send  fails
                     db_adapter.delete_object(user)
@@ -495,7 +495,7 @@ class UserManager__Views(object):
             # Send user_registered signal
             signals.user_registered.send(current_app._get_current_object(),
                                          user=user,
-                                         user_invite=user_invite)
+                                         user_invitation=user_invitation)
 
             # Redirect if USER_ENABLE_CONFIRM_EMAIL is set
             if um.USER_ENABLE_CONFIRM_EMAIL and require_email_confirmation:
@@ -628,7 +628,7 @@ class UserManager__Views(object):
         return redirect(_endpoint_url(um.USER_AFTER_UNCONFIRMED_EMAIL_ENDPOINT))
 
 
-def _USER_SEND_REGISTERED_EMAIL(user, user_email, require_email_confirmation=True):
+def _send_confirm_or_registered_email(user, user_email, require_email_confirmation=True):
     um =  current_app.user_manager
     db_adapter = um.db_adapter
 

@@ -37,7 +37,7 @@ Flask-User v1.0::
     # Setup Flask-User
     user_manager = UserManager(app, db, User, UserEmailClass=UserEmail)
 
-The `db`  parameter can be any Database instance (for example `SQLAlchemy()` or a `MongoAlchemy()`) and the
+The `db`  parameter can be any Database instance (for example `SQLAlchemy()` or a `MongoEngine()`) and the
 appropriate DbAdapter will be configured internally.
 
 Configuration settings changes
@@ -102,13 +102,13 @@ Table names have been renamed to plural to reflect standard SQL practices::
     def class User(db.Model, UserMixin):
         __tablename__ = 'users'
 
-    def Role User(db.Model):
+    def class Role(db.Model):
         __tablename__ = 'roles'
 
-    def UserEmail User(db.Model):
+    def class UserEmail(db.Model):
         __tablename__ = 'user_emails'
 
-    def UserInvite User(db.Model):
+    def class UserInvitation(db.Model):
         __tablename__ = 'user_invitations'
 
 Foreign keys must be updated accordingly::

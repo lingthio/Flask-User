@@ -24,7 +24,7 @@ VALID_PASSWORD = 'Password1'
 INVITE_USER_EMAIL = 'valid2@example.com'
 # Using global variable for speed
 valid_user = None
-valid_user_invite = None
+valid_user_invitation = None
 
 # ********************************
 # ** Automatically called Tests **
@@ -124,7 +124,7 @@ def check_all_valid_forms(um, client):
     #check_valid_invite_registration_different_email(um, client)
 
     delete_valid_user(client.db)
-    delete_valid_user_invite(client.db)
+    delete_valid_user_invitation(client.db)
 
 def check_valid_register_form(um, client, db):
     # Using global variable for speed
@@ -315,12 +315,12 @@ def check_valid_invite_email(um, client):
     then it should generate the proper email and response """
     if not um.USER_ENABLE_INVITE_USER: return
     # Submit form and verify that response has no errors
-    global valid_user_invite
-    UserInvite = um.UserInvitationClass
+    global valid_user_invitation
+    UserInvitation = um.UserInvitationClass
     client.login(username='member', email='member@example.com', password='Password1')
     client.post_valid_form(url_for('user.invite_user'), email=INVITE_USER_EMAIL)
-    valid_user_invite = um.db_adapter.find_first_object(UserInvite, email=INVITE_USER_EMAIL)
-    assert valid_user_invite
+    valid_user_invitation = um.db_adapter.find_first_object(UserInvitation, email=INVITE_USER_EMAIL)
+    assert valid_user_invitation
 
 def delete_valid_user(db):
     # Using global variable for speed
@@ -333,13 +333,13 @@ def delete_valid_user(db):
         um.db_adapter.commit()
         valid_user = None
 
-def delete_valid_user_invite(db):
+def delete_valid_user_invitation(db):
     # Using global variable for speed
-    global valid_user_invite
+    global valid_user_invitation
 
-    if valid_user_invite:
-        # Delete valid_user_invite
+    if valid_user_invitation:
+        # Delete valid_user_invitation
         um = current_app.user_manager
-        um.db_adapter.delete_object(valid_user_invite)
+        um.db_adapter.delete_object(valid_user_invitation)
         um.db_adapter.commit()
-        valid_user_invite = None
+        valid_user_invitation = None

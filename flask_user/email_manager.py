@@ -9,7 +9,7 @@
 
 import smtplib
 import socket
-from flask import render_template, url_for
+from flask import current_app, render_template, url_for
 
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class.
@@ -96,21 +96,21 @@ class EmailManager(object):
         # Send email message using Flask-Mail
         self._send_email_message(email, subject, html_message, text_message)
 
-    def send_user_invitation_email(self, user):
+    def send_user_invitation_email(self, user_invitation):
         """Send the 'user invitation' email."""
 
         # Verify email settings
         pass
 
-        token = self.user_manager.token_manager.generate_token(user_invite.id)
-        accept_invite_link = url_for('user.register', token=token, _external=True)
+        token = self.user_manager.token_manager.generate_token(user_invitation.id)
+        accept_invitation_link = url_for('user.register', token=token, _external=True)
 
         # Render subject, html message and text message
         subject, html_message, text_message = self._render_email(
                 self.user_manager.USER_INVITE_USER_EMAIL_TEMPLATE,
                 user=user,
                 app_name=self.user_manager.USER_APP_NAME,
-                accept_invite_link=accept_invite_link)
+                accept_invitation_link=accept_invitation_link)
 
         # Send email message using Flask-Mail
         self._send_email_message(user.email, subject, html_message, text_message)
@@ -160,10 +160,12 @@ class EmailManager(object):
 
     def _send_email_message(self, recipient, subject, html_message, text_message):
         """Send email via the configured email mailer ``user_manager.email_mailer``. """
-        
-        self.user_manager.email_mailer.send_email_message(
-            recipient, subject, html_message, text_message,
-        )
+
+        # Disable email sending when testing
+        if not current_app.testing:
+            self.user_manager.email_mailer.send_email_message(
+                recipient, subject, html_message, text_message,
+            )
 
     def _render_email(self, filename, **kwargs):
         # Render subject

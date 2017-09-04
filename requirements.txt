@@ -15,7 +15,6 @@ Flask-SQLAlchemy==2.2
 
 # Mongo DB testing
 Flask-MongoEngine==0.9.3
-Flask-MongoAlchemy==0.7.2
 
 # Development packages
 pytest==3.0.5

@@ -85,7 +85,7 @@ def create_app(test_config=None):                   # For automated tests
     user_manager = UserManager(db_adapter, app)     # Init Flask-User and bind to app
 
     @user_registered.connect_via(app)
-    def after_registered_hook(sender, user, user_invite):
+    def after_registered_hook(sender, user, user_invitation):
         sender.logger.info("USER REGISTERED")
 
     @user_sent_invitation.connect_via(app)

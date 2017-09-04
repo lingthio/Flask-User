@@ -62,9 +62,9 @@ Optionally:
 - blinker 1.3+ -- for Event Notification
 - Flask-Babel 0.9+ -- for translations
 - Flask-Mail 0.9+ -- for sending mail with SMTP
-- Flask-MongoAlchemy 0.7+ -- for MongoAlchemy applications
+- Flask-MongoEngine 0.9+ -- for MongoDB applications
 - Flask-Sendmail -- for sending mail with sendmail
-- Flask-SQLAlchemy 1.0+ -- for SQLAlchemy applications
+- Flask-SQLAlchemy 1.0+ -- for SQL database applications
 - py-bcript 0.4+ -- for fast bcrypt encryption
 - speaklater 1.3+ -- for translations
 

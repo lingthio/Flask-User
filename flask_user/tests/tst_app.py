@@ -22,9 +22,6 @@ class ConfigClass(object):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///tst_app.sqlite'    # File-based SQL database
     SQLALCHEMY_TRACK_MODIFICATIONS = False    # Avoids SQLAlchemy warning
 
-    # Flask-MongoAlchemy settings
-    MONGOALCHEMY_DATABASE = 'tst_app'
-
     # Flask-MongoEngine settings
     MONGODB_SETTINGS = {
         'db': 'tst_app',
