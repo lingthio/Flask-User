@@ -1,6 +1,6 @@
 .. _CustomizingForms:
 
-Customizing forms
+Customizing Forms
 =================
 
 The following Flask-User forms can be customized:
@@ -66,25 +66,7 @@ You should now have an app/template/flask_user directory::
     # email_templates
     # ... etc.
 
-4) Optionally change Flask-User's layout template
-
-- Forms that any user may access extend ``app/template/flask_user/_public_base.html``.
-- Forms for authorized users may access extend ``app/template/flask_user/_authorized_base.html``.
-- Both base templates extend ``app/template/flask_user/_common_base.html``.
-- The ``_common_base.html`` finally extends ``app/template/flask_user_layout.html``.
-
-It is likely that you want to use your own ``app/template/layout.html`` template,
-and this base file hierarchy is put in place so that you only need to edit one file::
-
-    edit app/template/flask_user/_common_base.html
-
-    replace:
-        {% extends "flask_user_layout.html" %}
-
-    with:
-        {% extends "layout.html" %}
-
-Steps 1) through 4) only need to be performed once.
+Steps 1) through 3) only need to be performed once.
 
 --------
 
@@ -99,6 +81,17 @@ After you've copied the templates, you can edit any HTML template file
 in your ``app/template/flask_user/`` directory,
 and change it to your liking.
 
+All Flask-User templates extend from ``app/template/flask_user_layout.html``.
+You can configure all Flask-User templates to extend from your own template by::
+
+    editing app/template/flask_user/_common_base.html, and
+
+    replacing:
+        {% extends "flask_user_layout.html" %}
+
+    with:
+        {% extends "layout.html" %}
+
 --------
 
 .. _CustomizingForms2:
@@ -108,7 +101,7 @@ Customizing Forms
 
 Optionally, if you need to add form fields to a Flask-User form, you will need to customize that form like so::
 
-    # Make sure to add a field to your User class
+    # Customize the User class
     class User(db.Model, UserMixin):
             ...
         country = db.Column(db.String(100), nullable=False)
@@ -190,8 +183,8 @@ Optionally, if you want to change the default behaviour, you can customize the v
 
 .. _CustomizingValidators:
 
-Customize form field validators
--------------------------------
+Customizing Form field Validators
+---------------------------------
 
 Flask user ships with default username and password form field validators that can be customized like so::
 

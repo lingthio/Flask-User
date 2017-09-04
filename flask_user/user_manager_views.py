@@ -537,7 +537,7 @@ class UserManager__Views(object):
                 _send_confirm_email(user, user_email)
 
             # Redirect to the login page
-            return redirect(_endpoint_url(um.USER_AFTER_resend_email_confirmation_ENDPOINT))
+            return redirect(_endpoint_url(um.USER_AFTER_RESEND_EMAIL_CONFIRMATION_ENDPOINT))
 
         # Process GET or invalid POST
         return render_template(um.USER_RESENT_CONFIRM_EMAIL_TEMPLATE, form=form)

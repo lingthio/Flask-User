@@ -1,7 +1,7 @@
-.. _ConfigureSettings:
+.. _ConfiguringSettings:
 
-Configure settings
-==================
+Configuring settings
+====================
 
 Flask-User default features and settings can overridden in one of two ways:
 
@@ -30,7 +30,7 @@ Flask-User default features and settings can overridden in one of two ways:
 Flask-User settings
 -------------------
 
-Below is a complete list of configurable Flask-User settings.
+Below is a complete list of configurable Flask-User settings and their defaults.
 
 Note: Ignore the `__Settings` part of the class name.
 It's a trick we use to split the code and docs across several files.

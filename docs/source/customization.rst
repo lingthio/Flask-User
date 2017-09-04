@@ -1,12 +1,9 @@
 Flask-User Customization
 ========================
 
-Flask-User is designed to be **largely configurable**,
+Flask-User is designed to be **largely configurable** and **almost fully customizable**.
 
-- :ref:`ConfigureSettings`
-
-and **almost fully customizable**.
-
+- :ref:`ConfiguringSettings`
 - :ref:`CustomizingForms`
 - :ref:`CustomizingValidators`
 - :ref:`CustomizingDbAdapter`

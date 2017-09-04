@@ -77,15 +77,15 @@ class UserManager__Settings(object):
     USER_AUTO_LOGIN_AT_LOGIN = True
 
     #: | Send notification email after a password change.
-    #: | Requires USER_ENABLE_EMAIL=True.
+    #: | Depends on USER_ENABLE_EMAIL=True.
     USER_SEND_PASSWORD_CHANGED_EMAIL = True
 
     #: | Send notification email after a registration.
-    #: | Requires USER_ENABLE_EMAIL=True.
+    #: | Depends on USER_ENABLE_EMAIL=True.
     USER_SEND_REGISTERED_EMAIL = True
 
     #: | Send notification email after a username change.
-    #: | Requires USER_ENABLE_EMAIL=True.
+    #: | Depends on USER_ENABLE_EMAIL=True.
     USER_SEND_USERNAME_CHANGED_EMAIL = True
 
     #: Password hash scheme.
@@ -163,9 +163,9 @@ class UserManager__Settings(object):
     USER_AFTER_LOGIN_ENDPOINT = '' #:
     USER_AFTER_LOGOUT_ENDPOINT = '' #:
     USER_AFTER_REGISTER_ENDPOINT = '' #:
-    USER_AFTER_resend_email_confirmation_ENDPOINT = '' #:
+    USER_AFTER_RESEND_EMAIL_CONFIRMATION_ENDPOINT = '' #:
     USER_AFTER_RESET_PASSWORD_ENDPOINT = '' #:
     USER_AFTER_INVITE_ENDPOINT = '' #:
-    USER_UNCONFIRMED_EMAIL_ENDPOINT = '' #:
     USER_UNAUTHENTICATED_ENDPOINT = 'user.login' #:
     USER_UNAUTHORIZED_ENDPOINT = '' #:
+    USER_UNCONFIRMED_EMAIL_ENDPOINT = '' #:

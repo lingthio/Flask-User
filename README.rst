@@ -37,11 +37,11 @@ Well documented
 
 Fully customizable, yet Ready to use
 ------------------------------------
-* **Largely configurable** -- Through configuration settings
-* **Almost fully customizable** -- Through customizable functions and email templates
-* **Ready to use** -- Through sensible defaults
-* Supports **SQL Databases** and **MongoDB Databases**
-* **Event hooking** -- Through signals
+* **Ready to use** -- Through sensible defaults.
+* **Largely configurable** -- By overriding configuration settings.
+* **Almost fully customizable** -- By overriding default methods and properties.
+* Supports **SQL Databases** and **MongoDB Databases**.
+* **Event hooking** -- Through efficient signals.
 
 Comes with translations
 -----------------------
@@ -72,3 +72,8 @@ Alternatives
 ------------
 * `Flask-Login <https://flask-login.readthedocs.org/en/latest/>`_
 * `Flask-Security <https://pythonhosted.org/Flask-Security/>`_
+
+Authors
+-------
+* Ling Thio - ling AT gmail DOT com
+* `Many contributors from coders/translators <https://github.com/lingthio/Flask-User/graphs/contributors>`_
