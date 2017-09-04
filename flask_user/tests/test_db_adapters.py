@@ -21,6 +21,7 @@ def test_mongoengine_db_adapter(app):
 
     # Test add_object
     user1 = db_adapter.add_object(User, username=username)
+    user2 = db_adapter.add_object(User, username='SecondUser')
     db_adapter.commit()
 
     # Test get_object
@@ -57,11 +58,18 @@ def test_mongoengine_db_adapter(app):
     assert user_roles == ['Secret', 'Agent']
 
     # Test delete_object
+    user1_id = user1.id
     db_adapter.delete_object(user1)
     db_adapter.commit()
-    user = db_adapter.find_first_object(User, username=username)
+    user = db_adapter.get_object(User, user1_id)
     assert user==None
+    user = db_adapter.get_object(User, user2.id)
+    assert user==user2
 
+    # Test drop_all_tables
+    db_adapter.drop_all_tables()
+    user = db_adapter.get_object(User, user2.id)
+    assert user==None
 
 
 
