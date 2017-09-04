@@ -54,6 +54,7 @@ if ORM_type=='SQLAlchemy':
 
     # Define the User data-model. Make sure to add flask_user UserMixin!!
     class User(db.Model, UserMixin):
+        __tablename__ = 'users'
         id = db.Column(db.Integer, primary_key=True)
 
         # User authentication information
@@ -72,8 +73,9 @@ if ORM_type=='SQLAlchemy':
 
     # Define UserEmail DataModel.
     class UserEmail(db.Model):
+        __tablename__ = 'user_emails'
         id = db.Column(db.Integer, primary_key=True)
-        user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+        user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
         # User email information
         email = db.Column(db.String(255), nullable=True, unique=True)
@@ -84,24 +86,26 @@ if ORM_type=='SQLAlchemy':
         user = db.relationship('User', uselist=False)
 
     class UserInvitation(db.Model):
-        __tablename__ = 'user_invite'
+        __tablename__ = 'user_invitations'
         id = db.Column(db.Integer, primary_key=True)
         email = db.Column(db.String(255), nullable=False)
         # save the user of the invitee
-        invited_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+        invited_by_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
         # token used for registration page to identify user registering
         token = db.Column(db.String(100), nullable=False, server_default='')
 
     # Define the Role data-model
     class Role(db.Model):
+        __tablename__ = 'roles'
         id = db.Column(db.Integer(), primary_key=True)
         name = db.Column(db.String(50), unique=True)
 
     # Define the UserRoles data-model
     class UserRoles(db.Model):
+        __tablename__ = 'user_roles'
         id = db.Column(db.Integer(), primary_key=True)
-        user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
-        role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
+        user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
+        role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
 
 
 if ORM_type == 'MongoEngine':

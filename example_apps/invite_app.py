@@ -54,7 +54,7 @@ def create_app(test_config=None):                   # For automated tests
 
     # Define the User data-model. Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
-        __tablename__ = 'user'
+        __tablename__ = 'users'
         id = db.Column(db.Integer, primary_key=True)
 
         # User authentication information
@@ -71,11 +71,11 @@ def create_app(test_config=None):                   # For automated tests
         last_name = db.Column(db.String(100), nullable=False, server_default='')
 
     class UserInvitation(db.Model):
-        __tablename__ = 'user_invite'
+        __tablename__ = 'user_invitations'
         id = db.Column(db.Integer, primary_key=True)
         email = db.Column(db.String(255), nullable=False)
         # save the user of the invitee
-        invited_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+        invited_by_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     # Create all database tables
     db.create_all()

@@ -1,4 +1,4 @@
-.. _CustomizeForms:
+.. _CustomizingForms:
 
 Customizing forms
 =================
@@ -17,9 +17,14 @@ The following Flask-User forms can be customized:
 
 For each form, you can customize the following:
 
-- The **HTML template** that renders the form,
-- The **Form** that defines the form fields, and
-- The **View method** that prepares the form on an HTTP GET and processes the form data on an HTTP POST.
+- :ref:`CustomizingHtmlTemplates` that renders the form,
+- :ref:`CustomizingForms2` that defines the form fields, and
+- :ref:`CustomizingViewMethods` that prepares the form (on HTTP GET) and processes the form data (on HTTP POST).
+
+
+--------
+
+.. _CopyingHTMLTemplates:
 
 Copying HTML templates
 ----------------------
@@ -71,25 +76,37 @@ You should now have an app/template/flask_user directory::
 It is likely that you want to use your own ``app/template/layout.html`` template,
 and this base file hierarchy is put in place so that you only need to edit one file::
 
-    # edit app/template/flask_user/_common_base.html
-    #
-    # replace:
-    #     {% extends "flask_user_layout.html" %}
-    #
-    # with:
-    #     {% extends "layout.html" %}
+    edit app/template/flask_user/_common_base.html
+
+    replace:
+        {% extends "flask_user_layout.html" %}
+
+    with:
+        {% extends "layout.html" %}
 
 Steps 1) through 4) only need to be performed once.
+
+--------
+
+.. _CustomizingHTMLTemplates:
 
 Customizing HTML templates
 --------------------------
 
-Edit an HTML template file in your ``app/template/flask_user/`` directory and change it to your liking.
+You must :ref:`copy HTML Templates<CopyingHTMLTemplates>` before you can modify them.
+
+After you've copied the templates, you can edit any HTML template file
+in your ``app/template/flask_user/`` directory,
+and change it to your liking.
+
+--------
+
+.. _CustomizingForms2:
 
 Customizing Forms
 -----------------
 
-Optionally, if you need to add fields to a Flask-User form, you will need to customize this form like so::
+Optionally, if you need to add form fields to a Flask-User form, you will need to customize that form like so::
 
     # Make sure to add a field to your User class
     class User(db.Model, UserMixin):
@@ -97,13 +114,13 @@ Optionally, if you need to add fields to a Flask-User form, you will need to cus
         country = db.Column(db.String(100), nullable=False)
 
     # Customize the Register form:
-    from flask_user.user_manager_forms import RegisterForm
+    from flask_user.forms import RegisterForm
     class CustomRegisterForm(RegisterForm):
         # Add a country field to the Register form
         country = StringField(_('Country'), validators=[DataRequired()])
 
     # Customize the User profile form:
-    from flask_user.user_manager_forms import UserProfileForm
+    from flask_user.forms import UserProfileForm
     class CustomUserProfileForm(UserProfileForm):
         # Add a country field to the UserProfile form
         country = StringField(_('Country'), validators=[DataRequired()])
@@ -114,36 +131,31 @@ Optionally, if you need to add fields to a Flask-User form, you will need to cus
         def customize(self):
 
             # Configure customized forms
-            # NB: assign ``= Form`` (the class) and not ``= Form()`` (the instance) !!
             self.register_form = CustomRegisterForm
             self.user_profile_form = CustomUserProfileForm
+            # NB: assign:  xyz_form = XyzForm   -- the class!
+            #   (and not:  xyz_form = XyzForm() -- the instance!)
 
     # Setup Flask-User
     user_manager = CustomUserManager(app, db, User)
 
-These are the UserManager form attributes that can be configured along with their defaults::
-
-    from flask_user import forms
-    self.add_email_form         = forms.AddEmailForm
-    self.change_password_form   = forms.ChangePasswordForm
-    self.change_username_form   = forms.ChangeUsernameForm
-    self.edit_user_profile_form = forms.EditUserProfileForm
-    self.forgot_password_form   = forms.ForgotPasswordForm
-    self.login_form             = forms.LoginForm
-    self.register_form          = forms.RegisterUserForm
-    self.resend_email_confirmation_form = forms.ResendEmailConfirmationForm
-    self.reset_password_form    = forms.ResetPasswordForm
-    self.invite_user_form       = forms.InviteUserForm
-
-
 .. seealso::
+
+    :ref:`UserManager__Forms` shows a complete list of customizable forms.
+
+    `Default forms are defined here
+    <https://github.com/lingthio/Flask-User/blob/master/flask_user/forms.py>`_
+
+.. note::
 
     Notice that in a simple use case like this, the form will work without customizing
     the accompanying view method. This is because WTForm's ``populate_obj()`` function
     knows how to move data from ``form.country.data`` to ``user.country``
     (as long as the attribute names are identical).
 
-.. seealso:: :ref:`UserManager__Forms` for a complete list of customizable forms.
+--------
+
+.. _CustomizingViewMethods:
 
 Customizing view methods
 ------------------------
@@ -165,12 +177,41 @@ Optionally, if you want to change the default behaviour, you can customize the v
 
 .. warning::
 
-    View perform lots of intricate operations, so use this feature with caution.
-    Be sure to read the source code of the default view function and make sure you understand
-    all that it does before attempting to change its behavior.
+    View methods perform lots of intricate operations, so use this feature with caution.
+    Be sure to read the source code of the default view method and make sure you understand
+    all that it does before attempting to modify its behavior.
 
-    | Default view functions are defined here:
-    | ``/Users/janedoe/.envs/my_app/lib/python2.7/site-packages/flask_user/user_manager_views.py``
+    `Default view methods are defined here
+    <https://github.com/lingthio/Flask-User/blob/master/flask_user/user_manager_views.py>`_
 
 .. seealso:: :ref:`UserManager__Views` for a complete list of customizable view methods.
 
+--------
+
+.. _CustomizingValidators:
+
+Customize form field validators
+-------------------------------
+
+Flask user ships with default username and password form field validators that can be customized like so::
+
+    from wtforms import ValidationError
+
+    # Customize Flask-User
+    class CustomUserManager(UserManager):
+
+        # Override the default password validator
+        def password_validator(form, field):
+            if not some_condition:
+                raise ValidationError('Some error message.')
+
+        # Override the default username validator
+        def password_username(form, field):
+            if not some_condition:
+                raise ValidationError('Some error message.')
+
+    # Setup Flask-User
+    user_manager = CustomUserManager(app, db, User)
+
+| `Default validators are defined here <https://github.com/lingthio/Flask-User/blob/master/flask_user/user_manager.py>`_
+| (Search for ``def password_validator`` or ``def username_validator``).

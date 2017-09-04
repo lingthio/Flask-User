@@ -5,13 +5,13 @@ Table of Contents
 .. toctree::
     :maxdepth: 2
 
-    introduction
+    Flask-User v0.9<introduction>
     installation
     quickstart
     limitations
     data_models
     authorization
-    customize
+    Customization<customization>
     porting
     api
 
@@ -29,9 +29,9 @@ Table of Contents
     api_user_manager_forms
     api_user_manager_views
     configure_settings
-    customize_forms
-    customize_db_adapter
-    customize_email_mailer
+    customizing_forms
+    customizing_db_adapter
+    customizing_email_mailer
     roles_required_app
     base_templates
     signals

@@ -1,5 +1,5 @@
 =====================
-Porting v0.6 to v1.0+
+Porting v0.6 to v9.0+
 =====================
 
 With Flask-User v0.1 through v0.6 we gained insights for an improved Flask-User API,
@@ -95,6 +95,26 @@ Flask-User v1.0 (keeping the original database column names)::
 
 The optional UserAuth class has been obsoleted. See below for a workaround.
 
+Database table names
+--------------------
+Table names have been renamed to plural to reflect standard SQL practices::
+
+    def class User(db.Model, UserMixin):
+        __tablename__ = 'users'
+
+    def Role User(db.Model):
+        __tablename__ = 'roles'
+
+    def UserEmail User(db.Model):
+        __tablename__ = 'user_emails'
+
+    def UserInvite User(db.Model):
+        __tablename__ = 'user_invitations'
+
+Foreign keys must be updated accordingly::
+
+    'user.id' --> 'users.id'
+    'role.id' --> 'roles.id'
 
 Flask-Login v0.3+ required
 --------------------------
@@ -155,10 +175,11 @@ from the user profile fields, you can use the workaround recipe below::
 
     # Define the UserAuth data-model.
     class UserAuth(db.Model):
+        __tablename__ = 'user_auths'
         id = db.Column(db.Integer, primary_key=True)
 
         # Relationship to user
-        user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+        user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
         user = db.relationship('User', uselist=False)
 
         # User authentication information
@@ -168,6 +189,7 @@ from the user profile fields, you can use the workaround recipe below::
 
     # Define the User data-model. Make sure to add flask_user UserMixin!!
     class User(db.Model, UserMixin):
+        __tablename__ = 'users'
         id = db.Column(db.Integer, primary_key=True)
 
         # User email information

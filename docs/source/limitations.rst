@@ -19,27 +19,21 @@ Flask-User has been tested with Flask 0.10, 0.11 and 0.12
 
 Supported Databases
 -------------------
-Flask-User uses a 'DatabaseAdapter' to shield its functionality from
-the underlying database. It ships with a DatabaseAdapter for SQLAlchemy.
+Flask-User makes use of DbAdapters to support different databases.
 
-SQLAlchemy supports many SQL databases, including:
+It ships with a SQLAlchemyDbAdapter to support a wide range of SQL databases via Flask-SQLAlchemy
+(Firebird, Microsoft SQL Server, MySQL, Oracle, PostgreSQL, SQLite, Sybase and more).
 
-* Firebird
-* Microsoft SQL Server
-* MySQL
-* Oracle
-* PostgreSQL
-* SQLite
-* Sybase
+It ships with a MongoEngineDbAdapter to support MongoDB databases via Flask-MongoEngine.
 
-The DatabaseAdapter can be subclassed to support other Databases.
+Other DbAdapter interfaces can be implemented to support other Databases.
 
 
-Python data-model class names
------------------------------
+Flexible data-model class names
+-------------------------------
 No known restrictions.
 
-Flask-User relies on a User class and optionally on a UserEmail, UserInvitation and Role class.
+Flask-User relies on a User class and optionally on a Role, UserRoles, UserEmail and/or UserInvitation class.
 The names of these classes can be anything you choose::
 
     class Client(db.Model, UserMixin):
@@ -48,69 +42,68 @@ The names of these classes can be anything you choose::
     user_manager = UserManager(app, db, Client)
 
 
-Python data-model attribute names
----------------------------------
+Fixed data-model attribute names
+--------------------------------
 
-If a single User data-model class is specified, the following attribute names are fixed::
+The following data-model attribute names are fixed::
 
     User.id
     User.password
+    User.username                   # optional
+    User.email                      # optional
+    User.email_confirmed_at         # optional
+    User.active                     # optional
+    User.roles                      # optional
+    User.user_emails                # optional
+    UserEmail.email                 # optional
+    UserEmail.email_confirmed_at    # optional
+    Role.id                         # optional
+    Role.name                       # optional
 
-    # If FLASK_USER_ENABLE_EMAIL is True
-    User.email
-    User.email_confirmed_at
+The following attribute names are flexible::
+    UserEmail.id                    # optional
+    UserRoles.id                    # optional
+    UserRoles.user_id               # optional
+    UserRoles.role_id               # optional
 
-    # If FLASK_USER_ENABLE_USERNAME is True
-    User.username
-
-    # Optional
-    User.active
-    User.roles         # only for role-based authorization
-    Role.id            # only for role-based authorization
-    Role.name          # only for role-based authorization
-    User.user_emails   # only for multiple emails per user
-
-
-| If your existing code uses different attribute names you have two options:
-| 1) Rename these attributes throughout your code base
-| 2) Use Python's property and propery-setters to translate attribute names
-
-::
+If you have existing code, and are unable to globally change a fixed attribute name,
+consider using Python's getter and setter properties as a bridge::
 
     class User(db.Model, UserMixin):
             ...
+        # Existing code uses email_address instead of email
         email_address = db.Column(db.String(255), nullable=False, unique=True)
             ...
 
+        # define email getter
         @property
         def email(self):
             return self.email_address   # on user.email: return user.email_address
 
+        # define email setter
         @email.setter
         def email(self, value):
             self.email_address = value  # on user.email='xyz': set user.email_address='xyz'
-
-
-Note: Depending on Flask-User configuration settings, some attributes may move to other data-model classes,
-such as UserEmail. These configurations will be discussed elsewhere.
 
 
 SQL table names
 ---------------
 No known restrictions when using SQLAlchemy.
 
+SQLAlchemy allows table names to be different from their corresponding class names::
+
+    class User(db.Model, UserMixin):
+        __tablename__ = 'clients'
+            ....
 
 SQL column names
 ----------------
 No known restrictions when using SQLAlchemy.
 
-Note: Even though some Python data-model attribute names are fixed,
-SQLAlchemy allows column names to be different from their corresponding attribute names.
+SQLAlchemy allows column names to be different from their corresponding attribute names::
 
-::
-
-    class User(db.Model, UserMixin)
-
+    class User(db.Model, UserMixin):
+            ...
         # Map Python Data-model attribute 'email' to SQL column 'email_address'
         email = db.Column('email_address', db.String(100))
 

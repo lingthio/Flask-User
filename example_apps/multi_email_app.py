@@ -40,6 +40,7 @@ def create_app():
 
     # Define the User data-model. Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
+        __tablename__ = 'users'
         id = db.Column(db.Integer, primary_key=True)
 
         # User authentication information
@@ -57,8 +58,9 @@ def create_app():
 
     # Define UserEmail DataModel.
     class UserEmail(db.Model):
+        __tablename__ = 'user_emails'
         id = db.Column(db.Integer, primary_key=True)
-        user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+        user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
         # User email information
         email = db.Column(db.String(255), nullable=False, unique=True)

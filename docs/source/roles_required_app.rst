@@ -3,7 +3,7 @@
 Roles Required App
 ==================
 The Roles Required App demonstrate the use of the ``@roles_required`` decorator
-to add role-based authorization.
+to add role-based authorization to a Flask application.
 
 Install Flask-User
 ------------------

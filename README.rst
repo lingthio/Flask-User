@@ -1,5 +1,5 @@
-Flask-User v0.9
-===============
+Flask-User v0.9 (pre-alpha)
+===========================
 **Customizable User Authentication, User Management, and more.**
 
 .. topic:: Attention

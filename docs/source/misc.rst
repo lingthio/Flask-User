@@ -220,6 +220,7 @@ Flask-User (v0.4.5 and up) has the capability to store extra registration fields
 Extra fields must be defined in the User data-model::
 
     class User(db.Model, UserMixin):
+        __tablename__ = 'users'
         id = db.Column(db.Integer, primary_key=True)
         is_enabled = db.Column(db.Boolean(), nullable=False, default=False)
         email = db.Column(db.String(255), nullable=False, default='')

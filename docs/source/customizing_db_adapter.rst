@@ -1,4 +1,4 @@
-.. _CustomizeDbAdapter:
+.. _CustomizingDbAdapter:
 
 Customizing the DbAdapter
 =========================
@@ -7,8 +7,8 @@ Flask-User uses DbAdapters to manage user records in various databases.
 
 Flask-User ships with the following DbAdapters:
 
-- :ref:`CustomizeSQLAlchemyDbAdapter` for various SQL databases.
-- :ref:`CustomizeMongoEngineDbAdapter` for MongoDB databases.
+- :ref:`CustomizingSQLAlchemyDbAdapter` for various SQL databases.
+- :ref:`CustomizingMongoEngineDbAdapter` for MongoDB databases.
 
 and developers can define their own:
 
@@ -16,7 +16,7 @@ and developers can define their own:
 
 --------
 
-.. _CustomizeSQLAlchemyDbAdapter:
+.. _CustomizingSQLAlchemyDbAdapter:
 
 SQLAlchemyDbAdapter
 -------------------
@@ -27,7 +27,7 @@ Configure the ``SQLALCHEMY_DATABASE_URI`` setting in your app config to point to
 
 --------
 
-.. _CustomizeMongoEngineDbAdapter:
+.. _CustomizingMongoEngineDbAdapter:
 
 MongoEngineDbAdapter
 --------------------
@@ -64,7 +64,6 @@ and minor customization is required to use and configure the MongoEngineDbAdapte
         last_name = db.StringField(default='')
 
         # Relationships
-        # roles = ListField(StringField(), required=False, default_empty=True)
         roles = db.ListField(db.StringField(), default=[])
 
     # Setup Flask-User

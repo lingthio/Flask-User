@@ -40,6 +40,7 @@ def create_app():
     # Define the User data-model.
     # NB: Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
+        __tablename__ = 'users'
         id = db.Column(db.Integer, primary_key=True)
 
         # User authentication information

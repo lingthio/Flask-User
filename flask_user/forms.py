@@ -20,9 +20,10 @@ from wtforms import BooleanField, HiddenField, PasswordField, SubmitField, Strin
 from wtforms import validators, ValidationError
 from .translations import lazy_gettext as _
 
-# **************************
-# ** Validation Functions **
-# **************************
+
+# ****************
+# ** Validators **
+# ****************
 
 def password_validator(form, field):
     current_app.user_manager.password_validator(form, field)
@@ -353,3 +354,6 @@ class InviteUserForm(FlaskForm):
         validators.Email(_('Invalid Email'))])
     next = HiddenField()
     submit = SubmitField(_('Invite!'))
+
+
+

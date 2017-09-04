@@ -1,4 +1,4 @@
-.. _CustomizeEmailMailer:
+.. _CustomizingEmailMailer:
 
 Customizing the EmailMailer
 ===========================
@@ -7,9 +7,9 @@ Flask-User uses EmailMailers to send email via various methods.
 
 Flask-User ships with the following EmailMailers:
 
-- :ref:`CustomizeSMTPEmailMailer` for sending email via SMTP.
-- :ref:`CustomizeSendmailEmailMailer` for sending email via ``sendmail``.
-- :ref:`CustomizeSendgridEmailMailer` for sending email via SendGrid.
+- :ref:`CustomizingSMTPEmailMailer` for sending email via SMTP.
+- :ref:`CustomizingSendmailEmailMailer` for sending email via ``sendmail``.
+- :ref:`CustomizingSendgridEmailMailer` for sending email via SendGrid.
 
 and developers can define their own:
 
@@ -17,7 +17,7 @@ and developers can define their own:
 
 --------
 
-.. _CustomizeSMTPEmailMailer:
+.. _CustomizingSMTPEmailMailer:
 
 SMTPEmailMailer
 ---------------
@@ -28,7 +28,7 @@ Configure the ``MAIL_...`` settings in your app config to point to the desired S
 
 --------
 
-.. _CustomizeSendmailEmailMailer:
+.. _CustomizingSendmailEmailMailer:
 
 SendmailEmailMailer
 -------------------
@@ -53,7 +53,7 @@ No configuration is required (other than setting up sendmail on your system).
 
 ---------
 
-.. _CustomizeSendgridEmailMailer:
+.. _CustomizingSendgridEmailMailer:
 
 SendgridEmailMailer
 -------------------

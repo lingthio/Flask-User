@@ -40,6 +40,7 @@ def create_app():
     # Define the User data-model.
     # NB: Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
+        __tablename__ = 'users'
         id = db.Column(db.Integer, primary_key=True)
 
         # User authentication information
@@ -56,14 +57,16 @@ def create_app():
 
     # Define the Role data-model
     class Role(db.Model):
+        __tablename__ = 'roles'
         id = db.Column(db.Integer(), primary_key=True)
         name = db.Column(db.String(50), unique=True)
 
     # Define the UserRoles association table
     class UserRoles(db.Model):
+        __tablename__ = 'user_roles'
         id = db.Column(db.Integer(), primary_key=True)
-        user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
-        role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
+        user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
+        role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
 
     # Create all database tables
     db.create_all()

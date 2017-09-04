@@ -1,5 +1,5 @@
-Customize
-=========
+Flask-User Customization
+========================
 
 Flask-User is designed to be **largely configurable**,
 
@@ -7,13 +7,13 @@ Flask-User is designed to be **largely configurable**,
 
 and **almost fully customizable**.
 
-- :ref:`CustomizeForms`
-- :ref:`CustomizeDbAdapter`
-- :ref:`CustomizeEmailMailer`
-- :ref:`CustomizeManagers`
+- :ref:`CustomizingForms`
+- :ref:`CustomizingValidators`
+- :ref:`CustomizingDbAdapter`
+- :ref:`CustomizingEmailMailer`
+- :ref:`CustomizingManagers`
 
-
-.. _CustomizeManagers:
+.. _CustomizingManagers:
 
 Customizing the EmailManager, PasswordManager or TokenManager
 -------------------------------------------------------------

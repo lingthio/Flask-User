@@ -22,7 +22,7 @@ This class manages the sending of Flask-User emails.
 
 .. autoclass:: flask_user.email_manager.EmailManager
 
-.. seealso:: :ref:`CustomizeManagers` on how to customize this manager.
+.. seealso:: :ref:`CustomizingManagers` on how to customize this manager.
 
 --------
 
@@ -36,7 +36,7 @@ The PasswordManager generates and verifies hashed passwords.
 .. autoclass:: flask_user.password_manager.PasswordManager
     :no-undoc-members:
 
-.. seealso:: :ref:`CustomizeManagers` on how to customize this manager.
+.. seealso:: :ref:`CustomizingManagers` on how to customize this manager.
 
 --------
 
@@ -56,4 +56,4 @@ These tokens are used in the following places:
 .. autoclass:: flask_user.token_manager.TokenManager
     :no-undoc-members:
 
-.. seealso:: :ref:`CustomizeManagers` on how to customize this manager.
+.. seealso:: :ref:`CustomizingManagers` on how to customize this manager.
