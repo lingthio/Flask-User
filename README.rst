@@ -1,5 +1,5 @@
-Flask-User v0.6 (stable)
-========================
+Flask-User v0.6
+===============
 **Customizable User Authentication & Management**
 
 .. topic:: Attention
