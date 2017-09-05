@@ -1,9 +1,9 @@
 .. _DbAdapterInterface:
 
-DbAdapter interface
-===================
+DbAdapterInterface
+==================
 
-The DbAdapter class defines an interface to find, add, update and remove
+The DbAdapterInterface class defines an interface to find, add, update and remove
 persistent database objects,
 while shielding the Flask-User code from the underlying implementation.
 
@@ -12,7 +12,7 @@ Included implementations:
 - :ref:`SQLAlchemyDbAdapter`
 - :ref:`MongoEngineDbAdapter`
 
-.. autoclass:: flask_user.db_adapters.db_adapter.DbAdapter
+.. autoclass:: flask_user.db_adapters.db_adapter_interface.DbAdapterInterface
 
 --------
 

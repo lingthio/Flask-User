@@ -76,6 +76,14 @@ class UserManager__Settings(object):
     #: Automatic sign-in at the login form (if the user session has not expired).
     USER_AUTO_LOGIN_AT_LOGIN = True
 
+    #: | Sender email address
+    #: | Required for sending out emails.
+    USER_EMAIL_SENDER_EMAIL = ''
+
+    #: Sender name
+    #: Required for sending out emails.
+    USER_EMAIL_SENDER_NAME = ''
+
     #: | Send notification email after a password change.
     #: | Depends on USER_ENABLE_EMAIL=True.
     USER_SEND_PASSWORD_CHANGED_EMAIL = True

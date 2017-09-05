@@ -23,9 +23,12 @@ class EmailMailerInterface(object):
         """
         self.sender_name = app.config.get('USER_EMAIL_SENDER_NAME', None)
         self.sender_email = app.config.get('USER_EMAIL_SENDER_EMAIL', None)
+
+        # Ensure that USER_EMAIL_SENDER_EMAIL is set
         if not self.sender_email:
             raise ConfigError('Config setting USER_EMAIL_SENDER_EMAIL is missing.')
-        if '@' not in self.sender_email or '.' not in self.sender_email:
+        # Simplistic email address verification
+        if '@' not in self.sender_email:
             raise ConfigError('Config setting USER_EMAIL_SENDER_EMAIL is not a valid email address.')
 
     def send_email_message(self, recipient, subject, html_message, text_message):

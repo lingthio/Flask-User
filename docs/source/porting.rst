@@ -2,13 +2,13 @@
 Porting v0.6 to v9.0+
 =====================
 
-With Flask-User v0.1 through v0.6 we gained insights for an improved Flask-User API,
+With Flask-User v0.1 through v0.6 we gained insights on how to improve the Flask-User API,
 but we were unable to implement these improvements due to backwards compatibility.
 
-With Flask-User v1.0, we decided to add these improvements at the cost of breaking backward compatibility.
+With Flask-User v0.9+, we decided to add these improvements at the cost of breaking backward compatibility.
 
 This page describes describes the changes required to make a Flask-User v0.6 application
-work with Flask-User v1.0.
+work with Flask-User v0.9+.
 
 UserManager() setup
 -------------------
@@ -26,7 +26,7 @@ Flask-User v0.6::
     db_adapter = SQLAlchemyAdapter(db, User, UserEmailClass=UserEmail)
     user_manager = UserManager(db_adapter, app)
 
-Flask-User v1.0::
+Flask-User v0.9+::
 
     from flask_sqlalchemy import SQLAlchemy
     from flask_user import UserManager    # No need for SQLAlchemyAdapter
@@ -53,7 +53,7 @@ Flask-User v0.6::
 
     USER_REQUIRE_RETYPE_PASSWORD = True
 
-Flask-User v1.0::
+Flask-User v0.9+::
 
     USER_SHOW_EMAIL_DOES_NOT_EXIST = False
     USER_SHOW_USERNAME_DOES_NOT_EXIST = False
@@ -79,7 +79,7 @@ Flask-User v0.6::
         email = db.Column(db.String(255), nullable=False, unique=True)
         confirmed_at = db.Column(db.DateTime())
 
-Flask-User v1.0 (keeping the original database column names)::
+Flask-User v0.9+ (keeping the original database column names)::
 
     class User(db.Model, UserMixin):
             ....
@@ -134,7 +134,7 @@ Flask-User v0.6::
 
     verify_password(password, user)
 
-Flask-User v1.0::
+Flask-User v0.9+::
 
     password_manager.verify_password(password, hashed_password)
 
@@ -144,21 +144,40 @@ EmailManager() changes
 Email related methods have been moved from the UserManager class to a separate EmailManager class,
 accessible through the UserManager.email_manager attribute.
 
+Introducing EmailMailers
+------------------------
+Flask-User v0.6 only supported sending emails through SMTP.
+
+With v0.9+ we introduced multiple EmailMailer classes that can send Email via SMTP, ``sendmail``,
+SendGrid and custom EmailMailers.
+
+The v0.6 ``MAIL_DEFAULT_SENDER`` config setting has been replaced with the v0.9+ ``FLASK_USER_EMAIL_SENDER_EMAIL``,
+and ``FLASK_USER_EMAIL_SENDER_NAME`` settings.
+
+Flask-User v0.6::
+
+    MAIL_DEFAULT_SENDER = '"App name" <info@example.com>'
+
+Flask-User v0.9+::
+
+    FLASK_USER_EMAIL_SENDER_EMAIL = 'info@example.com'    # Required for sending Emails
+    FLASK_USER_EMAIL_SENDER_NAME = 'App name'   # Optional
+
 
 TokenManager() changes
 ----------------------
 The v0.6 `token_manager.generate_token()` assumed that IDs were limited to 16 digits.
-This limitation has been removed in v1.0, to support Mongo ObjectIDs.
+This limitation has been removed in v0.9+, to support Mongo ObjectIDs.
 
-In v1.0, we added the last 8 bytes of the hashed passwords to `token_manager.generate_token()`
+In v0.9+, we added the last 8 bytes of the hashed passwords to `token_manager.generate_token()`
 to invalidate tokens when a user changes their password.
 
 As a result, the generated tokens are different, which will affect two areas:
 
-- v0.6 user-session tokens, that were stored in a browser cookie, are no longer valid in v1.0
+- v0.6 user-session tokens, that were stored in a browser cookie, are no longer valid in v0.9+
   and the user will be required to login again.
 
-- v0.6 password-reset tokens, that were sent in password reset emails, are no longer valid in v1.0
+- v0.6 password-reset tokens, that were sent in password reset emails, are no longer valid in v0.9+
   and the user will have to issue a new forgot-password email request.
   This effect is mitigated by the fact that these tokens are meant to expire relatively quickly.
 
@@ -167,7 +186,7 @@ As a result, the generated tokens are different, which will affect two areas:
 UserAuth class
 --------------
 
-The optional v0.6 UserAuth class has been fully obsoleted in v1.0 to simplify the Flask-User source code.
+The optional v0.6 UserAuth class has been fully obsoleted in v0.9+ to simplify the Flask-User source code.
 
 If you are using SQLAlchemy and choose to separate the uer authorization fields
 from the user profile fields, you can use the workaround recipe below::

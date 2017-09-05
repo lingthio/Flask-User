@@ -1,9 +1,9 @@
 .. _EmailMailerInterface:
 
-EmailMailer interface
-=====================
+EmailMailerInterface
+====================
 
-The EmailMailer class defines an interface to send email messages
+The EmailMailerInterface class defines an interface to send email messages
 while shielding the Flask-User code from the underlying implementation.
 
 Included implementations:
@@ -13,7 +13,7 @@ Included implementations:
 - :ref:`SendgridEmailMailer`
 - :ref:`CustomEmailMailer`
 
-.. autoclass:: flask_user.email_mailers.email_mailer.EmailMailer
+.. autoclass:: flask_user.email_mailers.email_mailer_interface.EmailMailerInterface
 
 --------
 
