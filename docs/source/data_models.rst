@@ -27,7 +27,7 @@ In its simplest form, Flask-User makes use of a single data-model class called U
     # Setup Flask-User
     user_manager = UserManager(app, db, User)
 
-The ``active`` attribute is optional. Add it if your application needs
+The ``active`` property is optional. Add it if your application needs
 to disable users. Flask-User will not let users login if this field is set to ``False``.
 
 Flexible class name
@@ -39,10 +39,10 @@ The ``User`` class name can be anything you want::
 
     user_manager = UserManager(app, db, Client)
 
-Fixed data-model attribute names
+Fixed data-model property names
 --------------------------------
 
-The following data-model attribute names are fixed (some are optional)::
+The following data-model property names are fixed::
 
     User.id
     User.username           # optional
@@ -55,13 +55,13 @@ The following data-model attribute names are fixed (some are optional)::
     Role.id                 # optional
     Role.name               # optional
 
-The following attribute names are flexible::
+The following property names are flexible::
     UserRoles.id            # optional
     UserRoles.user_id       # optional
     UserRoles.role_id       # optional
 
-If you have existing code, and are unable to globally change the fixed attribute names,
-consider using helper setters and getters as a bridge::
+If you have existing code, and are unable to globally change the fixed property names,
+consider using helper getters and setters as a bridge::
 
     class User(db.Model, UserMixin):
             ...
@@ -82,11 +82,11 @@ consider using helper setters and getters as a bridge::
 Flexible database column names
 ------------------------------
 SQLAlchemy allows developers to specify a database column name different from their corresponding
-data-model attribute name like so::
+data-model property name like so::
 
     class User(db.Model, UserMixin):
             ...
-        # Map email attribute to email_address column
+        # Map email property to email_address column
         email = db.Column('email_address', db.String(255), nullable=False, unique=True)
 
 .. _RoleAndUserRoleDataModels:
@@ -95,7 +95,7 @@ Optional Role and UserRoles data-models
 ---------------------------------------
 
 The optional ``Role`` and ``UserRoles`` data-models are only required for role-based authentication.
-In this configuration, the ``User`` data-model must aslo define a ``roles`` relationship attribute.
+In this configuration, the ``User`` data-model must aslo define a ``roles`` relationship property.
 
 The Role data-model holds the name of each role. This name will be matched to the @roles_required
 function decorator in a **CASE SENSITIVE** manner.
@@ -131,7 +131,7 @@ Roles are defined by adding rows to the Role table with a specific Role.name val
     agent_role = Role(name='Agent')
     db.session.commit()
 
-Users are assigned one or more roles by adding them to the User.roles attribute::
+Users are assigned one or more roles by adding them to the User.roles property::
 
     # Create 'user007' user with 'secret' and 'agent' roles
     user1 = User(
@@ -178,7 +178,7 @@ and sharing the same password. In this configuration, a separate UserEmail data-
     # Setup Flask-User
     user_manager = UserManager(app, User, UserEmailClass=UserEmail)
 
-The ``is_primary`` attribute defines which email receives account notification emails.
+The ``is_primary`` property defines which email receives account notification emails.
 
 
 Optional UserEmail data-model

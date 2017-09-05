@@ -449,9 +449,9 @@ class UserManager(UserManager__Settings, UserManager__Views):
         app.add_url_rule(self.USER_RESET_PASSWORD_URL, 'user.reset_password', reset_password_stub,
                          methods=['GET', 'POST'])
 
-    def _create_default_attr(self, attribute_name, default_value):
-        if not hasattr(self, attribute_name):
-            setattr(self, attribute_name, default_value)
+    def _create_default_attr(self, property_name, default_value):
+        if not hasattr(self, property_name):
+            setattr(self, property_name, default_value)
 
 
     def _check_settings(self):

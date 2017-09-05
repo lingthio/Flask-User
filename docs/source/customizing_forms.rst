@@ -144,7 +144,7 @@ Optionally, if you need to add form fields to a Flask-User form, you will need t
     Notice that in a simple use case like this, the form will work without customizing
     the accompanying view method. This is because WTForm's ``populate_obj()`` function
     knows how to move data from ``form.country.data`` to ``user.country``
-    (as long as the attribute names are identical).
+    (as long as the property names are identical).
 
 --------
 

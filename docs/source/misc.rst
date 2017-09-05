@@ -331,7 +331,7 @@ Flask-User comes standard
 with a password validator (at least 6 chars, 1 upper case letter, 1 lower case letter, 1 digit) and
 with a username validator (at least 3 characters in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._").
 
-Custom validators can be specified by setting an attribute on the Flask-User's UserManager object::
+Custom validators can be specified by setting an property on the Flask-User's UserManager object::
 
     from wtforms.validators import ValidationError
 
@@ -409,7 +409,7 @@ The built-in View Functions contain considerable business logic, so we recommend
 trying the approach of :ref:`customizingformtemplates`
 before making use of customized View Functions.
 
-Custom view functions are specified by setting an attribute on the Flask-User's UserManager object::
+Custom view functions are specified by setting an property on the Flask-User's UserManager object::
 
     # View functions
     user_manager = UserManager(db_adapter,

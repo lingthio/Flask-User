@@ -63,7 +63,7 @@ Flask-User v0.9+::
 
 Data-model changes
 ------------------
-The `confirmed_at` attribute name has been renamed to `email_confirmed_at` to better reflect what this attribute means.
+The `confirmed_at` property name has been renamed to `email_confirmed_at` to better reflect what this property means.
 
 Flask-User v0.6::
 
@@ -125,7 +125,7 @@ Since Flask-Login v0.3.0, ``is_authenticated()``, ``is_active()``, and ``is_anon
 PasswordManager() changes
 -------------------------
 Password related methods have been moved from the UserManager class to a separate PasswordManager class,
-accessible through the UserManager.password_manager attribute.
+accessible through the UserManager.password_manager property.
 
 We changed the ``verify_password()`` parameters to receive a ``hashed_password` parameter
 instead of the ``user`` parameter.
@@ -142,7 +142,7 @@ Flask-User v0.9+::
 EmailManager() changes
 ----------------------
 Email related methods have been moved from the UserManager class to a separate EmailManager class,
-accessible through the UserManager.email_manager attribute.
+accessible through the UserManager.email_manager property.
 
 Introducing EmailMailers
 ------------------------

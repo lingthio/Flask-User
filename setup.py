@@ -1,7 +1,14 @@
+import sys
 from setuptools import setup
 
 # Import version number from source code
-from flask_user import __version__ as flask_user_version
+from flask_user import __title__, __description__, __version__, __url__
+from flask_user import __author__, __author_email__, __license__
+
+
+# Load pytest and pytest-runner only when needed:
+needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
+pytest_runner = ['pytest-runner'] if needs_pytest else []
 
 
 # Read long description from README.rst file
@@ -11,15 +18,15 @@ def load_readme():
 
 
 setup(
-    name='Flask-User',
-    version=flask_user_version,
-    description='Customizable User Authorization and Management: Register, Confirm email, Login, Change username, Change password, Forgot password and more.',
+    name=__title__,
+    version=__version__,
+    description=__description__,
     long_description=load_readme(),
     keywords='Flask User Authorization Account Management Registration Username Email Confirmation Forgot Reset Password Invitation',
-    url='http://github.com/lingthio/Flask-User',
-    author='Ling Thio',
-    author_email='ling.thio@gmail.com',
-    license='BSD License',
+    url=__url__,
+    author=__author__,
+    author_email=__author_email__,
+    license=__license__,
 
     platforms='any',
     classifiers=[
@@ -59,14 +66,16 @@ setup(
     zip_safe=False,    # Do not zip as it will make debugging harder
 
     python_requires='>=2.6, !=3.0.*, !=3.1.*, !=3.2.*',   # Python 2.6, 2.7, 3.3+
+    setup_requires=pytest_runner,
     install_requires=[
+        'bcrypt>=1.1',
+        'cryptography>=2.0',
         'Flask>=0.9',
         'Flask-Login>=0.3',
         'Flask-Mail>=0.9',
         'Flask-SQLAlchemy>=1.0',
         'Flask-WTF>=0.9',
-        'bcrypt>=1.1',
-        'cryptography>=2.0',
         'passlib>=1.6',
     ],
+    tests_require=['pytest'],
 )

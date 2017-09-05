@@ -191,11 +191,3 @@ def setup(app):
     # Disable word hyphenation by HTML/CSS
     app.add_stylesheet('custom.css')
 
-# -- Global substitutions
-rst_epilog = """
-.. |supported_python_versions_and| replace:: {supported_python_versions_and}
-.. |supported_python_versions_or| replace:: {supported_python_versions_or}
-""".format(
-    supported_python_versions_and='2.6, 2.7, 3.3, 3.5, 3.5 and 3.6',
-    supported_python_versions_or='2.6, 2.7, 3.3, 3.5, 3.5 or 3.6',
-)

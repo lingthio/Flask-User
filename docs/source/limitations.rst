@@ -9,12 +9,12 @@ We want to be transparent about what this package can and can not do.
 
 Python versions
 ---------------
-Flask-User has been tested with Python |supported_python_versions_and|
+Flask-User has been tested with Python 2.6, 2.7, 3.3, 3.4, 3.5 and 3.6.
 
 
 Flask versions
 --------------
-Flask-User has been tested with Flask 0.10, 0.11 and 0.12
+Flask-User works with Flask 0.9+
 
 
 Supported Databases
@@ -26,47 +26,42 @@ It ships with a SQLAlchemyDbAdapter to support a wide range of SQL databases via
 
 It ships with a MongoEngineDbAdapter to support MongoDB databases via Flask-MongoEngine.
 
-Other DbAdapter interfaces can be implemented to support other Databases.
+Custom DbAdapters can be implemented to support other Databases.
 
 
-Flexible data-model class names
--------------------------------
-No known restrictions.
+Supported Email Mailers
+-----------------------
+Flask-User makes use of EmailMailers to send email via several platforms.
 
-Flask-User relies on a User class and optionally on a Role, UserRoles, UserEmail and/or UserInvitation class.
-The names of these classes can be anything you choose::
+It ships with a SMTPEmailMailer a SendmailEmailMailer and a SendGridEmailMailer
+to send emails via SMTP, ``sendmail`` and SendGrid.
 
-    class Client(db.Model, UserMixin):
-        ...
-
-    user_manager = UserManager(app, db, Client)
+Custom EmailMailers can be implemented to support other Email Mailers.
 
 
-Fixed data-model attribute names
+Fixed data-model property names
 --------------------------------
 
-The following data-model attribute names are fixed::
+The following data-model property names are fixed::
 
     User.id
     User.password
-    User.username                   # optional
-    User.email                      # optional
-    User.email_confirmed_at         # optional
-    User.active                     # optional
-    User.roles                      # optional
-    User.user_emails                # optional
-    UserEmail.email                 # optional
-    UserEmail.email_confirmed_at    # optional
-    Role.id                         # optional
-    Role.name                       # optional
+    User.username                      # optional
+    User.email                         # optional
+    User.email_confirmed_at            # optional
+    User.active                        # optional
+    User.roles                         # optional
+    User.user_emails                   # optional
+    Role.name                          # optional
+    UserEmail.id                       # optional
+    UserEmail.email                    # optional
+    UserEmail.email_confirmed_at       # optional
+    UserInvitation.id                  # optional
+    UserInvitation.email               # optional
+    UserInvitation.invited_by_user_id  # optional
 
-The following attribute names are flexible::
-    UserEmail.id                    # optional
-    UserRoles.id                    # optional
-    UserRoles.user_id               # optional
-    UserRoles.role_id               # optional
 
-If you have existing code, and are unable to globally change a fixed attribute name,
+If you have existing code, and are unable to globally change a fixed property name,
 consider using Python's getter and setter properties as a bridge::
 
     class User(db.Model, UserMixin):
@@ -86,47 +81,71 @@ consider using Python's getter and setter properties as a bridge::
             self.email_address = value  # on user.email='xyz': set user.email_address='xyz'
 
 
-SQL table names
----------------
-No known restrictions when using SQLAlchemy.
+Flexible data-model class, SQL table, and SQL column names
+----------------------------------------------------------------
+| Data-model class names are unrestricted.
+| SQL table names are unrestricted.
+| SQL column names are unrestricted.
 
-SQLAlchemy allows table names to be different from their corresponding class names::
+Here is an example of a data-model class with different class, table and column names::
 
-    class User(db.Model, UserMixin):
-        __tablename__ = 'clients'
-            ....
+    # Use of the Member class name (instead of User)
+    class Member(db.Model, UserMixin):
 
-SQL column names
-----------------
-No known restrictions when using SQLAlchemy.
-
-SQLAlchemy allows column names to be different from their corresponding attribute names::
-
-    class User(db.Model, UserMixin):
+        # Use of the 'members' SQL table (instead of 'users')
+        __tablename__ = 'members'
             ...
-        # Map Python Data-model attribute 'email' to SQL column 'email_address'
-        email = db.Column('email_address', db.String(100))
+        # Use of the 'email_address' SQL column (instead of 'email')
+        email = db.Column('email_address', db.String(255), nullable=False, unique=True)
 
-        # Map Python Data-model attribute 'active' to SQL column 'is_active'
-        active = db.Column('is_active', db.Boolean())
+    # Setup Flask-User
+    user_manager = UserManager(app, db, Member)    # Specify the Member class
 
 
 Primary keys
 ------------
-Without customization, the primary key of the User, UserEmail, UserInvitation and Role tables:
+Even though Flask-User relies on the following:
 
-- must be named ``id``
-- must be of type ``int``
-- may not be a compound key.
+- Primary key is a single property named ``id``.
+- ``id`` properties are:
 
-Customization may offer a way to use primary keys named other than ``id``.
+  - integers,
+  - or strings,
+  - or offer a string representation with ``str(id)``.
 
-Customization may offer a way to use primary keys of types other than ``int``
-as long as they can be converted into an ``str``.
+Developers can still support primary key properties named other than ``id``::
 
-As an example, the :ref:`MongoEngineDbAdapter` accepts primary keys of type ObjectID,
-which can be converted to a string with ``str(id)``.
+    class User(db.Model, UserMixin):
+        # Composite primary key
+        pk = db.Column(db.Integer, primary_key=True)
+            ...
+        # Map: id=user.id to: id=user.pk
+        @property
+        def id(self):
+            return self.pk
 
+        # Map: user.id=id to: user.pk=id
+        @id.setter
+        def id(self, value):
+            self.pk = value
 
+Developers can still support composite primary keys::
 
+    class User(db.Model, UserMixin):
+        # Composite primary key
+        pk1 = db.Column(db.Integer, primary_key=True)
+        pk2 = db.Column(db.String, primary_key=True)
+            ...
+        # Map:  id=user.id  to:  id=str(pk1)+'|'+pk2
+        @property
+        def id(self):
+            return str(self.pk1)+'|'+self.pk2
 
+        # Map:  user.id=str(pk1)+'|'+pk2  to:  user.pk1=pk1; user.pk2=pk2;
+        @id.setter
+        def id(self, value):
+            items = value.split('|',1)
+            self.pk1 = int(items[0])
+            self.pk2 = items[1]
+
+Developers can customize the TokenManager to accept IDs without string representations.

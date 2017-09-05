@@ -27,7 +27,7 @@ Secure and Reliable
 -------------------
 * **Secure** -- Built on top of widely deployed Passlib and Cryptography.
 * **Reliable** -- Code coverage of over 95%
-* **Available** -- Tested on Python 2.6, 2.7 and 3.3-3.6
+* **Available** -- Tested on Python 2.6, 2.7, 3.3, 3.4, 3.5 and 3.6
 
 Well documented
 ---------------
