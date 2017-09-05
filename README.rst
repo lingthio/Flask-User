@@ -37,7 +37,7 @@ Customizable, yet Ready to use
 Secure and Reliable
 -------------------
 * **Secure** -- Built on top of widely deployed Passlib, PyCrypto, ItsDangerous.
-* **Reliable** -- Code coverage of over 95%
+* **Reliable** -- Code coverage of over 90%
 * **Available** -- Tested on Python 2.6, 2.7 and 3.3-3.6
 
 
@@ -56,3 +56,11 @@ Alternatives
 ------------
 * `Flask-Login <https://flask-login.readthedocs.org/en/latest/>`_
 * `Flask-Security <https://pythonhosted.org/Flask-Security/>`_
+
+Authors
+-------
+| **Lead developer and Maintainer**
+| Ling Thio -- ling.thio AT gmail DOT com
+|
+| **Contributors**
+| `Many contributors <https://github.com/lingthio/Flask-User/graphs/contributors>`_
