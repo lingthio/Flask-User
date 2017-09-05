@@ -1,13 +1,10 @@
-from flask import current_app
-from flask_sqlalchemy import SQLAlchemy
 from flask_mongoengine import MongoEngine
 from flask_user.db_adapters import MongoEngineDbAdapter
 
 
-
 def test_mongoengine_db_adapter(app):
     db = MongoEngine(app)
-    db_adapter = MongoEngineDbAdapter(db)
+    db_adapter = MongoEngineDbAdapter(app, db)
 
     class User(db.Document):
         username = db.StringField(default='')

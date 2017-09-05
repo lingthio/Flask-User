@@ -26,7 +26,7 @@ And wouldn't it be nice to also offer:
 
 Secure and Reliable
 -------------------
-* **Secure** -- Built on top of widely deployed Passlib, PyCrypto, ItsDangerous.
+* **Secure** -- Built on top of widely deployed Passlib and Cryptography.
 * **Reliable** -- Code coverage of over 95%
 * **Available** -- Tested on Python 2.6, 2.7 and 3.3-3.6
 

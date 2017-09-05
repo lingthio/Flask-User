@@ -50,7 +50,7 @@ And point your browser to ``http://localhost:5000``.
 Troubleshooting
 ---------------
 
-If you receive an SendEmailError message,
+If you receive an EmailError message,
 or if the Registration form does not respond quickly
 then you may have specified incorrect SMTP settings.
 

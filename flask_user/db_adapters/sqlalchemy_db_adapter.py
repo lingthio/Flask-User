@@ -1,16 +1,20 @@
 from __future__ import print_function
 
-from .db_adapter import DbAdapter
+# Non-system imports are moved into the methods to make them an optional requirement
 
-class SQLAlchemyDbAdapter(DbAdapter):
+from flask_user.db_adapters import DbAdapterInterface
+
+
+class SQLAlchemyDbAdapter(DbAdapterInterface):
     """ Implements the DbAdapter interface to find, add, update and delete
     database objects using Flask-SQLAlchemy.
     """
 
     # Almost all methods are defined in the DbAdapter base class.
 
-    def __init__(self, db):
+    def __init__(self, app, db):
         """Args:
+            app(Flask): The Flask appliation instance.
             db(SQLAlchemy): The SQLAlchemy object-database mapper instance.
 
         | Example:
@@ -22,7 +26,7 @@ class SQLAlchemyDbAdapter(DbAdapter):
             Generic methods.
         """
         # This no-op method is defined to show it in Sphinx docs in order 'bysource'
-        super(SQLAlchemyDbAdapter, self).__init__(db)
+        super(SQLAlchemyDbAdapter, self).__init__(app, db)
 
     def get_object(self, ObjectClass, id):
         """ Retrieve object of type ``ObjectClass`` by ``id``.

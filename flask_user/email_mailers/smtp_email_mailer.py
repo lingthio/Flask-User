@@ -10,27 +10,30 @@ from __future__ import print_function
 import smtplib
 import socket
 
-from .email_mailer import EmailMailer, SendEmailError
+# Non-system imports are moved into the methods to make them an optional requirement
+
+from flask_user import ConfigError, EmailError
+from flask_user.email_mailers import EmailMailerInterface
 
 
-class SMTPEmailMailer(EmailMailer):
+class SMTPEmailMailer(EmailMailerInterface):
     """ Implements the EmailMailer interface to send email_templates with SMTP using Flask-Mail."""
-    def __init__(self, app, sender_email=None, sender_name=None):
-        """Setup Flask-Mail.
+    def __init__(self, app):
+        """Check config settings and setup Flask-Mail.
 
         Args:
-            app: The Flask application instance.
-            sender_email: The sender's email address.
-            sender_name: The sender's name.
-
-        The from: field will appear as "{{sender_name}} <{{sender_email}}>".
+            app(Flask): The Flask application instance.
         """
 
+        # Check config settings
+        super(SMTPEmailMailer, self).__init__(app)
+
+        # Setup Flask-Mail
         try:
             from flask_mail import Mail
         except :
-            raise SendEmailError(
-                "Flask-Mail has not been installed. Install Flask-Mail or use a different mailer package.")
+            raise ConfigError(
+                "Flask-Mail has not been installed. Install Flask-Mail with 'pip install Flask-Mail' or use a different EmailMailer.")
         self.mail = Mail(app)
 
     def send_email_message(self, recipient, subject, html_message, text_message):
@@ -56,7 +59,7 @@ class SMTPEmailMailer(EmailMailer):
 
         # Print helpful error messages on exceptions
         except (socket.gaierror, socket.error) as e:
-            raise SendEmailError('SMTP Connection error: Check your MAIL_SERVER and MAIL_PORT settings.')
+            raise EmailError('SMTP Connection error: Check your MAIL_SERVER and MAIL_PORT settings.')
         except smtplib.SMTPAuthenticationError:
-            raise SendEmailError('SMTP Authentication error: Check your MAIL_USERNAME and MAIL_PASSWORD settings.')
+            raise EmailError('SMTP Authentication error: Check your MAIL_USERNAME and MAIL_PASSWORD settings.')
 

@@ -7,29 +7,26 @@
 
 
 from __future__ import print_function
-import smtplib
-import socket
+
+from flask_user import ConfigError
 
 
-# Define the SendMailError exception
-class SendEmailError(Exception):
-    pass
-
-
-class EmailMailer(object):
+class EmailMailerInterface(object):
     """ Define the EmailMailer interface to send email_templates through specific email mailers."""
 
-    def __init__(self, app, sender_email=None, sender_name=None):
-        """Setup an email mailer.
+    def __init__(self, app):
+        """
+        Ensure that USER_EMAIL_SENDER_EMAIL is configured.
 
         Args:
-            app: The Flask application instance.
-            sender_email: The sender's email address.
-            sender_name: The sender's name.
-
-        The from: field will appear as "{{sender_name}} <{{sender_email}}>".
+            app(Flask): The Flask application instance.
         """
-        raise NotImplementedError
+        self.sender_name = app.config.get('USER_EMAIL_SENDER_NAME', None)
+        self.sender_email = app.config.get('USER_EMAIL_SENDER_EMAIL', None)
+        if not self.sender_email:
+            raise ConfigError('Config setting USER_EMAIL_SENDER_EMAIL is missing.')
+        if '@' not in self.sender_email or '.' not in self.sender_email:
+            raise ConfigError('Config setting USER_EMAIL_SENDER_EMAIL is not a valid email address.')
 
     def send_email_message(self, recipient, subject, html_message, text_message):
         """ Send email message via an email mailer.

@@ -15,8 +15,9 @@ from passlib.context import CryptContext
 class PasswordManager(object):
     """Hash and verify user passwords using passlib """
 
-    def __init__(self, password_hash):
-        """Create a passlib CryptContext.
+    def __init__(self, app, password_hash):
+        """
+        Create a passlib CryptContext.
 
         Args:
             password_hash(str): The name of a valid passlib password hash.
@@ -25,6 +26,8 @@ class PasswordManager(object):
         Example:
             ``password_manager = PasswordManager('bcrypt')``
         """
+
+        self.app = app
 
         # Create a passlib CryptContext
         self.password_crypt_context = CryptContext(

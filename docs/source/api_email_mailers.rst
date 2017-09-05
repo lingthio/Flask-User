@@ -45,12 +45,11 @@ then customize Flask-User like so::
     # Customize Flask-User
     class CustomUserManager(UserManager):
 
-        def customize():
+        def customize(self, app):
 
             # Configure the email mailer
             from flask_user.email_mailers import SendmailEmailMailer
-            self.email_mailer = SendmailEmailMailer(
-                self.email_sender_email, self.email_sender_name)
+            self.email_mailer = SendmailEmailMailer(app)
 
     # Setup Flask-User
     user_manager = CustomUserManager(app, db, User)
@@ -66,19 +65,18 @@ SendgridEmailMailer
 
 Flask-User ships with ``SendgridEmailMailer``, but you will need to install ``sendgrid-python`` manually::
 
-    pip install sendgrid-python
+    pip install sendgrid
 
 then customize Flask-User like so::
 
     # Customize Flask-User
     class CustomUserManager(UserManager):
 
-        def customize():
+        def customize(self, app):
 
             # Configure the email mailer
             from flask_user.email_mailers import SendgridEmailMailer
-            self.email_mailer = SendmailEmailMailer(
-                self.email_sender_email, self.email_sender_name)
+            self.email_mailer = SendmailEmailMailer(app)
 
     # Setup Flask-User
     user_manager = CustomUserManager(app, db, User)

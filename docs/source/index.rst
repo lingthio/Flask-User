@@ -5,7 +5,7 @@ Table of Contents
 .. toctree::
     :maxdepth: 2
 
-    Flask-User v0.9<introduction>
+    Flask-User<introduction>
     installation
     quickstart
     limitations

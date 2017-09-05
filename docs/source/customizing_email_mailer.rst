@@ -41,10 +41,10 @@ and minor customization is required use to SendmailEmailMailer to send emails vi
     # Customize Flask-User
     class CustomUserManager(UserManager):
 
-        def customize(self):
+        def customize(self, app):
             # Use the provided SendmailEmailMailer
             from flask_user.email_mailers import SendmailEmailMailer
-            self.email_mailer = SendmailEmailMailer()
+            self.email_mailer = SendmailEmailMailer(app)
 
     # Setup Flask-User
     user_manager = CustomUserManager(app, db, User)
@@ -59,17 +59,17 @@ SendgridEmailMailer
 -------------------
 Flask-User ships with a SendgridEmailMailer, but sendgrid-python needs to be installed manually::
 
-    pip install sendgrid-python
+    pip install sendgrid
 
 and minor customization is required to use SendgridEmailMailer to send emais via SendGrid::
 
     # Customize Flask-User
     class CustomUserManager(UserManager):
 
-        def customize(self):
+        def customize(self, app):
             # Use the provided SendgridEmailMailer
             from flask_user.email_mailers import SendgridEmailMailer
-            self.email_mailer = SendgridEmailMailer()
+            self.email_mailer = SendgridEmailMailer(app)
 
     # Setup Flask-User
     user_manager = CustomUserManager(app, db, User)
@@ -84,7 +84,7 @@ Implement a custom EmailMailer
 ------------------------------
 
 Flask-User allows developers to implement a custom EmailMailer that
-conforms to the :ref:`DbAdapterInterface`::
+conforms to the :ref:`EmailMailerInterface`::
 
     # Define a custom EmailMailer
     from flask_user.email_mailers import EmailMailer
@@ -94,9 +94,9 @@ conforms to the :ref:`DbAdapterInterface`::
     # Customize Flask-User
     class CustomUserManager(UserManager):
 
-        def customize(self):
+        def customize(self, app):
             # Use the CustomEmailMailer
-            self.email_mailer = CustomEmailMailer()
+            self.email_mailer = CustomEmailMailer(app)
 
     # Setup Flask-User
     user_manager = CustomUserManager(app, db, User)

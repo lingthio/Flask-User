@@ -7,21 +7,20 @@
 # License: Simplified BSD License, see LICENSE.txt for more details.
 
 
-import smtplib
-import socket
-from flask import current_app, render_template, url_for
+from flask import render_template, url_for
 
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class.
 class EmailManager(object):
     """ Send email_templates via the configured Email Mailer ``user_manager.email_mailer``. """
 
-    def __init__(self, user_manager):
+    def __init__(self, app):
         """
         Args:
-            user_manager: The Flask-User instance.
+            app(Flask): The Flask application instance.
         """
-        self.user_manager = user_manager
+        self.app = app
+        self.user_manager = app.user_manager
 
     def send_email_confirmation_email(self, user, user_email):
         """Send the 'email confirmation' email."""
@@ -162,7 +161,7 @@ class EmailManager(object):
         """Send email via the configured email mailer ``user_manager.email_mailer``. """
 
         # Disable email sending when testing
-        if not current_app.testing:
+        if not self.app.testing:
             self.user_manager.email_mailer.send_email_message(
                 recipient, subject, html_message, text_message,
             )

@@ -8,8 +8,11 @@ This module contains a manager class to generate and verify tokens.
 """
 
 import base64
-from cryptography.fernet import Fernet, InvalidToken
 import string
+
+# Non-system imports are moved into the methods to make them an optional requirement
+
+from flask_user import ConfigError
 
 class TokenManager(object):
     """Generate and verify timestamped, signed and encrypted tokens. """
@@ -22,28 +25,42 @@ class TokenManager(object):
     BASE = len(ALPHABET)
     INTEGER_PREFIX = '~'
     SEPARATOR = '|'
+    UNSAFE_DEFAULT_SECRET = b'\x8b\xc32\xbe^z\x1f\x86\xc6`\x96\'\x98\xad\x9dx\xe9\xfb\xd8\x16C\xa4\x9aH]\x8a\xf7\xeb"\xe5\x9c\xc4'
 
     # *** Public methods ***
 
-    def __init__(self, flask_secret_key):
-        """
+    def __init__(self, app):
+        """Check config settings and initialize the Fernet encryption cypher.
+
+        Fernet is basically AES128 in CBC mode, with a timestamp and a signature.
+
         Args:
-            flask_secret_key(str): The secret key used to encrypt and decrypt tokens.
-                This is typically Flask's SECRET_KEY setting.
-                Preferably 32 bytes or longer, but spaces will be padded if needed.
+            app(Flask): The Flask application instance.
         """
 
-        # Generate a 32-byte base-64 key from the Flask SECRET_KEY
-        long_key = flask_secret_key.encode() + b' '*32    # Make sure the key is at least 32 bytes long
-        key32 = long_key[:32]
+        self.app = app
+
+        # Use the applications's SECRET_KEY if flask_secret_key is not specified.
+        flask_secret_key = app.config.get('SECRET_KEY', None)
+        if not flask_secret_key:
+            raise ConfigError('Config setting SECRET_KEY is missing.')
+
+        # Print a warning if SECRET_KEY is too short
+        key = flask_secret_key.encode()
+        if len(key)<32:
+            print('WARNING: Flask-User TokenManager: SECRET_KEY is shorter than 32 bytes.')
+            key = key + b' '*32    # Make sure the key is at least 32 bytes long
+
+        key32 = key[:32]
         base64_key32 = base64.urlsafe_b64encode(key32)
 
         # Create a Fernet cypher to encrypt data -- basically AES128 in CBC mode,
         # Encrypt, timestamp, sign, and base64-encode
+        from cryptography.fernet import Fernet
         self.fernet = Fernet(base64_key32)
 
     def generate_token(self, *args):
-        """ Converts a list of integers or strings, specified by ``*args``, into an encrypted, timestamped, and signed token.
+        """ Convert a list of integers or strings, specified by ``*args``, into an encrypted, timestamped, and signed token.
 
         Note: strings may not contain any ``'|'`` characters, nor start with a ``'~'`` character
         as these are used as separators and integer indicators for encoding.
@@ -87,6 +104,8 @@ class TokenManager(object):
                 user = db_adapter.get_user_by_id(user_id)
                 token_is_valid = user and user.password[-8:]==password_ends_with
         """
+
+        from cryptography.fernet import InvalidToken
 
         try:
             concatenated_str = self.decrypt_string(token, expiration_in_seconds)

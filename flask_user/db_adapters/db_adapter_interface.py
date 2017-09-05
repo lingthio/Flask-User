@@ -8,13 +8,15 @@
 
 from __future__ import print_function
 
-class DbAdapter(object):
+class DbAdapterInterface(object):
     """ Define the DbAdapter interface to find, add, update and delete
     database objects using a specific object-database mapper.
     """
 
-    def __init__(self, db):
-        """Args:
+    def __init__(self, app, db):
+        """
+        Args:
+            app(Flask): The Flask appliation instance.
             db: The object-database mapper instance.
 
         | Example:
@@ -25,6 +27,7 @@ class DbAdapter(object):
 
             Generic methods.
         """
+        self.app = app
         self.db = db
 
     def get_object(self, ObjectClass, id):

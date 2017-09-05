@@ -25,6 +25,7 @@ from flask_user.token_manager import TokenManager
 
 from . import forms
 from . import translations
+from flask_user import ConfigError
 from .translations import get_translations, lazy_gettext as _
 from .user_manager_settings import UserManager__Settings
 from .user_manager_views import UserManager__Views, init_views
@@ -41,13 +42,6 @@ def _flask_user_context_processor():
     return dict(
         user_manager=current_app.user_manager,
         call_or_get=_call_or_get)
-
-
-# Define custom Exception
-class ConfigurationError(Exception):
-    pass
-
-
 
 
 # The UserManager is implemented across several source code files.
@@ -131,7 +125,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
                 from flask_sqlalchemy import SQLAlchemy
                 if isinstance(db, SQLAlchemy):
                     from .db_adapters import SQLAlchemyDbAdapter
-                    self.db_adapter = SQLAlchemyDbAdapter(db)
+                    self.db_adapter = SQLAlchemyDbAdapter(app, db)
             except:
                 pass
 
@@ -141,7 +135,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
                 from flask_mongoengine import MongoEngine
                 if isinstance(db, MongoEngine):
                     from .db_adapters import MongoEngineDbAdapter
-                    self.db_adapter = MongoEngineDbAdapter(db)
+                    self.db_adapter = MongoEngineDbAdapter(app, db)
             except:
                 pass
 
@@ -159,15 +153,6 @@ class UserManager(UserManager__Settings, UserManager__Views):
             app.jinja_env.add_extension('jinja2.ext.i18n')
             app.jinja_env.install_null_translations()
 
-        # Allow CustomUserManager to customize settings and methods
-        self.customize(app)
-
-        # Make sure the settings are valid -- raise ConfigurationError if not
-        self._check_settings()
-
-        # Configure a list of URLs to route to their corresponding view method.
-        self._configure_urls(app)
-
         # Validators
         #: Username validator
         # self.username_validator = forms.username_validator
@@ -175,13 +160,13 @@ class UserManager(UserManager__Settings, UserManager__Views):
         # self.password_validator = forms.password_validator
 
         # Setup PasswordManager
-        self.password_manager = PasswordManager(self.USER_PASSWORD_HASH)
+        self.password_manager = PasswordManager(app, self.USER_PASSWORD_HASH)
 
         # Setup EmailManager
-        self.email_manager = EmailManager(self)
+        self.email_manager = EmailManager(app)
 
         # Setup TokenManager
-        self.token_manager = TokenManager(app.config['SECRET_KEY'])
+        self.token_manager = TokenManager(app)
 
         # Setup default LoginManager using Flask-Login
         self.login_manager = LoginManager(app)
@@ -208,8 +193,17 @@ class UserManager(UserManager__Settings, UserManager__Views):
         # Add context processor
         app.context_processor(_flask_user_context_processor)
 
-        # Prepare for translations
-        _ = translations.gettext
+        # # Prepare for translations
+        # _ = translations.gettext
+
+        # Allow CustomUserManager to customize settings and methods
+        self.customize(app)
+
+        # Make sure the settings are valid -- raise ConfigError if not
+        self._check_settings()
+
+        # Configure a list of URLs to route to their corresponding view method.
+        self._configure_urls(app)
 
 
     def customize(self, app):
@@ -225,7 +219,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
             # Customize Flask-User
             class CustomUserManager(UserManager):
 
-                def customize():
+                def customize(self, app):
 
                     # Customize settings
                     # (Can also be set in the application config)
@@ -233,10 +227,10 @@ class UserManager(UserManager__Settings, UserManager__Views):
                     self.USER_ENABLE_USERNAME = False
 
                     # Add custom managers and email mailers here
-                    self.email_manager = CustomEmailManager()
-                    self.password_manager = CustomPasswordManager()
-                    self.token_manager = CustomTokenManager()
-                    self.email_mailer = CustomEmailMailer()
+                    self.email_manager = CustomEmailManager(app)
+                    self.password_manager = CustomPasswordManager(app, 'bcrypt')
+                    self.token_manager = CustomTokenManager(app)
+                    self.email_mailer = CustomEmailMailer(app)
 
             # Setup Flask-User
             user_manager = CustomUserManager(app, db, User)
@@ -463,10 +457,10 @@ class UserManager(UserManager__Settings, UserManager__Views):
     def _check_settings(self):
         """Verify required settings. Produce a helpful error messages for missing settings."""
         if self.db_adapter is None:
-            raise ConfigurationError('You must specify a DbAdapter interface or install Flask-SQLAlchemy or FlaskMongAlchemy.')
+            raise ConfigError('You must specify a DbAdapter interface or install Flask-SQLAlchemy or FlaskMongAlchemy.')
 
         if self.USER_ENABLE_INVITE_USER and not self.UserInvitationClass:
-            raise ConfigurationError(
+            raise ConfigError(
                 'Missing UserInvitationClass with USER_ENABLE_INVITE_USER=True setting.')
 
         # Disable settings that rely on a feature setting that's not enabled

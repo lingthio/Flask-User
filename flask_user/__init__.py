@@ -5,6 +5,12 @@
 # Author:    Ling Thio (ling.thio@gmail.com)
 # License:   Simplified BSD License, see LICENSE.txt for more details."""
 
+class ConfigError(Exception):
+    pass
+
+class EmailError(Exception):
+    pass
+
 from .user_mixin import UserMixin
 from .user_manager import UserManager
 from .email_manager import EmailManager
@@ -12,6 +18,7 @@ from .password_manager import PasswordManager
 from .token_manager import TokenManager
 
 __version__ = '0.9.0'
+
 
 # Export Flask-Login's current user
 from flask_login import current_user            # pass through Flask-Login's current_user

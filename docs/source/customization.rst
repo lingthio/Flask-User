@@ -35,12 +35,12 @@ Developers can customize the EmailManager PasswordManager and TokenManager as fo
     # Customize Flask-User
     class CustomUserManager(UserManager):
 
-        def customize(self):
+        def customize(self, app):
 
             # Customize Flask-User managers
-            self.email_manager = CustomEmailManager()
-            self.password_manager = CustomPasswordManager('bcrypt')
-            self.token_manager = CustomTokenManager(app.config['SECRET_KEY'])
+            self.email_manager = CustomEmailManager(app)
+            self.password_manager = CustomPasswordManager(app, 'bcrypt')
+            self.token_manager = CustomTokenManager(app)
 
     # Setup Flask-User
     user_manager = CustomUserManager(app, db, User)

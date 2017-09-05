@@ -36,6 +36,9 @@ class ConfigClass(object):
     MAIL_PORT =           int(os.getenv('MAIL_PORT',            '465'))
     MAIL_USE_SSL =            os.getenv('MAIL_USE_SSL',         True)
 
+    USER_APP_NAME = 'Test App'
+    USER_EMAIL_SENDER_NAME = USER_APP_NAME
+    USER_EMAIL_SENDER_EMAIL = 'noreply@example.com'
 
 # Read config from ConfigClass defined above
 app.config.from_object(__name__+'.ConfigClass')

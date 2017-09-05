@@ -1,3 +1,4 @@
+from .email_mailer_interface import EmailMailerInterface
 from .smtp_email_mailer import SMTPEmailMailer
 from .sendmail_email_mailer import SendmailEmailMailer
 from .sendgrid_email_mailer import SendgridEmailMailer

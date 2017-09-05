@@ -23,7 +23,7 @@ def test():
     local('py.test flask_user/tests/')
 
 @task
-def cov():
+def coverage():
     # Requires "pip install pytest-coverage"
     local('py.test --cov flask_user --cov-report term-missing --cov-config flask_user/tests/.coveragerc flask_user/tests/')
 

@@ -16,7 +16,7 @@ Flask-User default features and settings can overridden in one of two ways:
     # Customize Flask-User
     class CustomUserManager(UserManager):
 
-        def customize(self):
+        def customize(self, app):
 
             # Customize Flask-User settings
             self.USER_ENABLE_EMAIL = True

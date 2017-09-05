@@ -8,27 +8,30 @@
 
 from __future__ import print_function
 
-from .email_mailer import EmailMailer, SendEmailError
+# Non-system imports are moved into the methods to make them an optional requirement
+
+from flask_user import ConfigError, EmailError
+from flask_user.email_mailers import EmailMailerInterface
 
 
-class SendmailEmailMailer(EmailMailer):
+class SendmailEmailMailer(EmailMailerInterface):
     """ Implements the EmailMailer interface to send email_templates with sendmail using Flask-Sendmail."""
     def __init__(self, app, sender_email=None, sender_name=None):
-        """Setup Flask-Sendemail.
+        """Check config settings and setup Flask-Sendemail.
 
         Args:
-            app: The Flask application instance.
-            sender_email: The sender's email address.
-            sender_name: The sender's name.
-
-        The from: field will appear as "{{sender_name}} <{{sender_email}}>".
+            app(Flask): The Flask application instance.
         """
 
+        # Check config settings
+        super(SendmailEmailMailer, self).__init__(app)
+
+        # Setup Flask-Mail
         try:
             from flask_sendmail import Mail
         except:
-            raise SendEmailError(
-                "Flask-Sendmail has not been installed. Install Flask-Sendmail or use a different mailer package.")
+            raise ConfigError(
+                "Flask-Sendmail has not been installed. Install Flask-Sendmail with 'pip install Flask-Sendmail' or use a different EmailMailer.")
         self.mail = Mail(app)
 
     def send_email_message(self, recipient, subject, html_message, text_message):

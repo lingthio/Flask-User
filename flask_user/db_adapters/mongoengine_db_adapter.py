@@ -1,10 +1,11 @@
 from __future__ import print_function
 
-from .db_adapter import DbAdapter
+# Non-system imports are moved into the methods to make them an optional requirement
 
-from flask import current_app
+from flask_user.db_adapters import DbAdapterInterface
 
-class MongoEngineDbAdapter(DbAdapter):
+
+class MongoEngineDbAdapter(DbAdapterInterface):
     """ Implements the DbAdapter interface to find, add, update and delete
     database objects using Flask-MongoEngine.
     """
@@ -13,8 +14,9 @@ class MongoEngineDbAdapter(DbAdapter):
     # MongoEngineDbAdapter from SQLAlchemyDbAdapter
     # and re-use most of its methods.
 
-    def __init__(self, db):
+    def __init__(self, app, db):
         """Args:
+            app(Flask): The Flask appliation instance.
             db(MongoEngine): The MongoEngine object-database mapper instance.
 
         | Example:
@@ -26,7 +28,7 @@ class MongoEngineDbAdapter(DbAdapter):
             Generic methods.
         """
         # This no-op method is defined to show it in Sphinx docs in order 'bysource'
-        super(MongoEngineDbAdapter, self).__init__(db)
+        super(MongoEngineDbAdapter, self).__init__(app, db)
 
     def get_object(self, ObjectClass, id):
         """ Retrieve object of type ``ObjectClass`` by ``id``.

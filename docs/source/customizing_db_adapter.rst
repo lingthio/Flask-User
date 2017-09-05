@@ -44,10 +44,10 @@ and minor customization is required to use and configure the MongoEngineDbAdapte
     # Customize Flask-User
     class CustomUserManager(UserManager):
 
-        def customize(self):
+        def customize(self, app):
             # Use the provided MongoEngineDbAdapter
             from flask_user.db_adapters import MongoEngineDbAdapter
-            self.db_adapter = MongoEngineDbAdapter(db)
+            self.db_adapter = MongoEngineDbAdapter(app, db)
 
     # Define the User document
     # NB: Make sure to add flask_user UserMixin !!!
@@ -89,9 +89,9 @@ conforms to the :ref:`DbAdapterInterface`::
     # Customize Flask-User
     class CustomUserManager(UserManager):
 
-        def customize(self):
+        def customize(self, app):
             # Use the CustomDbAdapter
-            self.db_adapter = CustomDbAdapter()
+            self.db_adapter = CustomDbAdapter(app, db)
 
     # Setup Flask-User
     user_manager = CustomUserManager(app, db, User)

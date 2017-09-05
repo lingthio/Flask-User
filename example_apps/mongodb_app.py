@@ -59,9 +59,9 @@ def create_app():
 
     # Customize Flask-User to use the provided MongoEngineDbAdapter
     class CustomUserManager(UserManager):
-        def customize(self):
+        def customize(self, app):
             from flask_user.db_adapters import MongoEngineDbAdapter
-            self.db_adapter = MongoEngineDbAdapter(db)
+            self.db_adapter = MongoEngineDbAdapter(app, db)
 
     # Setup Flask-User and specify the User data-model
     user_manager = UserManager(app, db, User)
