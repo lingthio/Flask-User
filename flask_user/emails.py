@@ -25,6 +25,9 @@ def _render_email(filename, **kwargs):
 def send_email(recipient, subject, html_message, text_message):
     """ Send email from default sender to 'recipient' """
 
+    # Disable email sending when testing
+    if current_app.testing: return
+
     class SendEmailError(Exception):
         pass
 

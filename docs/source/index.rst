@@ -8,7 +8,7 @@ Flask-User v0.6
     backward compatibility with Flask-User v0.6.
 
     To avoid disruption, please take the time to pin your Flask-User version
-    in your ``requirements.txt`` to the latest v0.6 version: ``Flask-User==0.6.13``
+    in your ``requirements.txt``. For example: ``Flask-User==0.6.17``
 
 | So, you're writing a Flask web application and would like to authenticate your users.
 | You start with a simple **Login** page, but soon enough you'll need to handle:
@@ -30,7 +30,7 @@ Secure and Reliable
 -------------------
 * **Secure** -- Built on top of widely deployed Passlib, PyCrypto, ItsDangerous.
 * **Reliable** -- Code coverage of over 95%
-* **Available** -- Tested on Python 2.6, 2.7 and 3.3-3.6
+* **Available** -- Tested on Python 2.6, 2.7, 3.3, 3.4, 3.5 and 3.6
 
 Well documented
 ---------------

@@ -1,8 +1,13 @@
-from __future__ import print_function
 from setuptools import setup
+import sys
 
 # Import version number from source code
 from flask_user import __version__ as flask_user_version
+
+
+# Load pytest and pytest-runner only when needed:
+needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
+pytest_runner = ['pytest-runner'] if needs_pytest else []
 
 
 # Read long description from README.rst file
@@ -21,21 +26,8 @@ setup(
     description='Customizable User Authentication and Management, and more.',
     long_description=load_readme(),
     keywords='Flask User Registration Email Username Confirmation Password Reset',
-    packages=['flask_user'],
-    zip_safe=False,
-    include_package_data=True,
+
     platforms='any',
-    install_requires=[
-        'passlib',
-        'bcrypt',
-        'pycryptodome',
-        'Flask',
-        'Flask-Login',
-        'Flask-Mail',
-        'Flask-SQLAlchemy',
-        'Flask-WTF',
-    ],
-    test_suite="flask_user.tests.run_tests",
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
@@ -58,4 +50,23 @@ setup(
         'Topic :: Security',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
+
+    packages=['flask_user'],
+    include_package_data=True,    # Tells setup to use MANIFEST.in
+    zip_safe=False,    # Do not zip as it will make debugging harder
+
+    python_requires='>=2.6, !=3.0.*, !=3.1.*, !=3.2.*',   # Python 2.6, 2.7, 3.3+
+    setup_requires=pytest_runner,
+    install_requires=[
+        'bcrypt',
+        'Flask',
+        'Flask-Login',
+        'Flask-Mail',
+        'Flask-SQLAlchemy',
+        'Flask-WTF',
+        'passlib',
+        'pycryptodome',
+    ],
+    tests_require=['pytest'],
 )
+
