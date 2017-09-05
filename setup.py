@@ -18,7 +18,7 @@ setup(
     license='BSD License',
     author='Ling Thio',
     author_email='ling.thio@gmail.com',
-    description='Customizable User Account Management for Flask: Register, Confirm email, Login, Change username, Change password, Forgot password and more.',
+    description='Customizable User Authentication and Management, and more.',
     long_description=load_readme(),
     keywords='Flask User Registration Email Username Confirmation Password Reset',
     packages=['flask_user'],

@@ -1,5 +1,6 @@
 Revision History
 ----------------
+* v0.6.17 Documentation redirect message in PyPI README
 * v0.6.16 Documentation redirect message in PyPI README
 * v0.6.15 Documentation redirect message in PyPI README
 * v0.6.14 Documentation redirect message in PyPI README
