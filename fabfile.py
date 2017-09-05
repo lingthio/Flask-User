@@ -36,8 +36,6 @@ def rebuild_docs():
 
 @task
 def upload_to_pypi():
-    update_babel()
-    rebuild_docs()
     local('rm dist/*.tar.gz')
     local('python setup.py sdist')
     local('twine upload dist/*')

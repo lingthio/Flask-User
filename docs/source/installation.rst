@@ -13,7 +13,7 @@ Installation Instructions
 After setting up virtualenv, installation is as easy as::
 
     workon my_env
-    pip install flask-user
+    pip install flask-user==0.6.15
 
 Requirements
 ------------

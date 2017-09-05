@@ -4,10 +4,12 @@ from setuptools import setup
 # Import version number from source code
 from flask_user import __version__ as flask_user_version
 
+
 # Read long description from README.rst file
 def load_readme():
     with open('README.rst') as f:
         return f.read()
+
 
 setup(
     name='Flask-User',

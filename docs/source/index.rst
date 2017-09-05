@@ -1,3 +1,15 @@
+Flask-User v0.6
+===============
+**Customizable User Authentication & Management**
+
+.. topic:: Attention
+
+    IMPORTANT: Flask-User v0.9 is under development and breaks
+    backward compatibility with Flask-User v0.6.
+
+    To avoid disruption, please take the time to pin your Flask-User version
+    in your ``requirements.txt`` to the latest v0.6 version: ``Flask-User==0.6.13``
+
 .. include:: ../../README.rst
 
 Table of Contents

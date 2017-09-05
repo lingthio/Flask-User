@@ -2,18 +2,9 @@ Flask-User v0.6
 ===============
 **Customizable User Authentication & Management**
 
-.. topic:: Attention
-
-    IMPORTANT: Flask-User v0.9 is under development and breaks
-    backward compatibility with Flask-User v0.6.
-
-    To avoid disruption, please take the time to pin your Flask-User version
-    in your ``requirements.txt`` to the latest v0.6 version: ``Flask-User==0.6.13``
-
-.. topic:: Attention
-
-    Documentation has moved to http://flask-user.readthedocs.io/en/v0.6
-
+| **Attention:**
+| The documentation has moved to http://flask-user.readthedocs.io/en/v0.6
+|
 | So, you're writing a Flask web application and would like to authenticate your users.
 | You start with a simple **Login** page, but soon enough you'll need to handle:
 

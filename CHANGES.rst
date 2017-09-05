@@ -1,6 +1,8 @@
 Revision History
 ----------------
-* v0.6.14 Documenation redirect message in PyPI README
+* v0.6.16 Documentation redirect message in PyPI README
+* v0.6.15 Documentation redirect message in PyPI README
+* v0.6.14 Documentation redirect message in PyPI README
 * v0.6.13 Added make_safe_url() to prevent cross-domain redirections.
 * v0.6.12 Added Russian translation.
 * v0.6.11 (Skipped)
