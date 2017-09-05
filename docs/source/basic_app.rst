@@ -32,7 +32,7 @@ Create the basic_app.py file
 .. literalinclude:: ../../example_apps/basic_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 9, 33-38, 52-53, 68-69, 89
+   :emphasize-lines: 9, 33-38, 52-53, 69-70, 90
 
 Highlighted lines shows the few additional Flask-User code lines.
 

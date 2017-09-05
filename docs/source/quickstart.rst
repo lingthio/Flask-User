@@ -11,13 +11,13 @@ with the following additional functionality:
 * Change password
 * Forgot password
 
-Choose an example app
----------------------
+Choose a QuickStart app
+-----------------------
 
 - :ref:`QuickStartApp` -- Login with username. No need to configure SMTP.
-- :ref:`MongoDBApp` -- QuickStart App for MongoDB.
 - :ref:`BasicApp` -- Login with email. Requires SMTP configuration.
 - :ref:`RolesRequiredApp` -- Demonstrates role-based authorization.
+- :ref:`MongoDBApp` -- QuickStart App for MongoDB.
 
 Flask-User-starter-app
 ----------------------

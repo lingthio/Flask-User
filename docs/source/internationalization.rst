@@ -1,25 +1,21 @@
 Internationalization
 ====================
-Flask-User allows the developer to translate their user account management forms
-into other languages. This allows us to:
+Flask-User allows the developer to translate its forms into other languages.
 
-* Customize built-in English text to custom English text
-* Translate built-in English text into another language
+Flask-User ships with the following language translations:
 
-Flask-User ships with the following languages:
-
-* de - German (v0.6.9+)
-* en - English (v0.1+)
-* es - Spanish (v0.6.10+)
-* fa - Farsi (v0.6.9+)
-* fi - Finnish (v0.6.9+)
-* fr - French (v0.6.1+)
-* it - Italian (v0.6.9+)
-* nl - Dutch (v0.1+)
-* ru - Russian (v0.6.12+)
-* sv - Swedish (v0.6.9+)
-* tr - Turkish (v0.6.9+)
-* zh - Chinese (Simplified) (v0.6.1+)
+* Chinese Simplified (zh)
+* Dutch (nl)
+* English (en)
+* German (de)
+* Farsi (fa)
+* Finnish (fi)
+* French (fr)
+* Italian (it)
+* Russian (ru)
+* Spanish (es)
+* Swedish (sv)
+* Turkish (tr)
 
 
 REQUIRED: Installing Flask-Babel

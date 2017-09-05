@@ -32,7 +32,7 @@ Create the roles_required_app.py file
 .. literalinclude:: ../../example_apps/roles_required_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 9, 23-27, 41-42, 54-55, 57-60, 62-66, 71-72, 101, 118
+   :emphasize-lines: 9, 23-27, 41-42, 55-56, 58-62, 64-69, 74-75, 104, 121
 
 Highlighted lines shows the few additional Flask-User code lines.
 

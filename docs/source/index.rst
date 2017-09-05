@@ -1,4 +1,4 @@
-.. include:: ../../README.rst
+.. include:: includes/main_page.rst
 
 Table of Contents
 -----------------
@@ -12,7 +12,9 @@ Table of Contents
     data_models
     authorization
     Customization<customization>
+    internationalization
     porting
+    changes
     api
 
 .. toctree::
@@ -20,8 +22,8 @@ Table of Contents
 
     quickstart_app
     basic_app
+    roles_required_app
     mongodb_app
-    flask_user_starter_app
     api_db_adapters
     api_email_mailers
     api_user_manager
@@ -32,12 +34,9 @@ Table of Contents
     customizing_forms
     customizing_db_adapter
     customizing_email_mailer
-    roles_required_app
     base_templates
     signals
     recipes
-    internationalization
     faq
-    changes
     old_api
     misc
