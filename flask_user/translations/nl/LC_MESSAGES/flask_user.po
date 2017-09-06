@@ -7,21 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-09-05 19:21-0700\n"
-"PO-Revision-Date: 2017-09-05 19:25-0700\n"
+"POT-Creation-Date: 2017-09-05 19:49-0700\n"
+"PO-Revision-Date: 2017-09-05 19:34-0700\n"
 "Last-Translator: \n"
 "Language: nl\n"
 "Language-Team: nl <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.5.0\n"
-"X-Generator: Poedit 2.0.3\n"
 
 #: flask_user/forms.py:40
 msgid "This Username is already in use. Please try another one."
-msgstr "Deze gebruikersnaam is in gebruik. Gaarne een andere naam proberen."
+msgstr "Deze gebruikersnaam is al in gebruik. Gaarne een andere naam proberen."
 
 #: flask_user/forms.py:47
 msgid "This Email is already in use. Please try another one."
@@ -60,7 +59,7 @@ msgstr "Nieuw Wachtwoord"
 
 #: flask_user/forms.py:69 flask_user/forms.py:323
 msgid "New Password is required"
-msgstr "Nieuw Wachtwoord is verplicth"
+msgstr "Nieuw Wachtwoord is verplicht"
 
 #: flask_user/forms.py:72 flask_user/forms.py:326
 msgid "Retype New Password"
@@ -82,7 +81,7 @@ msgstr "Oud Wachtwoord is onjuist"
 
 #: flask_user/forms.py:107
 msgid "New Username"
-msgstr "Niuew Gebruikersnaam"
+msgstr "Niuewe Gebruikersnaam"
 
 #: flask_user/forms.py:108 flask_user/forms.py:157 flask_user/forms.py:248
 msgid "Username is required"
@@ -179,7 +178,7 @@ msgstr "Verstuur Reset Wachtwoord E-mail"
 
 #: flask_user/forms.py:317
 msgid "Resend email confirmation email"
-msgstr "Bevestigings e-mail nogmaals versturen"
+msgstr "Bevestigings-e-mail nogmaals versturen"
 
 #: flask_user/forms.py:356
 msgid "Invite!"
@@ -211,8 +210,8 @@ msgid ""
 "Password must have at least 6 characters with one lowercase letter, one "
 "uppercase letter and one number"
 msgstr ""
-"Wachtwoorden moeten tenminste 6 tekens bevatten met 1 hoofdletter, 1 kleine "
-"letter en 1 nummer"
+"Wachtwoorden moeten tenminste 6 tekens bevatten met 1 hoofdletter, 1 "
+"kleine letter en 1 nummer"
 
 #: flask_user/user_manager.py:296
 msgid "Username must be at least 3 characters long"
@@ -245,8 +244,8 @@ msgid ""
 "A reset password email has been sent to '%(email)s'. Open that email and "
 "follow the instructions to reset your password."
 msgstr ""
-"Een reset wachtwoord E-mail is verstuurd naar '%(email)s'. Open deze E-mail "
-"en volg de instructies om uw wachtwoord opnieuw in the stellen."
+"Een reset wachtwoord E-mail is verstuurd naar '%(email)s'. Open deze "
+"E-mail en volg de instructies om uw wachtwoord opnieuw in the stellen."
 
 #: flask_user/user_manager_views.py:318
 msgid "Invitation has been sent."
@@ -254,7 +253,7 @@ msgstr "Uitnodiging is verstuurd."
 
 #: flask_user/user_manager_views.py:391
 msgid "You have signed out successfully."
-msgstr "U ben met success afgemeld."
+msgstr "U bent met succes afgemeld."
 
 #: flask_user/user_manager_views.py:560
 msgid "Your reset password token is invalid."
@@ -282,11 +281,11 @@ msgstr "Je moet zijn ingelogd om toegang te krijgen tot %(url)s."
 #: flask_user/user_manager_views.py:648 flask_user/user_manager_views.py:664
 #, python-format
 msgid ""
-"A confirmation email has been sent to %(email)s with instructions to complete "
-"your registration."
+"A confirmation email has been sent to %(email)s with instructions to "
+"complete your registration."
 msgstr ""
-"Een bevestigings E-mail is verstuurd naar %(email)s met instructies om uw "
-"registratie te voltooien."
+"Een bevestigings E-mail is verstuurd naar %(email)s met instructies om uw"
+" registratie te voltooien."
 
 #: flask_user/user_manager_views.py:650
 msgid "You have registered successfully."
@@ -299,13 +298,13 @@ msgstr "Uw account is niet actief."
 #: flask_user/user_manager_views.py:682
 #, python-format
 msgid ""
-"Your email address has not yet been confirmed. Check your email Inbox and "
-"Spam folders for the confirmation email or <a href=\"%(url)s\">Re-send "
+"Your email address has not yet been confirmed. Check your email Inbox and"
+" Spam folders for the confirmation email or <a href=\"%(url)s\">Re-send "
 "confirmation email</a>."
 msgstr ""
-"Uw E-mail is nog niet bevestigd. Controleer uw Inbox end Spam mappen voor de "
-"bevestiging E-mail en volg de instructies im je account te activeren. <a "
-"href=“%(url)s”>Confirmatie E-mail herzenden</a>."
+"Uw E-mail is nog niet bevestigd. Controleer uw Inbox end Spam mappen voor"
+" de bevestiging E-mail en volg de instructies im je account te activeren."
+" <a href=“%(url)s”>Confirmatie E-mail herzenden</a>."
 
 #: flask_user/user_manager_views.py:693
 msgid "You have signed in successfully."
@@ -356,3 +355,4 @@ msgstr "Reset Wachtwoord"
 
 #~ msgid "Profile Page"
 #~ msgstr "Profielpagina"
+

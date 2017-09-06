@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-09-05 19:21-0700\n"
-"PO-Revision-Date: 2017-08-27 03:37-0700\n"
+"POT-Creation-Date: 2017-09-05 19:49-0700\n"
+"PO-Revision-Date: 2017-09-05 19:39-0700\n"
 "Last-Translator: Simon Allendörfer <kontakt@simon.allendoerfer.info>\n"
 "Language: de\n"
 "Language-Team: de <LL@li.org>\n"
@@ -102,7 +102,7 @@ msgstr "Nutzername"
 
 #: flask_user/forms.py:148
 msgid "Update"
-msgstr ""
+msgstr "Aktualisieren"
 
 #: flask_user/forms.py:163 flask_user/forms.py:255
 msgid "Password"
@@ -188,7 +188,7 @@ msgstr "Einladen!"
 
 #: flask_user/templates/flask_user_layout.html:37 flask_user/translations.py:94
 msgid "Sign out"
-msgstr ""
+msgstr "Abmelden"
 
 #: flask_user/translations.py:95
 msgid "Home Page"
@@ -201,7 +201,7 @@ msgstr "Nutzerprofil"
 
 #: flask_user/translations.py:97
 msgid "Member Page"
-msgstr ""
+msgstr "Mitgliedsseite"
 
 #: flask_user/translations.py:98
 msgid "Special Page"
@@ -315,7 +315,7 @@ msgstr "Sie haben sich erfolgreich angemeldet."
 
 #: flask_user/templates/flask_user_layout.html:45
 msgid "Home page"
-msgstr ""
+msgstr "Startseite"
 
 #: flask_user/templates/flask_user/forgot_password.html:5
 msgid "Forgot Password"
