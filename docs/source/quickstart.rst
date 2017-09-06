@@ -15,8 +15,7 @@ Choose a QuickStart app
 -----------------------
 
 - :ref:`QuickStartApp` -- Login with username. No need to configure SMTP.
-- :ref:`BasicApp` -- Login with email. Requires SMTP configuration.
-- :ref:`RolesRequiredApp` -- Demonstrates role-based authorization.
+- :ref:`BasicApp` -- Login with email, Role-based authentication, and Translations.
 - :ref:`MongoDBApp` -- QuickStart App for MongoDB.
 
 Flask-User-starter-app

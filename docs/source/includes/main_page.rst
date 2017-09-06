@@ -42,7 +42,9 @@ Fully customizable, yet Ready to use
 * Supports **SQL Databases** and **MongoDB Databases**.
 * **Event hooking** -- Through efficient signals.
 
-Comes with translations
+.. _SupportedLanguages:
+
+Ships with translations
 -----------------------
 Chinese, Dutch, English, Farsi, Finnish, French, German, Italian, Russian, Spanish, Swedish, and Turkish
 

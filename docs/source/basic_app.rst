@@ -54,8 +54,8 @@ Create the basic_app.py file
 - Lines 98-99 sets up Flask-User.
 - Lines 104-114 creates the User ``user007@example.com`` and associates her with the ``Secret`` and ``Agent`` roles.
 - Line 135 ensures that a user is logged in to access the ``members_page``.
-- Line 151 ensures that a user is logged in and that they have either the ``Secret``+``Sauce`` roles
-   or the ``Secret``+``Agent`` roles.
+- Line 151 ensures that a user is logged in and that they have either the Secret+Sauce
+   roles or the Secret+Agent roles.
 
 Configure Flask-Mail
 --------------------
@@ -80,6 +80,20 @@ Make sure to properly configure Flask-Mail settings::
    See :ref:`QuickStartApp` for an example without SMTP.
 
 
+Configure your browser
+----------------------
+If you want to see translation in action, you will need to change and prioritize
+a :ref:`supported language <SupportedLanguages>` (one that is other than 'English')
+in your browser language preferences.
+
+For Google Chrome:
+
+- Chrome > Preferences. Search for 'Language'.
+- Expand the 'Language' bar > Add languages.
+- Check the 'Dutch' checkbox > Add.
+- Make sure to move it to the top: Three dots > Move to top.
+
+
 Run the Basic App
 -----------------
 Run the Basic App with the following command::
@@ -93,13 +107,12 @@ And point your browser to ``http://localhost:5000``.
 Troubleshooting
 ---------------
 
-If you receive an EmailError message,
-or if the Registration form does not respond quickly
+If you receive an EmailError message, or if the Registration form does not respond quickly
 then you may have specified incorrect SMTP settings.
 
-If you receive a 'AssertionError: No sender address has been set' error, you may
-be using an old version of Flask-Mail which uses DEFAULT_MAIL_SENDER instead of MAIL_DEFAULT_SENDER.
+If you receive a SQLAlchemy error message, you may be using an old DB schema.
+Delete the quickstart_app.sqlite file and restart the app.
 
-If you receive a SQLAlchemy error message, delete the quickstart_app.sqlite file and restart the app.
-You may be using an old DB schema in that file.
+If you don't see any translations, you may not have installed ``Flask-Babel`` and ``speaklater``,
+or you may not have prioritized a supported language in your browser settings.
 
