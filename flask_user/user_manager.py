@@ -67,7 +67,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
                 Required for the 'register by invitation' feature.
 
         Example:
-            ``user_manager = UserManager(app, db, User)``
+            ``user_manager = UserManager(app, db, User, UserEmailClass=UserEmail)``
 
         .. note::
 

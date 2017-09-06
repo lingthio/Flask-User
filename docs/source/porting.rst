@@ -13,57 +13,60 @@ Flask-User v0.6 the more you'll have to change.
 
 Porting non-customized Flask-User v0.6 applications
 ---------------------------------------------------
-When we ported the non-customized Flask-User-demo app, these are the changes we had to make::
+When we ported non-customized Flask-User apps, these are the changes we had to make::
 
     - requirements.txt:
         - Replace: Flask-User==0.6.{X}
              with: Flask-User==0.9.{Y}
-
-    - Flask-User v0.6 leaves py-crypt
+        - pip uninstall py-crypt    # Left behind by some older Flask-User installs
         - Run: pip -r requirements.txt
 
     - application.py (where the app gets initialized):
         - Remove the SQLAlchemyAdaper import
-        - Replace: db_adapter = SQLAlchemyAdapter(db, User);
+        - Replace: db_adapter = SQLAlchemyAdapter(db, User)
                    user_manager = UserManager(db_adapter, app)
              with: user_manager = UserManager(app, db, User)
 
     - Entire code base:
+        - Replace: USER_ENABLE_RETYPE_PASSWORD
+             with: USER_REQUIRE_RETYPE_PASSWORD
         - Replace: confirmed_at = db.Column(db.DateTime())
              with: email_confirmed_at = db.Column('confirmed_at', db.DateTime())
-             # This changes the property name, but keeps the old database column name)
+                   # This changes the property name, but keeps the old database column name)
         - Replace: confirmed_at
-             with: email_confirmed_at
+             with: email_confirmed_at (or use getters and setters to alias this field)
         - Replace: @accept_roles
              with: @roles_required.
         - Replace: .hash_pasword(password)
              with: .password_manager.hash_password(password)
 
-If you upgrade from Flask-Login 2.x to Flask-Login 3.0+, you'll need to::
-    - Replace: is_authenticated()   # method
-         with: is_authenticated     # propery
-    - Replace: is_anonymous()   # method
-         with: is_anonymous     # propery
-    - Replace: is_active()   # method
-         with: is_active     # propery
+
+Complete list of incompatible changes
+=====================================
+
+Configuration settings changes
+------------------------------
+We renamed ``USER_ENABLE_RETYPE_PASSWORD`` to ``USER_REQUIRE_RETYPE_PASSWORD`` to better reflect what this setting does.
+
+We split ``USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST`` into ``USER_SHOW_USERNAME_DOES_NOT_EXIST``
+and ``USER_SHOW_EMAIL_DOES_NOT_EXIST`` and set the default to False for increased security --
+Hackers won't be able to differentiate between an invalid password event
+or a non-existing email/username event.
+
+Flask-User v0.6::
+
+    USER_ENABLE_RETYPE_PASSWORD = True
+
+    USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST = True
 
 
-Issues
-------
-::
+Flask-User v0.9+::
 
-    Python 2.7, SECRET_KEY = '\xb9\x8d\xb5\xc2\xc4Q\xe7\x8ej\xe0\x05\xf3\xa3kp\x99l\xe7\xf2i\x00\xb1-\xcd'
-    token_manager.py", line 49: key = flask_secret_key.encode()
-    UnicodeDecodeError: 'ascii' codec can't decode byte 0xb9 in position 0: ordinal not in range(128)
+    USER_REQUIRE_RETYPE_PASSWORD = True
 
+    USER_SHOW_EMAIL_DOES_NOT_EXIST = False
+    USER_SHOW_USERNAME_DOES_NOT_EXIST = False
 
-
-
-
-
-
-This page describes describes the changes required to make a Flask-User v0.6 application
-work with Flask-User v0.9+.
 
 UserManager() setup
 -------------------
@@ -95,60 +98,45 @@ Flask-User v0.9+::
 The `db`  parameter can be any Database instance (for example `SQLAlchemy()` or a `MongoEngine()`) and the
 appropriate DbAdapter will be configured internally.
 
-Configuration settings changes
-------------------------------
-We split ``USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST`` into ``USER_SHOW_USERNAME_DOES_NOT_EXIST``
-and ``USER_SHOW_EMAIL_DOES_NOT_EXIST`` and set the default to False for increased security.
 
-We renamed ``USER_REQUIRE_RETYPE_PASSWORD`` to ``USER_REQUIRE_RETYPE_PASSWORD`` to better reflect what this setting does.
+UserManager customization
+-------------------------
+Flask-User customization now happens by extending a CustomUserManager class from UserManager,
+and by overriding some properties and methods:
 
-Flask-User v0.6::
+    # Customize Flask-User
+    class CustomUserManager(UserManager):
 
-    USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST = True
+        def customize():
+            # override some properties
+                ....
 
-    USER_REQUIRE_RETYPE_PASSWORD = True
+        # Override a method
+        def some_custom_method():
+            ....
 
-Flask-User v0.9+::
+If your code passes custom parameters to the UserManager() instantiation,
+you'll have to move some code around to conform to the new way of customization.
 
-    USER_SHOW_EMAIL_DOES_NOT_EXIST = False
-    USER_SHOW_USERNAME_DOES_NOT_EXIST = False
+The only parameters allowed in v0.9+ are:
 
-    USER_REQUIRE_RETYPE_PASSWORD = True
-
+    - app
+    - db
+    - UserClass
+    - UserEmailClass    # Optional
+    - UserInvitationClass    # Optional
 
 Data-model changes
 ------------------
 The `confirmed_at` property name has been renamed to `email_confirmed_at` to better reflect what this property means.
+Remember that you can change the property name and keep the old column name like so::
 
-Flask-User v0.6::
-
-    class User(db.Model, UserMixin):
-            ....
-        email = db.Column(db.String(255), nullable=False, unique=True)
-        confirmed_at = db.Column(db.DateTime())
-
-    or:
-
-    class UserEmail(db.Model, UserMixin):
-            ....
-        email = db.Column(db.String(255), nullable=False, unique=True)
-        confirmed_at = db.Column(db.DateTime())
-
-Flask-User v0.9+ (keeping the original database column names)::
-
-    class User(db.Model, UserMixin):
-            ....
-        email = db.Column(db.String(255), nullable=False, unique=True)
-        email_confirmed_at = db.Column('confirmed_at', db.DateTime())
-
-    or:
-
-    class UserEmail(db.Model, UserMixin):
-            ....
-        email = db.Column(db.String(255), nullable=False, unique=True)
-        email_confirmed_at = db.Column('confirmed_at', db.DateTime())
+    # Map 'email_confirmed_at' property to 'confirmed_at' column
+    email_confirmed_at = db.Column('confirmed_at', db.DateTime())
 
 The optional UserAuth class has been obsoleted. See below for a workaround.
+
+The UserInvite class name has been renamed to UserInvitation.
 
 Database table names
 --------------------
@@ -171,10 +159,12 @@ Foreign keys must be updated accordingly::
     'user.id' --> 'users.id'
     'role.id' --> 'roles.id'
 
-Flask-Login v0.3+ required
---------------------------
-Since Flask-Login v0.3.0, ``is_authenticated()``, ``is_active()``, and ``is_anonymous()``
-**methods** have been replaced by ``is_authenticated``, ``is_active``, and ``is_anonymous`` **properties**.
+
+If you move from Flask-Login v0.2 to v0.3+
+------------------------------------------
+Since Flask-Login v0.3.0:
+- the ``is_authenticated``, ``is_active``, and ``is_anonymous`` **properties**
+- have replaced the ``is_authenticated()``, ``is_active()``, and ``is_anonymous()`` **methods**.
 
 
 PasswordManager() changes
@@ -183,15 +173,17 @@ Password related methods have been moved from the UserManager class to a separat
 accessible through the UserManager.password_manager property.
 
 We changed the ``verify_password()`` parameters to receive a ``hashed_password` parameter
-instead of the ``user`` parameter.
+instead of the ``user`` parameter to keep the PasswordManager unaware of User objects.
 
 Flask-User v0.6::
 
-    verify_password(password, user)
+    user_manager.hash_password(password)
+    user_manager.verify_password(password, user)
 
 Flask-User v0.9+::
 
-    password_manager.verify_password(password, hashed_password)
+    user_manager.password_manager.hash_password(password)
+    user_manager.password_manager.verify_password(password, user.password)
 
 
 EmailManager() changes
