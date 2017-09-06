@@ -1,7 +1,6 @@
 import os
 import datetime
 from flask import Flask, render_template_string, request
-from flask_babel import Babel
 from flask_user import login_required, UserManager, UserMixin
 from flask_user import roles_required, confirmed_email_required
 
@@ -147,9 +146,6 @@ def init_app(app, test_config=None):                # For automated tests
     # Load optional test_config                     # For automated tests
     if test_config:
         app.config.update(test_config)
-
-    # Initialize Flask extensions
-    babel = Babel(app)                              # Initialize Flask-Babel
 
     # Setup Flask-User
     if ORM_type == 'SQLAlchemy':

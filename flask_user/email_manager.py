@@ -9,6 +9,8 @@
 
 from flask import render_template, url_for
 
+from flask_user import ConfigError
+
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class.
 class EmailManager(object):
@@ -21,6 +23,8 @@ class EmailManager(object):
         """
         self.app = app
         self.user_manager = app.user_manager
+        self.sender_name = app.config.get('USER_EMAIL_SENDER_NAME', None)
+        self.sender_email = app.config.get('USER_EMAIL_SENDER_EMAIL', None)
 
     def send_email_confirmation_email(self, user, user_email):
         """Send the 'email confirmation' email."""
@@ -95,7 +99,7 @@ class EmailManager(object):
         # Send email message using Flask-Mail
         self._send_email_message(email, subject, html_message, text_message)
 
-    def send_user_invitation_email(self, user_invitation):
+    def send_user_invitation_email(self, user, user_invitation):
         """Send the 'user invitation' email."""
 
         # Verify email settings
@@ -159,12 +163,19 @@ class EmailManager(object):
 
     def _send_email_message(self, recipient, subject, html_message, text_message):
         """Send email via the configured email mailer ``user_manager.email_mailer``. """
+        # Skip email sending when testing
+        if self.app.testing: return
 
-        # Disable email sending when testing
-        if not self.app.testing:
-            self.user_manager.email_mailer.send_email_message(
-                recipient, subject, html_message, text_message,
-            )
+        # Ensure that USER_EMAIL_SENDER_EMAIL is set
+        if not self.sender_email:
+            raise ConfigError('Config setting USER_EMAIL_SENDER_EMAIL is missing.')
+        # Simplistic email address verification
+        if '@' not in self.sender_email:
+            raise ConfigError('Config setting USER_EMAIL_SENDER_EMAIL is not a valid email address.')
+
+        self.user_manager.email_mailer.send_email_message(
+            recipient, subject, html_message, text_message
+        )
 
     def _render_email(self, filename, **kwargs):
         # Render subject

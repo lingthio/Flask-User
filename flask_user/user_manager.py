@@ -6,6 +6,7 @@
 # License: Simplified BSD License, see LICENSE.txt for more details.
 
 # Python version specific imports
+import os
 from sys import version_info as py_version
 is_py2 = (py_version[0] == 2)     #: Python 2.x?
 is_py3 = (py_version[0] == 3)     #: Python 3.x?
@@ -204,6 +205,8 @@ class UserManager(UserManager__Settings, UserManager__Views):
 
         # Configure a list of URLs to route to their corresponding view method.
         self._configure_urls(app)
+
+        # self.init_babel(app)
 
 
     def customize(self, app):

@@ -303,7 +303,7 @@ class UserManager__Views(object):
 
             try:
                 # Send 'invite' email
-                um.send_user_invitation_email(user_invitation)
+                um.send_user_invitation_email(current_user, user_invitation)
             except Exception as e:
                 # delete new User object if send fails
                 db_adapter.delete_object(user_invitation)

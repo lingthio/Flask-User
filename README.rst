@@ -34,7 +34,7 @@ Customizable, yet Ready to use
 Secure and Reliable
 -------------------
 * **Secure** -- Built on top of widely deployed Passlib and Cryptography.
-* **Reliable** -- Code coverage of over 95%
+* **Reliable** -- Code coverage of over 90%
 * **Available** -- Tested on Python 2.6, 2.7, 3.3, 3.4, 3.5 and 3.6
 
 
@@ -57,5 +57,8 @@ Alternatives
 
 Authors
 -------
-* Ling Thio - ling AT gmail DOT com
-* `Many contributors from coders/translators <https://github.com/lingthio/Flask-User/graphs/contributors>`_
+| **Lead developer and Maintainer**
+| Ling Thio -- ling.thio AT gmail DOT com
+|
+| **Contributors**
+| `Many contributors <https://github.com/lingthio/Flask-User/graphs/contributors>`_

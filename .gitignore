@@ -119,10 +119,13 @@ prof/
 
 # Project-specific items
 ------------------------
+
+# Temp files
 *.sqlite
 *.sqlite-journal
 example_apps/*.sqlite
 example_apps/*.sqlite-journal
+example_apps/translations/
 
 # Private files
 local_settings.py

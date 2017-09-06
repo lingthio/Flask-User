@@ -6,9 +6,9 @@ Flask-User is designed to be **largely configurable** and **almost fully customi
 - :ref:`ConfiguringSettings`
 - :ref:`CustomizingForms`
 - :ref:`CustomizingValidators`
+- :ref:`CustomizingManagers`
 - :ref:`CustomizingDbAdapter`
 - :ref:`CustomizingEmailMailer`
-- :ref:`CustomizingManagers`
 
 .. _CustomizingManagers:
 

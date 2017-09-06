@@ -14,7 +14,7 @@ class ConfigClass(object):
     """ Flask application config """
 
     # Flask settings
-    SECRET_KEY = 'THIS IS AN INSECURE SECRET'
+    SECRET_KEY = 'THIS IS AN INSECURE SECRET -- Make sure to replace this for production!'
 
     # Flask-SQLAlchemy settings
     SQLALCHEMY_DATABASE_URI = 'sqlite:///quickstart_app.sqlite'    # File-based SQL database
@@ -69,7 +69,7 @@ def create_app():
                 <p><a href={{ url_for('user.register') }}>Register</a></p>
                 <p><a href={{ url_for('user.login') }}>Sign in</a></p>
                 <p><a href={{ url_for('home_page') }}>Home page</a> (accessible to anyone)</p>
-                <p><a href={{ url_for('members_page') }}>Members only page</a> (login required)</p>
+                <p><a href={{ url_for('members_page') }}>Member page</a> (login required)</p>
                 <p><a href={{ url_for('user.logout') }}>Sign out</a></p>
             {% endblock %}
             """)
@@ -86,7 +86,7 @@ def create_app():
                 <p><a href={{ url_for('user.register') }}>Register</a></p>
                 <p><a href={{ url_for('user.login') }}>Sign in</a></p>
                 <p><a href={{ url_for('home_page') }}>Home page</a> (accessible to anyone)</p>
-                <p><a href={{ url_for('members_page') }}>Members only page</a> (login required)</p>
+                <p><a href={{ url_for('members_page') }}>Member page</a> (login required)</p>
                 <p><a href={{ url_for('user.logout') }}>Sign out</a></p>
             {% endblock %}
             """)

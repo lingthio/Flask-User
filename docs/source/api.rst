@@ -3,8 +3,8 @@ Flask-User API
 
 - :ref:`UserManager`
 - :ref:`UserManager__Settings`
-- :ref:`UserManager__Forms`
 - :ref:`UserManager__Views`
+- :ref:`FlaskUserForms`
 - :ref:`EMailManager`
 - :ref:`PasswordManager`
 - :ref:`TokenManager`

@@ -1,4 +1,5 @@
 .. include:: includes/main_page.rst
+.. include:: ../../AUTHORS.rst
 
 Table of Contents
 -----------------
@@ -22,7 +23,6 @@ Table of Contents
 
     quickstart_app
     basic_app
-    roles_required_app
     mongodb_app
     api_db_adapters
     api_email_mailers

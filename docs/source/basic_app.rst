@@ -3,12 +3,18 @@
 Basic App
 =========
 
-The Basic App allows users to register and login with an email address
-and requires proper SMTP settings.
+The Basic App builds on the QuickStart App by adding the following features:
 
-Install Flask-User
-------------------
+- Register and Login with an email
+- Confirm emails, Change passwords
+- Role-base authorization
+- Enable translations
 
+Unlike the QuickStart App, the Basic App requires proper SMTP settings
+and the installation of ``Flask-Babel`` and ``speaklater``.
+
+Create a development environment
+--------------------------------
 We recommend making use of virtualenv and virtualenvwrapper::
 
     # Create virtual env
@@ -19,8 +25,13 @@ We recommend making use of virtualenv and virtualenvwrapper::
     mkdir -p ~dev/my_app           # or  mkdir C:\dev\my_app
     cd ~/dev/my_app                # or  cd C:\dev\my_app
 
-    # Install Flask-User
-    pip install flask-user
+Install required Python packages
+--------------------------------
+::
+
+   pip install Flask-User
+   pip install Flask-Babel
+   pip install speaklater
 
 Create the basic_app.py file
 ----------------------------
@@ -32,9 +43,19 @@ Create the basic_app.py file
 .. literalinclude:: ../../example_apps/basic_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 9, 33-38, 52-53, 69-70, 90
+   :emphasize-lines: 9, 11, 25-33, 50-51, 71-72, 74-78, 80-85, 87-88, 93-103, 124, 140
 
-Highlighted lines shows the few additional Flask-User code lines.
+- Lines 25-33 configure ``Flask-Mail``. Make sure to use the correct settings or emails
+   will not be sent.
+- Lines 50-51 sets up ``Flask-Babel``.
+- Lines 82-83 defines a required ``roles`` field in the User data-model.
+- Lines 85-89 defines the Role data-model.
+- Lines 91-96 defines the UserRoles association table.
+- Lines 98-99 sets up Flask-User.
+- Lines 104-114 creates the User ``user007@example.com`` and associates her with the ``Secret`` and ``Agent`` roles.
+- Line 135 ensures that a user is logged in to access the ``members_page``.
+- Line 151 ensures that a user is logged in and that they have either the ``Secret``+``Sauce`` roles
+   or the ``Secret``+``Agent`` roles.
 
 Configure Flask-Mail
 --------------------

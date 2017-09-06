@@ -134,7 +134,7 @@ Optionally, if you need to add form fields to a Flask-User form, you will need t
 
 .. seealso::
 
-    :ref:`UserManager__Forms` shows a complete list of customizable forms.
+    :ref:`FlaskUserForms` shows a complete list of customizable forms.
 
     `Default forms are defined here
     <https://github.com/lingthio/Flask-User/blob/master/flask_user/forms.py>`_

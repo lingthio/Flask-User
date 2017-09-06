@@ -6,9 +6,8 @@ QuickStart App
 The QuickStart App allows users to register and login with a username
 and avoids the need to configure SMTP settings.
 
-Install Flask-User
-------------------
-
+Create a development environment
+--------------------------------
 We recommend making use of virtualenv and virtualenvwrapper::
 
     # Create virtual env
@@ -19,8 +18,11 @@ We recommend making use of virtualenv and virtualenvwrapper::
     mkdir -p ~dev/my_app           # or  mkdir C:\dev\my_app
     cd ~/dev/my_app                # or  cd C:\dev\my_app
 
-    # Install Flask-User
-    pip install flask-user
+Install required Python packages
+--------------------------------
+::
+
+   pip install Flask-User
 
 Create the quickstart_app.py file
 ---------------------------------

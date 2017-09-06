@@ -20,14 +20,15 @@ Flask-User ships with the following language translations:
 
 REQUIRED: Installing Flask-Babel
 --------------------------------
-Flask-User relies on the Flask-Babel package to translate the account management forms.
-Without Flask-Babel installed, these forms WILL NOT BE translated.
+Flask-User relies on the ``Flask-Babel`` and ``speaklater`` packages to translate the account management forms.
+Without Flask-Babel installed, these forms WILL NOT be translated.
 
-Install Flask-Babel with
+Install ``Flask-Babel`` and ``speaklater`` with
 
 ::
 
     pip install Flask-Babel
+    pip install speaklater
 
 
 REQUIRED: Initializing Flask-Babel
@@ -38,22 +39,31 @@ and after the application configuration has been read:
 
 ::
 
+    from flask import Flask, request
     from flask_babel import Babel
 
-    ...
+        ...
 
+    # Setup Flask
     app = Flask(__name__)
+
+    # Read applicaton config
     app.config.from_object('app.config.settings')
 
-    ...
+        ...
 
     # Initialize Flask-Babel
     babel = Babel(app)
 
-    # Use the browser's language preferences to select an available translation
+    # Register the 'get_locale()' function to retrieve the best matched language locale
     @babel.localeselector
     def get_locale():
+        # If the user object holds a locale, you may retrieve it here:
+        if hasattr(current_user, 'locale'):
+            return current_user.locale
+        # Retrieve a list of available translation codes from Flask-User. E.g. ['de', 'en', 'fr']
         translations = [str(translation) for translation in babel.list_translations()]
+        # Match with languages from the user's browser's accept header
         return request.accept_languages.best_match(translations)
 
 
@@ -71,7 +81,7 @@ How Flask-Babel works
 
 * Translators edit the ``msgstr`` portion of the ``.po`` translation files.
 * ``pybabel compile`` compiles human readable ``.po`` translation files
-  into machine readable ``.mo`` complied translation files.
+  into machine readable ``.mo`` compiled translation files.
 * At runtime:
 
   * the browser specifies the preferred language code (``'en'`` for English, ``'es'`` for Spanish,
@@ -209,9 +219,9 @@ Point your browser to your app and your translated messages should appear.
 
 Troubleshooting
 ---------------
-If the code looks right, but the account management forms are not being translated:
+If the code looks right, but the Flask-User forms are not being translated:
 
-* Check to see if the 'Flask-Babel' package has been installed (try using ``pip freeze``).
+* Check to see if the ``Flask-Babel`` package has been installed with ``pip freeze``.
 * Check to see if the browser has been configured to prefer the language you are testing.
-* Check to see if the 'translations/' directory is in the right place.
+* Check to see if the ``YOURAPP/translations/flask_user/`` directory is in the right place.
 

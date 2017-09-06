@@ -13,5 +13,10 @@ Flask-User can be customized by extending or overriding any of the methods liste
     :no-undoc-members:
     :no-inherited-members:
 
---------
+UserManager settings
+--------------------
+See :ref:`UserManager__Settings`
 
+UserManager views
+-----------------
+See :ref:`UserManager__Views`

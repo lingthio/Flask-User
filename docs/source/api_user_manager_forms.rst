@@ -1,4 +1,4 @@
-.. _UserManager__Forms:
+.. _FlaskUserForms:
 
 Flask-User forms
 ================

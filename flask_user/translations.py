@@ -5,37 +5,64 @@
 # Author: Ling Thio (ling.thio@gmail.com)
 # License: Simplified BSD License, see LICENSE.txt for more details.
 
+import os
+from flask import _request_ctx_stack, request
 
-from flask import _request_ctx_stack, current_app
+# Return absolute path to Flask-User's translations dir ('/full/path/to/flask_user/translations')
+def get_flask_user_translations_dir():
+    translations_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'translations')
+    return translations_dir
+
+# Chooses the best locale from a list of available locales
+def choose_best_locale(app, babel, flask_user_translations_dir):
+    # babel.list_translations() does not accept a custom translations directory
+    # As a workaround, we:
+    # - temporarily set BABEL_TRANSLATION_DIRECTORIES=flask_user_translations_dir
+    # - call babel.list_translations()
+    # - restore BABEL_TRANSLATION_DIRECTORIES
+
+    # set BABEL_TRANSLATION_DIRECTORIES=flask_user_translations_dir
+    original_dir = app.config.get('BABEL_TRANSLATION_DIRECTORIES', '')
+    app.config.update(BABEL_TRANSLATION_DIRECTORIES=flask_user_translations_dir)
+
+    # Retrieve a list of available translation codes from Flask-User. E.g. ['de', 'en', 'fr']
+    available_codes = [str(translation) for translation in babel.list_translations()]
+
+    # Restore BABEL_TRANSLATION_DIRECTORIES
+    app.config.update(BABEL_TRANSLATION_DIRECTORIES=original_dir)
+
+    # Match list with languages from the user's browser's accept header
+    locale = request.accept_languages.best_match(available_codes)
+
+    return locale
+
 
 # To avoid requiring the Flask-Babel, Babel and speaklater packages,
 # we check if the app has initialized Flask-Babel or not
 def get_translations():
-    # If there is no context:  return None
+    # If there is no request context: return None
     ctx = _request_ctx_stack.top
-    if not ctx:
-        return None
+    if ctx is None: return None
+    app = ctx.app
 
-    # If context exists and contains a cashed value, return cached value
-    if hasattr(ctx, 'flask_user_translations'):
-        return ctx.flask_user_translations
+    # If babel is not setup: return None
+    babel = app.extensions.get('babel', None)
+    if babel is None: return None
 
-    # If App has not initialized Flask-Babel: return None
-    app_has_initalized_flask_babel = 'babel' in current_app.extensions
-    if not app_has_initalized_flask_babel:  # pragma: no cover
-        ctx.flask_user_translations = None
-        return ctx.flask_user_translations
+    # Only load translations if it has not yet been loaded before
+    translations = getattr(ctx, 'flask_user_translations', None)
+    if translations is None:
+        from flask_babel import support
+        flask_user_translations_dir = get_flask_user_translations_dir()
+        # Chooses the best locale from a list of available locales
+        locale = choose_best_locale(app, babel, flask_user_translations_dir)
+        locales = [locale]
 
-    # Load translations from <flask_user_dir>/translations/
-    import os
-    from flask_babel import get_locale, support
-    flask_user_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'translations')
-    domain = 'flask_user'
-    locales = [get_locale()]
-    ctx.flask_user_translations = support.Translations.load(flask_user_dir, locales, domain=domain)
+        # Load translations from dir/<locales>/LC_MESSAGES/<domain>.mo
+        translations = support.Translations.load(flask_user_translations_dir, locales, domain='flask_user')
+        ctx.flask_user_translations = translations
 
-    import flask_babel
-    return ctx.flask_user_translations.merge(flask_babel.get_translations())
+    return translations
 
 def gettext(string, **variables):
     """ Translate specified string."""

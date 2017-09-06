@@ -26,7 +26,7 @@ And wouldn't it be nice to also offer:
 Secure and Reliable
 -------------------
 * **Secure** -- Built on top of widely deployed Passlib and Cryptography.
-* **Reliable** -- Code coverage of over 95%
+* **Reliable** -- Code coverage of over 90%
 * **Available** -- Tested on Python 2.6, 2.7, 3.3, 3.4, 3.5 and 3.6
 
 Well documented
@@ -71,8 +71,3 @@ Alternatives
 ------------
 * `Flask-Login <https://flask-login.readthedocs.org/en/latest/>`_
 * `Flask-Security <https://pythonhosted.org/Flask-Security/>`_
-
-Authors
--------
-* Ling Thio - ling AT gmail DOT com
-* `Many contributors from coders/translators <https://github.com/lingthio/Flask-User/graphs/contributors>`_
