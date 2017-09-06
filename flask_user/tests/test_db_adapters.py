@@ -3,7 +3,15 @@ from flask_user.db_adapters import MongoEngineDbAdapter
 
 
 def test_mongoengine_db_adapter(app):
-    db = MongoEngine(app)
+    # Skip mongoengine tests if no MongoDB server is available
+    from mongoengine.connection import MongoEngineConnectionError
+    try:
+        db = MongoEngine(app)
+        skip_mongoengine_tests = False
+    except MongoEngineConnectionError:
+        skip_mongoengine_tests = True
+    if skip_mongoengine_tests: return
+
     db_adapter = MongoEngineDbAdapter(app, db)
 
     class User(db.Document):
