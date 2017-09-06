@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-09-05 18:17-0700\n"
+"POT-Creation-Date: 2017-09-05 19:21-0700\n"
 "PO-Revision-Date: 2017-08-27 03:37-0700\n"
 "Last-Translator: Simon Allendörfer <kontakt@simon.allendoerfer.info>\n"
 "Language: de\n"
@@ -118,6 +118,7 @@ msgstr "Angemeldet bleiben"
 
 #: flask_user/forms.py:168 flask_user/templates/flask_user/login.html:5
 #: flask_user/templates/flask_user/login_or_register.html:9
+#: flask_user/templates/flask_user_layout.html:39 flask_user/translations.py:93
 msgid "Sign in"
 msgstr "Anmelden"
 
@@ -185,15 +186,24 @@ msgstr "Bestätigungs-E-Mail erneut senden"
 msgid "Invite!"
 msgstr "Einladen!"
 
-#: flask_user/translations.py:75
+#: flask_user/templates/flask_user_layout.html:37 flask_user/translations.py:94
+msgid "Sign out"
+msgstr ""
+
+#: flask_user/translations.py:95
 msgid "Home Page"
 msgstr "Homepage"
 
-#: flask_user/translations.py:76
-msgid "Profile Page"
-msgstr "Profilseite"
+#: flask_user/templates/flask_user/edit_user_profile.html:5
+#: flask_user/translations.py:96
+msgid "User profile"
+msgstr "Nutzerprofil"
 
-#: flask_user/translations.py:77
+#: flask_user/translations.py:97
+msgid "Member Page"
+msgstr ""
+
+#: flask_user/translations.py:98
 msgid "Special Page"
 msgstr "Spezialseite"
 
@@ -303,9 +313,9 @@ msgstr ""
 msgid "You have signed in successfully."
 msgstr "Sie haben sich erfolgreich angemeldet."
 
-#: flask_user/templates/flask_user/edit_user_profile.html:5
-msgid "User profile"
-msgstr "Nutzerprofil"
+#: flask_user/templates/flask_user_layout.html:45
+msgid "Home page"
+msgstr ""
 
 #: flask_user/templates/flask_user/forgot_password.html:5
 msgid "Forgot Password"
@@ -345,4 +355,7 @@ msgstr "Passwort zurücksetzen"
 
 #~ msgid "Your reset password token has expired."
 #~ msgstr "Ihr Passwortzurücksetzungscode ist abgelaufen."
+
+#~ msgid "Profile Page"
+#~ msgstr "Profilseite"
 

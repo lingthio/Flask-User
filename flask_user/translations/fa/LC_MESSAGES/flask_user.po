@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-09-05 18:17-0700\n"
+"POT-Creation-Date: 2017-09-05 19:21-0700\n"
 "PO-Revision-Date: 2016-11-04 01:24+0330\n"
 "Last-Translator: Mohammad Amin Sameti <mamins1376@gmail.com>\n"
 "Language: fa\n"
@@ -117,6 +117,7 @@ msgstr "مرا به یاد داشته باش"
 
 #: flask_user/forms.py:168 flask_user/templates/flask_user/login.html:5
 #: flask_user/templates/flask_user/login_or_register.html:9
+#: flask_user/templates/flask_user_layout.html:39 flask_user/translations.py:93
 msgid "Sign in"
 msgstr "ورود"
 
@@ -185,15 +186,24 @@ msgstr "ارسال دوباره رایانامه تأیید حساب کاربر�
 msgid "Invite!"
 msgstr "دعوت کنید!"
 
-#: flask_user/translations.py:75
+#: flask_user/templates/flask_user_layout.html:37 flask_user/translations.py:94
+msgid "Sign out"
+msgstr ""
+
+#: flask_user/translations.py:95
 msgid "Home Page"
 msgstr "صفحه اصلی"
 
-#: flask_user/translations.py:76
-msgid "Profile Page"
-msgstr "صفحه نمایه"
+#: flask_user/templates/flask_user/edit_user_profile.html:5
+#: flask_user/translations.py:96
+msgid "User profile"
+msgstr "نمایه کاربر"
 
-#: flask_user/translations.py:77
+#: flask_user/translations.py:97
+msgid "Member Page"
+msgstr ""
+
+#: flask_user/translations.py:98
 msgid "Special Page"
 msgstr "صفحه خاص"
 
@@ -304,9 +314,9 @@ msgstr ""
 msgid "You have signed in successfully."
 msgstr "شما با موفقیت وارد شدید."
 
-#: flask_user/templates/flask_user/edit_user_profile.html:5
-msgid "User profile"
-msgstr "نمایه کاربر"
+#: flask_user/templates/flask_user_layout.html:45
+msgid "Home page"
+msgstr ""
 
 #: flask_user/templates/flask_user/forgot_password.html:5
 msgid "Forgot Password"
@@ -346,4 +356,7 @@ msgstr "بازنشانی گذرواژه"
 
 #~ msgid "Your reset password token has expired."
 #~ msgstr "توکن بازنشانی گذرواژه شما منقضی شده است."
+
+#~ msgid "Profile Page"
+#~ msgstr "صفحه نمایه"
 

@@ -88,7 +88,11 @@ def lazy_gettext(string, **variables):
     except ImportError:
        return string % variables
 
-_ = lazy_gettext
+# Add translation strings of the QuickStart apps
+_ = gettext
+_sign_in = _('Sign in')
+_sign_out = _('Sign out')
 _home_page = _('Home Page')
-_profile_page = _('Profile Page')
+_profile_page = _('User profile')
+_member_page = _('Member Page')
 _special_page = _('Special Page')

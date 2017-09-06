@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flask-Users 0.6.8\n"
 "Report-Msgid-Bugs-To: lele@metapensiero.it\n"
-"POT-Creation-Date: 2017-09-05 18:17-0700\n"
+"POT-Creation-Date: 2017-09-05 19:21-0700\n"
 "PO-Revision-Date: 2016-08-14 18:32+0200\n"
 "Last-Translator: Lele Gaifax <lele@metapensiero.it>\n"
 "Language: it\n"
@@ -117,6 +117,7 @@ msgstr "Ricorda la mia identità"
 
 #: flask_user/forms.py:168 flask_user/templates/flask_user/login.html:5
 #: flask_user/templates/flask_user/login_or_register.html:9
+#: flask_user/templates/flask_user_layout.html:39 flask_user/translations.py:93
 msgid "Sign in"
 msgstr "Accedi"
 
@@ -185,15 +186,24 @@ msgstr "Rispedisci l'email di conferma"
 msgid "Invite!"
 msgstr "Invita!"
 
-#: flask_user/translations.py:75
+#: flask_user/templates/flask_user_layout.html:37 flask_user/translations.py:94
+msgid "Sign out"
+msgstr ""
+
+#: flask_user/translations.py:95
 msgid "Home Page"
 msgstr ""
 
-#: flask_user/translations.py:76
-msgid "Profile Page"
+#: flask_user/templates/flask_user/edit_user_profile.html:5
+#: flask_user/translations.py:96
+msgid "User profile"
+msgstr "Profilo utente"
+
+#: flask_user/translations.py:97
+msgid "Member Page"
 msgstr ""
 
-#: flask_user/translations.py:77
+#: flask_user/translations.py:98
 msgid "Special Page"
 msgstr ""
 
@@ -302,9 +312,9 @@ msgstr ""
 msgid "You have signed in successfully."
 msgstr "Sei stato riconosciuto con successo."
 
-#: flask_user/templates/flask_user/edit_user_profile.html:5
-msgid "User profile"
-msgstr "Profilo utente"
+#: flask_user/templates/flask_user_layout.html:45
+msgid "Home page"
+msgstr ""
 
 #: flask_user/templates/flask_user/forgot_password.html:5
 msgid "Forgot Password"
@@ -344,4 +354,7 @@ msgstr "Resetta la password"
 
 #~ msgid "Your reset password token has expired."
 #~ msgstr "Il token di reset della password è scaduto."
+
+#~ msgid "Profile Page"
+#~ msgstr ""
 

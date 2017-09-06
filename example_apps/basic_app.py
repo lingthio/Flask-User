@@ -108,13 +108,13 @@ def create_app():
         return render_template_string("""
                 {% extends "flask_user_layout.html" %}
                 {% block content %}
-                    <h2>Home page</h2>
-                    <p><a href={{ url_for('user.register') }}>Register</a></p>
-                    <p><a href={{ url_for('user.login') }}>Sign in</a></p>
-                    <p><a href={{ url_for('home_page') }}>Home page</a> (accessible to anyone)</p>
-                    <p><a href={{ url_for('members_page') }}>Member page</a> (login required)</p>
-                    <p><a href={{ url_for('special_page') }}>Special page</a> (login with username 'user007' and password 'password')</p>
-                    <p><a href={{ url_for('user.logout') }}>Sign out</a></p>
+                    <h2>{%trans%}Home page{%endtrans%}</h2>
+                    <p><a href={{ url_for('user.register') }}>{%trans%}Register{%endtrans%}</a></p>
+                    <p><a href={{ url_for('user.login') }}>{%trans%}Sign in{%endtrans%}</a></p>
+                    <p><a href={{ url_for('home_page') }}>{%trans%}Home Page{%endtrans%}</a> (accessible to anyone)</p>
+                    <p><a href={{ url_for('members_page') }}>{%trans%}Member Page{%endtrans%}</a> (login required)</p>
+                    <p><a href={{ url_for('special_page') }}>{%trans%}Special Page{%endtrans%}</a> (login with username 'user007' and password 'password')</p>
+                    <p><a href={{ url_for('user.logout') }}>{%trans%}Sign out{%endtrans%}</a></p>
                 {% endblock %}
                 """)
 
@@ -125,13 +125,13 @@ def create_app():
         return render_template_string("""
                 {% extends "flask_user_layout.html" %}
                 {% block content %}
-                    <h2>Members page</h2>
-                    <p><a href={{ url_for('user.register') }}>Register</a></p>
-                    <p><a href={{ url_for('user.login') }}>Sign in</a></p>
-                    <p><a href={{ url_for('home_page') }}>Home page</a> (accessible to anyone)</p>
-                    <p><a href={{ url_for('members_page') }}>Member page</a> (login required)</p>
-                    <p><a href={{ url_for('special_page') }}>Special page</a> (login with username 'user007' and password 'password')</p>
-                    <p><a href={{ url_for('user.logout') }}>Sign out</a></p>
+                    <h2>{%trans%}Members page{%endtrans%}</h2>
+                    <p><a href={{ url_for('user.register') }}>{%trans%}Register{%endtrans%}</a></p>
+                    <p><a href={{ url_for('user.login') }}>{%trans%}Sign in{%endtrans%}</a></p>
+                    <p><a href={{ url_for('home_page') }}>{%trans%}Home Page{%endtrans%}</a> (accessible to anyone)</p>
+                    <p><a href={{ url_for('members_page') }}>{%trans%}Member Page{%endtrans%}</a> (login required)</p>
+                    <p><a href={{ url_for('special_page') }}>{%trans%}Special Page{%endtrans%}</a> (login with username 'user007' and password 'password')</p>
+                    <p><a href={{ url_for('user.logout') }}>{%trans%}Sign out{%endtrans%}</a></p>
                 {% endblock %}
                 """)
 
@@ -142,13 +142,13 @@ def create_app():
         return render_template_string("""
                 {% extends "flask_user_layout.html" %}
                 {% block content %}
-                    <h2>Special Page</h2>
-                    <p><a href={{ url_for('user.register') }}>Register</a></p>
-                    <p><a href={{ url_for('user.login') }}>Sign in</a></p>
-                    <p><a href={{ url_for('home_page') }}>Home page</a> (accessible to anyone)</p>
-                    <p><a href={{ url_for('members_page') }}>Member page</a> (login required)</p>
-                    <p><a href={{ url_for('special_page') }}>Special page</a> (login with username 'user007' and password 'password')</p>
-                    <p><a href={{ url_for('user.logout') }}>Sign out</a></p>
+                    <h2>{%trans%}Special Page{%endtrans%}</h2>
+                    <p><a href={{ url_for('user.register') }}>{%trans%}Register{%endtrans%}</a></p>
+                    <p><a href={{ url_for('user.login') }}>{%trans%}Sign in{%endtrans%}</a></p>
+                    <p><a href={{ url_for('home_page') }}>{%trans%}Home Page{%endtrans%}</a> (accessible to anyone)</p>
+                    <p><a href={{ url_for('members_page') }}>{%trans%}Member Page{%endtrans%}</a> (login required)</p>
+                    <p><a href={{ url_for('special_page') }}>{%trans%}Special Page{%endtrans%}</a> (login with username 'user007' and password 'password')</p>
+                    <p><a href={{ url_for('user.logout') }}>{%trans%}Sign out{%endtrans%}</a></p>
                 {% endblock %}
                 """)
 
