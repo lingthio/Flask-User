@@ -8,7 +8,6 @@ __maintainer__  = 'Ling Thio'
 __license__     = 'MIT'
 __copyright__   = '(c) 2013 Ling Thio'
 
-
 # Define Flask-User Exceptions early on
 class ConfigError(Exception):
     pass

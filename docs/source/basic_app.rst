@@ -43,19 +43,10 @@ Create the basic_app.py file
 .. literalinclude:: ../../example_apps/basic_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 9, 11, 25-33, 50-51, 71-72, 74-78, 80-85, 87-88, 93-103, 124, 140
+   :emphasize-lines: 9, 11, 25-33, 50-51, 71-72, 74-78, 87-88, 80-85, 87-88, 93-101, 103-113, 133, 150
 
 - Lines 25-33 configure ``Flask-Mail``. Make sure to use the correct settings or emails
    will not be sent.
-- Lines 50-51 sets up ``Flask-Babel``.
-- Lines 82-83 defines a required ``roles`` field in the User data-model.
-- Lines 85-89 defines the Role data-model.
-- Lines 91-96 defines the UserRoles association table.
-- Lines 98-99 sets up Flask-User.
-- Lines 104-114 creates the User ``user007@example.com`` and associates her with the ``Secret`` and ``Agent`` roles.
-- Line 135 ensures that a user is logged in to access the ``members_page``.
-- Line 151 ensures that a user is logged in and that they have either the Secret+Sauce
-   roles or the Secret+Agent roles.
 
 Configure Flask-Mail
 --------------------

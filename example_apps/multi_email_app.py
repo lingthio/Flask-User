@@ -87,21 +87,21 @@ def create_app():
                 <h2>Home page</h2>
                 <p>This page can be accessed by anyone.</p><br/>
                 <p><a href={{ url_for('home_page') }}>Home page</a> (anyone)</p>
-                <p><a href={{ url_for('members_page') }}>Members page</a> (login required)</p>
+                <p><a href={{ url_for('member_page') }}>Members page</a> (login required)</p>
             {% endblock %}
             """)
 
     # The Members page is only accessible to authenticated users
     @app.route('/members')
     @login_required                                 # Use of @login_required decorator
-    def members_page():
+    def member_page():
         return render_template_string("""
             {% extends "flask_user_layout.html" %}
             {% block content %}
                 <h2>Members page</h2>
                 <p>This page can only be accessed by authenticated users.</p><br/>
                 <p><a href={{ url_for('home_page') }}>Home page</a> (anyone)</p>
-                <p><a href={{ url_for('members_page') }}>Members page</a> (login required)</p>
+                <p><a href={{ url_for('member_page') }}>Members page</a> (login required)</p>
             {% endblock %}
             """)
 

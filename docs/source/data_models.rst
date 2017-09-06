@@ -127,17 +127,16 @@ Roles are defined by adding rows to the Role table with a specific Role.name val
 
 ::
 
-    secret_role = Role(name='Secret')
-    agent_role = Role(name='Agent')
+    admin_role = Role(name='Admin')
     db.session.commit()
 
 Users are assigned one or more roles by adding them to the User.roles property::
 
     # Create 'user007' user with 'secret' and 'agent' roles
     user1 = User(
-        username='user007', email='user007@example.com', active=True,
+        username='user007', email='admin@example.com', active=True,
         password=user_manager.password_manager.hash_password('Password1'))
-    user1.roles = [secret_role, agent_role]
+    user1.roles = [admin_role,]
     db.session.commit()
 
 

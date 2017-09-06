@@ -42,19 +42,19 @@ def test_authorization(client):
     # Test as anonymous user
     client.get_valid_page(url_for('home_page'))
     client.get_invalid_page(url_for('user_profile_page'), "You must be signed in to access ")
-    client.get_invalid_page(url_for('special_page'), "You must be signed in to access ")
+    client.get_invalid_page(url_for('admin_page'), "You must be signed in to access ")
 
     # Test as regular 'member' user
     client.login(username='member', password='Password1')
     client.get_valid_page(url_for('home_page'))
     client.get_valid_page(url_for('user_profile_page'))
-    client.get_invalid_page(url_for('special_page'), "You do not have permission to access ")
+    client.get_invalid_page(url_for('admin_page'), "You do not have permission to access ")
     client.logout()
 
     # Test as special 'user007' user
     client.login(username='user007', password='Password1')
     client.get_valid_page(url_for('home_page'))
     client.get_valid_page(url_for('user_profile_page'))
-    client.get_valid_page(url_for('special_page'))
+    client.get_valid_page(url_for('admin_page'))
     client.logout()
 

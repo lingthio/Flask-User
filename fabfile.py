@@ -45,12 +45,6 @@ def docs(rebuild=False):
 # sphinx-apidoc -f -o docs/source flask_user flask_user/tests flask_user/db_adapters
 # rm docs/source/flask_user.rst docs/source/modules.rst
 
-@task
-def upload_to_pypi():
-    update_babel()
-    local('python setup.py sdist')
-    local('twine upload dist/*')
-
 # PyEnv: https://gist.github.com/Bouke/11261620
 # PyEnv and Tox: https://www.holger-peters.de/using-pyenv-and-tox.html
 # Available Python versions: pyenv install --list
@@ -69,3 +63,13 @@ def tox():
 @task
 def start_mongodb():
     local('mongod -dbpath ~/mongodb/data/db')
+
+@task
+def build_dist():
+    local('python setup.py sdist')
+
+@task
+def upload_to_pypi():
+    build_dist()
+    local('twine upload dist/*')
+

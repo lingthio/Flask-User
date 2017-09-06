@@ -39,6 +39,13 @@ to send emails via SMTP, ``sendmail`` and SendGrid.
 Custom EmailMailers can be implemented to support other Email Mailers.
 
 
+Fixed app.user_manager name
+---------------------------
+
+An initialized UserManager() instance will assign itself to the ``app.user_manager`` property.
+This ``app.user_manager`` name can not be changed.
+
+
 Fixed data-model property names
 --------------------------------
 
@@ -139,12 +146,12 @@ Developers can still support composite primary keys::
         # Map:  id=user.id  to:  id=str(pk1)+'|'+pk2
         @property
         def id(self):
-            return str(self.pk1)+'|'+self.pk2
+            return str(self.pk1)+'|'+self.pk2    # Naive concatenation
 
         # Map:  user.id=str(pk1)+'|'+pk2  to:  user.pk1=pk1; user.pk2=pk2;
         @id.setter
         def id(self, value):
-            items = value.split('|',1)
+            items = value.split('|',1)    # Naive split
             self.pk1 = int(items[0])
             self.pk2 = items[1]
 

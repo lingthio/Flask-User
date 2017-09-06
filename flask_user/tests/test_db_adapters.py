@@ -49,10 +49,10 @@ def test_mongoengine_db_adapter(app):
     assert user.username=='NewUsername'
 
     # Test user_role methods
-    db_adapter.add_user_role(user1, 'Secret')
+    db_adapter.add_user_role(user1, 'Admin')
     db_adapter.add_user_role(user1, 'Agent')
     user_roles = db_adapter.get_user_roles(user1)
-    assert user_roles == ['Secret', 'Agent']
+    assert user_roles == ['Admin', 'Agent']
 
     # Test delete_object
     user1_id = user1.id

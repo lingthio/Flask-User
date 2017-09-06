@@ -1,9 +1,15 @@
 import sys
 from setuptools import setup
 
-# Import version number from source code
-from flask_user import __title__, __description__, __version__, __url__
-from flask_user import __author__, __author_email__, __license__
+__title__       = 'Flask-User'
+__description__ = 'Customizable User Authentication,User Management, and more.'
+__version__     = '0.9.0'
+__url__         = 'https://github.com/lingthio/Flask-User'
+__author__      = 'Ling Thio'
+__author_email__= 'ling.thio@gmail.com'
+__maintainer__  = 'Ling Thio'
+__license__     = 'MIT'
+__copyright__   = '(c) 2013 Ling Thio'
 
 
 # Load pytest and pytest-runner only when needed:
@@ -66,7 +72,7 @@ setup(
     zip_safe=False,    # Do not zip as it will make debugging harder
 
     python_requires='>=2.6, !=3.0.*, !=3.1.*, !=3.2.*',   # Python 2.6, 2.7, 3.3+
-    setup_requires=pytest_runner,
+    setup_requires=['Flask-Login',] + pytest_runner,
     install_requires=[
         'bcrypt>=1.1',
         'cryptography>=2.0',

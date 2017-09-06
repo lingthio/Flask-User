@@ -256,6 +256,8 @@ class UserManager(UserManager__Settings, UserManager__Views):
         safe_url = parts.path + parts.query + parts.fragment
         return safe_url
 
+    def hash_password(self, password):
+        return self.token_manager.hash_password
 
     def password_validator(self, form, field):
         """Ensure that passwords have one lowercase letter, one uppercase letter and one digit.

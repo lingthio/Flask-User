@@ -417,7 +417,7 @@ def test_valid_roles(client):
     um.USER_ENABLE_USERNAME = True
 
     client.login(username='user007', password='Password1')
-    url = url_for('special_page')
+    url = url_for('admin_page')
     response = client.get_valid_page(url)
     assert not response_has_string(response, 'You must be signed in to access')
     client.logout()
@@ -434,7 +434,7 @@ def test_invalid_roles(client):
     um.USER_ENABLE_USERNAME = True
 
     client.login(username='user1', password='Password1')
-    url = url_for('special_page')
+    url = url_for('admin_page')
     response = client.get_invalid_page(url, 'You do not have permission to access')
     client.logout()
 

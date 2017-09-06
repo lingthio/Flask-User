@@ -174,7 +174,7 @@ def init_app(app, test_config=None):                # For automated tests
     db_adapter.commit()
 
     # Create 'user007' user with 'secret' and 'agent' roles
-    user = db_adapter.add_object(User, username='user007', email='user007@example.com',
+    user = db_adapter.add_object(User, username='user007', email='admin@example.com',
             password=user_manager.password_manager.hash_password('Password1'))
     db_adapter.add_user_role(user, 'secret', RoleClass=RoleClass)
     db_adapter.add_user_role(user, 'agent', RoleClass=RoleClass)
@@ -214,11 +214,11 @@ def init_app(app, test_config=None):                # For automated tests
     # The '/special' page requires a user that has the 'secret' AND ('sauce' OR 'agent') role.
     @app.route('/special')
     @roles_required('secret', ['sauce', 'agent'])   # Use of @roles_required decorator
-    def special_page():
+    def admin_page():
         return render_template_string("""
             {% extends "flask_user_layout.html" %}
             {% block content %}
-            <h2>{%trans%}Special Page{%endtrans%}</h2>
+            <h2>{%trans%}Admin Page{%endtrans%}</h2>
             {% endblock %}
             """)
 

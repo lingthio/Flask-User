@@ -2,10 +2,65 @@
 Porting v0.6 to v9.0+
 =====================
 
-With Flask-User v0.1 through v0.6 we gained insights on how to improve the Flask-User API,
-but we were unable to implement these improvements due to backwards compatibility.
+Ever since Flask-User v0.4, we had plans to improve Flask-User but were held back
+by wanting to maintain backwards compatibility.
 
-With Flask-User v0.9+, we decided to add these improvements at the cost of breaking backward compatibility.
+With Flask-User v1.0 (and its v0.9 alpha/beta) we decided it was time to move forward,
+breaking compatibility with v0.6.
+
+Customization underwent a major redesign, so the more you customized
+Flask-User v0.6 the more you'll have to change.
+
+Porting non-customized Flask-User v0.6 applications
+---------------------------------------------------
+When we ported the non-customized Flask-User-demo app, these are the changes we had to make::
+
+    - requirements.txt:
+        - Replace: Flask-User==0.6.{X}
+             with: Flask-User==0.9.{Y}
+
+    - Flask-User v0.6 leaves py-crypt
+        - Run: pip -r requirements.txt
+
+    - application.py (where the app gets initialized):
+        - Remove the SQLAlchemyAdaper import
+        - Replace: db_adapter = SQLAlchemyAdapter(db, User);
+                   user_manager = UserManager(db_adapter, app)
+             with: user_manager = UserManager(app, db, User)
+
+    - Entire code base:
+        - Replace: confirmed_at = db.Column(db.DateTime())
+             with: email_confirmed_at = db.Column('confirmed_at', db.DateTime())
+             # This changes the property name, but keeps the old database column name)
+        - Replace: confirmed_at
+             with: email_confirmed_at
+        - Replace: @accept_roles
+             with: @roles_required.
+        - Replace: .hash_pasword(password)
+             with: .password_manager.hash_password(password)
+
+If you upgrade from Flask-Login 2.x to Flask-Login 3.0+, you'll need to::
+    - Replace: is_authenticated()   # method
+         with: is_authenticated     # propery
+    - Replace: is_anonymous()   # method
+         with: is_anonymous     # propery
+    - Replace: is_active()   # method
+         with: is_active     # propery
+
+
+Issues
+------
+::
+
+    Python 2.7, SECRET_KEY = '\xb9\x8d\xb5\xc2\xc4Q\xe7\x8ej\xe0\x05\xf3\xa3kp\x99l\xe7\xf2i\x00\xb1-\xcd'
+    token_manager.py", line 49: key = flask_secret_key.encode()
+    UnicodeDecodeError: 'ascii' codec can't decode byte 0xb9 in position 0: ordinal not in range(128)
+
+
+
+
+
+
 
 This page describes describes the changes required to make a Flask-User v0.6 application
 work with Flask-User v0.9+.
