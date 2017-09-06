@@ -224,7 +224,7 @@ def check_valid_change_password_form(um, client):
 
     # Define defaults
     new_password = 'Password9'
-    old_hashed_password = valid_user.password
+    old_password_hash = valid_user.password
 
     # Build variable argument list depending on config settings
     kwargs = {}
@@ -241,7 +241,7 @@ def check_valid_change_password_form(um, client):
     assert um.password_manager.verify_password(new_password, valid_user.password)
 
     # Change password back to old password for subsequent tests
-    um.db_adapter.update_object(valid_user, password=old_hashed_password)
+    um.db_adapter.update_object(valid_user, password=old_password_hash)
 
 def check_valid_change_username_form(um, client):
     # Skip test for certain config combinations
@@ -291,7 +291,7 @@ def check_valid_reset_password_page(um, client):
     # Define defaults
     password = 'Password1'
     new_password = 'Password9'
-    old_hashed_password = valid_user.password
+    old_password_hash = valid_user.password
     url = url_for('user.reset_password', token=token)
 
     # Build variable argument list depending on config settings
@@ -308,7 +308,7 @@ def check_valid_reset_password_page(um, client):
     assert um.password_manager.verify_password(new_password, valid_user.password)
 
     # Change password back to old password for subsequent tests
-    valid_user.password = old_hashed_password
+    valid_user.password = old_password_hash
 
 def check_valid_invite_email(um, client):
     """ If a valid email is submitted using the invite form,

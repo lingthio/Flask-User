@@ -1,7 +1,7 @@
 Flask-User API
 ==============
 
-- :ref:`UserManager`
+- :ref:`UserManagerClass`
 - :ref:`UserManager__Settings`
 - :ref:`UserManager__Views`
 - :ref:`FlaskUserForms`

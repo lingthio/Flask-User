@@ -96,10 +96,6 @@ class UserManager__Settings(object):
     #: | Depends on USER_ENABLE_EMAIL=True.
     USER_SEND_USERNAME_CHANGED_EMAIL = True
 
-    #: Password hash scheme.
-    #: Accepts valid pass hash schemes such as 'bcrypt', 'pbkdf2_sha512', 'sha512_crypt' or 'argon2'.
-    USER_PASSWORD_HASH = 'bcrypt'
-
     #: | Only invited users may register.
     #: | Depends on USER_ENABLE_EMAIL=True.
     USER_REQUIRE_INVITATION = False
@@ -127,9 +123,22 @@ class UserManager__Settings(object):
     #: | Reset password token expiration in seconds.
     #: | Default is 2 days (2*24*3600 seconds).
     #:
-    #: .. note:: URL settings and their defaults
+    #: .. note:: Password configuration
     USER_RESET_PASSWORD_EXPIRATION = 2*24*3600
 
+    #: | List of accepted password hashes.
+    #: | See `Passlib CryptContext docs on Constructor Keyword 'scheme' <http://passlib.readthedocs.io/en/stable/lib/passlib.context.html?highlight=cryptcontext#constructor-keywords>`_
+    #: | Example: ['bcrypt', 'argon2']
+    #: |   Creates new hashes with 'bcrypt' and verifies existing hashes with 'bcrypt' and 'argon2'.
+    USER_PASSLIB_CRYPTCONTEXT_SCHEMES = ['bcrypt']
+
+    #: | Dictionary of CryptContext keywords or hash options.
+    #: | See `Passlib CryptContext docs on Constructor Keyword <http://passlib.readthedocs.io/en/stable/lib/passlib.context.html?highlight=cryptcontext#constructor-keywords>`_
+    #: | and `Passlib CryptContext docs on Algorithm Options <http://passlib.readthedocs.io/en/stable/lib/passlib.context.html?highlight=cryptcontext#algorithm-options>`_
+    #: | Example: dict(bcrypt__rounds=12, argon2__time_cost=2, argon2__memory_cost=512)
+    #:
+    #: .. note:: URL settings and their defaults
+    USER_PASSLIB_CRYPTCONTEXT_KEYWORDS = dict()
 
     USER_CHANGE_PASSWORD_URL = '/user/change-password' #:
     USER_CHANGE_USERNAME_URL = '/user/change-username' #:

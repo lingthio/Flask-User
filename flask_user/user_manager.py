@@ -161,7 +161,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
         # self.password_validator = forms.password_validator
 
         # Setup PasswordManager
-        self.password_manager = PasswordManager(app, self.USER_PASSWORD_HASH)
+        self.password_manager = PasswordManager(app)
 
         # Setup EmailManager
         self.email_manager = EmailManager(app)
@@ -201,7 +201,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
         self.customize(app)
 
         # Make sure the settings are valid -- raise ConfigError if not
-        self._check_settings()
+        self._check_settings(app)
 
         # Configure a list of URLs to route to their corresponding view method.
         self._configure_urls(app)
@@ -239,6 +239,25 @@ class UserManager(UserManager__Settings, UserManager__Views):
             user_manager = CustomUserManager(app, db, User)
         """
 
+    def hash_password(self, password):
+        """Convenience method that calls password_manager.hash_password(password)."""
+        return self.password_manager.hash_password(password)
+
+    def verify_password(self, password, password_hash):
+        """Convenience method that calls password_manager.verify_password(password, password_hash).
+        """
+        # Handle deprecated v0.6 (password, user) params
+        if isinstance(password_hash, self.UserClass):
+            print(
+                'Deprecation warning: verify_password(password, user) has been changed'\
+                ' to: verify_password(password, password_hash). The user param will be deprecated.'\
+                ' Please change your call with verify_password(password, user) into'\
+                ' a call with verify_password(password, user.password)'
+                ' as soon as possible.')
+            password_hash = password_hash.password   # effectively user.password
+
+        return self.password_manager.verify_password(password, password_hash)
+
     def make_safe_url(self, url):
         """Makes a URL safe by removing optional hostname and port.
 
@@ -248,6 +267,10 @@ class UserManager(UserManager__Settings, UserManager__Views):
             | returns ``'/path1/path2?q1=v1&q2=v2#fragment'``
 
         Override this method if you need to allow a list of safe hostnames.
+
+        .. note::
+
+            Form field validators
         """
 
         # Split the URL into scheme, hostname, port, path, query and fragment
@@ -255,9 +278,6 @@ class UserManager(UserManager__Settings, UserManager__Views):
         # Rebuild a safe URL with only the path, query and fragment parts
         safe_url = parts.path + parts.query + parts.fragment
         return safe_url
-
-    def hash_password(self, password):
-        return self.token_manager.hash_password
 
     def password_validator(self, form, field):
         """Ensure that passwords have one lowercase letter, one uppercase letter and one digit.
@@ -369,6 +389,78 @@ class UserManager(UserManager__Settings, UserManager__Views):
 
     # ***** Private methods *****
 
+    def _check_settings(self, app):
+        """Verify required settings. Produce a helpful error messages for incorrect settings."""
+
+        # Check for invalid settings
+        # --------------------------
+
+        # Check self.db_adapter
+        if self.db_adapter is None:
+            raise ConfigError(
+                'No DbAdapter specified. Install Flask-SQLAlchemy, install FlaskMongAlchemy,' \
+                ' or set self.db_adapter in UserManager.custom().')
+
+        # Check self.UserInvitationClass and USER_ENABLE_INVITE_USER
+        if self.USER_ENABLE_INVITE_USER and not self.UserInvitationClass:
+            raise ConfigError(
+                'UserInvitationClass is missing while USER_ENABLE_INVITE_USER is True.' \
+                ' Specify UserInvitationClass with UserManager(app, db, User, UserInvitationClass=...' \
+                ' or set USER_ENABLE_INVITE_USER=False.')
+
+        # Check for deprecated settings
+        # -----------------------------
+
+        # Check for deprecated USER_ENABLE_RETYPE_PASSWORD
+        setting = app.config.get('USER_ENABLE_RETYPE_PASSWORD', None)
+        if setting is not None:
+            print(
+                'Deprecation warning: USER_ENABLE_RETYPE_PASSWORD has been replaced'\
+                ' by USER_REQUIRE_RETYPE_PASSWORD,'\
+                ' and will be deprecated. Please change this as soon as possible.')
+            self.USER_REQUIRE_RETYPE_PASSWORD = setting
+
+        # Check for deprecated USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST
+        setting = app.config.get('USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST', None)
+        if setting is not None:
+            print(
+                'Deprecation warning: USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST has been replaced'\
+                ' by USER_SHOW_USERNAME_DOES_NOT_EXIST and USER_SHOW_EMAIL_DOES_NOT_EXIST,'
+                ' and will be deprecated. Please change this as soon as possible.')
+            self.USER_SHOW_USERNAME_DOES_NOT_EXIST = setting
+            self.USER_SHOW_EMAIL_DOES_NOT_EXIST = setting
+
+        # Check for deprecated USER_PASSWORD_HASH
+        setting = app.config.get('USER_PASSWORD_HASH', None)
+        if setting is not None:
+            print(
+                "Deprecation warning: USER_PASSWORD_HASH (string) has been replaced"\
+                " by USER_PASSLIB_CRYPTCONTEXT_SCHEMES (list),"
+                " and will be deprecated."\
+                " Please change USER_PASSWORD_HASH='something' to"\
+                " USER_PASSLIB_CRYPTCONTEXT_SCHEMES=['something'] as soon as possible.")
+            self.USER_PASSLIB_CRYPTCONTEXT_SCHEMES = [setting]
+
+        # Disable settings that rely on a feature setting that's not enabled
+        # ------------------------------------------------------------------
+
+        # USER_ENABLE_REGISTER=True must have USER_ENABLE_USERNAME=True or USER_ENABLE_EMAIL=True.
+        if not self.USER_ENABLE_USERNAME and not self.USER_ENABLE_EMAIL:
+            self.USER_ENABLE_REGISTER = False
+
+        # Settings that depend on USER_ENABLE_EMAIL
+        if not self.USER_ENABLE_EMAIL:
+            self.USER_ENABLE_CONFIRM_EMAIL = False
+            self.USER_ENABLE_MULTIPLE_EMAILS = False
+            self.USER_ENABLE_FORGOT_PASSWORD = False
+            self.USER_SEND_PASSWORD_CHANGED_EMAIL = False
+            self.USER_SEND_REGISTERED_EMAIL = False
+            self.USER_SEND_USERNAME_CHANGED_EMAIL = False
+            self.USER_REQUIRE_INVITATION = False
+
+        # Settings that depend on USER_ENABLE_USERNAME
+        if not self.USER_ENABLE_USERNAME:
+            self.USER_ENABLE_CHANGE_USERNAME = False
 
     def _configure_urls(self, app):
         """Configure a list of URLs to route to their corresponding view method.."""
@@ -454,38 +546,5 @@ class UserManager(UserManager__Settings, UserManager__Views):
         app.add_url_rule(self.USER_RESET_PASSWORD_URL, 'user.reset_password', reset_password_stub,
                          methods=['GET', 'POST'])
 
-    def _create_default_attr(self, property_name, default_value):
-        if not hasattr(self, property_name):
-            setattr(self, property_name, default_value)
-
-
-    def _check_settings(self):
-        """Verify required settings. Produce a helpful error messages for missing settings."""
-        if self.db_adapter is None:
-            raise ConfigError('You must specify a DbAdapter interface or install Flask-SQLAlchemy or FlaskMongAlchemy.')
-
-        if self.USER_ENABLE_INVITE_USER and not self.UserInvitationClass:
-            raise ConfigError(
-                'Missing UserInvitationClass with USER_ENABLE_INVITE_USER=True setting.')
-
-        # Disable settings that rely on a feature setting that's not enabled
-
-        # USER_ENABLE_REGISTER=True must have USER_ENABLE_USERNAME=True or USER_ENABLE_EMAIL=True.
-        if not self.USER_ENABLE_USERNAME and not self.USER_ENABLE_EMAIL:
-            self.USER_ENABLE_REGISTER = False
-        
-        # Settings that depend on USER_ENABLE_EMAIL
-        if not self.USER_ENABLE_EMAIL:
-            self.USER_ENABLE_CONFIRM_EMAIL = False
-            self.USER_ENABLE_MULTIPLE_EMAILS = False
-            self.USER_ENABLE_FORGOT_PASSWORD = False
-            self.USER_SEND_PASSWORD_CHANGED_EMAIL = False
-            self.USER_SEND_REGISTERED_EMAIL = False
-            self.USER_SEND_USERNAME_CHANGED_EMAIL = False
-            self.USER_REQUIRE_INVITATION = False
-
-        # Settings that depend on USER_ENABLE_USERNAME
-        if not self.USER_ENABLE_USERNAME:
-            self.USER_ENABLE_CHANGE_USERNAME = False
 
 

@@ -13,13 +13,16 @@ We recommend making use of virtualenv, virtualenvwrapper and pip::
     # Install Flask-User
     pip install Flask-User
 
-Because Flask-User defaults to sending emails with Flask-Mail and managing databases with Flask-SQLAlchemy,
-Flask-User will install these packages by default.
+Optional uninstalls
+-------------------
+- FLask-User installs bcrypt for its default passlib hash of 'bcrypt'.
+- Flask-User installs Flask-Mail for its default SMTPEmailMailer.
+- Flask-User installs Flask-SQLAlchemy for its default SQLAlchemyDbAdapter.
 
-If you configure Flask-User to use a different mailer or a different
-object-database mapper, you may uninstall unused packages::
+If you configure/customize Flask-User away from their defaults, certain packages may be uninstalled::
 
     # Optionally uninstall unused packages
+    pip uninstall bcrypt
     pip uninstall Flask-Mail
     pip uninstall Flask-SQLAlchemy
 

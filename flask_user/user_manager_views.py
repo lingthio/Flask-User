@@ -54,10 +54,10 @@ class UserManager__Views(object):
         # Process valid POST
         if request.method == 'POST' and form.validate():
             # Hash password
-            hashed_password = um.password_manager.hash_password(form.new_password.data)
+            password_hash = um.password_manager.hash_password(form.new_password.data)
 
             # Update user.password
-            um.db_adapter.update_object(current_user, password=hashed_password)
+            um.db_adapter.update_object(current_user, password=password_hash)
             um.db_adapter.commit()
 
             # Send 'password_changed' email
@@ -451,8 +451,8 @@ class UserManager__Views(object):
             for field_name, field_value in register_form.data.items():
                 # Hash password field
                 if field_name == 'password':
-                    hashed_password = um.password_manager.hash_password(field_value)
-                    user_fields['password'] = hashed_password
+                    password_hash = um.password_manager.hash_password(field_value)
+                    user_fields['password'] = password_hash
                 # Store corresponding Form fields into the User object and/or UserProfile object
                 else:
                     if field_name in user_class_fields:
@@ -574,8 +574,8 @@ class UserManager__Views(object):
         # Process valid POST
         if request.method == 'POST' and form.validate():
             # Change password
-            hashed_password = um.password_manager.hash_password(form.new_password.data)
-            db_adapter.update_object(user, password=hashed_password)
+            password_hash = um.password_manager.hash_password(form.new_password.data)
+            db_adapter.update_object(user, password=password_hash)
             db_adapter.commit()
 
             # Send 'password_changed' email
