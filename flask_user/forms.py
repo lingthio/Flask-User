@@ -18,7 +18,8 @@ except ImportError:
 
 from wtforms import BooleanField, HiddenField, PasswordField, SubmitField, StringField
 from wtforms import validators, ValidationError
-from .translations import lazy_gettext as _
+
+from .translation_utils import lazy_gettext as _    # map _() to lazy_gettext()
 
 
 # ****************
@@ -356,4 +357,11 @@ class InviteUserForm(FlaskForm):
     submit = SubmitField(_('Invite!'))
 
 
+# Manually Add translation strings from QuickStart apps that use string templates
+_sign_in = _('Sign in')
+_sign_out = _('Sign out')
+_home_page = _('Home Page')
+_profile_page = _('User profile')
+_member_page = _('Member Page')
+_admin_page = _('Admin Page')
 

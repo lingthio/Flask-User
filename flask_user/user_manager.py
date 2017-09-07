@@ -1,13 +1,13 @@
-""" Flask-User is a customizable user account management extension for Flask.
+"""This module implements the main UserManager class for Flask-User.
 """
 
-# Copyright (c) 2013 by Ling Thio
-# Author: Ling Thio (ling.thio@gmail.com)
-# License: Simplified BSD License, see LICENSE.txt for more details.
+# Author: Ling Thio <ling.thio@gmail.com>
+# Copyright (c) 2013 Ling Thio'
 
+import os
 from wtforms import ValidationError
 
-from flask import abort, Blueprint, current_app, Flask
+from flask import abort, Blueprint, current_app, Flask, request
 from flask_login import LoginManager, current_user
 
 from . import ConfigError
@@ -15,14 +15,14 @@ from .email_manager import EmailManager
 from . import forms
 from .password_manager import PasswordManager
 from .token_manager import TokenManager
-from .translations import get_translations, lazy_gettext as _
+from .user_manager__settings import UserManager__Settings
+from .user_manager__utils import UserManager__Utils
+from .user_manager__views import UserManager__Views
+from .translation_utils import lazy_gettext as _    # map _() to lazy_gettext()
 
 
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class for ease of customization.
-from .user_manager__settings import UserManager__Settings
-from .user_manager__utils import UserManager__Utils
-from .user_manager__views import UserManager__Views
 class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views):
     """ Customizable User Authentication and Management.
     """
@@ -54,11 +54,12 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         if app:
             self.init_app(app, db, UserClass, **kwargs)
 
-    def init_app(self, app, db, UserClass,
-                 UserInvitationClass=None,
-                 UserEmailClass=None,
-                 RoleClass=None,    # Only used for testing
-                 ):
+    def init_app(
+        self, app, db, UserClass,
+        UserInvitationClass=None,
+        UserEmailClass=None,
+        RoleClass=None,    # Only used for testing
+        ):
 
         # See http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code
         # Perform Class type checking
@@ -70,20 +71,24 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Bind Flask-User to app
         app.user_manager = self
 
-        # Save DB and Class params
+        # Remember all data-models
+        # ------------------------
         self.db = db
         self.UserClass = UserClass
         self.UserEmailClass = UserEmailClass
         self.UserInvitationClass = UserInvitationClass
         self.RoleClass=RoleClass
 
-        # For each 'USER_...' property: load settings from application config.
+        # Load app config settings
+        # ------------------------
+        # For each 'UserManager.USER_...' property: load settings from the app config.
         for attrib_name in dir(self):
             if attrib_name[0:5] == 'USER_':
                 default_value = getattr(UserManager, attrib_name)
                 setattr(self, attrib_name, app.config.get(attrib_name, default_value))
 
         # Set default forms
+        # -----------------
         self.add_email_form = forms.AddEmailForm
         self.change_password_form = forms.ChangePasswordForm
         self.change_username_form = forms.ChangeUsernameForm
@@ -95,46 +100,8 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         self.resend_email_confirmation_form = forms.ResendEmailConfirmationForm
         self.reset_password_form = forms.ResetPasswordForm
 
-        # Configure a DbAdapter based on the class of the 'db' parameter
-        self.db_adapter = None
-        # Check if db is a SQLAlchemy instance
-        if self.db_adapter is None:
-            try:
-                from flask_sqlalchemy import SQLAlchemy
-                if isinstance(db, SQLAlchemy):
-                    from .db_adapters import SQLAlchemyDbAdapter
-                    self.db_adapter = SQLAlchemyDbAdapter(app, db)
-            except ImportError: pass
-
-        # Check if db is a MongoEngine instance
-        if self.db_adapter is None:
-            try:
-                from flask_mongoengine import MongoEngine
-                if isinstance(db, MongoEngine):
-                    from .db_adapters import MongoEngineDbAdapter
-                    self.db_adapter = MongoEngineDbAdapter(app, db)
-            except ImportError: pass
-
-        # Configure SMTPEmailMailer as the default email mailer
-        from .email_mailers.smtp_email_mailer import SMTPEmailMailer
-        self.email_mailer = SMTPEmailMailer(app)
-
-        # Initialize Translations -- Only if Flask-Babel has been installed
-        if hasattr(app.jinja_env, 'install_gettext_callables'):
-            app.jinja_env.install_gettext_callables(
-                    lambda x: get_translations().ugettext(x),
-                    lambda s, p, n: get_translations().ungettext(s, p, n),
-                    newstyle=True)
-        else:
-            app.jinja_env.add_extension('jinja2.ext.i18n')
-            app.jinja_env.install_null_translations()
-
-        # Validators
-        #: Username validator
-        # self.username_validator = forms.username_validator
-        #: Password validator
-        # self.password_validator = forms.password_validator
-
+        # Set default managers
+        # --------------------
         # Setup PasswordManager
         self.password_manager = PasswordManager(app)
 
@@ -144,44 +111,78 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Setup TokenManager
         self.token_manager = TokenManager(app)
 
+        # Set default DbAdapter, based on the type of the 'db' parameter
+        # ---------------------
+        # Configure a DbAdapter based on the class of the 'db' parameter
+        self.db_adapter = None
+        # Check if db is a SQLAlchemy instance
+        if self.db_adapter is None:
+            try:
+                from flask_sqlalchemy import SQLAlchemy
+                if isinstance(db, SQLAlchemy):
+                    from .db_adapters import SQLAlchemyDbAdapter
+                    self.db_adapter = SQLAlchemyDbAdapter(app, db)
+            except ImportError: pass    # Ignore ImportErrors
+
+        # Check if db is a MongoEngine instance
+        if self.db_adapter is None:
+            try:
+                from flask_mongoengine import MongoEngine
+                if isinstance(db, MongoEngine):
+                    from .db_adapters import MongoEngineDbAdapter
+                    self.db_adapter = MongoEngineDbAdapter(app, db)
+            except ImportError: pass    # Ignore ImportErrors
+
+        # Set default EmailMailer
+        from .email_mailers.smtp_email_mailer import SMTPEmailMailer
+        self.email_mailer = SMTPEmailMailer(app)
+
+        # Configure Flask-Login
+        # --------------------
         # Setup default LoginManager using Flask-Login
         self.login_manager = LoginManager(app)
         self.login_manager.login_view = 'user.login'
 
-        # Flask-Login calls this function to retrieve a User record by user ID.
-        # Note: user_id is a UNICODE string returned by UserMixin.get_id().
-        # See https://flask-login.readthedocs.org/en/latest/#how-it-works
+        # Flask-Login calls this function to retrieve a User record by token.
         @self.login_manager.user_loader
         def load_user_by_user_token(user_token):
-            user = self.UserClass.get_user_by_token(user_token, 3600)
+            user = self.UserClass.get_user_by_token(user_token, self.USER_USER_SESSION_EXPIRATION)
             return user
 
+        # Configure Flask-Babel
+        # ---------------------
+        self.babel = app.extensions.get('babel', None)
+        from .translation_utils import init_translations
+        init_translations(self.babel)
 
-        # Even though we do not make use of this Blueprint, we must create and
-        # register one to tell Flask to include the app/template/flask_user directory
-        # when searching for template files.
-        blueprint = Blueprint('flask_user', __name__, template_folder='templates')
-        app.register_blueprint(blueprint)
+        # Configure Jinja2
+        # ----------------
+        # If the application has not initialized BabelEx,
+        # we must provide a NULL translation to Jinja2
+        if not hasattr(app.jinja_env, 'install_gettext_callables'):
+            app.jinja_env.add_extension('jinja2.ext.i18n')
+            app.jinja_env.install_null_translations()
 
-        # In Flask-Login 0.2 ``is_authenticated`` and ``is_active`` were implemented as functions,
-        # while in 0.3+ they are implemented as properties.
-        def call_or_get(function_or_property):
-            return function_or_property() if callable(function_or_property) else function_or_property
-
+        # Define a context processor to provide custom variable and functions available to Jinja2 templates
         def flask_user_context_processor():
-            """ Make 'user_manager' available to Jinja2 templates"""
+            # In Flask-Login 0.2 ``is_authenticated`` and ``is_active`` were implemented as functions,
+            # while in 0.3+ they are implemented as properties.
+            def call_or_get(function_or_property):
+                return function_or_property() if callable(function_or_property) else function_or_property
+
             return dict(
                 user_manager=current_app.user_manager,
                 call_or_get=call_or_get,
             )
 
-        # Add context processor
+        # Register context processor with Jinja2
         app.context_processor(flask_user_context_processor)
 
-        # # Prepare for translations
-        # _ = translations.gettext
+        # Create a dummy Blueprint to add the app/templates/flask_user dir to the template search path
+        blueprint = Blueprint('flask_user', __name__, template_folder='templates')
+        app.register_blueprint(blueprint)
 
-        # Allow CustomUserManager to customize settings and methods
+        # Allow developers to customize UserManager
         self.customize(app)
 
         # Make sure the settings are valid -- raise ConfigError if not
@@ -189,8 +190,6 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
 
         # Configure a list of URLs to route to their corresponding view method.
         self._add_url_routes(app)
-
-        # self.init_babel(app)
 
 
     def customize(self, app):

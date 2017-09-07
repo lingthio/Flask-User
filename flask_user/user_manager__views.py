@@ -1,22 +1,14 @@
-"""UserManager__Views is a Mixin for UserManager that holds all Flask-User view methods.
-
-We code the behaviour into the Usermanager methods to allow the developer
-to override or extend this behaviour.
-
-Because the view methods have an additional 'self' parameter,
-URLs are first mapped to to view-stub functions, which call UserManager view methods.
+"""This module implements UserManager view methods.
 """
 
-# The UserManager is implemented across several source code files.
-# Mixins are used to aggregate all member functions into the one UserManager class.
-
+# Author: Ling Thio <ling.thio@gmail.com>
+# Copyright (c) 2013 Ling Thio
 
 from datetime import datetime
 from flask import current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_user, logout_user
 from .decorators import login_required
 from . import signals
-from .translations import gettext as _
 
 # Python version specific imports
 from sys import version_info as py_version
@@ -27,8 +19,11 @@ if is_py2:    # pragma: no cover
 if is_py3:
     from urllib.parse import quote, unquote
 
+from .translation_utils import gettext as _    # map _() to gettext()
 
-# This is a Mixin class that will become part of the UserManager class
+
+# This class mixes into the UserManager class.
+# Mixins allow for maintaining code and docs across several files.
 class UserManager__Views(object):
     """Flask-User views."""
 
@@ -67,6 +62,7 @@ class UserManager__Views(object):
             return redirect(safe_next)
 
         # Process GET or invalid POST
+        um.prepare_domain_translations()
         return render_template(um.USER_CHANGE_PASSWORD_TEMPLATE, form=form)
 
 
@@ -104,6 +100,7 @@ class UserManager__Views(object):
             return redirect(safe_next)
 
         # Process GET or invalid POST
+        um.prepare_domain_translations()
         return render_template(um.USER_CHANGE_USERNAME_TEMPLATE, form=form)
 
 
@@ -162,6 +159,7 @@ class UserManager__Views(object):
     @login_required
     def edit_user_profile_view(self):
         um = current_app.user_manager
+        um.prepare_domain_translations()
         return render_template(um.USER_EDIT_USER_PROFILE_TEMPLATE)
 
     @login_required
@@ -235,6 +233,7 @@ class UserManager__Views(object):
             return redirect(self._endpoint_url(um.USER_AFTER_FORGOT_PASSWORD_ENDPOINT))
 
         # Process GET or invalid POST
+        um.prepare_domain_translations()
         return render_template(um.USER_FORGOT_PASSWORD_TEMPLATE, form=form)
 
     @login_required
@@ -254,6 +253,7 @@ class UserManager__Views(object):
             return redirect(url_for('user.manage_emails'))
 
         # Process GET or invalid POST request
+        um.prepare_domain_translations()
         return render_template(um.USER_MANAGE_EMAILS_TEMPLATE,
                       user_emails=user_emails,
                       form=form,
@@ -306,6 +306,7 @@ class UserManager__Views(object):
             safe_next = self._get_safe_next_param('next', um.USER_AFTER_INVITE_ENDPOINT)
             return redirect(safe_next)
 
+        um.prepare_domain_translations()
         return render_template(um.USER_INVITE_USER_TEMPLATE, form=invite_user_form)
 
 
@@ -358,6 +359,7 @@ class UserManager__Views(object):
                 return self._do_login_user(user, safe_next, login_form.remember_me.data)
 
         # Process GET or invalid POST
+        um.prepare_domain_translations()
         return render_template(um.USER_LOGIN_TEMPLATE,
                       form=login_form,
                       login_form=login_form,
@@ -500,6 +502,7 @@ class UserManager__Views(object):
                 return redirect(url_for('user.login') + '?next=' + quote(safe_reg_next))  # redirect to login page
 
         # Process GET or invalid POST
+        um.prepare_domain_translations()
         return render_template(um.USER_REGISTER_TEMPLATE,
                       form=register_form,
                       login_form=login_form,
@@ -527,6 +530,7 @@ class UserManager__Views(object):
             return redirect(self._endpoint_url(um.USER_AFTER_RESEND_EMAIL_CONFIRMATION_ENDPOINT))
 
         # Process GET or invalid POST
+        um.prepare_domain_translations()
         return render_template(um.USER_RESENT_CONFIRM_EMAIL_TEMPLATE, form=form)
 
 
@@ -580,6 +584,7 @@ class UserManager__Views(object):
                 return redirect(url_for('user.login') + '?next=' + quote(safe_next))  # redirect to login page
 
         # Process GET or invalid POST
+        um.prepare_domain_translations()
         return render_template(um.USER_RESET_PASSWORD_TEMPLATE, form=form)
 
     def unauthenticated_view(self):

@@ -1,10 +1,9 @@
-""" This file hashes and verifies passwords for Flask-User.
+"""This module implements the PasswordManager for Flask-User.
+It uses passlib to hash and verify passwords.
 """
 
-# Copyright (c) 2013 by Ling Thio
-# Author: Ling Thio (ling.thio@gmail.com)
-# License: Simplified BSD License, see LICENSE.txt for more details.
-
+# Author: Ling Thio <ling.thio@gmail.com>
+# Copyright (c) 2013 Ling Thio
 
 from __future__ import print_function
 

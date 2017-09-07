@@ -1,8 +1,17 @@
-from flask import current_app
-from flask_login import UserMixin as LoginUserMixin
+"""This module implements the UserMixin class for Flask-User.
+This Mixin adds required methods to User data-model.
+"""
 
-class UserMixin(LoginUserMixin):
-    """ This class adds methods to the User data-model class required by Flask-Login and Flask-User."""
+from flask import current_app
+from flask_login import UserMixin as FlaskLoginUserMixin
+
+class UserMixin(FlaskLoginUserMixin):
+    """ This class adds required methods to the User data-model.
+
+    Example:
+        class User(db.Model, UserMixin):
+            ...
+    """
 
     def get_id(self):
         """Converts a User ID and parts of a User password hash to a token."""
@@ -46,31 +55,6 @@ class UserMixin(LoginUserMixin):
             token_is_valid = user and user.password[-8:]==password_ends_with
 
         return user if token_is_valid else None
-
-    def has_role(self, *specified_role_names):
-        """ Return True if the user has one of the specified roles. Return False otherwise.
-
-            has_roles() accepts a 1 or more role name parameters
-                has_role(role_name1, role_name2, role_name3).
-
-            For example:
-                has_roles('a', 'b')
-            Translates to:
-                User has role 'a' OR role 'b'
-        """
-
-        # Translates a list of role objects to a list of role_names
-        user_manager = current_app.user_manager
-        role_names = user_manager.db_adapter.get_user_roles(self)
-
-        # Return True if one of the role_names matches
-        for role_name in specified_role_names:
-            if role_name in role_names:
-                return True
-
-        # Return False if none of the role_names matches
-        return False
-
 
     def has_roles(self, *requirements):
         """ Return True if the user has all of the specified roles. Return False otherwise.

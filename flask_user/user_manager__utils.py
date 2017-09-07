@@ -1,5 +1,8 @@
-"""UserManager__Utils is a Mixin for UserManager that holds Flask-User utility methods.
+"""This module implements UserManager utility methods.
 """
+
+# Author: Ling Thio <ling.thio@gmail.com>
+# Copyright (c) 2013 Ling Thio
 
 # Python version specific imports
 from sys import version_info as py_version
@@ -12,7 +15,8 @@ else:
 from flask_login import current_user
 
 
-# This is a Mixin class that will become part of the UserManager class
+# This class mixes into the UserManager class.
+# Mixins allow for maintaining code and docs across several files.
 class UserManager__Utils(object):
     """Flask-User utility methods."""
 
@@ -60,6 +64,16 @@ class UserManager__Utils(object):
         """Convenience method that calls token_manager.generate_token(\*args)."""
         return self.token_manager.generate_token(*args)
 
+    def get_language_codes(self):
+        """Returns the language codes of available Flask-User translations.
+
+        Example:
+            ``['de', 'en', 'es', 'fa', 'fi', 'fr', 'it', 'nl', 'ru', 'sv', 'tr', 'zh']``
+
+        """
+        from .translation_utils import get_language_codes
+        return get_language_codes()
+
     def get_primary_user_email(self, user):
         """Retrieve the email from User object or the primary UserEmail object (if multiple emails
         per user are enabled)."""
@@ -100,6 +114,12 @@ class UserManager__Utils(object):
         # Rebuild a safe URL with only the path, query and fragment parts
         safe_url = parts.path + parts.query + parts.fragment
         return safe_url
+
+    def prepare_domain_translations(self):
+        """Set domain_translations for current request context."""
+        from .translation_utils import domain_translations
+        if domain_translations:
+            domain_translations.as_default()
 
     # Return True if ENABLE_EMAIL and ENABLE_CONFIRM_EMAIL and email has been confirmed.
     # Return False otherwise

@@ -1,11 +1,10 @@
-""" This file contains email sending functions for Flask-User.
-    It uses Jinja2 to render email subject and email message. It uses Flask-Mail to send email.
+"""This module implements the EmailManager for Flask-User.
+It uses Jinja2 to render email subject and email message.
+It uses the EmailMailer interface to send emails.
 """
 
-# Copyright (c) 2013 by Ling Thio
-# Author: Ling Thio (ling.thio@gmail.com)
-# License: Simplified BSD License, see LICENSE.txt for more details.
-
+# Author: Ling Thio <ling.thio@gmail.com>
+# Copyright (c) 2013 Ling Thio
 
 from flask import render_template, url_for
 

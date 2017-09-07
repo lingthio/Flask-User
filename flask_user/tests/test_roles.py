@@ -33,27 +33,27 @@ def test_roles(db):
     # Save everything to the DB
     db_adapter.commit()
 
-    # test has_role()
-    assert user0.has_role('Role 1')==False
-    assert user0.has_role('Role 2')==False
-    assert user0.has_role('Role 3')==False
-    assert user0.has_role('Role 1', 'Role 2')==False
-    assert user0.has_role('Role 2', 'Role 1')==False
-    assert user0.has_role('Role 1', 'Role 2', 'Role 3')==False
-
-    assert user1.has_role('Role 1')==True
-    assert user1.has_role('Role 2')==False
-    assert user1.has_role('Role 3')==False
-    assert user1.has_role('Role 1', 'Role 2')==True
-    assert user1.has_role('Role 2', 'Role 1')==True
-    assert user1.has_role('Role 1', 'Role 2', 'Role 3')==True
-
-    assert user2.has_role('Role 1')==True
-    assert user2.has_role('Role 2')==True
-    assert user2.has_role('Role 3')==False
-    assert user2.has_role('Role 1', 'Role 2')==True
-    assert user2.has_role('Role 2', 'Role 1')==True
-    assert user2.has_role('Role 1', 'Role 2', 'Role 3')==True
+    # # test has_role()
+    # assert user0.has_role('Role 1')==False
+    # assert user0.has_role('Role 2')==False
+    # assert user0.has_role('Role 3')==False
+    # assert user0.has_role('Role 1', 'Role 2')==False
+    # assert user0.has_role('Role 2', 'Role 1')==False
+    # assert user0.has_role('Role 1', 'Role 2', 'Role 3')==False
+    #
+    # assert user1.has_role('Role 1')==True
+    # assert user1.has_role('Role 2')==False
+    # assert user1.has_role('Role 3')==False
+    # assert user1.has_role('Role 1', 'Role 2')==True
+    # assert user1.has_role('Role 2', 'Role 1')==True
+    # assert user1.has_role('Role 1', 'Role 2', 'Role 3')==True
+    #
+    # assert user2.has_role('Role 1')==True
+    # assert user2.has_role('Role 2')==True
+    # assert user2.has_role('Role 3')==False
+    # assert user2.has_role('Role 1', 'Role 2')==True
+    # assert user2.has_role('Role 2', 'Role 1')==True
+    # assert user2.has_role('Role 1', 'Role 2', 'Role 3')==True
 
     # test has_roles()
     assert user0.has_roles('Role 1')==False

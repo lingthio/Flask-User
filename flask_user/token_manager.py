@@ -1,11 +1,9 @@
-"""Manager for generating and verifying tokens.
-
-This module contains a manager class to generate and verify tokens.
-
-:copyright: (c) 2013 by Ling Thio
-:author: Ling Thio (ling.thio@gmail.com)
-:license: Simplified BSD License, see LICENSE.txt for more details.
+"""This module implements the TokenManager for Flask-User.
+It uses cryptography to generate and verify tokens.
 """
+
+# Author: Ling Thio <ling.thio@gmail.com>
+# Copyright (c) 2013 Ling Thio
 
 import base64
 import string

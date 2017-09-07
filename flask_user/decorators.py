@@ -1,10 +1,9 @@
-""" This file implements Flask-User decorators: @login_required, @confirmed_email_required and @roles_required.
+""" This module defines Flask-User decorators
+such as @login_required, @roles_accepted and @roles_required and @confirmed_email_required.
 """
 
-# Copyright (c) 2013 by Ling Thio
-# Author: Ling Thio (ling.thio@gmail.com)
-# License: Simplified BSD License, see LICENSE.txt for more details.
-
+# Author: Ling Thio <ling.thio@gmail.com>
+# Copyright (c) 2013 Ling Thio
 
 from functools import wraps
 from flask import current_app, g

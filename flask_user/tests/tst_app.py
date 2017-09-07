@@ -1,8 +1,7 @@
 import os
 import datetime
 from flask import Flask, render_template_string, request
-from flask_user import login_required, UserManager, UserMixin
-from flask_user import roles_required
+from flask_user import login_required, roles_required, UserManager, UserMixin
 
 ORM_type = 'SQLAlchemy'   # SQLAlchemy  or MongoEngine
 # ORM_type = 'MongoEngine'   # SQLAlchemy  or MongoEngine

@@ -1,13 +1,11 @@
-"""UserManager__Settings is a Mixin for UserManager that holds all Flask-User settings.
+"""This module defines UserManager settings and their defaults.
 """
 
-# The UserManager is implemented across several source code files.
-# Mixins are used to aggregate all member functions into the one UserManager class.
+# Author: Ling Thio <ling.thio@gmail.com>
+# Copyright (c) 2013 Ling Thio
 
-# This Settings Mixin documents all Flask-User settings through docstrings.
-# Sphinx Autodoc builds the documentation from these docstrings.
-
-# This is a Mixin class that will become part of the UserManager class
+# This class mixes into the UserManager class.
+# Mixins allow for maintaining code and docs across several files.
 class UserManager__Settings(object):
     """Flask-User settings and their defaults.
 
@@ -140,12 +138,16 @@ class UserManager__Settings(object):
 
     #: | Reset password token expiration in seconds.
     #: | Default is 2 days (2*24*3600 seconds).
+    USER_RESET_PASSWORD_EXPIRATION = 2*24*3600
+
+    #: | User session token expiration in seconds.
+    #: | Default is 1 hour (1*3600 seconds).
     #:
     #: .. This hack shows a header above the _next_ section
     #: .. code-block:: none
     #:
     #:     Password hash settings
-    USER_RESET_PASSWORD_EXPIRATION = 2*24*3600
+    USER_USER_SESSION_EXPIRATION = 1*3600
 
     #: | List of accepted password hashes.
     #: | See `Passlib CryptContext docs on Constructor Keyword ``'schemes'`` <http://passlib.readthedocs.io/en/stable/lib/passlib.context.html?highlight=cryptcontext#constructor-keywords>`_

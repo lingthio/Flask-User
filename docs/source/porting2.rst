@@ -6,6 +6,22 @@ Porting v0.6 to v9.0+ - Complete list of changes
 For porting customized Flask-User v0.6 applications, here is a complete list of
 changes that may cause incompatibility issues.
 
+Python packages
+---------------
+
+Make sure to uninstall py-crypt and install bcrypt::
+
+    pip uninstall py-crypt    # This may already be absent
+    pip install bcrypt        # This may already be installed
+
+Make sure to uninstall Flask-Babel and install Flask-BabelEx::
+
+    pip uninstall Flask-Babel
+    pip install Flask-BabelEx
+
+    # Replace: from flask_babel import ...
+         with: from flask_babelex import ...
+
 UserManager() setup
 -------------------
 We simplified the Flask-User setup by removing the need to specify the db_adapter explicitly::

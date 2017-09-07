@@ -16,15 +16,14 @@ class EmailError(Exception):
     pass
 
 
+# Export Flask-Login's current user
+from flask_login import current_user    # pass through Flask-Login's current_user
+
 from .user_mixin import UserMixin
 from .user_manager import UserManager
 from .email_manager import EmailManager
 from .password_manager import PasswordManager
 from .token_manager import TokenManager
-
-
-# Export Flask-Login's current user
-from flask_login import current_user    # pass through Flask-Login's current_user
 
 # Export Flask-User decorators
 from .decorators import *

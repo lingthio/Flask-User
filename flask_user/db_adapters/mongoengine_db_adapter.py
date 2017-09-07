@@ -1,3 +1,9 @@
+"""This module implements the DbAdapter interface for MongoEngine.
+"""
+
+# Author: Ling Thio <ling.thio@gmail.com>
+# Copyright (c) 2013 Ling Thio
+
 from __future__ import print_function
 
 # Non-system imports are moved into the methods to make them an optional requirement

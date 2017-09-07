@@ -6,7 +6,7 @@
 
 import datetime
 from flask import Flask, request, render_template_string
-from flask_babel import Babel
+from flask_babelex import Babel
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import current_user, login_required, roles_required, UserManager, UserMixin
 

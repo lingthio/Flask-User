@@ -1,10 +1,8 @@
-""" This file shields Flask-User code from database/ORM specific functions.
+"""This module implements the EmailMailer interface for sendmail.
 """
 
-# Copyright (c) 2013 by Ling Thio
-# Author: Ling Thio (ling.thio@gmail.com)
-# License: Simplified BSD License, see LICENSE.txt for more details.
-
+# Author: Ling Thio <ling.thio@gmail.com>
+# Copyright (c) 2013 Ling Thio
 
 from __future__ import print_function
 
