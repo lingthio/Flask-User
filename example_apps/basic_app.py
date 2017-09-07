@@ -47,7 +47,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(__name__+'.ConfigClass')
 
-    # Initialize Flask-Babel
+    # Initialize Flask-BabelEx
     babel = Babel(app)
 
     # Initialize Flask-SQLAlchemy

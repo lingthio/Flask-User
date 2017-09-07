@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-09-05 19:49-0700\n"
+"POT-Creation-Date: 2017-09-07 12:43-0700\n"
 "PO-Revision-Date: 2017-08-27 03:41-0700\n"
 "Last-Translator: \n"
 "Language: ru\n"
@@ -117,7 +117,7 @@ msgstr "Запомнить меня"
 
 #: flask_user/forms.py:168 flask_user/templates/flask_user/login.html:5
 #: flask_user/templates/flask_user/login_or_register.html:9
-#: flask_user/templates/flask_user_layout.html:39 flask_user/translations.py:93
+#: flask_user/templates/flask_user_layout.html:39 flask_user/translations.py:9
 msgid "Sign in"
 msgstr "Вход"
 
@@ -185,28 +185,28 @@ msgstr "Повторно выслать письмо с подтверждени
 msgid "Invite!"
 msgstr "Пригласить!"
 
-#: flask_user/templates/flask_user_layout.html:37 flask_user/translations.py:94
+#: flask_user/templates/flask_user_layout.html:37 flask_user/translations.py:10
 msgid "Sign out"
 msgstr ""
 
-#: flask_user/translations.py:95
+#: flask_user/translations.py:11
 msgid "Home Page"
 msgstr "Домашняя Страница"
 
 #: flask_user/templates/flask_user/edit_user_profile.html:5
-#: flask_user/translations.py:96
+#: flask_user/translations.py:12
 msgid "User profile"
 msgstr "Профиль"
 
-#: flask_user/translations.py:97
+#: flask_user/translations.py:13
 msgid "Member Page"
 msgstr ""
 
-#: flask_user/translations.py:98
-msgid "Special Page"
-msgstr "Специальная Страница"
+#: flask_user/translations.py:14
+msgid "Admin Page"
+msgstr ""
 
-#: flask_user/user_manager.py:280
+#: flask_user/user_manager.py:259
 msgid ""
 "Password must have at least 6 characters with one lowercase letter, one "
 "uppercase letter and one number"
@@ -214,32 +214,32 @@ msgstr ""
 "Пароль должен быть не менее 6 символов, с одной строчной буквой, одной "
 "прописной и одной цифрой"
 
-#: flask_user/user_manager.py:296
+#: flask_user/user_manager.py:270
 msgid "Username must be at least 3 characters long"
 msgstr "Имя пользователя должно быть минимум из 3 символов"
 
-#: flask_user/user_manager.py:301
+#: flask_user/user_manager.py:276
 msgid "Username may only contain letters, numbers, '-', '.' and '_'"
 msgstr "Имя пользователя может содержать только буквы, цифры, '-', '.' а также '_'"
 
-#: flask_user/user_manager_views.py:71
+#: flask_user/user_manager__views.py:63
 msgid "Your password has been changed successfully."
 msgstr "Ваш пароль был успешно изменен."
 
-#: flask_user/user_manager_views.py:109
+#: flask_user/user_manager__views.py:100
 #, python-format
 msgid "Your username has been changed to '%(username)s'."
 msgstr "Ваше имя пользователя было изменено на '%(username)s'."
 
-#: flask_user/user_manager_views.py:129 flask_user/user_manager_views.py:151
+#: flask_user/user_manager__views.py:120 flask_user/user_manager__views.py:142
 msgid "Invalid confirmation token."
 msgstr "Не правильный верификационный токен."
 
-#: flask_user/user_manager_views.py:160
+#: flask_user/user_manager__views.py:151
 msgid "Your email has been confirmed."
 msgstr "Ваш email подтвержден."
 
-#: flask_user/user_manager_views.py:241
+#: flask_user/user_manager__views.py:230
 #, python-format
 msgid ""
 "A reset password email has been sent to '%(email)s'. Open that email and "
@@ -248,38 +248,38 @@ msgstr ""
 "Электронное письмо для сброса пароля было отправлено  на '%(email)s'. "
 "Откройте это письмо и следуйте инструкциям."
 
-#: flask_user/user_manager_views.py:318
+#: flask_user/user_manager__views.py:305
 msgid "Invitation has been sent."
 msgstr "Приглашение отправлено."
 
-#: flask_user/user_manager_views.py:391
+#: flask_user/user_manager__views.py:379
 msgid "You have signed out successfully."
 msgstr "Вы успешно вышли."
 
-#: flask_user/user_manager_views.py:560
+#: flask_user/user_manager__views.py:548
 msgid "Your reset password token is invalid."
 msgstr "Не правильный токен сброса пароля."
 
-#: flask_user/user_manager_views.py:586
+#: flask_user/user_manager__views.py:574
 msgid "Your password has been reset successfully."
 msgstr "Ваш пароль успешно изменен."
 
-#: flask_user/user_manager_views.py:603
+#: flask_user/user_manager__views.py:591
 #, python-format
 msgid "You must be signed in to access '%(url)s'."
 msgstr "Вы должный войти для доступа к '%(url)s'."
 
-#: flask_user/user_manager_views.py:614
+#: flask_user/user_manager__views.py:602
 #, python-format
 msgid "You do not have permission to access '%(url)s'."
 msgstr "У вас нет прав для доступа к '%(url)s'."
 
-#: flask_user/user_manager_views.py:624
+#: flask_user/user_manager__views.py:612
 #, python-format
 msgid "You must confirm your email to access '%(url)s'."
 msgstr "Вы должны подтвердить свой email для доступа к '%(url)s'."
 
-#: flask_user/user_manager_views.py:648 flask_user/user_manager_views.py:664
+#: flask_user/user_manager__views.py:636 flask_user/user_manager__views.py:652
 #, python-format
 msgid ""
 "A confirmation email has been sent to %(email)s with instructions to "
@@ -288,15 +288,15 @@ msgstr ""
 "Подтверждающее письмо с инструкциями по завершению регистрации было "
 "отправлено на %(email)s."
 
-#: flask_user/user_manager_views.py:650
+#: flask_user/user_manager__views.py:638
 msgid "You have registered successfully."
 msgstr "Вы успешно зарегистрировались."
 
-#: flask_user/user_manager_views.py:673
+#: flask_user/user_manager__views.py:661
 msgid "Your account has not been enabled."
 msgstr "Ваш аккаунт не был активирован."
 
-#: flask_user/user_manager_views.py:682
+#: flask_user/user_manager__views.py:671
 #, python-format
 msgid ""
 "Your email address has not yet been confirmed. Check your email Inbox and"
@@ -306,7 +306,7 @@ msgstr ""
 "Ваш электронный адрес не был подтвержден. Поищите письмо в папках "
 "Входящие и Спам или <a href=\"%(url)s\">повторно получите письмо</a>."
 
-#: flask_user/user_manager_views.py:693
+#: flask_user/user_manager__views.py:682
 msgid "You have signed in successfully."
 msgstr "Вы успешно вошли."
 
@@ -355,4 +355,7 @@ msgstr "Сбросить Пароль"
 
 #~ msgid "Profile Page"
 #~ msgstr "Страница Профиля"
+
+#~ msgid "Special Page"
+#~ msgstr "Специальная Страница"
 

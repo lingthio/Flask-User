@@ -11,11 +11,16 @@ def runapp(appname):
     local('PYTHONPATH=. python example_apps/'+appname+'.py')
 
 @task
-def update_babel():
-    local('pybabel extract -F flask_user/translations/babel.cfg -k lazy_gettext -c NOTE -o flask_user/translations/flask_user.pot flask_user flask_user')
-    for code in ('de', 'en', 'es', 'fa', 'fi', 'fr', 'it', 'nl', 'ru', 'sv', 'tr', 'zh'):
-        local('pybabel update -i flask_user/translations/flask_user.pot --domain=flask_user --output-dir flask_user/translations -l '+code)
-    local('pybabel compile -f --domain=flask_user --directory flask_user/translations')
+def babel(command):
+    # Generate the .pot file from source code files
+    if command=='extract':
+        local('pybabel extract -F flask_user/translations/babel.cfg -k lazy_gettext -c NOTE -o flask_user/translations/flask_user.pot flask_user flask_user')
+
+    # Update .po files from the .pot file
+    elif command=='update':
+        local('pybabel update -i flask_user/translations/flask_user.pot --domain=flask_user --output-dir flask_user/translations')
+    elif command=='compile':
+        local('pybabel compile -f --domain=flask_user --directory flask_user/translations')
 
 @task
 def test():
@@ -66,6 +71,9 @@ def start_mongodb():
 
 @task
 def build_dist():
+    # Compile translation files
+    babel('compile')
+    # Build distribution file
     local('python setup.py sdist')
 
 @task

@@ -50,7 +50,7 @@ Acknowledgements
 This project would not be possible without the use of the following amazing offerings:
 
 * `Flask <http://flask.pocoo.org/>`_
-* `Flask-Babel <http://babel.pocoo.org/>`_
+* `Flask-BabelEx <https://pythonhosted.org/Flask-BabelEx/#flask.ext.babelex.Babel.localeselector>`_ and `Flask-Babel <http://babel.pocoo.org/>`_
 * `Flask-Login <https://flask-login.readthedocs.org/en/latest/>`_
 * `Flask-Mail <http://pythonhosted.org/flask-mail/>`_
 * `SQLAlchemy <http://www.sqlalchemy.org/>`_ and `Flask-SQLAlchemy <http://pythonhosted.org/Flask-SQLAlchemy/>`_

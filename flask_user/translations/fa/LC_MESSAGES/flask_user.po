@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-09-05 19:49-0700\n"
+"POT-Creation-Date: 2017-09-07 12:43-0700\n"
 "PO-Revision-Date: 2016-11-04 01:24+0330\n"
 "Last-Translator: Mohammad Amin Sameti <mamins1376@gmail.com>\n"
 "Language: fa\n"
@@ -117,7 +117,7 @@ msgstr "مرا به یاد داشته باش"
 
 #: flask_user/forms.py:168 flask_user/templates/flask_user/login.html:5
 #: flask_user/templates/flask_user/login_or_register.html:9
-#: flask_user/templates/flask_user_layout.html:39 flask_user/translations.py:93
+#: flask_user/templates/flask_user_layout.html:39 flask_user/translations.py:9
 msgid "Sign in"
 msgstr "ورود"
 
@@ -186,28 +186,28 @@ msgstr "ارسال دوباره رایانامه تأیید حساب کاربر�
 msgid "Invite!"
 msgstr "دعوت کنید!"
 
-#: flask_user/templates/flask_user_layout.html:37 flask_user/translations.py:94
+#: flask_user/templates/flask_user_layout.html:37 flask_user/translations.py:10
 msgid "Sign out"
 msgstr ""
 
-#: flask_user/translations.py:95
+#: flask_user/translations.py:11
 msgid "Home Page"
 msgstr "صفحه اصلی"
 
 #: flask_user/templates/flask_user/edit_user_profile.html:5
-#: flask_user/translations.py:96
+#: flask_user/translations.py:12
 msgid "User profile"
 msgstr "نمایه کاربر"
 
-#: flask_user/translations.py:97
+#: flask_user/translations.py:13
 msgid "Member Page"
 msgstr ""
 
-#: flask_user/translations.py:98
-msgid "Special Page"
-msgstr "صفحه خاص"
+#: flask_user/translations.py:14
+msgid "Admin Page"
+msgstr ""
 
-#: flask_user/user_manager.py:280
+#: flask_user/user_manager.py:259
 msgid ""
 "Password must have at least 6 characters with one lowercase letter, one "
 "uppercase letter and one number"
@@ -215,34 +215,34 @@ msgstr ""
 "گذرواژه باید حداقل ۶ کاراکتر شامل حداقل یک عدد، یک حرف بزرگ و یک حرف کوچک"
 " باشد"
 
-#: flask_user/user_manager.py:296
+#: flask_user/user_manager.py:270
 msgid "Username must be at least 3 characters long"
 msgstr "نام کاربری باید حداقل ۳ کاراکتر باشد"
 
-#: flask_user/user_manager.py:301
+#: flask_user/user_manager.py:276
 msgid "Username may only contain letters, numbers, '-', '.' and '_'"
 msgstr ""
 "نام کاربری می‌تواند فقط دارای عدد، حروف و یکی از کاراکترهای رو به رو "
 "باشد: ـ-."
 
-#: flask_user/user_manager_views.py:71
+#: flask_user/user_manager__views.py:63
 msgid "Your password has been changed successfully."
 msgstr "گذرواژه شما با موفقیت تغییر یافت."
 
-#: flask_user/user_manager_views.py:109
+#: flask_user/user_manager__views.py:100
 #, python-format
 msgid "Your username has been changed to '%(username)s'."
 msgstr "نام کاربری شما به '%(username)s' تغییر یافت."
 
-#: flask_user/user_manager_views.py:129 flask_user/user_manager_views.py:151
+#: flask_user/user_manager__views.py:120 flask_user/user_manager__views.py:142
 msgid "Invalid confirmation token."
 msgstr "توکن تأیید نامعتبر است."
 
-#: flask_user/user_manager_views.py:160
+#: flask_user/user_manager__views.py:151
 msgid "Your email has been confirmed."
 msgstr "رایانامه شما تأیید شد."
 
-#: flask_user/user_manager_views.py:241
+#: flask_user/user_manager__views.py:230
 #, python-format
 msgid ""
 "A reset password email has been sent to '%(email)s'. Open that email and "
@@ -251,38 +251,38 @@ msgstr ""
 "یک رایانامه برای بازنشانی گذرواژه به '%(email)s' ارسال شد. آن نشانی را "
 "باز کنید و مراحل را دنبال کنید تا گذرواژه‌تان را بازنشانی کنید."
 
-#: flask_user/user_manager_views.py:318
+#: flask_user/user_manager__views.py:305
 msgid "Invitation has been sent."
 msgstr "دعوت‌نامه فرستاده شد."
 
-#: flask_user/user_manager_views.py:391
+#: flask_user/user_manager__views.py:379
 msgid "You have signed out successfully."
 msgstr "شما با موفقیت خارج شدید."
 
-#: flask_user/user_manager_views.py:560
+#: flask_user/user_manager__views.py:548
 msgid "Your reset password token is invalid."
 msgstr "توکن بازنشانی گذرواژه شما نامعتبر است."
 
-#: flask_user/user_manager_views.py:586
+#: flask_user/user_manager__views.py:574
 msgid "Your password has been reset successfully."
 msgstr "گذرواژه شما با موفقیت بازنشانده شد."
 
-#: flask_user/user_manager_views.py:603
+#: flask_user/user_manager__views.py:591
 #, python-format
 msgid "You must be signed in to access '%(url)s'."
 msgstr "برای دسترسی به نشانی '%(url)s' باید وارد شوی."
 
-#: flask_user/user_manager_views.py:614
+#: flask_user/user_manager__views.py:602
 #, python-format
 msgid "You do not have permission to access '%(url)s'."
 msgstr "شما اجازه دسترسی به '%(url)s' را ندارید."
 
-#: flask_user/user_manager_views.py:624
+#: flask_user/user_manager__views.py:612
 #, python-format
 msgid "You must confirm your email to access '%(url)s'."
 msgstr "شما باید برای دسترسی به '%(url)s' رایانامه خود را تأیید کنید."
 
-#: flask_user/user_manager_views.py:648 flask_user/user_manager_views.py:664
+#: flask_user/user_manager__views.py:636 flask_user/user_manager__views.py:652
 #, python-format
 msgid ""
 "A confirmation email has been sent to %(email)s with instructions to "
@@ -291,15 +291,15 @@ msgstr ""
 "یک رایانامه به همراه راهنمای کامل کردن ثبت‌نام شما به %(email)s فرستاده "
 "شد."
 
-#: flask_user/user_manager_views.py:650
+#: flask_user/user_manager__views.py:638
 msgid "You have registered successfully."
 msgstr "شما با موفقیت ثبت نام کردید."
 
-#: flask_user/user_manager_views.py:673
+#: flask_user/user_manager__views.py:661
 msgid "Your account has not been enabled."
 msgstr "حساب شما فعال نشده استو"
 
-#: flask_user/user_manager_views.py:682
+#: flask_user/user_manager__views.py:671
 #, python-format
 msgid ""
 "Your email address has not yet been confirmed. Check your email Inbox and"
@@ -310,7 +310,7 @@ msgstr ""
 "را بررسی کنید یا <a href=\"%(url)s\">رایانامه تأیید را دوباره ارسال "
 "کنید</a>."
 
-#: flask_user/user_manager_views.py:693
+#: flask_user/user_manager__views.py:682
 msgid "You have signed in successfully."
 msgstr "شما با موفقیت وارد شدید."
 
@@ -359,4 +359,7 @@ msgstr "بازنشانی گذرواژه"
 
 #~ msgid "Profile Page"
 #~ msgstr "صفحه نمایه"
+
+#~ msgid "Special Page"
+#~ msgstr "صفحه خاص"
 

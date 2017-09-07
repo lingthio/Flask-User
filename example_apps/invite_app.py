@@ -1,6 +1,6 @@
 import os
 from flask import Flask, redirect, render_template_string, request, url_for
-from flask_babel import Babel
+from flask_babelex import Babel
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import confirmed_email_required, utils, login_required, \
                         UserManager, UserMixin
@@ -45,7 +45,7 @@ def create_app(test_config=None):                   # For automated tests
 
     # Initialize Flask extensions
     db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
-    babel = Babel(app)                              # Initialize Flask-Babel
+    babel = Babel(app)                              # Initialize Flask-BabelEx
     @babel.localeselector
     def get_locale():
         translations = [str(translation) for translation in babel.list_translations()]

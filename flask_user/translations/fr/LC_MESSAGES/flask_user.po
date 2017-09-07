@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-09-05 19:49-0700\n"
+"POT-Creation-Date: 2017-09-07 12:43-0700\n"
 "PO-Revision-Date: 2015-08-03 13:24-0800\n"
 "Last-Translator: Alexis Benoist <alexis.benoist@gmail.com>\n"
 "Language: fr\n"
@@ -116,7 +116,7 @@ msgstr "Rester connecté"
 
 #: flask_user/forms.py:168 flask_user/templates/flask_user/login.html:5
 #: flask_user/templates/flask_user/login_or_register.html:9
-#: flask_user/templates/flask_user_layout.html:39 flask_user/translations.py:93
+#: flask_user/templates/flask_user_layout.html:39 flask_user/translations.py:9
 msgid "Sign in"
 msgstr "Connexion"
 
@@ -188,28 +188,28 @@ msgstr "Renvoyer le mail de confirmation"
 msgid "Invite!"
 msgstr ""
 
-#: flask_user/templates/flask_user_layout.html:37 flask_user/translations.py:94
+#: flask_user/templates/flask_user_layout.html:37 flask_user/translations.py:10
 msgid "Sign out"
 msgstr ""
 
-#: flask_user/translations.py:95
+#: flask_user/translations.py:11
 msgid "Home Page"
 msgstr "Page d'accueil"
 
 #: flask_user/templates/flask_user/edit_user_profile.html:5
-#: flask_user/translations.py:96
+#: flask_user/translations.py:12
 msgid "User profile"
 msgstr "Profil"
 
-#: flask_user/translations.py:97
+#: flask_user/translations.py:13
 msgid "Member Page"
 msgstr ""
 
-#: flask_user/translations.py:98
-msgid "Special Page"
-msgstr "Page spéciale"
+#: flask_user/translations.py:14
+msgid "Admin Page"
+msgstr ""
 
-#: flask_user/user_manager.py:280
+#: flask_user/user_manager.py:259
 msgid ""
 "Password must have at least 6 characters with one lowercase letter, one "
 "uppercase letter and one number"
@@ -217,35 +217,35 @@ msgstr ""
 "Le mot de passe doit contenir 6 caractères avec une minuscule, une "
 "majuscule et un chiffre."
 
-#: flask_user/user_manager.py:296
+#: flask_user/user_manager.py:270
 msgid "Username must be at least 3 characters long"
 msgstr "Le nom d'utilisateur doit contenir au moins 3 caractères."
 
-#: flask_user/user_manager.py:301
+#: flask_user/user_manager.py:276
 #, fuzzy
 msgid "Username may only contain letters, numbers, '-', '.' and '_'"
 msgstr ""
 "Le pseudo peut contenir uniquement des lettres, chiffres,  '-', '.' et "
 "'_'."
 
-#: flask_user/user_manager_views.py:71
+#: flask_user/user_manager__views.py:63
 msgid "Your password has been changed successfully."
 msgstr "Votre mot de passe a été changé"
 
-#: flask_user/user_manager_views.py:109
+#: flask_user/user_manager__views.py:100
 #, python-format
 msgid "Your username has been changed to '%(username)s'."
 msgstr "Votre pseudo est maintement  '%(username)s'."
 
-#: flask_user/user_manager_views.py:129 flask_user/user_manager_views.py:151
+#: flask_user/user_manager__views.py:120 flask_user/user_manager__views.py:142
 msgid "Invalid confirmation token."
 msgstr "Token de confirmation invalide"
 
-#: flask_user/user_manager_views.py:160
+#: flask_user/user_manager__views.py:151
 msgid "Your email has been confirmed."
 msgstr "Votre email a été confirmé"
 
-#: flask_user/user_manager_views.py:241
+#: flask_user/user_manager__views.py:230
 #, python-format
 msgid ""
 "A reset password email has been sent to '%(email)s'. Open that email and "
@@ -254,39 +254,39 @@ msgstr ""
 "Un mail de changement de mot de passe a été envoyé à '%(email)s'. Ouvrez "
 "le mail et suivez les instructions pour mettre à jour votre mot de passe."
 
-#: flask_user/user_manager_views.py:318
+#: flask_user/user_manager__views.py:305
 msgid "Invitation has been sent."
 msgstr ""
 
-#: flask_user/user_manager_views.py:391
+#: flask_user/user_manager__views.py:379
 msgid "You have signed out successfully."
 msgstr "Vous êtes bien déconnecté."
 
-#: flask_user/user_manager_views.py:560
+#: flask_user/user_manager__views.py:548
 msgid "Your reset password token is invalid."
 msgstr "Votre code de changement de mot de passe n'est pas valide."
 
-#: flask_user/user_manager_views.py:586
+#: flask_user/user_manager__views.py:574
 #, fuzzy
 msgid "Your password has been reset successfully."
 msgstr "Votre mot de passe a été changé"
 
-#: flask_user/user_manager_views.py:603
+#: flask_user/user_manager__views.py:591
 #, python-format
 msgid "You must be signed in to access '%(url)s'."
 msgstr "Vous devez être connecté pour accéder à %(url)s'."
 
-#: flask_user/user_manager_views.py:614
+#: flask_user/user_manager__views.py:602
 #, python-format
 msgid "You do not have permission to access '%(url)s'."
 msgstr "Vous n'avez pas les droits pour accéder à '%(url)s'."
 
-#: flask_user/user_manager_views.py:624
+#: flask_user/user_manager__views.py:612
 #, python-format
 msgid "You must confirm your email to access '%(url)s'."
 msgstr "Vous devez confirmer votre mail pour accéder à '%(url)s'."
 
-#: flask_user/user_manager_views.py:648 flask_user/user_manager_views.py:664
+#: flask_user/user_manager__views.py:636 flask_user/user_manager__views.py:652
 #, python-format
 msgid ""
 "A confirmation email has been sent to %(email)s with instructions to "
@@ -295,15 +295,15 @@ msgstr ""
 "Un email de confirmation a été envoyé à %(email)s avec les instructions "
 "pour terminer votre enregistrement."
 
-#: flask_user/user_manager_views.py:650
+#: flask_user/user_manager__views.py:638
 msgid "You have registered successfully."
 msgstr "Votre compte a été créé avec succès."
 
-#: flask_user/user_manager_views.py:673
+#: flask_user/user_manager__views.py:661
 msgid "Your account has not been enabled."
 msgstr "Votre compte n'a pas été activé."
 
-#: flask_user/user_manager_views.py:682
+#: flask_user/user_manager__views.py:671
 #, python-format
 msgid ""
 "Your email address has not yet been confirmed. Check your email Inbox and"
@@ -314,7 +314,7 @@ msgstr ""
 " réception ainsi que le dossier spam pour l'email de confirmation ou <a "
 "href=\"%(url)s\">Renvoyer l'email de confirmation</a>."
 
-#: flask_user/user_manager_views.py:693
+#: flask_user/user_manager__views.py:682
 msgid "You have signed in successfully."
 msgstr "Vous êtes bien connecté."
 
@@ -381,4 +381,7 @@ msgstr "Changer de mot de passe"
 
 #~ msgid "Profile Page"
 #~ msgstr "Profil"
+
+#~ msgid "Special Page"
+#~ msgstr "Page spéciale"
 

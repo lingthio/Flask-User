@@ -149,8 +149,8 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
             user = self.UserClass.get_user_by_token(user_token, self.USER_USER_SESSION_EXPIRATION)
             return user
 
-        # Configure Flask-Babel
-        # ---------------------
+        # Configure Flask-BabelEx
+        # -----------------------
         self.babel = app.extensions.get('babel', None)
         from .translation_utils import init_translations
         init_translations(self.babel)

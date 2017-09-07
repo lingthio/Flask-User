@@ -11,7 +11,7 @@ The Basic App builds on the QuickStart App by adding the following features:
 - Enable translations
 
 Unlike the QuickStart App, the Basic App requires proper SMTP settings
-and the installation of ``Flask-Babel`` and ``speaklater``.
+and the installation of ``Flask-BabelEx``.
 
 Create a development environment
 --------------------------------
@@ -29,9 +29,12 @@ Install required Python packages
 --------------------------------
 ::
 
+   # Uninstall Flask-Babel if needed
+   pip uninstall Flask-Babel
+
+   # Install Flask-BabelEx and Flask-User
+   pip install Flask-BabelEx
    pip install Flask-User
-   pip install Flask-Babel
-   pip install speaklater
 
 Create the basic_app.py file
 ----------------------------
@@ -104,6 +107,6 @@ then you may have specified incorrect SMTP settings.
 If you receive a SQLAlchemy error message, you may be using an old DB schema.
 Delete the quickstart_app.sqlite file and restart the app.
 
-If you don't see any translations, you may not have installed ``Flask-Babel`` and ``speaklater``,
+If you don't see any translations, you may not have installed ``Flask-BabelEx``,
 or you may not have prioritized a supported language in your browser settings.
 
