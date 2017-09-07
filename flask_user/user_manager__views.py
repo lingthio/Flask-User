@@ -664,7 +664,7 @@ class UserManager__Views(object):
         um = current_app.user_manager
         if um.USER_ENABLE_EMAIL \
                 and um.USER_ENABLE_CONFIRM_EMAIL \
-                and current_app.user_manager.USER_REQUIRE_CONFIRMED_EMAIL_TO_LOGIN \
+                and not current_app.user_manager.USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL \
                 and not self.user_has_confirmed_email(user):
             url = url_for('user.resend_email_confirmation')
             flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email or <a href="%(url)s">Re-send confirmation email</a>.', url=url), 'error')

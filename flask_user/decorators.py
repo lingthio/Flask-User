@@ -127,23 +127,35 @@ def roles_required(*role_names):
 
 
 def allow_unconfirmed_email(view_function):
-    """ | This decorator ensures that the user is logged in,
+    """ This decorator ensures that the user is logged in,
     but allows users with or without a confirmed email addresses
     to access this particular view.
+
+    It works in tandem with the ``USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL=True`` setting.
+
+    .. caution::
+
+        | Use ``USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL=True`` and
+            ``@allow_unconfirmed_email`` with caution,
+            as they relax security requirements.
+        | Make sure that decorated views **never call other views directly**.
+            Allways use ``redirect()`` to ensure proper view protection.
+
 
     Example::
 
         @route('/show_promotion')
         @allow_unconfirmed_emails
-        @login_required
         def show_promotion():   # Logged in, with or without
             ...                 # confirmed email address
 
-    .. attention::
+    It can also precede the ``@roles_required`` and ``@roles_accepted`` view decorators::
 
-        Use with caution, as it relaxes a security requirement.
-        Make sure that decorated views never **call** other views.
-        User ``redirect()`` instead.
+        @route('/show_promotion')
+        @allow_unconfirmed_emails
+        @roles_required('Visitor')
+        def show_promotion():   # Logged in, with or without
+            ...                 # confirmed email address
 
     | Calls unauthorized_view() when the user is not logged in.
     | Calls the decorated view otherwise.

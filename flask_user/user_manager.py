@@ -43,10 +43,10 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         Example:
             ``user_manager = UserManager(app, db, User, UserEmailClass=UserEmail)``
 
-        .. note::
+        .. This hack shows a header above the _next_ section
+        .. code-block:: none
 
-            What follows is a list of UserManager methods that can be extended or overridden
-            to customize Flask-User behavior.
+            Customizable UserManager methods
         """
 
         #see http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code """
@@ -241,11 +241,6 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         """Ensure that Usernames contains at least 3 alphanumeric characters.
 
         Override this method to customize the username validator.
-
-        .. note::
-
-            | What follows is a list of utility methods.
-            | There is typically no need to override these methods.
         """
         username = field.data
         if len(username) < 3:
@@ -286,13 +281,11 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         setting = app.config.get('USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL', None)
         if setting is not None:
             print(
-                'Deprecation warning: USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL=True'\
+                'Deprecation warning: USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL'\
                 ' will be deprecated.' \
-                ' It has been replaced by its OPPOSITE:'\
-                ' USER_REQUIRE_CONFIRMED_EMAIL_TO_LOGIN=False,'\
-                ' again, notice its OPPOSITE meaning.'\
+                ' It has been replaced by USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL.'\
                 ' Please change this as soon as possible.')
-            self.USER_REQUIRE_CONFIRMED_EMAIL_TO_LOGIN = not setting
+            self.USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL = setting
 
         # Check for deprecated USER_ENABLE_RETYPE_PASSWORD
         setting = app.config.get('USER_ENABLE_RETYPE_PASSWORD', None)

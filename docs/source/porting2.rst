@@ -119,17 +119,17 @@ to better reflect what this setting does.
     # To v0.9+
     USER_REQUIRE_RETYPE_PASSWORD = True
 
-We renamed the ``USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL`` setting to
-its **opposite** ``USER_REQUIRE_CONFIRMED_EMAIL_TO_LOGIN`` setting
+We renamed ``USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL`` to
+``USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL``
 to better reflect what this setting does.
 
 ::
 
     # From v0.6
-    # USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL = True  # Opposite meaning!!
+    # USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL = False
 
     # To v0.9+
-    USER_REQUIRE_CONFIRMED_EMAIL_TO_LOGIN = False  # Opposite meaning!!
+    USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL = False
 
 We split ``USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST`` into ``USER_SHOW_USERNAME_DOES_NOT_EXIST``
 and ``USER_SHOW_EMAIL_DOES_NOT_EXIST`` and set the default to False for increased security --
@@ -213,11 +213,11 @@ As a result, the generated tokens are different, which will affect two areas:
 --------------------------------------------
 The ``@confirm_email_required`` view decorator has been deprecated for security reasonse.
 
-| In v0.6, the ``USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL=True`` setting removed
+| In v0.6, the ``USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL`` setting removed
     confirmed email protection for all the views and required developers to re-protect
     the vulnerable views with ``@confirm_email_required``.
-| In v0.9+ we adopt the opposite approach where the (renamed) ``USER_REQUIRE_CONFIRMED_EMAIL_TO_LOGIN=True``
-    setting still protects all the views, except those decorated with the
+| In v0.9+ we adopt the opposite approach where the (renamed) ``USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL=True``
+    setting continues to protect all the views, except those decorated with the
     new ``@allow_unconfirmed_email`` decorator.
 
 

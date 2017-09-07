@@ -5,12 +5,17 @@ UserManager Utility methods
 
 Below is a complete list of Flask-User utility methods.
 
-.. note::
+.. This hack shows a header above the _next_ section
+.. code-block:: none
 
-    These settings are part of the ``UserManager`` class.
-    The docs show it under the `UserManager__Settings` mixin class
-    that we use to modulerize ``UserManager`` class code across several code files.
+    The UserManager__Untils class mixes into the UserManager class
+    (for maintaining code and docs across several files).
 
 .. autoclass:: flask_user.user_manager__utils.UserManager__Utils
     :no-undoc-members:
 
+.. seealso::
+
+    - :ref:`UserManagerClass`
+    - :ref:`UserManager__Settings`
+    - :ref:`UserManager__Views`

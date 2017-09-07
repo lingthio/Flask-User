@@ -77,8 +77,8 @@ Resolve deprecation warnings (optional but recommended)::
     - Replace: USER_ENABLE_RETYPE_PASSWORD
          with: USER_REQUIRE_RETYPE_PASSWORD
 
-    - Replace: USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL=True  # Opposite values!
-         with: USER_REQUIRE_CONFIRMED_EMAIL_TO_LOGIN=False   # Opposite values!
+    - Replace: USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL
+         with: USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL
 
     - Replace: USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST
          with: USER_SHOW_USERNAME_DOES_NOT_EXIST and USER_SHOW_EMAIL_DOES_NOT_EXIST

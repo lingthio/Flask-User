@@ -24,7 +24,8 @@ class UserManager__Utils(object):
         In Flask-Login 0.2 ``is_authenticated`` and ``is_active`` were
         implemented as functions, while in 0.3+ they are implemented as properties.
 
-        Example:
+        Example::
+
             if self.call_or_get(current_user.is_authenticated):
                 pass
         """
@@ -56,7 +57,7 @@ class UserManager__Utils(object):
         return (user, user_email)
 
     def generate_token(self, *args):
-        """Convenience method that calls token_manager.generate_token(*args)."""
+        """Convenience method that calls token_manager.generate_token(\*args)."""
         return self.token_manager.generate_token(*args)
 
     def get_primary_user_email(self, user):

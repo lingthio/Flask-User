@@ -11,7 +11,10 @@
 class UserManager__Settings(object):
     """Flask-User settings and their defaults.
 
-    .. note:: Feature settings and their defaults
+    .. This hack shows a header above the _next_ section
+    .. code-block:: none
+
+        Feature settings
     """
 
 
@@ -44,7 +47,10 @@ class UserManager__Settings(object):
 
     #: | Remember user sessions across browser restarts.
     #:
-    #: .. note:: Generic settings and their defaults
+    #: .. This hack shows a header above the _next_ section
+    #: .. code-block:: none
+    #:
+    #:     Generic settings and their defaults
     USER_ENABLE_REMEMBER_ME = True
 
 
@@ -67,12 +73,12 @@ class UserManager__Settings(object):
     #: Automatic sign-in at the login form (if the user session has not expired).
     USER_AUTO_LOGIN_AT_LOGIN = True
 
-    #: | Sender email address
-    #: | Required for sending out emails.
+    #: | Sender's email address, used by the EmailMailers.
+    #: | Required for sending emails.
     USER_EMAIL_SENDER_EMAIL = ''
 
-    #: Sender name
-    #: Required for sending out emails.
+    #: | Sender's name, user by the EmailMailers.
+    #: | Optional.
     USER_EMAIL_SENDER_NAME = ''
 
     #: | Send notification email after a password change.
@@ -97,12 +103,20 @@ class UserManager__Settings(object):
 
     #: | Ensure that users can login only with a confirmed email address.
     #: | Depends on USER_ENABLE_EMAIL=True.
-    #: | Depends on USER_ENABLE_CONFIRM_EMAIL=True.
     #:
-    #: The ``@login_required`` decorator still protects views from
-    #: users with confirmed email addresses, unless the
-    #: ``@allow_unconfirmed_emails`` decorator precedes the ``@login_required decorator``.
-    USER_REQUIRE_CONFIRMED_EMAIL_TO_LOGIN = True
+    #: This setting works in tandem with the ``@allow_unconfirmed_emails``
+    #: view decorator to allow users without confirmed email addresses
+    #: to access certain views.
+    #:
+    #: .. caution::
+    #:
+    #:     | Use ``USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL=True`` and
+    #:         ``@allow_unconfirmed_email`` with caution,
+    #:         as they relax security requirements.
+    #:     | Make sure that decorated views **never call other views directly**.
+    #:         Allways se ``redirect()`` to ensure proper view protection.
+
+    USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL = False
 
     #: | Require users to retype their password.
     #: | Affects registration, change password and reset password forms.
@@ -127,21 +141,25 @@ class UserManager__Settings(object):
     #: | Reset password token expiration in seconds.
     #: | Default is 2 days (2*24*3600 seconds).
     #:
-    #: .. note:: Password configuration
+    #: .. This hack shows a header above the _next_ section
+    #: .. code-block:: none
+    #:
+    #:     Password hash settings
     USER_RESET_PASSWORD_EXPIRATION = 2*24*3600
 
     #: | List of accepted password hashes.
-    #: | See `Passlib CryptContext docs on Constructor Keyword 'scheme' <http://passlib.readthedocs.io/en/stable/lib/passlib.context.html?highlight=cryptcontext#constructor-keywords>`_
-    #: | Example: ['bcrypt', 'argon2']
+    #: | See `Passlib CryptContext docs on Constructor Keyword ``'schemes'`` <http://passlib.readthedocs.io/en/stable/lib/passlib.context.html?highlight=cryptcontext#constructor-keywords>`_
+    #: | Example: ``['bcrypt', 'argon2']``
     #: |   Creates new hashes with 'bcrypt' and verifies existing hashes with 'bcrypt' and 'argon2'.
     USER_PASSLIB_CRYPTCONTEXT_SCHEMES = ['bcrypt']
 
-    #: | Dictionary of CryptContext keywords or hash options.
-    #: | See `Passlib CryptContext docs on Constructor Keyword <http://passlib.readthedocs.io/en/stable/lib/passlib.context.html?highlight=cryptcontext#constructor-keywords>`_
+    #: | Dictionary of CryptContext keywords and hash options.
+    #: | See `Passlib CryptContext docs on Constructor Keywords <http://passlib.readthedocs.io/en/stable/lib/passlib.context.html?highlight=cryptcontext#constructor-keywords>`_
     #: | and `Passlib CryptContext docs on Algorithm Options <http://passlib.readthedocs.io/en/stable/lib/passlib.context.html?highlight=cryptcontext#algorithm-options>`_
-    #: | Example: dict(bcrypt__rounds=12, argon2__time_cost=2, argon2__memory_cost=512)
+    #: | Example: ``dict(bcrypt__rounds=12, argon2__time_cost=2, argon2__memory_cost=512)``
     #:
-    #: .. note:: URL settings and their defaults
+    #: .. This hack shows a header above the _next_ section
+    #:     URL settings
     USER_PASSLIB_CRYPTCONTEXT_KEYWORDS = dict()
 
     USER_CHANGE_PASSWORD_URL = '/user/change-password' #:
@@ -156,7 +174,12 @@ class UserManager__Settings(object):
     USER_MANAGE_EMAILS_URL = '/user/manage-email_templates' #:
     USER_REGISTER_URL = '/user/register' #:
     USER_RESEND_EMAIL_CONFIRMATION_URL = '/user/resend-email-confirmation' #:
-    USER_RESET_PASSWORD_URL = '/user/reset-password/<token>' #: .. note:: template file settings and their defaults
+
+    #: .. This hack shows a header above the _next_ section
+    #: .. code-block:: none
+    #:
+    #:     Template file settings
+    USER_RESET_PASSWORD_URL = '/user/reset-password/<token>'
 
     USER_CHANGE_PASSWORD_TEMPLATE = 'flask_user/change_password.html' #:
     USER_CHANGE_USERNAME_TEMPLATE = 'flask_user/change_username.html' #:
@@ -167,14 +190,24 @@ class UserManager__Settings(object):
     USER_MANAGE_EMAILS_TEMPLATE = 'flask_user/manage_emails.html' #:
     USER_REGISTER_TEMPLATE = 'flask_user/register.html' #:
     USER_RESEND_EMAIL_CONFIRMATION_TEMPLATE = 'flask_user/request_email_confirmation.html' #:
-    USER_RESET_PASSWORD_TEMPLATE = 'flask_user/reset_password.html' #: .. note:: email template file settings and their defaults
+
+    #: .. This hack shows a header above the _next_ section
+    #: .. code-block:: none
+    #:
+    #:     Email template file settings
+    USER_RESET_PASSWORD_TEMPLATE = 'flask_user/reset_password.html'
 
     USER_CONFIRM_EMAIL_TEMPLATE = 'flask_user/email_templates/confirm_email' #:
     USER_INVITE_USER_EMAIL_TEMPLATE = 'flask_user/email_templates/invite_user' #:
     USER_PASSWORD_CHANGED_EMAIL_TEMPLATE = 'flask_user/email_templates/password_changed' #:
     USER_REGISTERED_EMAIL_TEMPLATE = 'flask_user/email_templates/registered' #:
     USER_RESET_PASSWORD_EMAIL_TEMPLATE = 'flask_user/email_templates/reset_password' #:
-    USER_USERNAME_CHANGED_EMAIL_TEMPLATE = 'flask_user/email_templates/username_changed' #: .. note:: Flask endpoint settings and their defaults
+
+    #: .. This hack shows a header above the _next_ section
+    #: .. code-block:: none
+    #:
+    #:     FLask endpoint settings
+    USER_USERNAME_CHANGED_EMAIL_TEMPLATE = 'flask_user/email_templates/username_changed'
 
     USER_AFTER_CHANGE_PASSWORD_ENDPOINT = '' #:
     USER_AFTER_CHANGE_USERNAME_ENDPOINT = '' #:

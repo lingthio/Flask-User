@@ -14,6 +14,6 @@ Flask-User can be customized by extending or overriding any of the methods liste
 .. seealso::
 
     - :ref:`UserManager__Settings`
-    - :ref:`UserManager__Utils`
     - :ref:`UserManager__Views`
+    - :ref:`UserManager__Utils`
 
