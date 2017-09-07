@@ -8,34 +8,6 @@
 import os
 from flask import _request_ctx_stack, request
 
-# Return absolute path to Flask-User's translations dir ('/full/path/to/flask_user/translations')
-def get_flask_user_translations_dir():
-    translations_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'translations')
-    return translations_dir
-
-# Chooses the best locale from a list of available locales
-def choose_best_locale(app, babel, flask_user_translations_dir):
-    # babel.list_translations() does not accept a custom translations directory
-    # As a workaround, we:
-    # - temporarily set BABEL_TRANSLATION_DIRECTORIES=flask_user_translations_dir
-    # - call babel.list_translations()
-    # - restore BABEL_TRANSLATION_DIRECTORIES
-
-    # set BABEL_TRANSLATION_DIRECTORIES=flask_user_translations_dir
-    original_dir = app.config.get('BABEL_TRANSLATION_DIRECTORIES', '')
-    app.config.update(BABEL_TRANSLATION_DIRECTORIES=flask_user_translations_dir)
-
-    # Retrieve a list of available translation codes from Flask-User. E.g. ['de', 'en', 'fr']
-    available_codes = [str(translation) for translation in babel.list_translations()]
-
-    # Restore BABEL_TRANSLATION_DIRECTORIES
-    app.config.update(BABEL_TRANSLATION_DIRECTORIES=original_dir)
-
-    # Match list with languages from the user's browser's accept header
-    locale = request.accept_languages.best_match(available_codes)
-
-    return locale
-
 
 # To avoid requiring the Flask-Babel, Babel and speaklater packages,
 # we check if the app has initialized Flask-Babel or not
@@ -52,6 +24,34 @@ def get_translations():
     # Only load translations if it has not yet been loaded before
     translations = getattr(ctx, 'flask_user_translations', None)
     if translations is None:
+        # Return absolute path to Flask-User's translations dir ('/full/path/to/flask_user/translations')
+        def _get_flask_user_translations_dir():
+            translations_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'translations')
+            return translations_dir
+
+        # Chooses the best locale from a list of available locales
+        def _choose_best_locale(app, babel, flask_user_translations_dir):
+            # babel.list_translations() does not accept a custom translations directory
+            # As a workaround, we:
+            # - temporarily set BABEL_TRANSLATION_DIRECTORIES=flask_user_translations_dir
+            # - call babel.list_translations()
+            # - restore BABEL_TRANSLATION_DIRECTORIES
+
+            # set BABEL_TRANSLATION_DIRECTORIES=flask_user_translations_dir
+            original_dir = app.config.get('BABEL_TRANSLATION_DIRECTORIES', '')
+            app.config.update(BABEL_TRANSLATION_DIRECTORIES=flask_user_translations_dir)
+
+            # Retrieve a list of available translation codes from Flask-User. E.g. ['de', 'en', 'fr']
+            available_codes = [str(translation) for translation in babel.list_translations()]
+
+            # Restore BABEL_TRANSLATION_DIRECTORIES
+            app.config.update(BABEL_TRANSLATION_DIRECTORIES=original_dir)
+
+            # Match list with languages from the user's browser's accept header
+            locale = request.accept_languages.best_match(available_codes)
+
+            return locale
+
         from flask_babel import support
         flask_user_translations_dir = get_flask_user_translations_dir()
         # Chooses the best locale from a list of available locales

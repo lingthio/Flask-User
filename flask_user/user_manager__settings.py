@@ -1,5 +1,4 @@
-"""
-UserManager__Settings is a Mixin for UserManager that holds all Flask-User settings.
+"""UserManager__Settings is a Mixin for UserManager that holds all Flask-User settings.
 """
 
 # The UserManager is implemented across several source code files.
@@ -8,6 +7,7 @@ UserManager__Settings is a Mixin for UserManager that holds all Flask-User setti
 # This Settings Mixin documents all Flask-User settings through docstrings.
 # Sphinx Autodoc builds the documentation from these docstrings.
 
+# This is a Mixin class that will become part of the UserManager class
 class UserManager__Settings(object):
     """Flask-User settings and their defaults.
 
@@ -18,18 +18,9 @@ class UserManager__Settings(object):
     #: | Allow users to login and register with an email address
     USER_ENABLE_EMAIL = True
 
-    #: | Require users to confirm their email.
-    #: | Depends on USER_ENABLE_EMAIL=True.
-    USER_ENABLE_CONFIRM_EMAIL = True
-
     #: | Allow users to associate multiple email addresses with one user account.
     #: | Depends on USER_ENABLE_EMAIL=True
     USER_ENABLE_MULTIPLE_EMAILS = False
-
-    #: | Allow users to login without a confirmed email address.
-    #: | Depends on USER_ENABLE_EMAIL=True.
-    #: | Make sure to protect vulnerable views using @confirmed_email_required.
-    USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL = False
 
     #: | Allow users to login and register with a username
     USER_ENABLE_USERNAME = True
@@ -96,9 +87,22 @@ class UserManager__Settings(object):
     #: | Depends on USER_ENABLE_EMAIL=True.
     USER_SEND_USERNAME_CHANGED_EMAIL = True
 
+    #: | Require users to have a confirmed email.
+    #: | Depends on USER_ENABLE_EMAIL=True.
+    USER_ENABLE_CONFIRM_EMAIL = True
+
     #: | Only invited users may register.
     #: | Depends on USER_ENABLE_EMAIL=True.
     USER_REQUIRE_INVITATION = False
+
+    #: | Ensure that users can login only with a confirmed email address.
+    #: | Depends on USER_ENABLE_EMAIL=True.
+    #: | Depends on USER_ENABLE_CONFIRM_EMAIL=True.
+    #:
+    #: The ``@login_required`` decorator still protects views from
+    #: users with confirmed email addresses, unless the
+    #: ``@allow_unconfirmed_emails`` decorator precedes the ``@login_required decorator``.
+    USER_REQUIRE_CONFIRMED_EMAIL_TO_LOGIN = True
 
     #: | Require users to retype their password.
     #: | Affects registration, change password and reset password forms.

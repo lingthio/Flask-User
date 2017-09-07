@@ -28,7 +28,7 @@ class SendgridEmailMailer(EmailMailerInterface):
         # Setup sendgrid-python
         try:
             from sendgrid import SendGridAPIClient
-        except:
+        except ImportError:
             raise ConfigError(
                 "sendgrid-python has not been installed. Install sendgrid-python with 'pip install sendgrid' or use a different EmailMailer.")
 
@@ -48,6 +48,6 @@ class SendgridEmailMailer(EmailMailerInterface):
         from sendgrid.helpers.mail import Email, Content, Substitution, Mail
         try:
             pass    # TODO
-        except :
+        except ImportError:
             pass    # TODO
 

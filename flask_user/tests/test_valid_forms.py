@@ -36,8 +36,6 @@ def test_with_email(client):
     """
     Test all forms with all enabled features and USER_ENABLE_USERNAME=False
     """
-    print('test_with_email()')
-
     um = current_app.user_manager
     um.USER_ENABLE_REGISTER = True
     um.USER_ENABLE_USERNAME = False
@@ -55,8 +53,6 @@ def test_with_username(client):
     """
     Test all forms with all enabled features and USER_ENABLE_USERNAME=True
     """
-    print('test_with_username()')
-
     # Enable all features
     um = current_app.user_manager
     um.USER_ENABLE_REGISTER = True

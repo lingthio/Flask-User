@@ -29,7 +29,7 @@ class SendmailEmailMailer(EmailMailerInterface):
         # Setup Flask-Mail
         try:
             from flask_sendmail import Mail
-        except:
+        except ImportError:
             raise ConfigError(
                 "Flask-Sendmail has not been installed. Install Flask-Sendmail with 'pip install Flask-Sendmail' or use a different EmailMailer.")
         self.mail = Mail(app)

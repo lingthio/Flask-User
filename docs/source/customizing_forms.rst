@@ -175,7 +175,7 @@ Optionally, if you want to change the default behaviour, you can customize the v
     all that it does before attempting to modify its behavior.
 
     `Default view methods are defined here
-    <https://github.com/lingthio/Flask-User/blob/master/flask_user/user_manager_views.py>`_
+    <https://github.com/lingthio/Flask-User/blob/master/flask_user/user_manager__views.py>`_
 
 .. seealso:: :ref:`UserManager__Views` for a complete list of customizable view methods.
 

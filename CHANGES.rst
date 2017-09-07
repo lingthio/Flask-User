@@ -1,21 +1,21 @@
 Change history
 ==============
 
-With **v0.9 (alpha and beta)** and **v1.0 (stable)** we
-allow developers to customize Flask-User by overriding or extending
-``UserManager`` properties and methods.
+With **v0.9 (alpha and beta)** and **v1.0 (stable)** we simplified customization
+by allowing developers to override or extend ``UserManager`` properties and methods.
 
-We re-wrote the TokenManager to support MongoDB IDs and adding parts of the password
-to the token to invalidate tokens after a password change.
+We increased security by having the TokenManager accept parts of passwords,
+in addition to the user ID, to invalidate tokens after a password has changed.
 
-Password hashing can be completely configured using ``USER_PASSLIB_CRYPTCONTEXT_SCHEMES``
-and USER_PASSLIB_CRYPTCONTEXT_KEYWORDS settings.
+Hashlib password hashing is completely configurable through two config settings:
+``USER_PASSLIB_CRYPTCONTEXT_SCHEMES`` and ``USER_PASSLIB_CRYPTCONTEXT_KEYWORDS``.
+Example: ``SCHEMES=['bcrypt', 'argon2']``, ``KEYWORDS=dict(bcrypt__rounds=12, argon2__memory_cost=512)``.
 
-We modified the DbAdapter interface slightly to support MongoDB through MongoEngine
-and custom DbAdapters.
+We added support for MongoDBs through a MongoEngineAdapter and by
+having the TokenManager accept string representations of MongoDB ObjecIds.
 
-We introduced the EmailMailer interface to support sending emails via SMTP, ``sendmail``,
-SendGrid, and custom EmailMailers.
+We introduced the EmailMailer interface to support sending emails not only via SMTP,
+but also via ``sendmail``, SendGrid, and custom EmailMailers.
 
 For all of the above we finally had to break compatibility with **v0.6 (stable)**.
 For non-customized Flask-User apps, the porting is relatively straightforward.

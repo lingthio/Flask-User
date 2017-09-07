@@ -2,7 +2,7 @@ import os
 import datetime
 from flask import Flask, render_template_string, request
 from flask_user import login_required, UserManager, UserMixin
-from flask_user import roles_required, confirmed_email_required
+from flask_user import roles_required
 
 ORM_type = 'SQLAlchemy'   # SQLAlchemy  or MongoEngine
 # ORM_type = 'MongoEngine'   # SQLAlchemy  or MongoEngine
@@ -15,7 +15,7 @@ app = Flask(__name__)
 # os.getenv() enables configuration through OS environment variables
 class ConfigClass(object):
     # Flask settings
-    SECRET_KEY =              os.getenv('SECRET_KEY',       'THIS IS AN INSECURE SECRET')
+    SECRET_KEY = 'This is an INSECURE secret!! DO NOT use this in production!!'
 
     # Flask-SQLAlchemy settings
     SQLALCHEMY_DATABASE_URI = 'sqlite:///tst_app.sqlite'    # File-based SQL database
@@ -141,7 +141,7 @@ class CustomUserManager(UserManager):
 def init_app(app, test_config=None):                # For automated tests
     # Load local_settings.py if file exists         # For automated tests
     try: app.config.from_object('local_settings')
-    except: pass
+    except ImportError: pass
 
     # Load optional test_config                     # For automated tests
     if test_config:
@@ -149,11 +149,11 @@ def init_app(app, test_config=None):                # For automated tests
 
     # Setup Flask-User
     if ORM_type == 'SQLAlchemy':
-        user_manager = CustomUserManager(app, db, User, UserInvitationClass=UserInvitation)
         RoleClass = Role
+        user_manager = CustomUserManager(app, db, User, UserInvitationClass=UserInvitation, RoleClass=RoleClass)
     else:
-        user_manager = CustomUserManager(app, db, User)
         RoleClass = None
+        user_manager = CustomUserManager(app, db, User, RoleClass=RoleClass)
 
     # Reset database by dropping, then creating all tables
     db_adapter = user_manager.db_adapter
@@ -194,7 +194,6 @@ def init_app(app, test_config=None):                # For automated tests
     # The '/profile' page requires a logged-in user
     @app.route('/user/profile')
     @login_required                                 # Use of @login_required decorator
-    @confirmed_email_required
     def user_profile_page():
         return render_template_string("""
             {% extends "flask_user_layout.html" %}

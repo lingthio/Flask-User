@@ -1,7 +1,7 @@
 .. _DbAdapterInterface:
 
-DbAdapterInterface
-==================
+DbAdapter Interface
+===================
 
 The DbAdapterInterface class defines an interface to find, add, update and remove
 persistent database objects,

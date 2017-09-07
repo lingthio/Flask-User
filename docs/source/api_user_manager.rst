@@ -1,6 +1,6 @@
 .. _UserManagerClass:
 
-UserManager class
+UserManager Class
 =================
 
 The UserManager class implements most of the Flask-User functionality.
@@ -11,10 +11,9 @@ Flask-User can be customized by extending or overriding any of the methods liste
     :no-undoc-members:
     :no-inherited-members:
 
-UserManager settings
---------------------
-See :ref:`UserManager__Settings`
+.. seealso::
 
-UserManager views
------------------
-See :ref:`UserManager__Views`
+    - :ref:`UserManager__Settings`
+    - :ref:`UserManager__Utils`
+    - :ref:`UserManager__Views`
+

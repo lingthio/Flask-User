@@ -35,7 +35,7 @@ Below is a complete list of configurable Flask-User settings and their defaults.
 Note: Ignore the `__Settings` part of the class name.
 It's a trick we use to split the code and docs across several files.
 
-.. autoclass:: flask_user.user_manager_settings.UserManager__Settings
+.. autoclass:: flask_user.user_manager__settings.UserManager__Settings
     :private-members:
     :noindex:
 

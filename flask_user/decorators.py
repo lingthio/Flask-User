@@ -7,94 +7,167 @@
 
 
 from functools import wraps
-from flask import current_app
+from flask import current_app, g
 from flask_login import current_user
-from .utils import user_is_authenticated, user_has_confirmed_email
+
+def _is_logged_in_with_confirmed_email(user_manager):
+    """| Returns True if user is logged in and has a confirmed email address.
+    | Returns False otherwise.
+    """
+    # User must be logged in
+    if user_manager.call_or_get(current_user.is_authenticated):
+        # Is unconfirmed email allowed for this view by @allow_unconfirmed_email?
+        unconfirmed_email_allowed = \
+            getattr(g, '_flask_user_allow_unconfirmed_email', False)
+        
+        # unconfirmed_email_allowed must be True or
+        # User must have at least one confirmed email address
+        if unconfirmed_email_allowed or user_manager.user_has_confirmed_email(current_user):
+            return True
+
+    return False
 
 
-def login_required(func):
-    """ This decorator ensures that the current user is logged in before calling the actual view.
-        Calls the unauthorized_view() when the user is not logged in."""
-    @wraps(func)
-    def decorated_view(*args, **kwargs):
-        # User must be authenticated
-        if not user_is_authenticated(current_user):
+def login_required(view_function):
+    """ This decorator ensures that the current user is logged in.
+
+    Example::
+
+        @route('/member_page')
+        @login_required
+        def member_page():  # User must be logged in
+            ...
+
+    If USER_ENABLE_EMAIL is True and USER_ENABLE_CONFIRM_EMAIL is True,
+    this view decorator also ensures that the user has a confirmed email address.
+
+    | Calls unauthorized_view() when the user is not logged in
+        or when the user has not confirmed their email address.
+    | Calls the decorated view otherwise.
+    """
+    @wraps(view_function)    # Tells debuggers that is is a function wrapper
+    def decorator(*args, **kwargs):
+        user_manager = current_app.user_manager
+        
+        # User must be logged in with a confirmed email address
+        allowed = _is_logged_in_with_confirmed_email(user_manager)
+        if not allowed:
             # Redirect to unauthenticated page
-            return current_app.user_manager.unauthenticated_view()
+            return user_manager.unauthenticated_view()
 
-        # Call the actual view
-        return func(*args, **kwargs)
-    return decorated_view
+        # It's OK to call the view
+        return view_function(*args, **kwargs)
+
+    return decorator
 
 
-# def roles_accepted(*role_names):
-#     """ This decorator ensures that the current user one of the specified roles.
-#         Calls the unauthorized_view() when requirements fail.
-#         See also: UserMixin.has_role()
-#     """
-#     def wrapper(func):
-#         @wraps(func)
-#         def decorated_view(*args, **kwargs):
-#             # User must be logged
-#             if not user_is_authenticated(current_user):
-#                 # Redirect to the unauthenticated page
-#                 return current_app.user_manager.unauthenticated_view()
-#
-#             # User must have the required roles
-#             if not current_user.has_role(*role_names):
-#                 # Redirect to the unauthorized page
-#                 return current_app.user_manager.unauthorized_view()
-#
-#             # Call the actual view
-#             return func(*args, **kwargs)
-#         return decorated_view
-#     return wrapper
+def roles_accepted(*role_names):
+    """| This decorator ensures that the current user is logged in,
+    | and has *at least one* of the specified roles (OR operation).
+
+    Example::
+
+        @route('/edit_article')
+        @roles_accepted('Writer', 'Editor')
+        def edit_article():  # User must be 'Writer' OR 'Editor'
+            ...
+
+    | Calls unauthenticated_view() when the user is not logged in
+        or when user has not confirmed their email address.
+    | Calls unauthorized_view() when the user does not have the required roles.
+    | Calls the decorated view otherwise.
+    """
+    # convert the list to a list containing that list.
+    # Because roles_required(a, b) requires A AND B
+    # while roles_required([a, b]) requires A OR B
+    required_role_names = [*role_names]
+    return roles_required(required_role_names)
 
 
 def roles_required(*role_names):
-    """ This decorator ensures that the current user has the required roles.
+    """| This decorator ensures that the current user is logged in,
+    | and has *all* of the specified roles (AND operation).
 
-    | Returns the result of unauthorized_view() when the user is not logged in.
-    | Returns the result of unauthorized_view() when the user does not have the required roles.
-    | Returns the result of the decorated view otherwise.
+    Example::
 
-    See also: UserMixin.has_roles()
+        @route('/escape')
+        @roles_required('Special', 'Agent')
+        def escape_capture():  # User must be 'Special' AND 'Agent'
+            ...
+
+    | Calls unauthenticated_view() when the user is not logged in
+        or when user has not confirmed their email address.
+    | Calls unauthorized_view() when the user does not have the required roles.
+    | Calls the decorated view otherwise.
     """
-    def wrapper(func):
-        @wraps(func)
-        def decorated_view(*args, **kwargs):
-            # User must be logged
-            if not user_is_authenticated(current_user):
-                # Redirect to the unauthenticated page
-                return current_app.user_manager.unauthenticated_view()
+    def wrapper(view_function):
+
+        @wraps(view_function)    # Tells debuggers that is is a function wrapper
+        def decorator(*args, **kwargs):
+            user_manager = current_app.user_manager
+
+            # User must be logged in with a confirmed email address
+            allowed = _is_logged_in_with_confirmed_email(user_manager)
+            if not allowed:
+                # Redirect to unauthenticated page
+                return user_manager.unauthenticated_view()
 
             # User must have the required roles
             if not current_user.has_roles(*role_names):
                 # Redirect to the unauthorized page
-                return current_app.user_manager.unauthorized_view()
+                return user_manager.unauthorized_view()
 
-            # Call the actual view
-            return func(*args, **kwargs)
-        return decorated_view
+            # It's OK to call the view
+            return view_function(*args, **kwargs)
+
+        return decorator
+
     return wrapper
 
 
-def confirmed_email_required(func):
-    """ This decorator ensures that the current user is logged in and has confirmed their email.
 
-    | Returns the result of unauthorized_view() when the user is not logged in.
-    | Returns the result of unconfimed_view() when the use has not confirmed their email.
-    | Returns the result of the decorated view otherwise.
+def allow_unconfirmed_email(view_function):
+    """ | This decorator ensures that the user is logged in,
+    but allows users with or without a confirmed email addresses
+    to access this particular view.
+
+    Example::
+
+        @route('/show_promotion')
+        @allow_unconfirmed_emails
+        @login_required
+        def show_promotion():   # Logged in, with or without
+            ...                 # confirmed email address
+
+    .. attention::
+
+        Use with caution, as it relaxes a security requirement.
+        Make sure that decorated views never **call** other views.
+        User ``redirect()`` instead.
+
+    | Calls unauthorized_view() when the user is not logged in.
+    | Calls the decorated view otherwise.
     """
-    @wraps(func)
-    def decorated_view(*args, **kwargs):
-        # User must be authenticated
-        if user_is_authenticated(current_user):
+    @wraps(view_function)    # Tells debuggers that is is a function wrapper
+    def decorator(*args, **kwargs):
+        # Sets a boolean on the global request context
+        g._flask_user_allow_unconfirmed_email = True
+
+        # Catch exceptions to properly unset boolean on exceptions
+        try:
             user_manager = current_app.user_manager
-            # If confirm email has been enabled, user must have at least one confirmed email
-            if user_has_confirmed_email(current_user):
-                return func(*args, **kwargs)
 
-        return current_app.user_manager.unconfirmed_email_view()
+            # User must be logged in with a confirmed email address
+            allowed = _is_logged_in_with_confirmed_email(user_manager)
+            if not allowed:
+                # Redirect to unauthenticated page
+                return user_manager.unauthenticated_view()
 
-    return decorated_view
+            # It's OK to call the view
+            return view_function(*args, **kwargs)
+
+        finally:
+            # Allways unset the boolean, whether exceptions occurred or not
+            g._flask_user_allow_unconfirmed_email = False
+
+    return decorator

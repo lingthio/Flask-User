@@ -10,7 +10,7 @@ from flask_user.signals import user_sent_invitation, user_registered
 # os.getenv() enables configuration through OS environment variables
 class ConfigClass(object):
     # Flask settings
-    SECRET_KEY =              os.getenv('SECRET_KEY',       'THIS IS AN INSECURE SECRET')
+    SECRET_KEY = 'This is an INSECURE secret!! DO NOT use this in production!!'
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///test_app.sqlite')
     CSRF_ENABLED = True
 
@@ -37,7 +37,7 @@ def create_app(test_config=None):                   # For automated tests
 
     # Load local_settings.py if file exists         # For automated tests
     try: app.config.from_object('local_settings')
-    except: pass
+    except ImportError: pass
 
     # Load optional test_config                     # For automated tests
     if test_config:
@@ -110,7 +110,8 @@ def create_app(test_config=None):                   # For automated tests
                 {% endif %}
             {% endblock %}
             """)
-        if _call_or_get(utils.is_authenticated):
+        user_manager = current_app.user_manager
+        if user_manager.call_or_get(current_user.is_authenticated):
             return redirect(url_for('user_profile_page'))
         else:
             return redirect(url_for('user.login'))

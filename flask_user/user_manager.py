@@ -5,53 +5,27 @@
 # Author: Ling Thio (ling.thio@gmail.com)
 # License: Simplified BSD License, see LICENSE.txt for more details.
 
-# Python version specific imports
-import os
-from sys import version_info as py_version
-is_py2 = (py_version[0] == 2)     #: Python 2.x?
-is_py3 = (py_version[0] == 3)     #: Python 3.x?
-if is_py2:
-    from urlparse import urlsplit
-if is_py3:
-    from urllib.parse import urlsplit
-
 from wtforms import ValidationError
 
 from flask import abort, Blueprint, current_app, Flask
 from flask_login import LoginManager, current_user
 
-from flask_user.email_manager import EmailManager
-from flask_user.password_manager import PasswordManager
-from flask_user.token_manager import TokenManager
-
+from . import ConfigError
+from .email_manager import EmailManager
 from . import forms
-from . import translations
-from flask_user import ConfigError
+from .password_manager import PasswordManager
+from .token_manager import TokenManager
 from .translations import get_translations, lazy_gettext as _
-from .user_manager_settings import UserManager__Settings
-from .user_manager_views import UserManager__Views, init_views
-
-__version__ = '0.9'
-
-
-def _call_or_get(function_or_property):
-    return function_or_property() if callable(function_or_property) else function_or_property
-
-
-def _flask_user_context_processor():
-    """ Make 'user_manager' available to Jinja2 templates"""
-    return dict(
-        user_manager=current_app.user_manager,
-        call_or_get=_call_or_get)
 
 
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class for ease of customization.
-class UserManager(UserManager__Settings, UserManager__Views):
+from .user_manager__settings import UserManager__Settings
+from .user_manager__utils import UserManager__Utils
+from .user_manager__views import UserManager__Views
+class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views):
     """ Customizable User Authentication and Management.
     """
-
-    # ***** Initialization methods *****
 
     def __init__(self, app, db, UserClass, **kwargs):
         """
@@ -71,7 +45,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
 
         .. note::
 
-            Any of the UserManager methods listed below can be extended or overridden
+            What follows is a list of UserManager methods that can be extended or overridden
             to customize Flask-User behavior.
         """
 
@@ -82,7 +56,9 @@ class UserManager(UserManager__Settings, UserManager__Views):
 
     def init_app(self, app, db, UserClass,
                  UserInvitationClass=None,
-                 UserEmailClass=None):
+                 UserEmailClass=None,
+                 RoleClass=None,    # Only used for testing
+                 ):
 
         # See http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code
         # Perform Class type checking
@@ -99,6 +75,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
         self.UserClass = UserClass
         self.UserEmailClass = UserEmailClass
         self.UserInvitationClass = UserInvitationClass
+        self.RoleClass=RoleClass
 
         # For each 'USER_...' property: load settings from application config.
         for attrib_name in dir(self):
@@ -127,8 +104,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
                 if isinstance(db, SQLAlchemy):
                     from .db_adapters import SQLAlchemyDbAdapter
                     self.db_adapter = SQLAlchemyDbAdapter(app, db)
-            except:
-                pass
+            except ImportError: pass
 
         # Check if db is a MongoEngine instance
         if self.db_adapter is None:
@@ -137,8 +113,7 @@ class UserManager(UserManager__Settings, UserManager__Views):
                 if isinstance(db, MongoEngine):
                     from .db_adapters import MongoEngineDbAdapter
                     self.db_adapter = MongoEngineDbAdapter(app, db)
-            except:
-                pass
+            except ImportError: pass
 
         # Configure SMTPEmailMailer as the default email mailer
         from .email_mailers.smtp_email_mailer import SMTPEmailMailer
@@ -188,11 +163,20 @@ class UserManager(UserManager__Settings, UserManager__Views):
         blueprint = Blueprint('flask_user', __name__, template_folder='templates')
         app.register_blueprint(blueprint)
 
-        # Add URL routes
-        init_views(app, self)
+        # In Flask-Login 0.2 ``is_authenticated`` and ``is_active`` were implemented as functions,
+        # while in 0.3+ they are implemented as properties.
+        def call_or_get(function_or_property):
+            return function_or_property() if callable(function_or_property) else function_or_property
+
+        def flask_user_context_processor():
+            """ Make 'user_manager' available to Jinja2 templates"""
+            return dict(
+                user_manager=current_app.user_manager,
+                call_or_get=call_or_get,
+            )
 
         # Add context processor
-        app.context_processor(_flask_user_context_processor)
+        app.context_processor(flask_user_context_processor)
 
         # # Prepare for translations
         # _ = translations.gettext
@@ -204,80 +188,30 @@ class UserManager(UserManager__Settings, UserManager__Views):
         self._check_settings(app)
 
         # Configure a list of URLs to route to their corresponding view method.
-        self._configure_urls(app)
+        self._add_url_routes(app)
 
         # self.init_babel(app)
 
 
     def customize(self, app):
-        """ Override this method to customize settings or to configure:
+        """ Override this method to customize properties.
 
-        - a custom EmailManager
-        - a custom TokenManager
-        - a custom PasswordManager
-        - a custom EmailMailer
-
-        ::
+        Example::
 
             # Customize Flask-User
             class CustomUserManager(UserManager):
 
                 def customize(self, app):
 
-                    # Customize settings
-                    # (Can also be set in the application config)
-                    self.USER_ENABLE_EMAIL = True
-                    self.USER_ENABLE_USERNAME = False
-
                     # Add custom managers and email mailers here
                     self.email_manager = CustomEmailManager(app)
-                    self.password_manager = CustomPasswordManager(app, 'bcrypt')
+                    self.password_manager = CustomPasswordManager(app)
                     self.token_manager = CustomTokenManager(app)
                     self.email_mailer = CustomEmailMailer(app)
 
             # Setup Flask-User
             user_manager = CustomUserManager(app, db, User)
         """
-
-    def hash_password(self, password):
-        """Convenience method that calls password_manager.hash_password(password)."""
-        return self.password_manager.hash_password(password)
-
-    def verify_password(self, password, password_hash):
-        """Convenience method that calls password_manager.verify_password(password, password_hash).
-        """
-        # Handle deprecated v0.6 (password, user) params
-        if isinstance(password_hash, self.UserClass):
-            print(
-                'Deprecation warning: verify_password(password, user) has been changed'\
-                ' to: verify_password(password, password_hash). The user param will be deprecated.'\
-                ' Please change your call with verify_password(password, user) into'\
-                ' a call with verify_password(password, user.password)'
-                ' as soon as possible.')
-            password_hash = password_hash.password   # effectively user.password
-
-        return self.password_manager.verify_password(password, password_hash)
-
-    def make_safe_url(self, url):
-        """Makes a URL safe by removing optional hostname and port.
-
-        Example:
-
-            | ``make_safe_url('https://hostname:80/path1/path2?q1=v1&q2=v2#fragment')``
-            | returns ``'/path1/path2?q1=v1&q2=v2#fragment'``
-
-        Override this method if you need to allow a list of safe hostnames.
-
-        .. note::
-
-            Form field validators
-        """
-
-        # Split the URL into scheme, hostname, port, path, query and fragment
-        parts = urlsplit(url)
-        # Rebuild a safe URL with only the path, query and fragment parts
-        safe_url = parts.path + parts.query + parts.fragment
-        return safe_url
 
     def password_validator(self, form, field):
         """Ensure that passwords have one lowercase letter, one uppercase letter and one digit.
@@ -299,8 +233,8 @@ class UserManager(UserManager__Settings, UserManager__Views):
         # Password must have one lowercase letter, one uppercase letter and one digit
         is_valid = password_length >= 6 and lowers and uppers and digits
         if not is_valid:
-            raise ValidationError(_(
-                'Password must have at least 6 characters with one lowercase letter, one uppercase letter and one number'))
+            raise ValidationError(
+                _('Password must have at least 6 characters with one lowercase letter, one uppercase letter and one number'))
 
 
     def username_validator(self, form, field):
@@ -310,82 +244,19 @@ class UserManager(UserManager__Settings, UserManager__Views):
 
         .. note::
 
-            Utility methods that are used by the form views.
-            There is usually no need to override these methods.
+            | What follows is a list of utility methods.
+            | There is typically no need to override these methods.
         """
         username = field.data
         if len(username) < 3:
-            raise ValidationError(_('Username must be at least 3 characters long'))
+            raise ValidationError(
+                _('Username must be at least 3 characters long'))
         valid_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._'
         chars = list(username)
         for char in chars:
             if char not in valid_chars:
-                raise ValidationError(_("Username may only contain letters, numbers, '-', '.' and '_'"))
-
-    def email_is_available(self, new_email):
-        """Check if ``new_email`` is available.
-
-        | Returns True if ``new_email`` does not exist or belongs to the current user.
-        | Return False otherwise.
-        """
-
-        user, user_email = self.find_user_by_email(new_email)
-        return (user == None)
-
-    def find_user_by_username(self, username):
-        """Retrieve a User by username (case insensitively)."""
-        return self.db_adapter.ifind_first_object(self.UserClass, username=username)
-
-    def find_user_by_email(self, email):
-        """Retrieve a User by email."""
-        if self.UserEmailClass:
-            user_email = self.db_adapter.ifind_first_object(self.UserEmailClass, email=email)
-            user = user_email.user if user_email else None
-        else:
-            user_email = None
-            user = self.db_adapter.ifind_first_object(self.UserClass, email=email)
-
-        return (user, user_email)
-
-    def get_primary_user_email(self, user):
-        """Retrieve the email from User object or the primary UserEmail object (if multiple emails
-        per user are enabled)."""
-        db_adapter = self.db_adapter
-        if self.UserEmailClass:
-            user_email = db_adapter.find_first_object(self.UserEmailClass,
-                                                      user_id=user.id,
-                                                      is_primary=True)
-            return user_email
-        else:
-            return user
-
-    def get_user_by_id(self, user_id):
-        """Retrieve a User object by ID."""
-        return self.db_adapter.get_object(self.UserClass, user_id)
-
-    def get_user_email_by_id(self, user_email_id):
-        """Retrieve a UserEmail object by ID."""
-        return self.db_adapter.get_object(self.UserEmailClass, user_email_id)
-
-    def username_is_available(self, new_username):
-        """Check if ``new_username`` is still available.
-
-        | Returns True if ``new_username`` does not exist or belongs to the current user.
-        | Return False otherwise.
-
-        .. note::
-
-            Flask-User validators.
-        """
-
-        # Return True if new_username equals current user's username
-        if _call_or_get(current_user.is_authenticated):
-            if new_username == current_user.username:
-                return True
-
-        # Return True if new_username does not exist,
-        # Return False otherwise.
-        return self.find_user_by_username(new_username) == None
+                raise ValidationError(
+                    _("Username may only contain letters, numbers, '-', '.' and '_'"))
 
     # ***** Private methods *****
 
@@ -411,22 +282,37 @@ class UserManager(UserManager__Settings, UserManager__Views):
         # Check for deprecated settings
         # -----------------------------
 
+        # Check for deprecated USER_ENABLE_CONFIRM_EMAIL
+        setting = app.config.get('USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL', None)
+        if setting is not None:
+            print(
+                'Deprecation warning: USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL=True'\
+                ' will be deprecated.' \
+                ' It has been replaced by its OPPOSITE:'\
+                ' USER_REQUIRE_CONFIRMED_EMAIL_TO_LOGIN=False,'\
+                ' again, notice its OPPOSITE meaning.'\
+                ' Please change this as soon as possible.')
+            self.USER_REQUIRE_CONFIRMED_EMAIL_TO_LOGIN = not setting
+
         # Check for deprecated USER_ENABLE_RETYPE_PASSWORD
         setting = app.config.get('USER_ENABLE_RETYPE_PASSWORD', None)
         if setting is not None:
             print(
-                'Deprecation warning: USER_ENABLE_RETYPE_PASSWORD has been replaced'\
-                ' by USER_REQUIRE_RETYPE_PASSWORD,'\
-                ' and will be deprecated. Please change this as soon as possible.')
+                'Deprecation warning: USER_ENABLE_RETYPE_PASSWORD'\
+                ' will be deprecated.' \
+                ' It has been replaced with USER_REQUIRE_RETYPE_PASSWORD.'\
+                ' Please change this as soon as possible.')
             self.USER_REQUIRE_RETYPE_PASSWORD = setting
 
         # Check for deprecated USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST
         setting = app.config.get('USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST', None)
         if setting is not None:
             print(
-                'Deprecation warning: USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST has been replaced'\
-                ' by USER_SHOW_USERNAME_DOES_NOT_EXIST and USER_SHOW_EMAIL_DOES_NOT_EXIST,'
-                ' and will be deprecated. Please change this as soon as possible.')
+                'Deprecation warning: USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST' \
+                ' will be deprecated.' \
+                ' It has been replaced with USER_SHOW_USERNAME_DOES_NOT_EXIST'
+                ' and USER_SHOW_EMAIL_DOES_NOT_EXIST.'
+                ' Please change this as soon as possible.')
             self.USER_SHOW_USERNAME_DOES_NOT_EXIST = setting
             self.USER_SHOW_EMAIL_DOES_NOT_EXIST = setting
 
@@ -434,9 +320,9 @@ class UserManager(UserManager__Settings, UserManager__Views):
         setting = app.config.get('USER_PASSWORD_HASH', None)
         if setting is not None:
             print(
-                "Deprecation warning: USER_PASSWORD_HASH (string) has been replaced"\
-                " by USER_PASSLIB_CRYPTCONTEXT_SCHEMES (list),"
-                " and will be deprecated."\
+                "Deprecation warning: USER_PASSWORD_HASH=<string>"\
+                " will be deprecated."\
+                " It has been replaced with USER_PASSLIB_CRYPTCONTEXT_SCHEMES=<list>."
                 " Please change USER_PASSWORD_HASH='something' to"\
                 " USER_PASSLIB_CRYPTCONTEXT_SCHEMES=['something'] as soon as possible.")
             self.USER_PASSLIB_CRYPTCONTEXT_SCHEMES = [setting]
@@ -462,11 +348,18 @@ class UserManager(UserManager__Settings, UserManager__Views):
         if not self.USER_ENABLE_USERNAME:
             self.USER_ENABLE_CHANGE_USERNAME = False
 
-    def _configure_urls(self, app):
+    def _add_url_routes(self, app):
         """Configure a list of URLs to route to their corresponding view method.."""
 
-        # Stubs are needed because url_rules call functions (and not methods with the extra 'self' parameter).
-        # This is also where we check if the USER_... settings allow these URLs or not.
+        # Because methods contain an extra ``self`` parameter, URL routes are mapped
+        # to stub functions, which simply call the corresponding method.
+
+        # For testing purposes, we map all available URLs to stubs, but the stubs
+        # contain config checks to return 404 when a feature is disabled.
+
+        # Define the stubs
+        # ----------------
+
         def change_password_stub():
             if not self.USER_ENABLE_CHANGE_PASSWORD: abort(404)
             return self.change_password_view()
@@ -520,12 +413,14 @@ class UserManager(UserManager__Settings, UserManager__Views):
             return self.unconfirmed_email_view()
 
         def unauthenticated_stub():
-            return self.unconfirmed_email_view()
+            return self.unauthenticated_view()
 
         def unauthorized_stub():
-            return self.unconfirmed_email_view()
+            return self.unauthorized_view()
 
-        """ Add URL Routes"""
+        # Add the URL routes
+        # ------------------
+
         app.add_url_rule(self.USER_CHANGE_PASSWORD_URL, 'user.change_password', change_password_stub,
                          methods=['GET', 'POST'])
         app.add_url_rule(self.USER_CHANGE_USERNAME_URL, 'user.change_username', change_username_stub,
@@ -536,13 +431,19 @@ class UserManager(UserManager__Settings, UserManager__Views):
         app.add_url_rule(self.USER_EMAIL_ACTION_URL, 'user.email_action', email_action_stub)
         app.add_url_rule(self.USER_FORGOT_PASSWORD_URL, 'user.forgot_password', forgot_password_stub,
                          methods=['GET', 'POST'])
-        app.add_url_rule(self.USER_INVITE_USER_URL, 'user.invite_user', invite_user_stub, methods=['GET', 'POST'])
-        app.add_url_rule(self.USER_LOGIN_URL, 'user.login', login_stub, methods=['GET', 'POST'])
-        app.add_url_rule(self.USER_LOGOUT_URL, 'user.logout', logout_stub, methods=['GET', 'POST'])
-        app.add_url_rule(self.USER_MANAGE_EMAILS_URL, 'user.manage_emails', manage_emails_stub, methods=['GET', 'POST'])
-        app.add_url_rule(self.USER_REGISTER_URL, 'user.register', register_stub, methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_INVITE_USER_URL, 'user.invite_user', invite_user_stub,
+                         methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_LOGIN_URL, 'user.login', login_stub,
+                         methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_LOGOUT_URL, 'user.logout', logout_stub,
+                         methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_MANAGE_EMAILS_URL, 'user.manage_emails', manage_emails_stub,
+                         methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_REGISTER_URL, 'user.register', register_stub,
+                         methods=['GET', 'POST'])
         app.add_url_rule(self.USER_RESEND_EMAIL_CONFIRMATION_URL, 'user.resend_email_confirmation',
-                         resend_email_confirmation_stub, methods=['GET', 'POST'])
+                         resend_email_confirmation_stub,
+                         methods=['GET', 'POST'])
         app.add_url_rule(self.USER_RESET_PASSWORD_URL, 'user.reset_password', reset_password_stub,
                          methods=['GET', 'POST'])
 

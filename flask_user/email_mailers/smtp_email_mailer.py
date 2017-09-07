@@ -31,7 +31,7 @@ class SMTPEmailMailer(EmailMailerInterface):
         # Setup Flask-Mail
         try:
             from flask_mail import Mail
-        except :
+        except ImportError:
             raise ConfigError(
                 "Flask-Mail has not been installed. Install Flask-Mail with 'pip install Flask-Mail' or use a different EmailMailer.")
         self.mail = Mail(app)

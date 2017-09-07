@@ -1,6 +1,6 @@
 .. _FlaskUserForms:
 
-Flask-User forms
+Flask-User Forms
 ================
 
 Below is a complete list of customizable Flask-User forms.

@@ -8,7 +8,7 @@ from flask_user import login_required, UserManager, UserMixin
 # os.getenv() enables configuration through OS environment variables
 class ConfigClass(object):
     # Flask settings
-    SECRET_KEY =              os.getenv('SECRET_KEY',       'THIS IS AN INSECURE SECRET')
+    SECRET_KEY = 'This is an INSECURE secret!! DO NOT use this in production!!'
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///multi_email_app.sqlite')
     CSRF_ENABLED = True
 
