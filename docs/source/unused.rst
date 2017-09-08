@@ -90,120 +90,6 @@ The following can be customized by editing the English Babel translation file:
 See :doc:`internationalization`
 
 
-Emails
-------
-Emails are generated using Flask Jinja2 template files.
-Flask will first look for template files in the application's ``templates`` directory
-before looking in Flask-User's ``templates`` directory.
-
-Emails can thus be customized by copying the built-in Email template files
-from the Flask-User directory to your application's directory
-and editing the new copy.
-
-Flask-User typically installs in the ``flask_user`` sub-directory of the Python packages directory.
-The location of this directory depends on Python, virtualenv and pip
-and can be determined with the following command::
-
-    python -c "from distutils.sysconfig import get_python_lib; print get_python_lib();"
-
-Let's assume that:
-
-* The Python packages dir is: ``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/``
-* The Flask-User dir is: ``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/flask_user/``
-* Your app directory is: ``~/path/to/YOURAPP/YOURAPP``
-  (your application directory typically contains the 'static' and 'templates' sub-directories).
-
-The built-in Email template files can be copied like so::
-
-    cd ~/path/to/YOURAPP/YOURAPP
-    mkdir -p templates/flask_user/emails
-    cp ~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/flask_user/templates/flask_user/email_templates/* templates/flask_user/email_templates/.
-
-Flask-User currently offers the following email messages::
-
-    confirm_email     # Sent after a user submitted a registration form
-                      # - Requires USER_ENABLE_EMAIL = True
-                      # - Requires USER_ENABLE_CONFIRM_EMAIL = True
-
-    forgot_password   # Sent after a user submitted a forgot password form
-                      # - Requires USER_ENABLE_EMAIL = True
-                      # - Requires USER_ENABLE_FORGOT_PASSWORD = True
-
-    password_changed  # Sent after a user submitted a change password or reset password form
-                      # - Requires USER_ENABLE_EMAIL = True
-                      # - Requires USER_ENABLE_CHANGE_PASSWORD = True
-                      # - Requires USER_SEND_PASSWORD_CHANGED_EMAIL = True
-
-    registered        # Sent to users after they submitted a registration form
-                      # - Requires USER_ENABLE_EMAIL = True
-                      # - Requires USER_ENABLE_CONFIRM_EMAIL = False
-                      # - Requires USER_SEND_REGISTERED_EMAIL = True
-
-    username_changed  # Sent after a user submitted a change username form
-                      # - Requires USER_ENABLE_EMAIL = True
-                      # - Requires USER_ENABLE_CHANGE_USERNAME = True
-                      # - Requires USER_SEND_USERNAME_CHANGED_EMAIL = True
-
-Each email type has three email template files.
-The 'registered' email for example has the following files::
-
-    templates/flask_user/email_templates/registered_subject.txt   # The email subject line
-    templates/flask_user/email_templates/registered_message.html  # The email message in HTML format
-    templates/flask_user/email_templates/registered_message.txt   # The email message in Text format
-
-Each file is extended from the base template file::
-
-    templates/flask_user/email_templates/base_subject.txt
-    templates/flask_user/email_templates/base_message.html
-    templates/flask_user/email_templates/base_message.txt
-
-The base template files are used to define email elements that are similar in all types of email messages.
-
-| If, for example, for every email you want to:
-| - Set the background color and padding,
-| - Start with a logo and salutation, and
-| - End with a signature,
-| you can define ``templates/flask_user/email_templates/base_message.html`` like so
-
-::
-
-    <div style="background-color: #f4f2dd; padding: 10px;">
-        <p><img src="http://example.com/static/images/email-logo.png"></p>
-        <p>Dear Customer,</p>
-        {% block message %}{% endblock %}
-        <p>Sincerely,<br/>
-        The Flask-User Team</p>
-    </div>
-
-and define the confirmation specific messages in ``templates/flask_user/email_templates/confirm_email_message.html`` like so::
-
-    {% extends "flask_user/email_templates/base_message.html" %}
-
-    {% block message %}
-    <p>Thank you for registering with Flask-User.</p>
-    <p>Visit the link below to complete your registration:</p>
-    <p><a href="{{ confirm_email_link }}">Confirm your email address</a>.</p>
-    <p>If you did not initiate this registration, you may safely ignore this email.</p>
-    {% endblock %}
-
-The email template files, along with available template variables listed below:
-
-* Template variables available in any email template
-    * ``user_manager`` - For example: ``{% if user_manager.USER_ENABLE_CONFIRM_EMAIL %}``
-    * ``user`` - For example: ``{{ user.email }}``
-* templates/flask_user/confirm_email_[subject.txt|message.html|message.txt]
-    * ``confirm_email_link`` - For example: ``{{ confirm_email_link }}``
-* templates/flask_user/forgot_password_[subject.txt|message.html|message.txt]
-    * ``reset_password_link`` - For example: ``{{ reset_password_link }}``
-* templates/flask_user/password_changed_[subject.txt|message.html|message.txt]
-    * n/a
-* templates/flask_user/registered_[subject.txt|message.html|message.txt]
-    * n/a
-* templates/flask_user/username_changed_[subject.txt|message.html|message.txt]
-    * n/a
-
-If you need other email notifications, please enter a feature request to our Github issue tracker. Thank you.
-
 
 Registration Form
 -----------------
@@ -430,4 +316,78 @@ Custom view functions are specified by setting an property on the Flask-User's U
 Token Generation
 ----------------
 To be documented.
+
+
+
+Emails
+------
+
+Emails are generated using Flask Jinja2 template files.
+Flask will first look for template files in the application's ``templates`` directory
+before looking in Flask-User's ``templates`` directory.
+
+Emails can thus be customized by copying the built-in Email template files
+from the Flask-User directory to your application's directory
+and editing the new copy.
+
+Flask-User typically installs in the ``flask_user`` sub-directory of the Python packages directory.
+The location of this directory depends on Python, virtualenv and pip
+and can be determined with the following command::
+
+    python -c "from distutils.sysconfig import get_python_lib; print get_python_lib();"
+
+Let's assume that:
+
+* The Python packages dir is: ``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/``
+* The Flask-User dir is: ``~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/flask_user/``
+* Your app directory is: ``~/path/to/YOURAPP/YOURAPP``
+  (your application directory typically contains the 'static' and 'templates' sub-directories).
+
+The built-in Email template files can be copied like so::
+
+    cd ~/path/to/YOURAPP/YOURAPP
+    mkdir -p templates/flask_user/emails
+    cp ~/.virtualenvs/ENVNAME/lib/python2.7/site-packages/flask_user/templates/flask_user/emails/* templates/flask_user/emails/.
+
+Each email type has three email template files.
+The 'registered' email for example has the following files::
+
+    templates/flask_user/emails/registered_subject.txt   # The email subject line
+    templates/flask_user/emails/registered_message.html  # The email message in HTML format
+    templates/flask_user/emails/registered_message.txt   # The email message in Text format
+
+Each file is extended from the base template file::
+
+    templates/flask_user/emails/base_subject.txt
+    templates/flask_user/emails/base_message.html
+    templates/flask_user/emails/base_message.txt
+
+The base template files are used to define email elements that are similar in all types of email messages.
+
+| If, for example, for every email you want to:
+| - Set the background color and padding,
+| - Start with a logo and salutation, and
+| - End with a signature,
+| you can define ``templates/flask_user/emails/base_message.html`` like so
+
+::
+
+    <div style="background-color: #f4f2dd; padding: 10px;">
+        <p><img src="http://example.com/static/images/email-logo.png"></p>
+        <p>Dear Customer,</p>
+        {% block message %}{% endblock %}
+        <p>Sincerely,<br/>
+        The Flask-User Team</p>
+    </div>
+
+and define the confirmation specific messages in ``templates/flask_user/emails/confirm_email_message.html`` like so::
+
+    {% extends "flask_user/emails/base_message.html" %}
+
+    {% block message %}
+    <p>Thank you for registering with Flask-User.</p>
+    <p>Visit the link below to complete your registration:</p>
+    <p><a href="{{ confirm_email_link }}">Confirm your email address</a>.</p>
+    <p>If you did not initiate this registration, you may safely ignore this email.</p>
+    {% endblock %}
 

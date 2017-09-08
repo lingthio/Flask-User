@@ -11,7 +11,7 @@ from __future__ import print_function
 from flask_user.db_adapters import DbAdapterInterface
 
 
-class SQLAlchemyDbAdapter(DbAdapterInterface):
+class SQLDbAdapter(DbAdapterInterface):
     """ Implements the DbAdapter interface to find, add, update and delete
     database objects using Flask-SQLAlchemy.
     """
@@ -25,14 +25,14 @@ class SQLAlchemyDbAdapter(DbAdapterInterface):
 
         | Example:
         |     db = SQLAlchemy()
-        |     db_adapter = SQLAlchemyDbAdapter(db)
+        |     db_adapter = SQLDbAdapter(db)
 
         .. note::
 
             Generic methods.
         """
         # This no-op method is defined to show it in Sphinx docs in order 'bysource'
-        super(SQLAlchemyDbAdapter, self).__init__(app, db)
+        super(SQLDbAdapter, self).__init__(app, db)
 
     def get_object(self, ObjectClass, id):
         """ Retrieve object of type ``ObjectClass`` by ``id``.
@@ -122,7 +122,7 @@ class SQLAlchemyDbAdapter(DbAdapterInterface):
         with the fields and values specified in ``**kwargs``.
         """
         # Convert name=value kwargs to object.name=value
-        super(SQLAlchemyDbAdapter, self).update_object(object, **kwargs)
+        super(SQLDbAdapter, self).update_object(object, **kwargs)
 
     def delete_object(self, object):
         """ Delete object specified by ``object``."""

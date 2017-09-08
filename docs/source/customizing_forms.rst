@@ -1,88 +1,96 @@
-.. _CustomizingForms:
-
 Customizing Forms
 =================
 
+.. include:: includes/submenu_defs.rst
+.. include:: includes/customizing_submenu.rst
+
+--------
+
 The following Flask-User forms can be customized:
 
-- :ref:`AddEmailForm`
-- :ref:`ChangeUsernameForm`
-- :ref:`EditUserProfileForm`
-- :ref:`ForgotPasswordForm`
-- :ref:`InviteUserForm`
-- :ref:`LoginForm`
-- :ref:`RegisterForm`
-- :ref:`ResendEmailConfirmationForm`
-- :ref:`ResetPasswordForm`
+- AddEmailForm
+- ChangeUsernameForm
+- EditUserProfileForm
+- ForgotPasswordForm
+- InviteUserForm
+- LoginForm
+- RegisterForm
+- ResendEmailConfirmationForm
+- ResetPasswordForm
 
 For each form, you can customize the following:
 
-- :ref:`CustomizingHtmlTemplates` that renders the form,
-- :ref:`CustomizingForms2` that defines the form fields, and
-- :ref:`CustomizingViewMethods` that prepares the form (on HTTP GET) and processes the form data (on HTTP POST).
+- :ref:`CustomizingFormTemplates`
+- :ref:`CustomizingFormClasses`
+- :ref:`CustomizingFormValidators`
+- :ref:`CustomizingFormViews`
 
 
 --------
 
-.. _CopyingHTMLTemplates:
+.. _CustomizingFormTemplates:
 
-Copying HTML templates
-----------------------
-The HTML template files reside in the Flask-User package directory, whereever it's installed.
-We'll need to copy these files into your local application's template directory before we
-can change them.
+Customizing Form Templates
+--------------------------
+
+Before we can customize any of the form templates, we'll need to copy them
+from the Flask-User install directory to your application's template directory.
+
+Copying Form template files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1) Determine the location of where the Flask-User package is installed::
 
+    # In a python shell, type the following:
     import os
     import flask_user
-    filename = flask_user.__file__
-    directory = os.path.dirname(filename)
-    print(directory)        # For python 2.x: print directory
+    print(os.path.dirname(flask_user.__file__))
 
     # Prints something like:
-    # /Users/janedoe/.envs/my_app/lib/python2.7/site-packages/flask_user
+    # ~/.envs/my_app/lib/python3.6/site-packages/flask_user
 
-2) Let's assume that your application's template directory is::
+2) The examples below assume the following::
 
-    ~/dev/my_app/app/templates/
+    flask_user dir: ~/.envs/my_app/lib/python3.6/site-packages/flask_user
+    app dir:        ~/dev/my_app
 
-3) Copy the template files, substituting your flask_user and your template directory accordingly::
+Adjust the examples below to your specific environment.
 
-    cp /Users/janedoe/.envs/my_app/lib/python2.7/site-packages/flask_user/templates/flask_user ~/dev/my_app/app/templates/.
-    cp /Users/janedoe/.envs/my_app/lib/python2.7/site-packages/flask_user/templates/flask_user_base.html ~/dev/my_app/app/templates/.
+3) Copy the form template files, substituting your flask_user and your app/templates directory accordingly::
+
+    # IMPORTANT:
+    # If you've already worked on customizing email templates, you can (and must) skip this step,
+    # since you've already copied the form templates along with the email templates.
+
+    cp ~/.envs/my_app/lib/python2.7/site-packages/flask_user/templates/flask_user ~/dev/my_app/app/templates/.
+    cp ~/.envs/my_app/lib/python2.7/site-packages/flask_user/templates/flask_user_base.html ~/dev/my_app/app/templates/.
 
 You should now have an app/template/flask_user directory::
 
     ls -1 ~/dev/my_app/app/templates/flask_user
 
-    # Expected output:
-    # _authorized_base.html
-    # _common_base.html
-    # _macros.html
-    # _public_base.html
-    # change_password.html
-    # change_username.html
-    # email_templates
-    # ... etc.
+Expected output::
+
+    _authorized_base.html
+    _common_base.html
+    _macros.html
+    _public_base.html
+    change_password.html
+    change_username.html
+    emails
+        ...
 
 Steps 1) through 3) only need to be performed once.
 
---------
+Editing Form template files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. _CustomizingHTMLTemplates:
-
-Customizing HTML templates
---------------------------
-
-You must :ref:`copy HTML Templates<CopyingHTMLTemplates>` before you can modify them.
-
-After you've copied the templates, you can edit any HTML template file
-in your ``app/template/flask_user/`` directory,
+After you've copied the Form template files,
+you can edit any template file in your ``app/templates/flask_user/`` directory,
 and change it to your liking.
 
 All Flask-User templates extend from ``app/template/flask_user_layout.html``.
-You can configure all Flask-User templates to extend from your own template by::
+You can configure all Flask-User templates to extend from your own layout template by::
 
     editing app/template/flask_user/_common_base.html, and
 
@@ -94,10 +102,10 @@ You can configure all Flask-User templates to extend from your own template by::
 
 --------
 
-.. _CustomizingForms2:
+.. _CustomizingFormClasses:
 
-Customizing Forms
------------------
+Customizing Form Classes
+------------------------
 
 Optionally, if you need to add form fields to a Flask-User form, you will need to customize that form like so::
 
@@ -148,10 +156,41 @@ Optionally, if you need to add form fields to a Flask-User form, you will need t
 
 --------
 
-.. _CustomizingViewMethods:
+.. _CustomizingFormValidators:
 
-Customizing view methods
-------------------------
+Customizing Form Validators
+---------------------------
+
+Flask user ships with default username and password form field validators that can be customized like so::
+
+    from wtforms import ValidationError
+
+    # Customize Flask-User
+    class CustomUserManager(UserManager):
+
+        # Override the default password validator
+        def password_validator(form, field):
+            if not some_condition:
+                raise ValidationError('Some error message.')
+
+        # Override the default username validator
+        def password_username(form, field):
+            if not some_condition:
+                raise ValidationError('Some error message.')
+
+    # Setup Flask-User
+    user_manager = CustomUserManager(app, db, User)
+
+The code for the default ``password_validator()`` can be found `on github near this line <https://github.com/lingthio/Flask-User/blob/master/flask_user/user_manager.py#L215>`_.
+
+The code for the default ``username_validator()`` can be found `on github near this line <https://github.com/lingthio/Flask-User/blob/master/flask_user/user_manager.py#L239>`_.
+
+--------
+
+.. _CustomizingFormViews:
+
+Customizing Form Views
+----------------------
 
 View methods contain the code that prepares forms (on an HTTP GET) and process forms (on an HTTP POST).
 
@@ -181,30 +220,5 @@ Optionally, if you want to change the default behaviour, you can customize the v
 
 --------
 
-.. _CustomizingValidators:
-
-Customizing Form field Validators
----------------------------------
-
-Flask user ships with default username and password form field validators that can be customized like so::
-
-    from wtforms import ValidationError
-
-    # Customize Flask-User
-    class CustomUserManager(UserManager):
-
-        # Override the default password validator
-        def password_validator(form, field):
-            if not some_condition:
-                raise ValidationError('Some error message.')
-
-        # Override the default username validator
-        def password_username(form, field):
-            if not some_condition:
-                raise ValidationError('Some error message.')
-
-    # Setup Flask-User
-    user_manager = CustomUserManager(app, db, User)
-
-| `Default validators are defined here <https://github.com/lingthio/Flask-User/blob/master/flask_user/user_manager.py>`_
-| (Search for ``def password_validator`` or ``def username_validator``).
+.. include:: includes/submenu_defs.rst
+.. include:: includes/customizing_submenu.rst

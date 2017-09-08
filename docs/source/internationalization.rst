@@ -72,4 +72,4 @@ For Google Chrome:
 - Check the 'Dutch' checkbox > Add.
 - Make sure to move it to the top: Three dots > Move to top.
 
-You can test this with the :ref:`BasicApp`.
+You can test this with the :doc:`basic_app`.

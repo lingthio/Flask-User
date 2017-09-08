@@ -10,7 +10,7 @@ from flask_user import ConfigError
 
 
 class EmailMailerInterface(object):
-    """ Define the EmailMailer interface to send email_templates through specific email mailers."""
+    """ Define the EmailMailer interface to send emails through specific email mailers."""
 
     def __init__(self, app):
         """

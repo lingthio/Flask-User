@@ -17,7 +17,7 @@ Optional uninstalls
 -------------------
 - FLask-User installs bcrypt for its default passlib hash of 'bcrypt'.
 - Flask-User installs Flask-Mail for its default SMTPEmailMailer.
-- Flask-User installs Flask-SQLAlchemy for its default SQLAlchemyDbAdapter.
+- Flask-User installs Flask-SQLAlchemy for its default SQLDbAdapter.
 
 If you configure/customize Flask-User away from their defaults, certain packages may be uninstalled::
 

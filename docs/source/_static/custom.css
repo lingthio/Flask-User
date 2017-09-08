@@ -11,12 +11,18 @@ p {
     -webkit-margin-after: 0.8em;
 }
 
-/* Reduce left margin for code blocks */
+/* Format code-blocks */
 div.highlight pre {
     margin: 0.5em 0px;
     padding: 0.7em 1em;
     font-size: 0.8em;
 }
+
+/* Format line numbers (left of code-blocks) */
+td.linenos pre {
+    font-size: 0.8em;
+}
+
 /* Reduce margins for notes and warnings */
 div.admonition {
     margin: 0.5em 0px;

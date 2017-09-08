@@ -18,42 +18,43 @@ And wouldn't it be nice to also offer:
 * **Added Security**
 * **Increased Reliability**
 * **Role-based Authorization**
-* **Internationalization**
-* **Support for multiple emails per user**
+* **Internationalization** (Chinese, Dutch, English, Farsi, Finnish, French, German, Italian, Russian, Spanish, Swedish, and Turkish)
 
 
 Customizable, yet Ready to use
 ------------------------------
 * **Largely Configurable** -- By overriding configuration settings.
-* **Almost fully Customizable** -- By overriding methods and properties.
+* **Fully Customizable** -- By overriding methods and properties.
 * **Ready to use** -- Through sensible defaults.
-* Supports **SQL Databases**.
-* **Event hooking** -- Through efficient signals.
-
-
-Secure and Reliable
--------------------
-* **Secure** -- Built on top of widely deployed Passlib and Cryptography.
-* **Reliable** -- Code coverage of over 90%
-* **Available** -- Tested on Python 2.6, 2.7, 3.3, 3.4, 3.5 and 3.6
+* Supports **SQL** and **MongoDB** databases.
 
 
 Well documented
 ---------------
+- `Latest documentation <https://flask-user.readthedocs.io/en/latest/>`_
 - `Flask-User v0.6 documentation <https://flask-user.readthedocs.io/en/v0.6/>`_
 - `Flask-User v0.5 documentation <https://flask-user.readthedocs.io/en/v0.5/>`_
 
+Additional features
+-------------------
+* **MIT License**
+* **Tested** on Python 2.6, 2.7, 3.3, 3.4, 3.5 and 3.6. Coverage: Over 90%.
+* **Event hooking** -- Through efficient signals.
+* **Support for multiple emails per user**
 
-Comes with translations
------------------------
-Chinese, Dutch, English, Farsi, Finnish, French, German, Italian, Russian, Spanish, Swedish, and Turkish
-
+Minimal Requirements
+--------------------
+- brypt 2.0+
+- cryptography 1.6+
+- Flask 0.9+
+- Flask-Login 0.2+
+- Flask-WTF 0.9+
+- passlib 1.6+
 
 Alternatives
 ------------
 * `Flask-Login <https://flask-login.readthedocs.org/en/latest/>`_
 * `Flask-Security <https://pythonhosted.org/Flask-Security/>`_
-
 
 Authors
 -------

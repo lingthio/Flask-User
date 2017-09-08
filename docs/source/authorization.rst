@@ -56,4 +56,4 @@ See the docs on :ref:`Role and UserRoles data-models<RoleAndUserRoleDataModels>`
 
 Example App
 -----------
-The :ref:`BasicApp` demonstrates the use of the ``@roles_required`` decorator.
+The :doc:`basic_app` demonstrates the use of the ``@roles_required`` decorator.

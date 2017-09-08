@@ -15,58 +15,39 @@ Flask-User v0.9
 
 And wouldn't it be nice to also offer:
 
-* **Added security**
-* **Increased reliability**
+* **Added Security**
+* **Increased Reliability**
 * **Role-based Authorization**
-* **Internationalization**
-* **Support for multiple emails per user**
+* **Internationalization** (Chinese, Dutch, English, Farsi, Finnish, French, German, Italian, Russian, Spanish, Swedish, and Turkish)
 
-| Flask-User offers these features and more.
-
-Secure and Reliable
--------------------
-* **Secure** -- Built on top of widely deployed Passlib and Cryptography.
-* **Reliable** -- Code coverage of over 90%
-* **Available** -- Tested on Python 2.6, 2.7, 3.3, 3.4, 3.5 and 3.6
+Customizable, yet Ready to use
+------------------------------
+* **Largely Configurable** -- By overriding configuration settings.
+* **Fully Customizable** -- By overriding methods and properties.
+* **Ready to use** -- Through sensible defaults.
+* Supports **SQL** and **MongoDB** databases.
 
 Well documented
 ---------------
-- `Flask-User v0.6 documentation <http://flask-user.readthedocs.io/en/v0.6/>`_
-- `Flask-User v0.5 documentation <http://flask-user.readthedocs.io/en/v0.5/>`_
+- `Latest documentation <https://flask-user.readthedocs.io/en/latest/>`_
+- `Flask-User v0.6 documentation <https://flask-user.readthedocs.io/en/v0.6/>`_
+- `Flask-User v0.5 documentation <https://flask-user.readthedocs.io/en/v0.5/>`_
 
-Fully customizable, yet Ready to use
-------------------------------------
-* **Ready to use** -- Through sensible defaults.
-* **Largely configurable** -- By overriding configuration settings.
-* **Almost fully customizable** -- By overriding default methods and properties.
-* Supports **SQL Databases** and **MongoDB Databases**.
+Additional features
+-------------------
+* **MIT License**
+* **Tested** on Python 2.6, 2.7, 3.3, 3.4, 3.5 and 3.6. Coverage: Over 90%.
 * **Event hooking** -- Through efficient signals.
+* **Support for multiple emails per user**
 
-.. _SupportedLanguages:
-
-Ships with translations
------------------------
-Chinese, Dutch, English, Farsi, Finnish, French, German, Italian, Russian, Spanish, Swedish, and Turkish
-
-Requirements
-------------
-Flask-User requires the following Python packages:
-
-- cryptography 2.0+
+Minimal Requirements
+--------------------
+- brypt 2.0+
+- cryptography 1.6+
 - Flask 0.9+
-- Flask-Login 0.3+
+- Flask-Login 0.2+
 - Flask-WTF 0.9+
 - passlib 1.6+
-
-Optionally:
-
-- blinker 1.3+ -- for Event Notification
-- Flask-BabelEx 0.9+ -- for translations
-- Flask-Mail 0.9+ -- for sending mail with SMTP
-- Flask-MongoEngine 0.9+ -- for MongoDB applications
-- Flask-Sendmail -- for sending mail with sendmail
-- Flask-SQLAlchemy 1.0+ -- for SQL database applications
-- py-bcript 0.4+ -- for fast bcrypt encryption
 
 Alternatives
 ------------

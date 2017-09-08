@@ -12,7 +12,7 @@ Table of Contents
     limitations
     data_models
     authorization
-    Customization<customization>
+    Customizing <customizing>
     internationalization
     porting
     changes
@@ -32,10 +32,10 @@ Table of Contents
     api_user_manager__settings
     api_user_manager__utils
     api_user_manager__views
-    configure_settings
+    configuring_settings
+    customizing_emails
     customizing_forms
-    customizing_db_adapter
-    customizing_email_mailer
+    customizing_advanced
     porting_basics
     porting_customizations
     porting_advanced
@@ -44,4 +44,4 @@ Table of Contents
     recipes
     faq
     old_api
-    misc
+    unused

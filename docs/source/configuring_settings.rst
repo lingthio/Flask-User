@@ -2,6 +2,10 @@
 
 Configuring settings
 ====================
+.. include:: includes/submenu_defs.rst
+.. include:: includes/customizing_submenu.rst
+
+--------
 
 Flask-User default features and settings can overridden in one of two ways:
 
@@ -44,3 +48,7 @@ To keep the code base simple and robust, we offer no easy way to change
 the '/user' base URLs or the '/flask_user' base directories in bulk.
 Please copy them from this page, then use your editor to bulk-change these settings.
 
+--------
+
+.. include:: includes/submenu_defs.rst
+.. include:: includes/customizing_submenu.rst

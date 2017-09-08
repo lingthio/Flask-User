@@ -9,27 +9,27 @@ while shielding the Flask-User code from the underlying implementation.
 
 Included implementations:
 
-- :ref:`SQLAlchemyDbAdapter`
-- :ref:`MongoEngineDbAdapter`
+- :ref:`SQLDbAdapter`
+- :ref:`MongoDbAdapter`
 
 .. autoclass:: flask_user.db_adapters.db_adapter_interface.DbAdapterInterface
 
 --------
 
-.. _SQLAlchemyDbAdapter:
+.. _SQLDbAdapter:
 
-SQLAlchemyDbAdapter
+SQLDbAdapter
 -------------------
 
-.. autoclass:: flask_user.db_adapters.sqlalchemy_db_adapter.SQLAlchemyDbAdapter
+.. autoclass:: flask_user.db_adapters.sql_db_adapter.SQLDbAdapter
 
 --------
 
-.. _MongoEngineDbAdapter:
+.. _MongoDbAdapter:
 
-MongoEngineDbAdapter
+MongoDbAdapter
 ---------------------
 
-.. autoclass:: flask_user.db_adapters.mongoengine_db_adapter.MongoEngineDbAdapter
+.. autoclass:: flask_user.db_adapters.mongodb_db_adapter.MongoDbAdapter
 
 

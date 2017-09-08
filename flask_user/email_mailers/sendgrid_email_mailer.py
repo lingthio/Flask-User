@@ -12,7 +12,7 @@ from flask_user import ConfigError, EmailError
 from flask_user.email_mailers import EmailMailerInterface
 
 class SendgridEmailMailer(EmailMailerInterface):
-    """ Implements the EmailMailer interface to send email_templates with SendGrid Web API v3 using sendgrid-python."""
+    """ Implements the EmailMailer interface to send emails with SendGrid Web API v3 using sendgrid-python."""
     def __init__(self, app):
         """Check config settings and setup SendGrid Web API v3.
 

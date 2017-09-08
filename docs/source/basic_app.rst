@@ -1,7 +1,9 @@
-.. _BasicApp:
-
 Basic App
 =========
+.. include:: includes/submenu_defs.rst
+.. include:: includes/quickstart_submenu.rst
+
+--------
 
 The Basic App builds on the QuickStart App by adding the following features:
 
@@ -71,7 +73,7 @@ Make sure to properly configure Flask-Mail settings::
    Search the web for 'Gmail less secure apps' or 'Yahoo less secure apps'
    to learn how to change this default setting for your account.
 
-   See :ref:`QuickStartApp` for an example without SMTP.
+   See :doc:`quickstart_app` for an example without SMTP.
 
 
 Configure your browser
@@ -110,3 +112,7 @@ Delete the quickstart_app.sqlite file and restart the app.
 If you don't see any translations, you may not have installed ``Flask-BabelEx``,
 or you may not have prioritized a supported language in your browser settings.
 
+--------
+
+.. include:: includes/submenu_defs.rst
+.. include:: includes/quickstart_submenu.rst

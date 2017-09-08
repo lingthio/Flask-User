@@ -1,5 +1,9 @@
 QuickStart
 ==========
+.. include:: includes/submenu_defs.rst
+.. include:: includes/quickstart_submenu.rst
+
+--------
 
 With less than a dozen lines of code, we can extend existing Flask applications
 with the following additional functionality:
@@ -14,9 +18,9 @@ with the following additional functionality:
 Choose a QuickStart app
 -----------------------
 
-- :ref:`QuickStartApp` -- Login with username. No need to configure SMTP.
-- :ref:`BasicApp` -- Login with email, Role-based authentication, and Translations.
-- :ref:`MongoDBApp` -- QuickStart App for MongoDB.
+- :doc:`quickstart_app` -- Login with username. No need to configure SMTP.
+- :doc:`basic_app` -- Login with email, Role-based authentication, and Translations.
+- :doc:`mongodb_app` -- QuickStart App for MongoDB.
 
 Flask-User-starter-app
 ----------------------
@@ -39,4 +43,7 @@ See https://github.com/lingthio/Flask-User-starter-app
 
 This may serve as a great starting place to create your next Flask application.
 
+--------
 
+.. include:: includes/submenu_defs.rst
+.. include:: includes/quickstart_submenu.rst

@@ -11,13 +11,13 @@ from __future__ import print_function
 from flask_user.db_adapters import DbAdapterInterface
 
 
-class MongoEngineDbAdapter(DbAdapterInterface):
+class MongoDbAdapter(DbAdapterInterface):
     """ Implements the DbAdapter interface to find, add, update and delete
     database objects using Flask-MongoEngine.
     """
 
     # Since MongoEngine is similar to SQLAlchemy, we extend
-    # MongoEngineDbAdapter from SQLAlchemyDbAdapter
+    # MongoDbAdapter from SQLDbAdapter
     # and re-use most of its methods.
 
     def __init__(self, app, db):
@@ -27,14 +27,14 @@ class MongoEngineDbAdapter(DbAdapterInterface):
 
         | Example:
         |    db = MongoEngine()
-        |    db_adapter = MongoEngineDbAdapter(db)
+        |    db_adapter = MongoDbAdapter(db)
 
         .. note::
 
             Generic methods.
         """
         # This no-op method is defined to show it in Sphinx docs in order 'bysource'
-        super(MongoEngineDbAdapter, self).__init__(app, db)
+        super(MongoDbAdapter, self).__init__(app, db)
 
     def get_object(self, ObjectClass, id):
         """ Retrieve object of type ``ObjectClass`` by ``id``.
@@ -94,7 +94,7 @@ class MongoEngineDbAdapter(DbAdapterInterface):
         with the fields and values specified in ``**kwargs``.
         """
         # Convert name=value kwargs to object.name=value
-        super(MongoEngineDbAdapter, self).update_object(object, **kwargs)
+        super(MongoDbAdapter, self).update_object(object, **kwargs)
         object.save()
 
 
@@ -103,7 +103,7 @@ class MongoEngineDbAdapter(DbAdapterInterface):
         object.delete()
 
     def commit(self):
-        """This method does nothing for MongoEngineDbAdapter.
+        """This method does nothing for MongoDbAdapter.
 
         .. note::
 
@@ -130,7 +130,7 @@ class MongoEngineDbAdapter(DbAdapterInterface):
         return user.roles
 
     def create_all_tables(self):
-        """This method does nothing for MongoEngineDbAdapter."""
+        """This method does nothing for MongoDbAdapter."""
         pass
 
     def drop_all_tables(self):

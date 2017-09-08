@@ -36,7 +36,7 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
 
         Keyword Args:
             UserEmailClass: The optional UserEmail class (*not* an instance!).
-                Required for the 'multiple email_templates per user' feature.
+                Required for the 'multiple emails per user' feature.
             UserInvitationClass: The optional UserInvitation class (*not* an instance!).
                 Required for the 'register by invitation' feature.
 
@@ -120,8 +120,8 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
             try:
                 from flask_sqlalchemy import SQLAlchemy
                 if isinstance(db, SQLAlchemy):
-                    from .db_adapters import SQLAlchemyDbAdapter
-                    self.db_adapter = SQLAlchemyDbAdapter(app, db)
+                    from .db_adapters import SQLDbAdapter
+                    self.db_adapter = SQLDbAdapter(app, db)
             except ImportError: pass    # Ignore ImportErrors
 
         # Check if db is a MongoEngine instance
@@ -129,8 +129,8 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
             try:
                 from flask_mongoengine import MongoEngine
                 if isinstance(db, MongoEngine):
-                    from .db_adapters import MongoEngineDbAdapter
-                    self.db_adapter = MongoEngineDbAdapter(app, db)
+                    from .db_adapters import MongoDbAdapter
+                    self.db_adapter = MongoDbAdapter(app, db)
             except ImportError: pass    # Ignore ImportErrors
 
         # Set default EmailMailer

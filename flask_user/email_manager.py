@@ -13,7 +13,7 @@ from flask_user import ConfigError
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class.
 class EmailManager(object):
-    """ Send email_templates via the configured Email Mailer ``user_manager.email_mailer``. """
+    """ Send emails via the configured Email Mailer ``user_manager.email_mailer``. """
 
     def __init__(self, app):
         """

@@ -185,7 +185,7 @@ class UserManager__Views(object):
             db_adapter.commit()
 
         elif action == 'make-primary':
-            # Disable previously primary email_templates
+            # Disable previously primary emails
             user_emails = db_adapter.find_objects(um.UserEmailClass, user_id=current_user.id)
             for other_user_email in user_emails:
                 if other_user_email.is_primary:

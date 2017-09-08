@@ -1,7 +1,9 @@
-.. _QuickStartApp:
-
 QuickStart App
 ==============
+.. include:: includes/submenu_defs.rst
+.. include:: includes/quickstart_submenu.rst
+
+--------
 
 The QuickStart App allows users to register and login with a username
 and avoids the need to configure SMTP settings.
@@ -54,3 +56,8 @@ Troubleshooting
 
 If you receive a SQLAlchemy error message, delete the quickstart_app.sqlite file and restart the app.
 You may be using an old DB schema in that file.
+
+--------
+
+.. include:: includes/submenu_defs.rst
+.. include:: includes/quickstart_submenu.rst

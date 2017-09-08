@@ -21,10 +21,10 @@ Supported Databases
 -------------------
 Flask-User makes use of DbAdapters to support different databases.
 
-It ships with a SQLAlchemyDbAdapter to support a wide range of SQL databases via Flask-SQLAlchemy
+It ships with a SQLDbAdapter to support a wide range of SQL databases via Flask-SQLAlchemy
 (Firebird, Microsoft SQL Server, MySQL, Oracle, PostgreSQL, SQLite, Sybase and more).
 
-It ships with a MongoEngineDbAdapter to support MongoDB databases via Flask-MongoEngine.
+It ships with a MongoDbAdapter to support MongoDB databases via Flask-MongoEngine.
 
 Custom DbAdapters can be implemented to support other Databases.
 

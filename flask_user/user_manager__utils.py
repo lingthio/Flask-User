@@ -138,7 +138,7 @@ class UserManager__Utils(object):
 
         db_adapter = self.db_adapter
 
-        # Handle multiple email_templates per user: Find at least one confirmed email
+        # Handle multiple emails per user: Find at least one confirmed email
         if self.UserEmailClass:
             has_confirmed_email = False
             user_emails = db_adapter.find_objects(self.UserEmailClass, user_id=user.id)

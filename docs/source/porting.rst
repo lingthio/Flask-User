@@ -1,6 +1,6 @@
 Porting v0.6 to v9.0+
 =====================
-.. include:: includes/porting_defs.rst
+.. include:: includes/submenu_defs.rst
 .. include:: includes/porting_submenu.rst
 
 --------
@@ -15,9 +15,9 @@ Porting slightly customized v0.6 applications
 ---------------------------------------------
 If you've only customized Flask-User v0.6 in the following ways:
 
-    - Changed some ``USER_...`` app config settings
-    - Changed some form templates (the .html files)
-    - Changed some email templates (the .html or .txt files)
+    - Changed ``USER_...`` app config settings
+    - Customized form templates (the .html files)
+    - Customized email templates (the .html or .txt files)
 
 Reading :doc:`porting_basics` will suffice.
 

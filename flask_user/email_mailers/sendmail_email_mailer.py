@@ -13,7 +13,7 @@ from flask_user.email_mailers import EmailMailerInterface
 
 
 class SendmailEmailMailer(EmailMailerInterface):
-    """ Implements the EmailMailer interface to send email_templates with sendmail using Flask-Sendmail."""
+    """ Implements the EmailMailer interface to send emails with sendmail using Flask-Sendmail."""
     def __init__(self, app, sender_email=None, sender_name=None):
         """Check config settings and setup Flask-Sendemail.
 

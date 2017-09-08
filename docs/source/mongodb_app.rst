@@ -1,10 +1,12 @@
-.. _MongoDBApp:
-
 MongoDB App
 ===========
+.. include:: includes/submenu_defs.rst
+.. include:: includes/quickstart_submenu.rst
 
-Flask-User can work with MongoDB databases by replacing the default SQLAlchemyDbAdapter
-with the provided MongoEngineDbAdapter.
+--------
+
+Flask-User can work with MongoDB databases by replacing the default SQLDbAdapter
+with the provided MongoDbAdapter.
 
 The MONGODB_SETTINGS in this example requires a MongoDB server running on localhost:27017 (its default).
 
@@ -62,3 +64,8 @@ Troubleshooting
 ---------------
 
 [TBD]
+
+--------
+
+.. include:: includes/submenu_defs.rst
+.. include:: includes/quickstart_submenu.rst

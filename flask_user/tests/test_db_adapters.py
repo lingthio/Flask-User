@@ -1,5 +1,5 @@
 from flask_mongoengine import MongoEngine
-from flask_user.db_adapters import MongoEngineDbAdapter
+from flask_user.db_adapters import MongoDbAdapter
 
 
 def test_mongoengine_db_adapter(app):
@@ -12,7 +12,7 @@ def test_mongoengine_db_adapter(app):
         skip_mongoengine_tests = True
     if skip_mongoengine_tests: return
 
-    db_adapter = MongoEngineDbAdapter(app, db)
+    db_adapter = MongoDbAdapter(app, db)
 
     class User(db.Document):
         username = db.StringField(default='')

@@ -15,7 +15,7 @@ from flask_user.email_mailers import EmailMailerInterface
 
 
 class SMTPEmailMailer(EmailMailerInterface):
-    """ Implements the EmailMailer interface to send email_templates with SMTP using Flask-Mail."""
+    """ Implements the EmailMailer interface to send emails with SMTP using Flask-Mail."""
     def __init__(self, app):
         """Check config settings and setup Flask-Mail.
 

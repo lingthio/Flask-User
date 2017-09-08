@@ -19,7 +19,7 @@ class DbAdapterInterface(object):
 
         | Example:
         |     db = SQLAlchemy()
-        |     db_adapter = SQLAlchemyDbAdapter(db)
+        |     db_adapter = SQLDbAdapter(db)
 
         .. note::
 
