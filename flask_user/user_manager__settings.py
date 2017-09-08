@@ -173,7 +173,7 @@ class UserManager__Settings(object):
     USER_INVITE_USER_URL = '/user/invite' #:
     USER_LOGIN_URL = '/user/sign-in' #:
     USER_LOGOUT_URL = '/user/sign-out' #:
-    USER_MANAGE_EMAILS_URL = '/user/manage-email_templates' #:
+    USER_MANAGE_EMAILS_URL = '/user/manage-emails' #:
     USER_REGISTER_URL = '/user/register' #:
     USER_RESEND_EMAIL_CONFIRMATION_URL = '/user/resend-email-confirmation' #:
 
@@ -199,17 +199,17 @@ class UserManager__Settings(object):
     #:     Email template file settings
     USER_RESET_PASSWORD_TEMPLATE = 'flask_user/reset_password.html'
 
-    USER_CONFIRM_EMAIL_TEMPLATE = 'flask_user/email_templates/confirm_email' #:
-    USER_INVITE_USER_EMAIL_TEMPLATE = 'flask_user/email_templates/invite_user' #:
-    USER_PASSWORD_CHANGED_EMAIL_TEMPLATE = 'flask_user/email_templates/password_changed' #:
-    USER_REGISTERED_EMAIL_TEMPLATE = 'flask_user/email_templates/registered' #:
-    USER_RESET_PASSWORD_EMAIL_TEMPLATE = 'flask_user/email_templates/reset_password' #:
+    USER_CONFIRM_EMAIL_TEMPLATE = 'flask_user/emails/confirm_email' #:
+    USER_INVITE_USER_EMAIL_TEMPLATE = 'flask_user/emails/invite_user' #:
+    USER_PASSWORD_CHANGED_EMAIL_TEMPLATE = 'flask_user/emails/password_changed' #:
+    USER_REGISTERED_EMAIL_TEMPLATE = 'flask_user/emails/registered' #:
+    USER_RESET_PASSWORD_EMAIL_TEMPLATE = 'flask_user/emails/reset_password' #:
 
     #: .. This hack shows a header above the _next_ section
     #: .. code-block:: none
     #:
     #:     FLask endpoint settings
-    USER_USERNAME_CHANGED_EMAIL_TEMPLATE = 'flask_user/email_templates/username_changed'
+    USER_USERNAME_CHANGED_EMAIL_TEMPLATE = 'flask_user/emails/username_changed'
 
     USER_AFTER_CHANGE_PASSWORD_ENDPOINT = '' #:
     USER_AFTER_CHANGE_USERNAME_ENDPOINT = '' #:
