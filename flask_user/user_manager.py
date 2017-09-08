@@ -319,6 +319,32 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
                 " USER_PASSLIB_CRYPTCONTEXT_SCHEMES=['something'] as soon as possible.")
             self.USER_PASSLIB_CRYPTCONTEXT_SCHEMES = [setting]
 
+        # If USER_EMAIL_SENDER_EMAIL is not set, try to construct it from
+        # MAIL_DEFAULT_SENDER or DEFAULT_MAIL_SENDER
+        if not self.USER_EMAIL_SENDER_EMAIL:
+            default_sender = app.config.get('DEFAULT_MAIL_SENDER', None)
+            default_sender = app.config.get('MAIL_DEFAULT_SENDER', default_sender)
+            if default_sender:
+                # Accept two formats: '{name}<{email}>' or plain '{email}'
+                if default_sender[-1:]=='>':
+                    start=default_sender.rfind('<')
+                    if start>=1:
+                        self.USER_EMAIL_SENDER_EMAIL = default_sender[start+1:-1]
+                        if not self.USER_EMAIL_SENDER_NAME:
+                            self.USER_EMAIL_SENDER_NAME = default_sender[0:start].strip(' "')
+                else:
+                    self.USER_EMAIL_SENDER_EMAIL = default_sender
+
+        # If USER_EMAIL_SENDER_NAME is not set, default it to USER_APP_NAME
+        if not self.USER_EMAIL_SENDER_NAME:
+            self.USER_EMAIL_SENDER_NAME = self.USER_APP_NAME
+
+        # Check that USER_EMAIL_SENDER_EMAIL is set when USER_ENABLE_EMAIL is True
+        if not self.USER_EMAIL_SENDER_EMAIL and self.USER_ENABLE_EMAIL:
+            raise ConfigError(
+                'USER_EMAIL_SENDER_EMAIL is missing while USER_ENABLE_EMAIL is True.'\
+                ' specify USER_EMAIL_SENDER_EMAIL (and USER_EMAIL_SENDER_NAME) or set USER_ENABLE_EMAIL to False.')
+
         # Disable settings that rely on a feature setting that's not enabled
         # ------------------------------------------------------------------
 

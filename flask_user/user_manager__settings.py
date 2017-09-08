@@ -26,12 +26,16 @@ class UserManager__Settings(object):
     #: | Allow users to login and register with a username
     USER_ENABLE_USERNAME = True
 
-    #: | Allow users to change their username or not.
+    #: | Allow users to change their username.
     #: | Depends on USER_ENABLE_USERNAME=True.
     USER_ENABLE_CHANGE_USERNAME = True
 
     #: | Allow users to change their password.
     USER_ENABLE_CHANGE_PASSWORD = True
+
+    #: | Enable email confirmation emails to be sent.
+    #: | Depends on USER_ENABLE_EMAIL=True.
+    USER_ENABLE_CONFIRM_EMAIL = True
 
     #: | Allow users to reset their passwords.
     #: | Depends on USER_ENABLE_EMAIL=True.
@@ -73,10 +77,11 @@ class UserManager__Settings(object):
 
     #: | Sender's email address, used by the EmailMailers.
     #: | Required for sending emails.
+    #: | Derived from MAIL_DEFAULT_SENDER or DEFAULT_MAIL_SENDER when specified.
     USER_EMAIL_SENDER_EMAIL = ''
 
     #: | Sender's name, user by the EmailMailers.
-    #: | Optional.
+    #: | Optional. Defaults to USER_APP_NAME setting.
     USER_EMAIL_SENDER_NAME = ''
 
     #: | Send notification email after a password change.
@@ -90,10 +95,6 @@ class UserManager__Settings(object):
     #: | Send notification email after a username change.
     #: | Depends on USER_ENABLE_EMAIL=True.
     USER_SEND_USERNAME_CHANGED_EMAIL = True
-
-    #: | Require users to have a confirmed email.
-    #: | Depends on USER_ENABLE_EMAIL=True.
-    USER_ENABLE_CONFIRM_EMAIL = True
 
     #: | Only invited users may register.
     #: | Depends on USER_ENABLE_EMAIL=True.

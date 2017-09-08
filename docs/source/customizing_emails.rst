@@ -112,16 +112,22 @@ and change it to your liking.
 
 Flask-User makes the following template variables available to all email templates::
 
-    user_manager  # The UserManager object, to access USER_... setting
-    user          # The User object that this will be sent to
+    app_name      # The value of the USER_APP_NAME app config setting
+    email         # The user's email
+    user          # The user's User object
+    user_manager  # The UserManager object
 
 The following email templates also receive the following template variables::
 
     # confirm_email templates
-    confirm_email_link   # Confirm email link with confirm email token
+    confirm_email_link     # Confirm email link with confirm email token
 
     # forgot_password templates
-    reset_password_link  # Reset password link with reset password token
+    reset_password_link    # Reset password link with reset password token
+
+    # invite_user templates
+    accept_invitation_link # Accept invitation like with register token
+    invited_by_user        # The user that created this invitation
 
 Here's the default `base_message.html implementation on github <https://github.com/lingthio/Flask-User/blob/master/flask_user/templates/flask_user/emails/base_message.html>`_.
 

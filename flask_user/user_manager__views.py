@@ -49,7 +49,7 @@ class UserManager__Views(object):
 
             # Send 'password_changed' email
             if um.USER_ENABLE_EMAIL and um.USER_SEND_PASSWORD_CHANGED_EMAIL:
-                um.email_manager.send_password_has_changed_email(current_user)
+                um.email_manager.send_password_changed_email(current_user)
 
             # Send password_changed signal
             signals.user_changed_password.send(current_app._get_current_object(), user=current_user)
@@ -87,7 +87,7 @@ class UserManager__Views(object):
 
             # Send 'username_changed' email
             if um.USER_ENABLE_EMAIL and um.USER_SEND_USERNAME_CHANGED_EMAIL:
-                um.send_username_has_changed_email(current_user)
+                um.send_username_changed_email(current_user)
 
             # Send username_changed signal
             signals.user_changed_username.send(current_app._get_current_object(), user=current_user)
@@ -290,7 +290,7 @@ class UserManager__Views(object):
 
             try:
                 # Send 'invite' email
-                um.send_user_invitation_email(current_user, user_invitation)
+                um.send_invite_user_email(current_user, user_invitation)
             except Exception as e:
                 # delete new User object if send fails
                 db_adapter.delete_object(user_invitation)
@@ -462,11 +462,14 @@ class UserManager__Views(object):
             else:
                 user_email = None
 
-            require_email_confirmation = True
+            # Email confirmation depends on the USER_ENABLE_CONFIRM_EMAIL setting
+            request_email_confirmation = um.USER_ENABLE_CONFIRM_EMAIL
+            # Users that register through an invitation, can skip this process
+            # but only when they register with an email that matches their invitation.
             if user_invitation:
-                if user_invitation.email == register_form.email.data:
-                    require_email_confirmation = False
+                if user_invitation.email.lower() == register_form.email.data.lower():
                     db_adapter.update_object(user, email_confirmed_at=datetime.utcnow())
+                    request_email_confirmation = False
 
             db_adapter.commit()
 
@@ -474,7 +477,7 @@ class UserManager__Views(object):
             if um.USER_SEND_REGISTERED_EMAIL:
                 try:
                     # Send 'confirm email' or 'registered' email
-                    self._send_confirm_or_registered_email(user, user_email, require_email_confirmation)
+                    self._send_registered_email(user, user_email, request_email_confirmation)
                 except Exception as e:
                     # delete new User object if send  fails
                     db_adapter.delete_object(user)
@@ -487,7 +490,7 @@ class UserManager__Views(object):
                                          user_invitation=user_invitation)
 
             # Redirect if USER_ENABLE_CONFIRM_EMAIL is set
-            if um.USER_ENABLE_CONFIRM_EMAIL and require_email_confirmation:
+            if um.USER_ENABLE_CONFIRM_EMAIL and request_email_confirmation:
                 safe_reg_next = um.make_safe_url(register_form.reg_next.data)
                 return redirect(safe_reg_next)
 
@@ -571,7 +574,7 @@ class UserManager__Views(object):
 
             # Send 'password_changed' email
             if um.USER_ENABLE_EMAIL and um.USER_SEND_PASSWORD_CHANGED_EMAIL:
-                um.email_manager.send_password_has_changed_email(user)
+                um.email_manager.send_password_changed_email(user)
 
             # Prepare one-time system message
             flash(_("Your password has been reset successfully."), 'success')
@@ -620,22 +623,16 @@ class UserManager__Views(object):
         return redirect(self._endpoint_url(um.USER_UNCONFIRMED_EMAIL_ENDPOINT))
 
 
-    def _send_confirm_or_registered_email(self, user, user_email, require_email_confirmation=True):
+    def _send_registered_email(self, user, user_email, request_email_confirmation):
         um =  current_app.user_manager
-        db_adapter = um.db_adapter
 
-        # Send 'confirm_email' or 'registered' email
-        if um.USER_ENABLE_EMAIL and um.USER_ENABLE_CONFIRM_EMAIL:
-            # Generate confirm email link
-            object_id = user_email.id if user_email else user.id
-            token = um.token_manager.generate_token(object_id)
-            confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
+        if um.USER_ENABLE_EMAIL and um.USER_SEND_REGISTERED_EMAIL:
 
-            # Send email
-            um.email_manager.send_user_has_registered_email(user, user_email, confirm_email_link)
+            # Send 'registered' email, with or without a confirmation request
+            um.email_manager.send_registered_email(user, user_email, request_email_confirmation)
 
             # Prepare one-time system message
-            if um.USER_ENABLE_CONFIRM_EMAIL and require_email_confirmation:
+            if request_email_confirmation:
                 email = user_email.email if user_email else user.email
                 flash(_('A confirmation email has been sent to %(email)s with instructions to complete your registration.', email=email), 'success')
             else:
@@ -644,12 +641,11 @@ class UserManager__Views(object):
 
     def _send_confirm_email(self, user, user_email):
         um =  current_app.user_manager
-        db_adapter = um.db_adapter
 
         # Send 'confirm_email' or 'registered' email
         if um.USER_ENABLE_EMAIL and um.USER_ENABLE_CONFIRM_EMAIL:
             # Send email
-            um.email_manager.send_email_confirmation_email(user, user_email)
+            um.email_manager.send_confirm_email_email(user, user_email)
 
             # Prepare one-time system message
             email = user_email.email if user_email else user.email
