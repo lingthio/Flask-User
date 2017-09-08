@@ -4,8 +4,8 @@ Flask-User v0.9
 
 .. topic:: Attention
 
-    Flask-User v0.9 (pre-alpha) is under active development and not recommended for production use at this time.
-    Please use `Flask-User v0.6 <http://flask-user.readthedocs.io/en/v0.6/>`_ (stable) for now.
+    | Flask-User v0.9 is in its **Alpha** stage (under active development).
+    | The latest stable version is `Flask-User v0.6 <http://flask-user.readthedocs.io/en/v0.6/>`_.
 
 | So, you're writing a Flask web application and would like to authenticate your users.
 | You start with a simple **Login** page, but soon enough you'll need to handle:

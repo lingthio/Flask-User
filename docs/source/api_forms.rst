@@ -71,12 +71,12 @@ LoginForm
 
 --------
 
-.. _RegisterUserForm:
+.. _RegisterForm:
 
-RegisterUserForm
+RegisterForm
 ----------------
 
-.. autoclass:: flask_user.forms.RegisterUserForm
+.. autoclass:: flask_user.forms.RegisterForm
     :no-undoc-members:
     :no-inherited-members:
 

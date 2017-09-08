@@ -96,7 +96,7 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         self.forgot_password_form = forms.ForgotPasswordForm
         self.invite_user_form = forms.InviteUserForm
         self.login_form = forms.LoginForm
-        self.register_form = forms.RegisterUserForm
+        self.register_form = forms.RegisterForm
         self.resend_email_confirmation_form = forms.ResendEmailConfirmationForm
         self.reset_password_form = forms.ResetPasswordForm
 

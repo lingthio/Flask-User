@@ -238,7 +238,7 @@ class LoginForm(FlaskForm):
         return False                                # Unsuccessful authentication
 
 
-class RegisterUserForm(FlaskForm):
+class RegisterForm(FlaskForm):
     """Register new user form."""
     password_validator_added = False
 
@@ -287,7 +287,7 @@ class RegisterUserForm(FlaskForm):
         # if not has_been_added:
         #     self.password.validators.append(user_manager.password_validator)
         # Validate field-validators
-        if not super(RegisterUserForm, self).validate():
+        if not super(RegisterForm, self).validate():
             return False
         # All is well
         return True

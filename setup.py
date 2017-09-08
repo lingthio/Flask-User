@@ -77,7 +77,7 @@ setup(
         'bcrypt>=1.1',
         'cryptography>=2.0',
         'Flask>=0.9',
-        'Flask-Login>=0.3',
+        'Flask-Login>=0.2',
         'Flask-Mail>=0.9',
         'Flask-SQLAlchemy>=1.0',
         'Flask-WTF>=0.9',

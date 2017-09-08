@@ -19,6 +19,10 @@ class EmailError(Exception):
 # Export Flask-Login's current user
 from flask_login import current_user    # pass through Flask-Login's current_user
 
+# Export v0.6 legacy classes DbAdapter and SQLAlchemyAdapter
+# To display an Incompatibilty error message the v0.6 API is used on a v0.9+ install
+from .legacy_error import DbAdapter, SQLAlchemyAdapter
+
 from .user_mixin import UserMixin
 from .user_manager import UserManager
 from .email_manager import EmailManager

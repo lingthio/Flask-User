@@ -36,7 +36,9 @@ Table of Contents
     customizing_forms
     customizing_db_adapter
     customizing_email_mailer
-    porting2
+    porting_basics
+    porting_customizations
+    porting_advanced
     base_templates
     signals
     recipes

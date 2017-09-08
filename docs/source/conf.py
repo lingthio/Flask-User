@@ -188,6 +188,8 @@ autodoc_member_order = 'bysource'
 autoclass_content = 'both'   # Show class doc, but not __init__ doc
 
 def setup(app):
-    # Disable word hyphenation by HTML/CSS
+    # Add custom CSS with:
+    # - Disable word hyphenation by HTML/CSS
+    # - Smaller font size for code blocks
     app.add_stylesheet('custom.css')
 

@@ -74,6 +74,7 @@ def build_dist():
     # Compile translation files
     babel('compile')
     # Build distribution file
+    local('rm -f dist/*')
     local('python setup.py sdist')
 
 @task

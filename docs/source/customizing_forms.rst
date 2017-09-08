@@ -11,7 +11,7 @@ The following Flask-User forms can be customized:
 - :ref:`ForgotPasswordForm`
 - :ref:`InviteUserForm`
 - :ref:`LoginForm`
-- :ref:`RegisterUserForm`
+- :ref:`RegisterForm`
 - :ref:`ResendEmailConfirmationForm`
 - :ref:`ResetPasswordForm`
 

@@ -61,7 +61,7 @@ class UserManager__Utils(object):
         return (user, user_email)
 
     def generate_token(self, *args):
-        """Convenience method that calls token_manager.generate_token(\*args)."""
+        """Convenience method that calls self.token_manager.generate_token(\*args)."""
         return self.token_manager.generate_token(*args)
 
     def get_language_codes(self):
@@ -95,7 +95,7 @@ class UserManager__Utils(object):
         return self.db_adapter.get_object(self.UserEmailClass, user_email_id)
 
     def hash_password(self, password):
-        """Convenience method that calls password_manager.hash_password(password)."""
+        """Convenience method that calls self.password_manager.hash_password(password)."""
         return self.password_manager.hash_password(password)
 
     def make_safe_url(self, url):
@@ -120,6 +120,13 @@ class UserManager__Utils(object):
         from .translation_utils import domain_translations
         if domain_translations:
             domain_translations.as_default()
+
+    def send_email_message(self, recipient, subject, html_message, text_message):
+        """Convenience method that calls self.email_mailer.send_email_message(password, password_hash).
+        """
+        return self.email_mailer.send_email_message(
+            recipient=recipient, subject=subject,
+            html_message=html_message, text_message=text_message)
 
     # Return True if ENABLE_EMAIL and ENABLE_CONFIRM_EMAIL and email has been confirmed.
     # Return False otherwise
@@ -163,7 +170,7 @@ class UserManager__Utils(object):
         return self.find_user_by_username(new_username) == None
 
     def verify_password(self, password, password_hash):
-        """Convenience method that calls password_manager.verify_password(password, password_hash).
+        """Convenience method that calls self.password_manager.verify_password(password, password_hash).
         """
         # Handle deprecated v0.6 (password, user) params
         if isinstance(password_hash, self.UserClass):
@@ -178,5 +185,5 @@ class UserManager__Utils(object):
         return self.password_manager.verify_password(password, password_hash)
 
     def verify_token(self, token, expiration_in_seconds):
-        """Convenience method that calls token_manager.verify_token(token, expiration_in_seconds)."""
+        """Convenience method that calls self.token_manager.verify_token(token, expiration_in_seconds)."""
         return self.token_manager.verify_token(token, expiration_in_seconds)

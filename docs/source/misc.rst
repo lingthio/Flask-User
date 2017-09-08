@@ -234,14 +234,14 @@ Extra fields must be defined in the User data-model::
 
     db_adapter = SQLAlchemyAdapter(db, UserClass=User)
 
-A custom RegisterUserForm must be defined with field names
+A custom RegisterForm must be defined with field names
 **exactly matching** the names of the data-model fields::
 
-    class MyRegisterUserForm(RegisterUserForm):
+    class MyRegisterForm(RegisterForm):
         first_name = StringField('First name', validators=[DataRequired('First name is required')])
         last_name  = StringField('Last name',  validators=[DataRequired('Last name is required')])
 
-    user_manager = UserManager(db_adapter, app, register_form=MyRegisterUserForm)
+    user_manager = UserManager(db_adapter, app, register_form=MyRegisterForm)
 
 A custom ``templates/flask_user/register.html`` file must be copied and defined with the extra fields.
 See :ref:`customizingformtemplates`.
@@ -255,9 +255,9 @@ will be stored in the corresponding User field.
 **Extra registration fields in UserProfile data-model**
 
 * Add extra fields to the User data-model
-* Extend a custom MyRegisterUserForm class from the built-in flask_user.forms.RegisterUserForm class.
+* Extend a custom MyRegisterForm class from the built-in flask_user.forms.RegisterForm class.
 * Add extra fields to the form **using identical field names**.
-* Specify your custom registration form: ``user_manager = UserManager(db_adapter, app, register_form=MyRegisterUserForm)``
+* Specify your custom registration form: ``user_manager = UserManager(db_adapter, app, register_form=MyRegisterForm)``
 * Copy the built-in ``templates/flask_user/register.html`` to your application's templates/flask_user directory.
 * Add the extra form fields to register.html
 
