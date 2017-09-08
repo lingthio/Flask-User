@@ -16,21 +16,21 @@ against an _incompatible_ Flask-User v0.9 install.
 Flask-User v0.9:
 - Is in its _Alpha_ stage, and not ready for production,
 - Is no longer compatible with v0.6,
-- Has completely changed the way it customizes functions,
+- Has no changes in the way it customizes form and email templates.
 - Has a few changes in its configuration settings,
-- Has no changes in the way it customizes forms.
+- Has completely changed the way you customize form classes and views,
+- Has completely changed the way you customize passwords and tokens.
 
 1) Please downgrade Flask-User back to the latest v0.6 version, or
 2) read https://flask-user.readthedocs.io/en/latest/porting.html
-   and http://flask-user.readthedocs.io/en/latest/porting2.html#porting2.
 
 To downgrade Flask-User:
 - Install the latest v0.6 Flask-User
-    pip install "Flask-User<0.7"
+      pip install "Flask-User<0.7"
 - Make note of the latest Flask-v0.6 version (Flask-User==0.6.{X})
-    pip freeze | grep Flask-User
+      pip freeze | grep Flask-User
 - Update your requirements.txt file to pin the Flask-User version
-    Flask-User==0.6.{X}
+      Flask-User==0.6.{X}
 """
 
 class DbAdapter(object):

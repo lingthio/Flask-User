@@ -15,7 +15,7 @@ Package installs
     pip uninstall Flask-Babel    # We're requiring Flask-BabelEx now
 
     # Install new Python packages
-    pip install Flask-BabelEx    # Only if you require internatiolization
+    pip install Flask-BabelEx    # Only if you require internationalization
     pip install Flask-User       # Install v0.9
 
 Use: ``pip freeze | grep Flask-User`` to show the installed Flask-User version,
@@ -43,14 +43,14 @@ To v0.9+::
     # Setup Flask-User
     user_manager = UserManager(app, db, User)
 
-Make sure to never use the legacy SQLAlchemyAdapter or DbAdapter
+Make sure to stop using the legacy SQLAlchemyAdapter or DbAdapter
 classes as they will trigger legacy warning exceptions.
 
 USER\_... config settings
 -------------------------
-Some v0.6 ``USER\_...`` settings have been renamed in v0.9 to better reflect
+Some v0.6 ``USER_...`` settings have been renamed in v0.9 to better reflect
 what these settings means. v0.9 still honors the old v0.6 names, but
-a deprecation warning message will be printer.
+a deprecation warning message will be printed.
 
 We recommend resolving these warning messages by renaming the following settings:
 

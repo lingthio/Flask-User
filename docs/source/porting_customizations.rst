@@ -100,14 +100,15 @@ into::
 
 @confirm_email_required decorator deprecated
 --------------------------------------------
-The ``@confirm_email_required`` view decorator has been deprecated for security reasonse.
+The ``@confirm_email_required`` view decorator has been deprecated for security reasons.
 
-| In v0.6, the ``USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL`` setting removed
-    confirmed email protection for all the views and required developers to re-protect
-    the vulnerable views with ``@confirm_email_required``.
-| In v0.9+ we adopt the opposite approach where the (renamed) ``USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL=True``
-    setting continues to protect all the views, except those decorated with the
-    new ``@allow_unconfirmed_email`` decorator.
+In v0.6, the ``USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL`` setting removed
+confirmed email protection for all the views and required developers to re-protect
+the vulnerable views with ``@confirm_email_required``.
+
+In v0.9+ we adopt the opposite approach where the (renamed) ``USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL=True``
+setting continues to protect all the views, except those decorated with the
+new ``@allow_unconfirmed_email`` decorator.
 
 
 Contact us

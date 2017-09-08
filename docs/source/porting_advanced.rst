@@ -19,8 +19,6 @@ This difference often requires changes in many places (in code and in template f
     user.is_anonymous()      -->  user.is_anonymous
     user.is_active()         -->  user.is_active
 
-and we recommend upgrading Flask-Login only when needed.
-
 Python getters and setters
 --------------------------
 If you are unable to change property names, you can use Python's
@@ -29,23 +27,19 @@ getters and setters to form a bridge between required property names and actual 
 Here's an example of how to map the v0.9 required ``email_confirmed_at`` property
 to your existing ``confirmed_at`` property::
 
+    # Actual property name differs from required name.
     class User(db.Model, UserMixin)
             ...
         confirmed_at = db.Column(db.DateTime())
 
+        # Map required property name to actual property
         @property
-        email_confirmed_at(self):
+        def email_confirmed_at(self):
             return self.confirmed_at
 
         @email_confirmed_at.setter
-        email_confirmed_at(self, value):
+        def email_confirmed_at(self, value):
             self.confirmed_at = value
-
-    # -----------------------------------------------------------------
-    # This code snippet has not yet been tested. You can email
-    # ling.thio@gmail.com when it works or when you encounter problems.
-    # When enough people tested this I will remove this comment.
-    # Thank you!
 
 You can even use this approach to bridge properties between different classes (and hence
 database tables), as long as there's a one-to-one relationship between them.
@@ -148,8 +142,8 @@ TokenManager() changes
 The v0.6 TokenManager assumed that IDs were integers with less than 16 digits,
 and that only one ID needed to be represented.
 
-The v0.9+ TokenManager can represent a list of integers and strings and integers
-are no longer limited to 16 digits.
+The v0.9+ TokenManager can represent a list of integers and strings.
+Integers can be of any size.
 This enables us to encrypt Mongo Object IDs as well as encrypt portions of the user
 password to invalidate tokens after their password changed.
 
