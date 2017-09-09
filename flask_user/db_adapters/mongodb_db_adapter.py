@@ -26,8 +26,9 @@ class MongoDbAdapter(DbAdapterInterface):
             db(MongoEngine): The MongoEngine object-database mapper instance.
 
         | Example:
+        |    app = Flask(__name__)
         |    db = MongoEngine()
-        |    db_adapter = MongoDbAdapter(db)
+        |    db_adapter = MongoDbAdapter(app, db)
 
         .. note::
 

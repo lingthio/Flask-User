@@ -16,14 +16,6 @@ class DbAdapterInterface(object):
         Args:
             app(Flask): The Flask appliation instance.
             db: The object-database mapper instance.
-
-        | Example:
-        |     db = SQLAlchemy()
-        |     db_adapter = SQLDbAdapter(db)
-
-        .. note::
-
-            Generic methods.
         """
         self.app = app
         self.db = db

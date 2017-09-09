@@ -7,29 +7,24 @@ The DbAdapterInterface class defines an interface to find, add, update and remov
 persistent database objects,
 while shielding the Flask-User code from the underlying implementation.
 
-Included implementations:
-
-- :ref:`SQLDbAdapter`
-- :ref:`MongoDbAdapter`
-
 .. autoclass:: flask_user.db_adapters.db_adapter_interface.DbAdapterInterface
+    :special-members: __init__
 
---------
+Example implementation
+----------------------
+Here's the `SQLDbAdapter() implementation on github <https://github.com/lingthio/Flask-User/blob/master/flask_user/db_adapters/sql_db_adapter.py>`_.
 
-.. _SQLDbAdapter:
+Customizing Flask-User
+----------------------
+::
 
-SQLDbAdapter
--------------------
+    # Customize Flask-User
+    class CustomUserManager(UserManager):
 
-.. autoclass:: flask_user.db_adapters.sql_db_adapter.SQLDbAdapter
+        def customize(self, app):
+            # Use the CustomDbAdapter
+            self.db_adapter = CustomDbAdapter(app)
 
---------
-
-.. _MongoDbAdapter:
-
-MongoDbAdapter
----------------------
-
-.. autoclass:: flask_user.db_adapters.mongodb_db_adapter.MongoDbAdapter
-
+    # Setup Flask-User
+    user_manager = CustomUserManager(app, db, User)
 

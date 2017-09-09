@@ -1,3 +1,16 @@
+- Consider replacing @allow_unconfirmed_email with
+  @login_required_allow_unconfirmed_email,
+  @roles_accepted_allow_unconfirmed_email, and
+  @roles_required_allow_unconfirmed_email
+  Pros: No need for global setting g._flask_user_allow_unconfirmed_email
+  Cons: Three extra decorators needed
+  Decorator X could test for email and then call X_allow_unconfirmed_email
+
+- Consider eliminating EmailMailers.
+  Pros: simpler
+  Cons: no separation of init and send
+  I think we should keep EmailMailers.
+
 - Increase test coverage
   - 45 lines in user_manager_views: invite_user_view
   - 6 lines in user_manager_views: if invite_token and um.UserInvitationClass:
@@ -6,3 +19,21 @@
   - 3 lines in forms: Test with USER_SHOW_EMAIL_DOES_NOT_EXIST
   - 3 lines in user_manager__views: edit_user_profile_view
 
+- For autodocs of interfaces, init params are show twice
+  - Idea:
+  - conf.py: remove autoclass_content = 'both'
+  - All classes except interfaces: Move __init__ docstring to class docstring
+
+- API docs:
+  Submenu1: Intro, UserManager, Decorators, Forms, Views, Interfaces
+  UserManager submenu2: UserManager, Settings, Utils, Views
+  Why two views?
+  Move Managers to Intefaces
+
+- EmailMailer interface:
+    Move
+        self.sender_name = self.app.user_manager.USER_EMAIL_SENDER_NAME
+        self.sender_email = self.app.user_manager.USER_EMAIL_SENDER_EMAIL
+    outside of email interface???
+    add sender_name and email as param to send()???
+    I like this. Can be re-used in RS2 which will need different senders for different orgs.

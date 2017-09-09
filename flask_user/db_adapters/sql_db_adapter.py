@@ -24,8 +24,9 @@ class SQLDbAdapter(DbAdapterInterface):
             db(SQLAlchemy): The SQLAlchemy object-database mapper instance.
 
         | Example:
+        |     app = Flask(__name__)
         |     db = SQLAlchemy()
-        |     db_adapter = SQLDbAdapter(db)
+        |     db_adapter = SQLDbAdapter(app, db)
 
         .. note::
 

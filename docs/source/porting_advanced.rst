@@ -19,6 +19,31 @@ This difference often requires changes in many places (in code and in template f
     user.is_anonymous()      -->  user.is_anonymous
     user.is_active()         -->  user.is_active
 
+
+TokenManager() changes
+----------------------
+The v0.6 TokenManager could only encrypt a single integer ID with less than 16 digits.
+
+The v0.9+ TokenManager can now encrypt a list of items.
+Each item can be an integer or a string.
+Integers can be of any size.
+
+This change enables us to encrypt Mongo Object IDs as well as the last 8 bytes of a
+password, to invalidate tokens after their password changed.
+
+As a result, the generated tokens are different, which will affect these areas:
+
+- v0.6 user-session tokens, that were stored in a browser cookie, are no longer valid in v0.9+
+  and the user will be required to login again.
+
+- Unused v0.6 password-reset tokens and user-invitation tokens, are no longer valid in v0.9+
+  and the affected users will have to issue new forgot-password emails and new
+  user invitatin emails.
+  This effect is mitigated by the fact that these tokens are meant to expire relatively quickly.
+
+- user-session tokens and password-reset tokens become invalid if the user changes their password.
+
+
 Python getters and setters
 --------------------------
 If you are unable to change property names, you can use Python's
@@ -27,9 +52,11 @@ getters and setters to form a bridge between required property names and actual 
 Here's an example of how to map the v0.9 required ``email_confirmed_at`` property
 to your existing ``confirmed_at`` property::
 
-    # Actual property name differs from required name.
+    # If the actual property (confirmed_at) name
+    # differs from required name (email_confirmed_at).
     class User(db.Model, UserMixin)
             ...
+        # Actual property
         confirmed_at = db.Column(db.DateTime())
 
         # Map required property name to actual property
@@ -41,12 +68,12 @@ to your existing ``confirmed_at`` property::
         def email_confirmed_at(self, value):
             self.confirmed_at = value
 
-You can even use this approach to bridge properties between different classes (and hence
-database tables), as long as there's a one-to-one relationship between them.
+Supporting deprecated ``UserAuth`` data-models
+----------------------------------------------
 
-If you're using separate ``UserAuth`` and ``User`` classes and are unable to merge the underlying
-``user_auth`` table with your ``user`` table, you can try using getters and setters
-to virtually combine the two like so::
+Because the optional ``UserAuth`` and ``User`` have a one-to-one relationship
+to each other, you can use getters and setters to have Flask-User manage two objects
+while specifying only the one ``User`` class::
 
     # This is your existing UserAuth data-model
     # -----------------------------------------
@@ -136,29 +163,6 @@ to virtually combine the two like so::
     # When enough people tested this I will remove this comment.
     # Thank you!
 
-
-TokenManager() changes
-----------------------
-The v0.6 TokenManager assumed that IDs were integers with less than 16 digits,
-and that only one ID needed to be represented.
-
-The v0.9+ TokenManager can represent a list of integers and strings.
-Integers can be of any size.
-This enables us to encrypt Mongo Object IDs as well as encrypt portions of the user
-password to invalidate tokens after their password changed.
-
-As a result, the generated tokens are different, which will affect these areas:
-
-- v0.6 user-session tokens, that were stored in a browser cookie, are no longer valid in v0.9+
-  and the user will be required to login again.
-
-- Unused v0.6 password-reset tokens and user-invitation tokens, are no longer valid in v0.9+
-  and the affected users will have to issue new forgot-password emails and new
-  user invitatin emails.
-  This effect is mitigated by the fact that these tokens are meant to expire relatively quickly.
-
-- user-session tokens and password-reset tokens become invalid if the user changes their password.
-
 Logging in without confirmed email addresses
 --------------------------------------------
 In v0.6, the ``USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL=True`` setting allowed users to
@@ -178,14 +182,17 @@ continue to be protected against users without confirmed email addresses.
 If you want unconfirmed users to access certain views, you will need to add the
 new ``@allow_unconfirmed_email`` decorator to each view that you choose to expose.
 
-This new decorator **must precede** any of the other Flask-Userdecorators,
-but it also **must follow** the @route decorator::
+| This decorator **must follow** the @route decorator (as usual)
+| THis decorator **must precede** any of the other Flask-Userdecorators
+
+::
 
     @route(...)
     @allow_unconfirmed_email
     @login_required
     def unprotected_view():
         ...
+
 
 --------
 

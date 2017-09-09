@@ -28,8 +28,8 @@ in addition to being secure and reliable.
 
 - And then there are :doc:`customizing_advanced`
     - :ref:`CustomizingManagers`
-    - :ref:`CustomizingDbAdapters`
-    - :ref:`CustomizingEmailMailers`
+    - :ref:`CustomDbAdapters`
+    - :ref:`CustomEmailMailers`
 
 
 --------
