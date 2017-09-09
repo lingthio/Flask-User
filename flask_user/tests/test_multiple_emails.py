@@ -59,7 +59,7 @@ def test_multiple_emails(app, db, client):
         assert user_email1 != None
 
         # Confirm email
-        confirmation_token = um.token_manager.generate_token(user_email1.id)
+        confirmation_token = um.generate_token(user_email1.id)
         client.get_valid_page(url_for('user.confirm_email', token=confirmation_token))
 
         # Log in using email1
@@ -77,7 +77,7 @@ def test_multiple_emails(app, db, client):
         assert user_email2 != None
 
         # Confirm email
-        confirmation_token = um.token_manager.generate_token(user_email2.id)
+        confirmation_token = um.generate_token(user_email2.id)
         client.get_valid_page(url_for('user.confirm_email', token=confirmation_token))
 
         # Logout

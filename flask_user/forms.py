@@ -95,7 +95,7 @@ class ChangePasswordForm(FlaskForm):
             return False
 
         # Verify current_user and current_password
-        if not current_user or not user_manager.password_manager.verify_password(self.old_password.data, current_user.password):
+        if not current_user or not user_manager.verify_password(self.old_password.data, current_user.password):
             self.old_password.errors.append(_('Old Password is incorrect'))
             return False
 
@@ -132,7 +132,7 @@ class ChangeUsernameForm(FlaskForm):
             return False
 
         # Verify current_user and current_password
-        if not current_user or not user_manager.password_manager.verify_password(self.old_password.data, current_user.password):
+        if not current_user or not user_manager.verify_password(self.old_password.data, current_user.password):
             self.old_password.errors.append(_('Old Password is incorrect'))
             return False
 
@@ -203,7 +203,7 @@ class LoginForm(FlaskForm):
             user, user_email = user_manager.find_user_by_email(self.email.data)
 
         # Handle successful authentication
-        if user and user_manager.password_manager.verify_password(self.password.data, user.password):
+        if user and user_manager.verify_password(self.password.data, user.password):
             return True                         # Successful authentication
 
         # Handle unsuccessful authentication

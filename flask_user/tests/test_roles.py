@@ -9,7 +9,7 @@ from flask_user import login_required, roles_accepted, roles_required, allow_unc
 def test_roles(db):
     um =  current_app.user_manager
     db_adapter= um.db_adapter
-    password_hash = um.password_manager.hash_password('Password1')
+    password_hash = um.hash_password('Password1')
     User = um.UserClass
 
     if isinstance(db, SQLAlchemy):

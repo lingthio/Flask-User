@@ -41,7 +41,7 @@ class UserManager__Views(object):
         # Process valid POST
         if request.method == 'POST' and form.validate():
             # Hash password
-            password_hash = um.password_manager.hash_password(form.new_password.data)
+            password_hash = um.hash_password(form.new_password.data)
 
             # Update user.password
             um.db_adapter.update_object(current_user, password=password_hash)
@@ -154,7 +154,6 @@ class UserManager__Views(object):
         else:
             return redirect(url_for('user.login') + '?next=' + quote(safe_next))  # redirect to login page
 
-        pass
 
     @login_required
     def edit_user_profile_view(self):
@@ -178,7 +177,7 @@ class UserManager__Views(object):
 
         if action == 'delete':
             # Primary UserEmail can not be deleted
-            if user_email.is_primary:
+            if user_email.is_primary:    # pragma: no cover
                 return self.unauthorized_view()
             # Delete UserEmail
             db_adapter.delete_object(user_email)
@@ -440,7 +439,7 @@ class UserManager__Views(object):
             for field_name, field_value in register_form.data.items():
                 # Hash password field
                 if field_name == 'password':
-                    password_hash = um.password_manager.hash_password(field_value)
+                    password_hash = um.hash_password(field_value)
                     user_fields['password'] = password_hash
                 # Store corresponding Form fields into the User object and/or UserProfile object
                 else:
@@ -568,7 +567,7 @@ class UserManager__Views(object):
         # Process valid POST
         if request.method == 'POST' and form.validate():
             # Change password
-            password_hash = um.password_manager.hash_password(form.new_password.data)
+            password_hash = um.hash_password(form.new_password.data)
             db_adapter.update_object(user, password=password_hash)
             db_adapter.commit()
 

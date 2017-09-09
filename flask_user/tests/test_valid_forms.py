@@ -156,7 +156,7 @@ def check_valid_register_form(um, client, db):
         # Create user record manually
 
         # hash password
-        kwargs['password'] = um.password_manager.hash_password(VALID_PASSWORD)
+        kwargs['password'] = um.hash_password(VALID_PASSWORD)
 
         # Create User
         valid_user = User(email_confirmed_at=datetime.datetime.utcnow(), **kwargs)
@@ -185,7 +185,7 @@ def check_valid_confirm_email_page(um, client):
     global valid_user
 
     # Generate confirmation token for user 1
-    confirmation_token = um.token_manager.generate_token(valid_user.id)
+    confirmation_token = um.generate_token(valid_user.id)
 
     # Retrieve page and verify that response has no errors
     client.get_valid_page(url_for('user.confirm_email', token=confirmation_token))
@@ -234,7 +234,8 @@ def check_valid_change_password_form(um, client):
 
     # Verify operations
     valid_user = um.db_adapter.get_object(um.UserClass, valid_user.id)
-    assert um.password_manager.verify_password(new_password, valid_user.password)
+    # deliberately test verify_password with deprecated user param (instead of user.password)
+    assert um.verify_password(new_password, valid_user)
 
     # Change password back to old password for subsequent tests
     um.db_adapter.update_object(valid_user, password=old_password_hash)
@@ -282,7 +283,7 @@ def check_valid_reset_password_page(um, client):
     global valid_user
 
     # Simulate a valid forgot password form
-    token = um.token_manager.generate_token(valid_user.id)
+    token = um.generate_token(valid_user.id)
 
     # Define defaults
     password = 'Password1'
@@ -301,7 +302,7 @@ def check_valid_reset_password_page(um, client):
 
     # Verify operations
     valid_user = um.db_adapter.get_object(um.UserClass, valid_user.id)
-    assert um.password_manager.verify_password(new_password, valid_user.password)
+    assert um.verify_password(new_password, valid_user.password)
 
     # Change password back to old password for subsequent tests
     valid_user.password = old_password_hash

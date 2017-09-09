@@ -22,8 +22,17 @@ class EmailManager(object):
         """
         self.app = app
         self.user_manager = app.user_manager
-        self.sender_name = app.config.get('USER_EMAIL_SENDER_NAME', None)
-        self.sender_email = app.config.get('USER_EMAIL_SENDER_EMAIL', None)
+        self.sender_name = self.user_manager.USER_EMAIL_SENDER_NAME
+        self.sender_email = self.user_manager.USER_EMAIL_SENDER_EMAIL
+
+        # Ensure that USER_EMAIL_SENDER_EMAIL is set
+        if not self.sender_email:
+            raise ConfigError('Config setting USER_EMAIL_SENDER_EMAIL is missing.')
+
+        # Simplistic email address verification
+        if '@' not in self.sender_email:
+            raise ConfigError('Config setting USER_EMAIL_SENDER_EMAIL is not a valid email address.')
+
 
     def send_confirm_email_email(self, user, user_email):
         """Send the 'email confirmation' email."""
@@ -37,7 +46,7 @@ class EmailManager(object):
 
         # Generate a confirm_email_link
         object_id = user_email.id if user_email else user.id
-        token = self.user_manager.token_manager.generate_token(object_id)
+        token = self.user_manager.generate_token(object_id)
         confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
 
         # Render email from templates and send it via the configured EmailMailer
@@ -76,7 +85,7 @@ class EmailManager(object):
         email = user_email.email if user_email else user.email
 
         # Generate a reset_password_link
-        token = self.user_manager.token_manager.generate_token(user.id)
+        token = self.user_manager.generate_token(user.id)
         reset_password_link = url_for('user.reset_password', token=token, _external=True)
 
         # Render email from templates and send it via the configured EmailMailer
@@ -105,7 +114,7 @@ class EmailManager(object):
         user = self.user_manager.UserClass(email=email)
 
         # Generate a accept_invitation_link
-        token = self.user_manager.token_manager.generate_token(user_invitation.id)
+        token = self.user_manager.generate_token(user_invitation.id)
         accept_invitation_link = url_for('user.register', token=token, _external=True)
 
         # Render email from templates and send it via the configured EmailMailer
@@ -130,7 +139,7 @@ class EmailManager(object):
         # Add a request to confirm email if needed
         if request_email_confirmation:
             # Generate a confirm_email_link
-            token = self.user_manager.token_manager.generate_token(user_email.id if user_email else user.id)
+            token = self.user_manager.generate_token(user_email.id if user_email else user.id)
             confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
         else:
             confirm_email_link = None
@@ -161,14 +170,6 @@ class EmailManager(object):
         )
 
     def _render_and_send_email(self, email, user, template_filename, **kwargs):
-        # Ensure that USER_EMAIL_SENDER_EMAIL is set
-        if not self.sender_email:
-            raise ConfigError('Config setting USER_EMAIL_SENDER_EMAIL is missing.')
-
-        # Simplistic email address verification
-        if '@' not in self.sender_email:
-            raise ConfigError('Config setting USER_EMAIL_SENDER_EMAIL is not a valid email address.')
-
         # Add some variables to the template context
         kwargs['app_name'] = self.user_manager.USER_APP_NAME
         kwargs['email'] = email
@@ -184,11 +185,8 @@ class EmailManager(object):
         # Render text message
         text_message = render_template(template_filename+'_message.txt', **kwargs)
 
-        # Skip email sending when testing
-        if not self.app.testing:
-
-            # Send email via configured EmailMailer
-            self.user_manager.email_mailer.send_email_message(
-                email, subject, html_message, text_message)
+        # Send email via configured EmailMailer
+        self.user_manager.send_email_message(
+            email, subject, html_message, text_message)
 
 

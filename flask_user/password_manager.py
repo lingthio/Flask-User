@@ -69,6 +69,16 @@ class PasswordManager(object):
                     login_user(user)
         """
 
+        # Print deprecation warning if called with (password, user) instead of (password, user.password)
+        if isinstance(password_hash, self.user_manager.UserClass):
+            print(
+                'Deprecation warning: verify_password(password, user) has been changed'\
+                ' to: verify_password(password, password_hash). The user param will be deprecated.'\
+                ' Please change your call with verify_password(password, user) into'\
+                ' a call with verify_password(password, user.password)'
+                ' as soon as possible.')
+            password_hash = password_hash.password   # effectively user.password
+
         # Use passlib's CryptContext to verify a password
         return self.password_crypt_context.verify(password, password_hash)
 

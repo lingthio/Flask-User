@@ -29,6 +29,11 @@ def test_mongoengine_db_adapter(app):
     user2 = db_adapter.add_object(User, username='SecondUser')
     db_adapter.commit()
 
+    # Test tokenizing MongoDB IDs
+    token_manager = app.user_manager.token_manager
+    token = token_manager.generate_token(user1.id)
+    assert(token_manager.verify_token(token, 3600))
+
     # Test get_object
     user = db_adapter.get_object(User, '1234567890ab1234567890ab')
     assert user==None

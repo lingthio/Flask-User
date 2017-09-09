@@ -14,11 +14,10 @@ exclude_lines =
 
     # Don't complain if tests don't hit defensive assertion code:
     except .*\:
-    raise AssertionError
+    raise ConfigError
     raise NotImplementedError
-    raise SendEmailError
-    raise ConfigurationError
     raise KeyError
+    raise TypeError
     if not ctx:
 
     # Misc

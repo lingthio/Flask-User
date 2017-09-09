@@ -7,9 +7,9 @@
 # Python version specific imports
 from sys import version_info as py_version
 is_py2 = (py_version[0] == 2)     #: Python 2.x?
-if is_py2:
+if is_py2:    # pragma: no cover
     from urlparse import urlsplit
-else:
+else:         # pragma: no cover
     from urllib.parse import urlsplit
 
 from flask_login import current_user
@@ -63,16 +63,6 @@ class UserManager__Utils(object):
     def generate_token(self, *args):
         """Convenience method that calls self.token_manager.generate_token(\*args)."""
         return self.token_manager.generate_token(*args)
-
-    def get_language_codes(self):
-        """Returns the language codes of available Flask-User translations.
-
-        Example:
-            ``['de', 'en', 'es', 'fa', 'fi', 'fr', 'it', 'nl', 'ru', 'sv', 'tr', 'zh']``
-
-        """
-        from .translation_utils import get_language_codes
-        return get_language_codes()
 
     def get_primary_user_email(self, user):
         """Retrieve the email from User object or the primary UserEmail object (if multiple emails
@@ -172,16 +162,6 @@ class UserManager__Utils(object):
     def verify_password(self, password, password_hash):
         """Convenience method that calls self.password_manager.verify_password(password, password_hash).
         """
-        # Handle deprecated v0.6 (password, user) params
-        if isinstance(password_hash, self.UserClass):
-            print(
-                'Deprecation warning: verify_password(password, user) has been changed'\
-                ' to: verify_password(password, password_hash). The user param will be deprecated.'\
-                ' Please change your call with verify_password(password, user) into'\
-                ' a call with verify_password(password, user.password)'
-                ' as soon as possible.')
-            password_hash = password_hash.password   # effectively user.password
-
         return self.password_manager.verify_password(password, password_hash)
 
     def verify_token(self, token, expiration_in_seconds):

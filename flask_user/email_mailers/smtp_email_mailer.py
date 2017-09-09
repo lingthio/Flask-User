@@ -8,6 +8,8 @@ from __future__ import print_function
 import smtplib
 import socket
 
+from flask import current_app
+
 # Non-system imports are moved into the methods to make them an optional requirement
 
 from flask_user import ConfigError, EmailError
@@ -44,20 +46,22 @@ class SMTPEmailMailer(EmailMailerInterface):
             text_message: The message body in plain text.
         """
 
-        from flask_mail import Message
-        try:
-            # Prepare email message
-            message = Message(
-                subject,
-                recipients=[recipient],
-                html=html_message,
-                body=text_message)
-            # Send email message
-            self.mail.send(message)
+        # Send email via SMTP except when we're testing
+        if not current_app.testing:
+            from flask_mail import Message
+            try:
+                # Prepare email message
+                message = Message(
+                    subject,
+                    recipients=[recipient],
+                    html=html_message,
+                    body=text_message)
+                # Send email message
+                self.mail.send(message)
 
-        # Print helpful error messages on exceptions
-        except (socket.gaierror, socket.error) as e:
-            raise EmailError('SMTP Connection error: Check your MAIL_SERVER and MAIL_PORT settings.')
-        except smtplib.SMTPAuthenticationError:
-            raise EmailError('SMTP Authentication error: Check your MAIL_USERNAME and MAIL_PASSWORD settings.')
+            # Print helpful error messages on exceptions
+            except (socket.gaierror, socket.error) as e:
+                raise EmailError('SMTP Connection error: Check your MAIL_SERVER and MAIL_PORT settings.')
+            except smtplib.SMTPAuthenticationError:
+                raise EmailError('SMTP Authentication error: Check your MAIL_USERNAME and MAIL_PASSWORD settings.')
 

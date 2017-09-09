@@ -24,7 +24,7 @@ class UserMixin(FlaskLoginUserMixin):
 
         user_id = self.id
         password_ends_with = self.password[-8:]
-        user_token = user_manager.token_manager.generate_token(
+        user_token = user_manager.generate_token(
             user_id,               # User ID
             password_ends_with,    # Last 8 characters of user password
         )
@@ -39,7 +39,7 @@ class UserMixin(FlaskLoginUserMixin):
 
         # Verifies a token and decrypts a User ID and parts of a User password hash
         user_manager = current_app.user_manager
-        data_items = user_manager.token_manager.verify_token(token, expiration_in_seconds)
+        data_items = user_manager.verify_token(token, expiration_in_seconds)
 
         # Verify password_ends_with
         token_is_valid = False

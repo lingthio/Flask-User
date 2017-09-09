@@ -95,7 +95,7 @@ def create_app():
         user = User(
             email='member@example.com',
             email_confirmed_at=datetime.datetime.utcnow(),
-            password=user_manager.password_manager.hash_password('Password1'),
+            password=user_manager.hash_password('Password1'),
         )
         db.session.add(user)
         db.session.commit()
@@ -105,7 +105,7 @@ def create_app():
         user = User(
             email='admin@example.com',
             email_confirmed_at=datetime.datetime.utcnow(),
-            password=user_manager.password_manager.hash_password('Password1'),
+            password=user_manager.hash_password('Password1'),
         )
         user.roles.append(Role(name='Admin'))
         user.roles.append(Role(name='Agent'))

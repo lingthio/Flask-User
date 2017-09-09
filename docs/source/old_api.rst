@@ -20,7 +20,7 @@ hash_password()
 ~~~~~~~~~~~~~~~
 ::
 
-    user_manager.password_manager.hash_password(password)
+    user_manager.hash_password(password)
     # Returns hashed 'password' using the configured password hash
     # Config settings: USER_PASSWORD_HASH_MODE = 'passlib'
     #                  USER_PASSWORD_HASH      = 'bcrypt'
@@ -31,7 +31,7 @@ verify_password()
 ~~~~~~~~~~~~~~~~~~~~~~
 ::
 
-    user_manager.password_manager.verify_password(password, user.password)
+    user_manager.verify_password(password, user.password)
     # Returns True if 'password' matches the user's 'hashed password'
     # Returns False otherwise.
 

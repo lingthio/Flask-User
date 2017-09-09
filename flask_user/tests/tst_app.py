@@ -1,6 +1,7 @@
 import os
 import datetime
 from flask import Flask, render_template_string, request
+from flask_babelex import Babel
 from flask_user import login_required, roles_required, UserManager, UserMixin
 
 ORM_type = 'SQLAlchemy'   # SQLAlchemy  or MongoEngine
@@ -8,13 +9,14 @@ ORM_type = 'SQLAlchemy'   # SQLAlchemy  or MongoEngine
 
 # Use "mongod -dbpath ~/mongodb/data/db" to start the MongoDB deamon
 
+# Setup Flask
 app = Flask(__name__)
 
 # Use a Class-based config to avoid needing a 2nd file
 # os.getenv() enables configuration through OS environment variables
 class ConfigClass(object):
     # Flask settings
-    SECRET_KEY = 'This is an INSECURE secret!! DO NOT use this in production!!'
+    SECRET_KEY = 'Test with short key'  # Less than 32 bytes
 
     # Flask-SQLAlchemy settings
     SQLALCHEMY_DATABASE_URI = 'sqlite:///tst_app.sqlite'    # File-based SQL database
@@ -29,16 +31,27 @@ class ConfigClass(object):
     # Flask-Mail settings
     MAIL_USERNAME =           os.getenv('MAIL_USERNAME',        'email@example.com')
     MAIL_PASSWORD =           os.getenv('MAIL_PASSWORD',        'password')
-    MAIL_DEFAULT_SENDER =     os.getenv('MAIL_DEFAULT_SENDER',  '"MyApp" <noreply@example.com>')
+    MAIL_DEFAULT_SENDER =     os.getenv('MAIL_DEFAULT_SENDER',  '"TestApp" <noreply@example.com>')
     MAIL_SERVER =             os.getenv('MAIL_SERVER',          'smtp.gmail.com')
     MAIL_PORT =           int(os.getenv('MAIL_PORT',            '465'))
     MAIL_USE_SSL =            os.getenv('MAIL_USE_SSL',         True)
 
-    USER_APP_NAME = 'Test App'
-    USER_EMAIL_SENDER_EMAIL = 'noreply@example.com'
+    # Flask-User settings
+    USER_APP_NAME = 'TestApp'
+    USER_ENABLE_EMAIL = True
+    USER_ENABLE_INVITATION = True
 
-# Read config from ConfigClass defined above
+    # Deliberately test with deprecated v0.6 Flask-User settings
+    USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL = False
+    USER_ENABLE_RETYPE_PASSWORD = True
+    USER_SHOW_USERNAME_EMAIL_DOES_NOT_EXIST = False
+    USER_PASSWORD_HASH = 'bcrypt'
+
+# Read app config from class
 app.config.from_object(__name__+'.ConfigClass')
+
+# Setup Flask-BabelEx
+babel = Babel(app)
 
 if ORM_type=='SQLAlchemy':
     # Initialize Flask-SQLAlchemy, using SQLALCHEMY_DATABASE_URI setting
@@ -55,6 +68,7 @@ if ORM_type=='SQLAlchemy':
         email = db.Column(db.String(255), nullable=True, unique=True)
         email_confirmed_at = db.Column(db.DateTime())
         password = db.Column(db.String(255), nullable=False, server_default='')
+        active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
 
         # User information
         first_name = db.Column(db.String(100), nullable=False, server_default='')
@@ -128,12 +142,14 @@ if ORM_type == 'MongoEngine':
 
 # Define custom UserManager class
 class CustomUserManager(UserManager):
-    # Customize settings
-    def __init__(self, *args, **kwargs):
-        super(CustomUserManager, self).__init__(*args, **kwargs)
-        self.APP_NAME = "CustomAppName"
-        self.ENABLE_EMAIL = True
-        self.ENABLE_INVITATION = True
+
+    # Install the MockEmailMailer
+    def customize(self, app):
+        # Test __init__() of all EmailMailers other than default SMTPEmailMailer
+        from flask_user.email_mailers import SendmailEmailMailer
+        from flask_user.email_mailers import SendgridEmailMailer
+        email_mailer = SendmailEmailMailer(app)
+        email_mailer = SendgridEmailMailer(app)
 
 
 def init_app(app, test_config=None):                # For automated tests
@@ -153,13 +169,17 @@ def init_app(app, test_config=None):                # For automated tests
         RoleClass = None
         user_manager = CustomUserManager(app, db, User, RoleClass=RoleClass)
 
+    # Test MAIL_DEFAULT_SENDER parser
+    assert user_manager.USER_EMAIL_SENDER_NAME=='TestApp'
+    assert user_manager.USER_EMAIL_SENDER_EMAIL=='noreply@example.com'
+
     # Reset database by dropping, then creating all tables
     db_adapter = user_manager.db_adapter
     db_adapter.drop_all_tables()
     db_adapter.create_all_tables()
 
     # For debugging purposes
-    token = user_manager.token_manager.generate_token('abc', 123, 'xyz')
+    token = user_manager.generate_token('abc', 123, 'xyz')
     data_items = user_manager.token_manager.verify_token(token, 3600)
     assert data_items is not None
     assert data_items[0] == 'abc'
@@ -168,12 +188,12 @@ def init_app(app, test_config=None):                # For automated tests
 
     # Create regular 'member' user
     user = db_adapter.add_object(User, username='member', email='member@example.com',
-            password=user_manager.password_manager.hash_password('Password1'), email_confirmed_at=datetime.datetime.utcnow())
+            password=user_manager.hash_password('Password1'), email_confirmed_at=datetime.datetime.utcnow())
     db_adapter.commit()
 
     # Create 'user007' user with 'secret' and 'agent' roles
     user = db_adapter.add_object(User, username='user007', email='admin@example.com',
-            password=user_manager.password_manager.hash_password('Password1'))
+            password=user_manager.hash_password('Password1'))
     db_adapter.add_user_role(user, 'secret', RoleClass=RoleClass)
     db_adapter.add_user_role(user, 'agent', RoleClass=RoleClass)
     db_adapter.commit()
