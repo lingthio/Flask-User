@@ -12,6 +12,7 @@ from flask_login import LoginManager, current_user
 
 from . import ConfigError
 from .db_adapters import select_db_adapter
+from .db_manager import DBManager
 from .email_manager import EmailManager
 from . import forms
 from .password_manager import PasswordManager
@@ -168,6 +169,9 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
 
         # Set default managers
         # --------------------
+        # Setup DBManager
+        self.db_manager = DBManager(app, db)
+
         # Setup PasswordManager
         self.password_manager = PasswordManager(app)
 
