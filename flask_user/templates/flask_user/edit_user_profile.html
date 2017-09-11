@@ -4,6 +4,14 @@
 {% from "flask_user/_macros.html" import render_field, render_checkbox_field, render_submit_field %}
 <h1>{%trans%}User profile{%endtrans%}</h1>
 
+<form action="" method="POST" class="form" role="form">
+    {{ form.hidden_tag() }}
+    {% for field in form.fields %}
+        {{ render_field(field, tabindex=loop.index) }}
+    {{ render_submit_field(form.submit, tabindex=90) }}
+</form>
+<br/>
+
 {% if user_manager.USER_ENABLE_CHANGE_USERNAME %}
 <p><a href="{{ url_for('user.change_username') }}">{%trans%}Change username{%endtrans%}</a></p>
 {% endif %}

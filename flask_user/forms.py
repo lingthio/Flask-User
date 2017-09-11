@@ -143,8 +143,8 @@ class ChangeUsernameForm(FlaskForm):
 class EditUserProfileForm(FlaskForm):
     """Edit user profile form."""
 
-    first_name = StringField(_('Username'), validators=[validators.DataRequired()])
-    last_name = StringField(_('Username'), validators=[validators.DataRequired()])
+    first_name = StringField(_('First name'), validators=[validators.DataRequired()])
+    last_name = StringField(_('Last name'), validators=[validators.DataRequired()])
 
     submit = SubmitField(_('Update'))
 

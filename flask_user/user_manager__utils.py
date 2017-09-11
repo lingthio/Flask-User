@@ -111,13 +111,6 @@ class UserManager__Utils(object):
         if domain_translations:
             domain_translations.as_default()
 
-    def send_email_message(self, recipient, subject, html_message, text_message):
-        """Convenience method that calls self.email_mailer.send_email_message(password, password_hash).
-        """
-        return self.email_mailer.send_email_message(
-            recipient=recipient, subject=subject,
-            html_message=html_message, text_message=text_message)
-
     # Return True if ENABLE_EMAIL and ENABLE_CONFIRM_EMAIL and email has been confirmed.
     # Return False otherwise
     def user_has_confirmed_email(self, user):

@@ -186,7 +186,7 @@ class EmailManager(object):
         text_message = render_template(template_filename+'_message.txt', **kwargs)
 
         # Send email via configured EmailMailer
-        self.user_manager.send_email_message(
+        self.user_manager.email_mailer.send_email_message(
             email, subject, html_message, text_message)
 
 

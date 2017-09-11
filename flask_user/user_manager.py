@@ -107,56 +107,6 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         if not self.USER_EMAIL_SENDER_NAME:
             self.USER_EMAIL_SENDER_NAME = self.USER_APP_NAME
 
-        # Set default forms
-        # -----------------
-        self.add_email_form = forms.AddEmailForm
-        self.change_password_form = forms.ChangePasswordForm
-        self.change_username_form = forms.ChangeUsernameForm
-        self.edit_user_profile_form = forms.EditUserProfileForm
-        self.forgot_password_form = forms.ForgotPasswordForm
-        self.invite_user_form = forms.InviteUserForm
-        self.login_form = forms.LoginForm
-        self.register_form = forms.RegisterForm
-        self.resend_email_confirmation_form = forms.ResendEmailConfirmationForm
-        self.reset_password_form = forms.ResetPasswordForm
-
-        # Set default managers
-        # --------------------
-        # Setup PasswordManager
-        self.password_manager = PasswordManager(app)
-
-        # Setup EmailManager
-        self.email_manager = EmailManager(app)
-
-        # Setup TokenManager
-        self.token_manager = TokenManager(app)
-
-        # Set default DbAdapter, based on the type of the 'db' parameter
-        # ---------------------
-        # Configure a DbAdapter based on the class of the 'db' parameter
-        self.db_adapter = None
-        # Check if db is a SQLAlchemy instance
-        if self.db_adapter is None:
-            try:
-                from flask_sqlalchemy import SQLAlchemy
-                if isinstance(db, SQLAlchemy):
-                    from .db_adapters import SQLDbAdapter
-                    self.db_adapter = SQLDbAdapter(app, db)
-            except ImportError: pass    # Ignore ImportErrors
-
-        # Check if db is a MongoEngine instance
-        if self.db_adapter is None:
-            try:
-                from flask_mongoengine import MongoEngine
-                if isinstance(db, MongoEngine):
-                    from .db_adapters import MongoDbAdapter
-                    self.db_adapter = MongoDbAdapter(app, db)
-            except ImportError: pass    # Ignore ImportErrors
-
-        # Set default EmailMailer
-        from .email_mailers.smtp_email_mailer import SMTPEmailMailer
-        self.email_mailer = SMTPEmailMailer(app)
-
         # Configure Flask-Login
         # --------------------
         # Setup default LoginManager using Flask-Login
@@ -201,6 +151,58 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Create a dummy Blueprint to add the app/templates/flask_user dir to the template search path
         blueprint = Blueprint('flask_user', __name__, template_folder='templates')
         app.register_blueprint(blueprint)
+
+        # Set default forms
+        # -----------------
+        self.add_email_form = forms.AddEmailForm
+        self.change_password_form = forms.ChangePasswordForm
+        self.change_username_form = forms.ChangeUsernameForm
+        self.edit_user_profile_form = forms.EditUserProfileForm
+        self.forgot_password_form = forms.ForgotPasswordForm
+        self.invite_user_form = forms.InviteUserForm
+        self.login_form = forms.LoginForm
+        self.register_form = forms.RegisterForm
+        self.resend_email_confirmation_form = forms.ResendEmailConfirmationForm
+        self.reset_password_form = forms.ResetPasswordForm
+
+        # Set default managers
+        # --------------------
+        # Setup PasswordManager
+        self.password_manager = PasswordManager(app)
+
+        # Set default EmailMailer
+        if self.USER_ENABLE_EMAIL:
+            from .email_mailers.smtp_email_mailer import SMTPEmailMailer
+            self.email_mailer = SMTPEmailMailer(app)
+
+        # Setup EmailManager
+        if self.USER_ENABLE_EMAIL:
+            self.email_manager = EmailManager(app)
+
+        # Setup TokenManager
+        self.token_manager = TokenManager(app)
+
+        # Set default DbAdapter, based on the type of the 'db' parameter
+        # ---------------------
+        # Configure a DbAdapter based on the class of the 'db' parameter
+        self.db_adapter = None
+        # Check if db is a SQLAlchemy instance
+        if self.db_adapter is None:
+            try:
+                from flask_sqlalchemy import SQLAlchemy
+                if isinstance(db, SQLAlchemy):
+                    from .db_adapters import SQLDbAdapter
+                    self.db_adapter = SQLDbAdapter(app, db)
+            except ImportError: pass    # Ignore ImportErrors
+
+        # Check if db is a MongoEngine instance
+        if self.db_adapter is None:
+            try:
+                from flask_mongoengine import MongoEngine
+                if isinstance(db, MongoEngine):
+                    from .db_adapters import MongoDbAdapter
+                    self.db_adapter = MongoDbAdapter(app, db)
+            except ImportError: pass    # Ignore ImportErrors
 
         # Allow developers to customize UserManager
         self.customize(app)
