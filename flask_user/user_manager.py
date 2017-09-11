@@ -204,6 +204,15 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
                     self.db_adapter = MongoDbAdapter(app, db)
             except ImportError: pass    # Ignore ImportErrors
 
+        # Check if db is a Flywheel instance
+        if self.db_adapter is None:
+            try:
+                from flask_flywheel import Flywheel
+                if isinstance(db, Flywheel):
+                    from .db_adapters import DynamoDbAdapter
+                    self.db_adapter = DynamoDbAdapter(app, db)
+            except ImportError: pass    # Ignore ImportErrors
+
         # Allow developers to customize UserManager
         self.customize(app)
 
