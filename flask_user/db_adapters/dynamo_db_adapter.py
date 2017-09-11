@@ -30,13 +30,19 @@ class DynamoDbAdapter(DbAdapterInterface):
         |    app = Flask(__name__)
         |    db = MongoEngine()
         |    db_adapter = DynamoDbAdapter(app, db)
-
-        .. note::
-
-            Generic methods.
         """
         # This no-op method is defined to show it in Sphinx docs in order 'bysource'
         super(DynamoDbAdapter, self).__init__(app, db)
+
+    def add_object(self, ObjectClass, **kwargs):
+        """Add a new object of type ``ObjectClass``,
+        with fields and values specified in ``**kwargs``.
+        """
+
+        print('dynamo.add_object(%s, %s)' % (ObjectClass, str(kwargs)))
+        object=ObjectClass(**kwargs)
+        self.db.engine.save(object)
+        return object
 
     def get_object(self, ObjectClass, id):
         """ Retrieve object of type ``ObjectClass`` by ``id``.
@@ -117,16 +123,6 @@ class DynamoDbAdapter(DbAdapterInterface):
         # Execute query
         return query.first(desc=True)
 
-    def add_object(self, ObjectClass, **kwargs):
-        """Add a new object of type ``ObjectClass``,
-        with fields and values specified in ``**kwargs``.
-        """
-
-        print('dynamo.add_object(%s, %s)' % (ObjectClass, str(kwargs)))
-        object=ObjectClass(**kwargs)
-        self.db.engine.save(object)
-        return object
-
     def update_object(self, object, **kwargs):
         """ Update an existing object, specified by ``object``,
         with the fields and values specified in ``**kwargs``.
@@ -144,15 +140,15 @@ class DynamoDbAdapter(DbAdapterInterface):
 
     def commit(self):
         """This method does nothing for DynamoDbAdapter.
-
-        .. note::
-
-            User-class specific utility methods.
         """
         # pdb.set_trace()
         print('dynamo.commit()')
         self.db.engine.sync()
         # self.db.session.commit()
+
+
+    # Role management methods
+    # -----------------------
 
     def add_user_role(self, user, role_name, RoleClass=None):
         """ Add a ``role_name`` role to ``user``."""
@@ -165,12 +161,12 @@ class DynamoDbAdapter(DbAdapterInterface):
 
     def get_user_roles(self, user):
         """ Retrieve a list of user role names.
-
-        .. note::
-
-            Database specific utility methods.
         """
         return user.roles
+
+
+    # Database management methods
+    # ---------------------------
 
     def create_all_tables(self):
         """This method does nothing for DynamoDbAdapter."""

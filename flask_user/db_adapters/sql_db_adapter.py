@@ -27,13 +27,17 @@ class SQLDbAdapter(DbAdapterInterface):
         |     app = Flask(__name__)
         |     db = SQLAlchemy()
         |     db_adapter = SQLDbAdapter(app, db)
-
-        .. note::
-
-            Generic methods.
         """
         # This no-op method is defined to show it in Sphinx docs in order 'bysource'
         super(SQLDbAdapter, self).__init__(app, db)
+
+    def add_object(self, ObjectClass, **kwargs):
+        """ Add a new object of type ``ObjectClass``,
+        with fields and values specified in ``**kwargs``.
+        """
+        object=ObjectClass(**kwargs)
+        self.db.session.add(object)
+        return object
 
     def get_object(self, ObjectClass, id):
         """ Retrieve object of type ``ObjectClass`` by ``id``.
@@ -110,14 +114,6 @@ class SQLDbAdapter(DbAdapterInterface):
         # Execute query
         return query.first()
 
-    def add_object(self, ObjectClass, **kwargs):
-        """ Add a new object of type ``ObjectClass``,
-        with fields and values specified in ``**kwargs``.
-        """
-        object=ObjectClass(**kwargs)
-        self.db.session.add(object)
-        return object
-
     def update_object(self, object, **kwargs):
         """ Update an existing object, specified by ``object``,
         with the fields and values specified in ``**kwargs``.
@@ -131,12 +127,12 @@ class SQLDbAdapter(DbAdapterInterface):
 
     def commit(self):
         """Save modified objects in the database session.
-
-        .. note::
-
-            User-class specific utility methods.
         """
         self.db.session.commit()
+
+
+    # Role management methods
+    # -----------------------
 
     def add_user_role(self, user, role_name, RoleClass=None):
         """ Add a ``role_name`` role to ``user``."""
@@ -148,12 +144,12 @@ class SQLDbAdapter(DbAdapterInterface):
 
     def get_user_roles(self, user):
         """ Retrieve a list of user role names.
-
-        .. note::
-
-            Database specific utility methods.
         """
         return [role.name for role in user.roles]
+
+
+    # Database management methods
+    # ---------------------------
 
     def create_all_tables(self):
         """Create database tables for all known database data-models."""

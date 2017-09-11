@@ -29,13 +29,18 @@ class MongoDbAdapter(DbAdapterInterface):
         |    app = Flask(__name__)
         |    db = MongoEngine()
         |    db_adapter = MongoDbAdapter(app, db)
-
-        .. note::
-
-            Generic methods.
         """
         # This no-op method is defined to show it in Sphinx docs in order 'bysource'
         super(MongoDbAdapter, self).__init__(app, db)
+
+    def add_object(self, ObjectClass, **kwargs):
+        """Add a new object of type ``ObjectClass``,
+        with fields and values specified in ``**kwargs``.
+        """
+
+        object = ObjectClass(**kwargs)
+        object.save()
+        return object
 
     def get_object(self, ObjectClass, id):
         """ Retrieve object of type ``ObjectClass`` by ``id``.
@@ -81,15 +86,6 @@ class MongoDbAdapter(DbAdapterInterface):
         # Retrieve first object
         return ObjectClass.objects(**ikwargs).first()
 
-    def add_object(self, ObjectClass, **kwargs):
-        """Add a new object of type ``ObjectClass``,
-        with fields and values specified in ``**kwargs``.
-        """
-
-        object = ObjectClass(**kwargs)
-        object.save()
-        return object
-
     def update_object(self, object, **kwargs):
         """ Update an existing object, specified by ``object``,
         with the fields and values specified in ``**kwargs``.
@@ -105,12 +101,12 @@ class MongoDbAdapter(DbAdapterInterface):
 
     def commit(self):
         """This method does nothing for MongoDbAdapter.
-
-        .. note::
-
-            User-class specific utility methods.
         """
         pass
+
+
+    # Role management methods
+    # -----------------------
 
     def add_user_role(self, user, role_name, RoleClass=None):
         """ Add a ``role_name`` role to ``user``."""
@@ -123,12 +119,12 @@ class MongoDbAdapter(DbAdapterInterface):
 
     def get_user_roles(self, user):
         """ Retrieve a list of user role names.
-
-        .. note::
-
-            Database specific utility methods.
         """
         return user.roles
+
+
+    # Database management methods
+    # ---------------------------
 
     def create_all_tables(self):
         """This method does nothing for MongoDbAdapter."""
