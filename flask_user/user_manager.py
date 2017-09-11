@@ -11,6 +11,7 @@ from flask import abort, Blueprint, current_app, Flask, request
 from flask_login import LoginManager, current_user
 
 from . import ConfigError
+from .db_adapters import select_db_adapter
 from .email_manager import EmailManager
 from . import forms
 from .password_manager import PasswordManager
@@ -182,36 +183,8 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Setup TokenManager
         self.token_manager = TokenManager(app)
 
-        # Set default DbAdapter, based on the type of the 'db' parameter
-        # ---------------------
-        # Configure a DbAdapter based on the class of the 'db' parameter
-        self.db_adapter = None
-        # Check if db is a SQLAlchemy instance
-        if self.db_adapter is None:
-            try:
-                from flask_sqlalchemy import SQLAlchemy
-                if isinstance(db, SQLAlchemy):
-                    from .db_adapters import SQLDbAdapter
-                    self.db_adapter = SQLDbAdapter(app, db)
-            except ImportError: pass    # Ignore ImportErrors
-
-        # Check if db is a MongoEngine instance
-        if self.db_adapter is None:
-            try:
-                from flask_mongoengine import MongoEngine
-                if isinstance(db, MongoEngine):
-                    from .db_adapters import MongoDbAdapter
-                    self.db_adapter = MongoDbAdapter(app, db)
-            except ImportError: pass    # Ignore ImportErrors
-
-        # Check if db is a Flywheel instance
-        if self.db_adapter is None:
-            try:
-                from flask_flywheel import Flywheel
-                if isinstance(db, Flywheel):
-                    from .db_adapters import DynamoDbAdapter
-                    self.db_adapter = DynamoDbAdapter(app, db)
-            except ImportError: pass    # Ignore ImportErrors
+        # Select the appropriate DbAdapter, based on the db parameter type
+        self.db_adapter = select_db_adapter(app, db)
 
         # Allow developers to customize UserManager
         self.customize(app)
