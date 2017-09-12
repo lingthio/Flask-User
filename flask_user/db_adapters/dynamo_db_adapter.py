@@ -1,4 +1,4 @@
-"""This module implements the DbAdapter interface for MongoEngine.
+"""This module implements the DbAdapter interface for Flywheel.
 """
 
 # Author: Ling Thio <ling.thio@gmail.com>
@@ -14,21 +14,17 @@ from flask_user.db_adapters import DbAdapterInterface
 
 class DynamoDbAdapter(DbAdapterInterface):
     """ Implements the DbAdapter interface to find, add, update and delete
-    database objects using Flask-MongoEngine.
+    database objects using Flask-Flywheel.
     """
-
-    # Since MongoEngine is similar to SQLAlchemy, we extend
-    # DynamoDbAdapter from SQLDbAdapter
-    # and re-use most of its methods.
 
     def __init__(self, app, db):
         """Args:
             app(Flask): The Flask appliation instance.
-            db(MongoEngine): The MongoEngine object-database mapper instance.
+            db(Flywheel): The Flywheel object-database mapper instance.
 
         | Example:
         |    app = Flask(__name__)
-        |    db = MongoEngine()
+        |    db = Flywheel()
         |    db_adapter = DynamoDbAdapter(app, db)
         """
         # This no-op method is defined to show it in Sphinx docs in order 'bysource'

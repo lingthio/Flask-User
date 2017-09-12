@@ -16,10 +16,6 @@ class MongoDbAdapter(DbAdapterInterface):
     database objects using Flask-MongoEngine.
     """
 
-    # Since MongoEngine is similar to SQLAlchemy, we extend
-    # MongoDbAdapter from SQLDbAdapter
-    # and re-use most of its methods.
-
     def __init__(self, app, db):
         """Args:
             app(Flask): The Flask appliation instance.
