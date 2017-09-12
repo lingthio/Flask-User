@@ -55,8 +55,8 @@ class DBManager(object):
         # Check self.db_adapter
         if self.db_adapter is None:
             raise ConfigError(
-                'No DbAdapter specified. Install Flask-SQLAlchemy, install FlaskMongAlchemy,' \
-                ' or set self.db_adapter in UserManager.custom().')
+                'No Flask-SQLAlchemy, Flask-MongoEngine or Flask-Flywheel installed.'\
+                ' You must install one of these Flask extensions.')
 
 
     def add_user(self, **kwargs):
