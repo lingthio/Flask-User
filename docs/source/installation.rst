@@ -16,7 +16,7 @@ We recommend making use of virtualenv, virtualenvwrapper and pip::
 Optional uninstalls
 -------------------
 - FLask-User installs bcrypt for its default passlib hash of 'bcrypt'.
-- Flask-User installs Flask-Mail for its default SMTPEmailMailer.
+- Flask-User installs Flask-Mail for its default SMTPEmailAdapter.
 - Flask-User installs Flask-SQLAlchemy for its default SQLDbAdapter.
 
 If you configure/customize Flask-User away from their defaults, certain packages may be uninstalled::

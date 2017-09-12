@@ -11,7 +11,7 @@ Flask-User API
 - :ref:`PasswordManager`
 - :ref:`TokenManager`
 - :ref:`DbAdapterInterface`
-- :ref:`EmailMailerInterface`
+- :ref:`EmailAdapterInterface`
 
 --------
 

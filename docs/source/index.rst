@@ -27,7 +27,7 @@ Table of Contents
     mongodb_app
     api_db_adapters
     api_decorators
-    api_email_mailers
+    api_email_adapters
     api_forms
     api_user_manager
     api_user_manager__settings

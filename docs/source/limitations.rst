@@ -31,12 +31,12 @@ Custom DbAdapters can be implemented to support other Databases.
 
 Supported Email Mailers
 -----------------------
-Flask-User makes use of EmailMailers to send email via several platforms.
+Flask-User makes use of EmailAdapters to send email via several platforms.
 
-It ships with a SMTPEmailMailer a SendmailEmailMailer and a SendGridEmailMailer
+It ships with a SMTPEmailAdapter a SendmailEmailAdapter and a SendGridEmailAdapter
 to send emails via SMTP, ``sendmail`` and SendGrid.
 
-Custom EmailMailers can be implemented to support other Email Mailers.
+Custom EmailAdapters can be implemented to support other Email Mailers.
 
 
 Fixed app.user_manager name

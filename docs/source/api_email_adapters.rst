@@ -1,12 +1,12 @@
-.. _EmailMailerInterface:
+.. _EmailAdapterInterface:
 
-EmailMailer Interface
-=====================
+EmailAdapter Interface
+======================
 
-The EmailMailerInterface class defines an interface to send email messages
+The EmailAdapterInterface class defines an interface to send email messages
 while shielding the Flask-User code from the underlying implementation.
 
-.. autoclass:: flask_user.email_mailers.email_mailer_interface.EmailMailerInterface
+.. autoclass:: flask_user.email_adapters.email_adapter_interface.EmailAdapterInterface
     :special-members: __init__
 
 .. tip::
@@ -23,7 +23,7 @@ while shielding the Flask-User code from the underlying implementation.
 
 Example implementation
 ----------------------
-Here's the `SMTPEmailMailer() implementation on github <https://github.com/lingthio/Flask-User/blob/master/flask_user/email_mailers/smtp_email_mailer.py>`_.
+Here's the `SMTPEmailAdapter() implementation on github <https://github.com/lingthio/Flask-User/blob/master/flask_user/email_adapters/smtp_email_adapter.py>`_.
 
 Customizing Flask-User
 ----------------------
@@ -33,8 +33,8 @@ Customizing Flask-User
     class CustomUserManager(UserManager):
 
         def customize(self, app):
-            # Use the CustomEmailMailer
-            self.email_mailer = CustomEmailMailer(app)
+            # Use the CustomEmailAdapter
+            self.email_adapter = CustomEmailAdapter(app)
 
     # Setup Flask-User
     user_manager = CustomUserManager(app, db, User)

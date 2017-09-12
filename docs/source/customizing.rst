@@ -29,7 +29,7 @@ in addition to being secure and reliable.
 - And then there are :doc:`customizing_advanced`
     - :ref:`CustomizingManagers`
     - :ref:`CustomDbAdapters`
-    - :ref:`CustomEmailMailers`
+    - :ref:`CustomEmailAdapters`
 
 
 --------

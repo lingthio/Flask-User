@@ -13,6 +13,8 @@ Flask-User v0.9
 * **Registrations** and **Email Confirmations**
 * **Change Usernames**, **Change Passwords**, and **Forgotten Passwords**
 
+.. _SupportedLanguages:
+
 And wouldn't it be nice to also offer:
 
 * **Added Security**

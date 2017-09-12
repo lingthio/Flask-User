@@ -449,34 +449,34 @@ Configure the ``MONGODB_SETTINGS`` setting in your app config to point to the de
 
 --------
 
-.. _CustomizingSMTPEmailMailer:
+.. _CustomizingSMTPEmailAdapter:
 
-SMTPEmailMailer
----------------
-Flask-User uses the SMTPEmailMailer and install Flask-Mail by default.
-No customization is required to use SMTPEmailMailer to send emails via SMTP.
+SMTPEmailAdapter
+----------------
+Flask-User uses the SMTPEmailAdapter and install Flask-Mail by default.
+No customization is required to use SMTPEmailAdapter to send emails via SMTP.
 
 Configure the ``MAIL_...`` settings in your app config to point to the desired SMTP server and account.
 
 --------
 
-.. _CustomizingSendmailEmailMailer:
+.. _CustomizingSendmailEmailAdapter:
 
-SendmailEmailMailer
--------------------
-Flask-User ships with a SendmailEmailMailer, but Flask-Sendmail must be installed manually::
+SendmailEmailAdapter
+--------------------
+Flask-User ships with a SendmailEmailAdapter, but Flask-Sendmail must be installed manually::
 
     pip install Flask-Sendmail
 
-and minor customization is required use to SendmailEmailMailer to send emails via ``sendmail``.::
+and minor customization is required use to SendmailEmailAdapter to send emails via ``sendmail``.::
 
     # Customize Flask-User
     class CustomUserManager(UserManager):
 
         def customize(self, app):
-            # Use the provided SendmailEmailMailer
-            from flask_user.email_mailers import SendmailEmailMailer
-            self.email_mailer = SendmailEmailMailer(app)
+            # Use the provided SendmailEmailAdapter
+            from flask_user.email_adapters import SendmailEmailAdapter
+            self.email_adapter = SendmailEmailAdapter(app)
 
     # Setup Flask-User
     user_manager = CustomUserManager(app, db, User)
@@ -485,23 +485,23 @@ No configuration is required (other than setting up sendmail on your system).
 
 ---------
 
-.. _CustomizingSendgridEmailMailer:
+.. _CustomizingSendgridEmailAdapter:
 
-SendgridEmailMailer
--------------------
-Flask-User ships with a SendgridEmailMailer, but sendgrid-python needs to be installed manually::
+SendgridEmailAdapter
+--------------------
+Flask-User ships with a SendgridEmailAdapter, but sendgrid-python needs to be installed manually::
 
     pip install sendgrid
 
-and minor customization is required to use SendgridEmailMailer to send emais via SendGrid::
+and minor customization is required to use SendgridEmailAdapter to send emais via SendGrid::
 
     # Customize Flask-User
     class CustomUserManager(UserManager):
 
         def customize(self, app):
-            # Use the provided SendgridEmailMailer
-            from flask_user.email_mailers import SendgridEmailMailer
-            self.email_mailer = SendgridEmailMailer(app)
+            # Use the provided SendgridEmailAdapter
+            from flask_user.email_adapters import SendgridEmailAdapter
+            self.email_adapter = SendgridEmailAdapter(app)
 
     # Setup Flask-User
     user_manager = CustomUserManager(app, db, User)

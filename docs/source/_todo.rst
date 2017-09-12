@@ -6,11 +6,6 @@
   Cons: Three extra decorators needed
   Decorator X could test for email and then call X_allow_unconfirmed_email
 
-- Consider eliminating EmailMailers.
-  Pros: simpler
-  Cons: no separation of init and send
-  I think we should keep EmailMailers.
-
 - Increase test coverage
   - 45 lines in user_manager_views: invite_user_view
   - 6 lines in user_manager_views: if invite_token and um.UserInvitationClass:
@@ -30,10 +25,3 @@
   Why two views?
   Move Managers to Intefaces
 
-- EmailMailer interface:
-    Move
-        self.sender_name = self.app.user_manager.USER_EMAIL_SENDER_NAME
-        self.sender_email = self.app.user_manager.USER_EMAIL_SENDER_EMAIL
-    outside of email interface???
-    add sender_name and email as param to send()???
-    I like this. Can be re-used in RS2 which will need different senders for different orgs.

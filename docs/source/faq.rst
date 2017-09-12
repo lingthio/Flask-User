@@ -35,7 +35,7 @@ It exists since December 2013 and contains 661 statements with a 98% test covera
 
 Flask-User shields itself from database operations through a DBAdapter.
 It ships with a SQLAlchemyAdapter, but the API is very simple, so other adapters
-can be easily added. See :ref:`SQLDbAdapter`.
+can be easily added. See :ref:`DbAdapterInterface`.
 
 
 

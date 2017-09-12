@@ -62,7 +62,7 @@ Flask-User allows developers to implement a custom DbAdapter that
 conforms to the :ref:`DbAdapterInterface`::
 
     # Define a custom DbAdapter
-    from flask_user.email_mailers import DbAdapter
+    from flask_user.email_adapters import DbAdapter
     class CustomDbAdapter(DbAdapter):
         pass
 
@@ -79,38 +79,38 @@ conforms to the :ref:`DbAdapterInterface`::
 Here's the `SQLDbAdapter() implementation on github <https://github.com/lingthio/Flask-User/blob/master/flask_user/db_adapters/sql_db_adapter.py>`_.
 
 
-.. _CustomEmailMailers:
+.. _CustomEmailAdapters:
 
-Custom EmailMailers
-===================
+Custom EmailAdapters
+====================
 
-Flask-User uses EmailMailers to send email via various methods.
+Flask-User uses EmailAdapters to send email via various methods.
 
-Flask-User ships with the following EmailMailers:
+Flask-User ships with the following EmailAdapters:
 
-- ``SMTPEmailMailer()`` for sending email via SMTP.
-- ``SendmailEmailMailer()`` for sending email via ``sendmail``.
-- ``SendgridEmailMailer()`` for sending email via SendGrid.
+- ``SMTPEmailAdapter()`` for sending email via SMTP.
+- ``SendmailEmailAdapter()`` for sending email via ``sendmail``.
+- ``SendgridEmailAdapter()`` for sending email via SendGrid.
 
-Flask-User allows developers to implement a custom EmailMailer that
-conforms to the :ref:`EmailMailerInterface`::
+Flask-User allows developers to implement a custom EmailAdapter that
+conforms to the :ref:`EmailAdapterInterface`::
 
-    # Define a custom EmailMailer
-    from flask_user.email_mailers import EmailMailer
-    class CustomEmailMailer(EmailMailer):
+    # Define a custom EmailAdapter
+    from flask_user.email_adapters import EmailAdapter
+    class CustomEmailAdapter(EmailAdapter):
         pass
 
     # Customize Flask-User
     class CustomUserManager(UserManager):
 
         def customize(self, app):
-            # Use the CustomEmailMailer
-            self.email_mailer = CustomEmailMailer(app)
+            # Use the CustomEmailAdapter
+            self.email_adapter = CustomEmailAdapter(app)
 
     # Setup Flask-User
     user_manager = CustomUserManager(app, db, User)
 
-Here's the `SMTPEmailMailer() implementation on github <https://github.com/lingthio/Flask-User/blob/master/flask_user/email_mailers/smtp_email_mailer.py>`_.
+Here's the `SMTPEmailAdapter() implementation on github <https://github.com/lingthio/Flask-User/blob/master/flask_user/email_adapters/smtp_email_adapter.py>`_.
 
 
 --------

@@ -6,16 +6,17 @@ by allowing developers to override or extend ``UserManager`` properties and meth
 
 We increased security by having the TokenManager accept parts of passwords,
 in addition to the user ID, to invalidate tokens after a password has changed.
+The TokenManager now also excepts IDs other than small integers.
 
 Hashlib password hashing is completely configurable through two config settings:
 ``USER_PASSLIB_CRYPTCONTEXT_SCHEMES`` and ``USER_PASSLIB_CRYPTCONTEXT_KEYWORDS``.
 Example: ``SCHEMES=['bcrypt', 'argon2']``, ``KEYWORDS=dict(bcrypt__rounds=12, argon2__memory_cost=512)``.
 
-We added support for MongoDBs through a MongoEngineAdapter and by
-having the TokenManager accept string representations of MongoDB ObjecIds.
+We added support for MongoDBs (through Flask-MongoEngine)
+and for DynamoDBs (through Flask-Flywheel).
 
-We introduced the EmailMailer interface to support sending emails not only via SMTP,
-but also via ``sendmail``, SendGrid, and custom EmailMailers.
+We introduced the EmailAdapter interface to support sending emails not only via SMTP,
+but also via ``sendmail``, SendGrid, and custom EmailAdapters.
 
 For all of the above we finally had to break compatibility with **v0.6 (stable)**.
 For non-customized Flask-User apps, the porting is relatively straightforward.
