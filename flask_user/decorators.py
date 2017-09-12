@@ -79,8 +79,31 @@ def roles_accepted(*role_names):
     # convert the list to a list containing that list.
     # Because roles_required(a, b) requires A AND B
     # while roles_required([a, b]) requires A OR B
-    required_role_names = [*role_names]
-    return roles_required(required_role_names)
+    def wrapper(view_function):
+
+        @wraps(view_function)    # Tells debuggers that is is a function wrapper
+        def decorator(*args, **kwargs):
+            user_manager = current_app.user_manager
+
+            # User must be logged in with a confirmed email address
+            allowed = _is_logged_in_with_confirmed_email(user_manager)
+            if not allowed:
+                # Redirect to unauthenticated page
+                return user_manager.unauthenticated_view()
+
+            # User must have the required roles
+            # NB: roles_required would call has_roles(*role_names): ('A', 'B') --> ('A', 'B')
+            # But: roles_accepted must call has_roles(role_names):  ('A', 'B') --< (('A', 'B'),)
+            if not current_user.has_roles(role_names):
+                # Redirect to the unauthorized page
+                return user_manager.unauthorized_view()
+
+            # It's OK to call the view
+            return view_function(*args, **kwargs)
+
+        return decorator
+
+    return wrapper
 
 
 def roles_required(*role_names):

@@ -5,7 +5,7 @@ from flask_login import login_user, logout_user
 
 from flask_user import login_required, roles_accepted, roles_required, allow_unconfirmed_email
 
-def test_decorators(request):
+def test_decorators(app, request):
 
     # Setup view functions with decorators
     # ------------------------------------
