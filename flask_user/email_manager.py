@@ -39,7 +39,7 @@ class EmailManager(object):
         
         # Verify config settings
         if not self.user_manager.USER_ENABLE_EMAIL: return
-        if not self.user_manager.USER_SEND_REGISTERED_EMAIL and not self.user_manager.USER_ENABLE_CONFIRM_EMAIL: return
+        if not self.user_manager.USER_ENABLE_CONFIRM_EMAIL: return
 
         # The confirm_email email is sent to a specific user_email.email or user.email
         email = user_email.email if user_email else user.email
