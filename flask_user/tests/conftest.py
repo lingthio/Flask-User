@@ -32,14 +32,14 @@ def app(request):
 @pytest.fixture(scope='session')
 def db(app, request):
     # Retrieve db_adapter through App
-    db_adapter = app.user_manager.db_adapter
+    db_manager = app.user_manager.db_manager
 
     # Create all tables
-    db_adapter.create_all_tables()
+    db_manager.create_all_tables()
 
     # Define a teardown() function to drop all tables at end of test
     def teardown():
-        db_adapter.drop_all_tables()
+        db_manager.drop_all_tables()
 
     # Register teardown function
     request.addfinalizer(teardown)

@@ -48,7 +48,7 @@ class UserMixin(FlaskLoginUserMixin):
             # Load user by User ID
             user_id = data_items[0]
             password_ends_with = data_items[1]
-            user = user_manager.get_user_by_id(user_id)
+            user = user_manager.db_manager.get_user_by_id(user_id)
 
 
             # Make sure that last 8 characters of user password matches
@@ -76,7 +76,7 @@ class UserMixin(FlaskLoginUserMixin):
 
         # Translates a list of role objects to a list of role_names
         user_manager = current_app.user_manager
-        role_names = user_manager.db_adapter.get_user_roles(self)
+        role_names = user_manager.db_manager.get_user_roles(self)
 
         # has_role() accepts a list of requirements
         for requirement in requirements:

@@ -125,7 +125,7 @@ def check_all_valid_forms(um, client):
 def check_valid_register_form(um, client, db):
     # Using global variable for speed
     global valid_user
-    User = um.UserClass
+    User = um.db_manager.UserClass
 
     # Build variable argument list depending on config settings
     kwargs = {}
@@ -146,10 +146,10 @@ def check_valid_register_form(um, client, db):
         client.post_valid_form(url_for('user.register'), **kwargs)
 
         if um.USER_ENABLE_USERNAME:
-            valid_user = um.db_adapter.find_first_object(User, username=VALID_USERNAME)
+            valid_user = um.db_manager.find_user_by_username(VALID_USERNAME)
 
         else:
-            valid_user = um.db_adapter.find_first_object(User, email=VALID_EMAIL)
+            valid_user = um.db_manager.db_adapter.find_first_object(User, email=VALID_EMAIL)
         assert valid_user
 
     else:
@@ -161,7 +161,7 @@ def check_valid_register_form(um, client, db):
         # Create User
         valid_user = User(email_confirmed_at=datetime.datetime.utcnow(), **kwargs)
         db.session.add(valid_user)
-        um.db_adapter.commit()
+        um.db_manager.commit()
         assert valid_user
 
 def check_valid_resend_email_confirmation_form(um, client):
@@ -191,7 +191,7 @@ def check_valid_confirm_email_page(um, client):
     client.get_valid_page(url_for('user.confirm_email', token=confirmation_token))
 
     # Verify operations
-    valid_user = um.db_adapter.get_object(um.UserClass, valid_user.id)
+    valid_user = um.db_manager.db_adapter.get_object(um.db_manager.UserClass, valid_user.id)
     assert valid_user.email_confirmed_at != None
 
 def check_valid_login_form(um, client):
@@ -233,12 +233,14 @@ def check_valid_change_password_form(um, client):
     client.post_valid_form(url_for('user.change_password'), **kwargs)
 
     # Verify operations
-    valid_user = um.db_adapter.get_object(um.UserClass, valid_user.id)
+    valid_user = um.db_manager.db_adapter.get_object(um.db_manager.UserClass, valid_user.id)
     # deliberately test verify_password with deprecated user param (instead of user.password)
     assert um.verify_password(new_password, valid_user)
 
     # Change password back to old password for subsequent tests
-    um.db_adapter.update_object(valid_user, password=old_password_hash)
+    valid_user.password=old_password_hash
+    um.db_manager.save_object(valid_user)
+    um.db_manager.commit()
 
 def check_valid_change_username_form(um, client):
     # Skip test for certain config combinations
@@ -253,7 +255,7 @@ def check_valid_change_username_form(um, client):
     client.post_valid_form(url_for('user.change_username'), new_username=new_username, old_password=VALID_PASSWORD)
 
     # Verify operations
-    valid_user = um.db_adapter.get_object(um.UserClass, valid_user.id)
+    valid_user = um.db_manager.db_adapter.get_object(um.db_manager.UserClass, valid_user.id)
     assert valid_user.username == new_username
 
     # Change username back to old password for subsequent tests
@@ -301,7 +303,7 @@ def check_valid_reset_password_page(um, client):
     client.post_valid_form(url, **kwargs)
 
     # Verify operations
-    valid_user = um.db_adapter.get_object(um.UserClass, valid_user.id)
+    valid_user = um.db_manager.db_adapter.get_object(um.db_manager.UserClass, valid_user.id)
     assert um.verify_password(new_password, valid_user.password)
 
     # Change password back to old password for subsequent tests
@@ -316,7 +318,7 @@ def check_valid_invite_email(um, client):
     UserInvitation = um.UserInvitationClass
     client.login(username='member', email='member@example.com', password='Password1')
     client.post_valid_form(url_for('user.invite_user'), email=INVITE_USER_EMAIL)
-    valid_user_invitation = um.db_adapter.find_first_object(UserInvitation, email=INVITE_USER_EMAIL)
+    valid_user_invitation = um.db_manager.db_adapter.find_first_object(UserInvitation, email=INVITE_USER_EMAIL)
     assert valid_user_invitation
 
 def delete_valid_user(db):
@@ -326,8 +328,8 @@ def delete_valid_user(db):
     if valid_user:
         # Delete valid_user
         um = current_app.user_manager
-        um.db_adapter.delete_object(valid_user)
-        um.db_adapter.commit()
+        um.db_manager.delete_object(valid_user)
+        um.db_manager.commit()
         valid_user = None
 
 def delete_valid_user_invitation(db):
@@ -337,6 +339,6 @@ def delete_valid_user_invitation(db):
     if valid_user_invitation:
         # Delete valid_user_invitation
         um = current_app.user_manager
-        um.db_adapter.delete_object(valid_user_invitation)
-        um.db_adapter.commit()
+        um.db_manager.delete_object(valid_user_invitation)
+        um.db_manager.commit()
         valid_user_invitation = None

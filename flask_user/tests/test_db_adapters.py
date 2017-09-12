@@ -1,5 +1,6 @@
 from flask_mongoengine import MongoEngine
 from flask_user.db_adapters import MongoDbAdapter
+from flask_user.db_manager import DBManager
 
 
 def test_mongoengine_db_adapter(app):
@@ -12,22 +13,22 @@ def test_mongoengine_db_adapter(app):
         skip_mongoengine_tests = True
     if skip_mongoengine_tests: return
 
-    db_adapter = MongoDbAdapter(app, db)
-
     class User(db.Document):
         username = db.StringField(default='')
         roles = db.ListField(db.StringField(), default=[])
 
-    username = 'Username'
+    db_manager = DBManager(app, db, UserClass=User)
+
+    username = 'username'
 
     # Test create_all_tables
-    db_adapter.drop_all_tables()
-    db_adapter.create_all_tables()
+    db_manager.drop_all_tables()
+    db_manager.create_all_tables()
 
     # Test add_object
-    user1 = db_adapter.add_object(User, username=username)
-    user2 = db_adapter.add_object(User, username='SecondUser')
-    db_adapter.commit()
+    user1 = db_manager.add_user(username='username')
+    user2 = db_manager.add_user(username='SecondUser')
+    db_manager.commit()
 
     # Test tokenizing MongoDB IDs
     token_manager = app.user_manager.token_manager
@@ -35,50 +36,43 @@ def test_mongoengine_db_adapter(app):
     assert(token_manager.verify_token(token, 3600))
 
     # Test get_object
-    user = db_adapter.get_object(User, '1234567890ab1234567890ab')
+    user = db_manager.get_user_by_id('1234567890ab1234567890ab')
     assert user==None
-    user = db_adapter.get_object(User, user1.id)
+    user = db_manager.get_user_by_id(user1.id)
     assert user==user1
 
     # Test find methods
-    users = db_adapter.find_objects(User, username='Xyz')
-    assert not users
-    users = db_adapter.find_objects(User, username=username)
-    assert users[0]==user1
-    user = db_adapter.find_first_object(User, username='Xyz')
+    user = db_manager.find_user_by_username('Xyz')
     assert user==None
-    user = db_adapter.find_first_object(User, username=username)
-    assert user==user1
-    user = db_adapter.ifind_first_object(User, username='xyz')
-    assert user==None
-    user = db_adapter.ifind_first_object(User, username=username.lower())
+    user = db_manager.find_user_by_username(username)
     assert user==user1
 
-    # Test update_object
-    db_adapter.update_object(user, username='NewUsername')
-    db_adapter.commit()
-    user = db_adapter.get_object(User, user.id)
+    # Test save_object
+    user.username='NewUsername'
+    db_manager.save_object(user)
+    db_manager.commit()
+    user = db_manager.get_user_by_id(user.id)
     assert user==user1
     assert user.username=='NewUsername'
 
     # Test user_role methods
-    db_adapter.add_user_role(user1, 'Admin')
-    db_adapter.add_user_role(user1, 'Agent')
-    user_roles = db_adapter.get_user_roles(user1)
+    db_manager.add_user_role(user1, 'Admin')
+    db_manager.add_user_role(user1, 'Agent')
+    user_roles = db_manager.get_user_roles(user1)
     assert user_roles == ['Admin', 'Agent']
 
     # Test delete_object
     user1_id = user1.id
-    db_adapter.delete_object(user1)
-    db_adapter.commit()
-    user = db_adapter.get_object(User, user1_id)
+    db_manager.delete_object(user1)
+    db_manager.commit()
+    user = db_manager.get_user_by_id(user1_id)
     assert user==None
-    user = db_adapter.get_object(User, user2.id)
+    user = db_manager.get_user_by_id(user2.id)
     assert user==user2
 
     # Test drop_all_tables
-    db_adapter.drop_all_tables()
-    user = db_adapter.get_object(User, user2.id)
+    db_manager.drop_all_tables()
+    user = db_manager.get_user_by_id(user2.id)
     assert user==None
 
 

@@ -101,35 +101,9 @@ class DynamoDbAdapter(DbAdapterInterface):
         # Execute query
         return query.first(desc=True)
 
-    def ifind_first_object(self, ObjectClass, **kwargs):
-        """Retrieve the first object of type ``ObjectClass``,
-        matching the filters specified in ``**kwargs`` -- case insensitive.
-        """
-
-        # Convert each name/value pair in 'kwargs' into a filter
-        print("dynamo.ifind_first_object(%s, %s). I don't actually support case insensitive yet" % (ObjectClass, str(kwargs)))
-
-        query = self.db.engine.query(ObjectClass)
-        for field_name, field_value in kwargs.items():
-
-            # Make sure that ObjectClass has a 'field_name' property
-            field = getattr(ObjectClass, field_name, None)
-            if field is None:
-                raise KeyError("DynamoDBAdapter.ifind_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
-
-            # Add a case sensitive filter to the query
-            query = query.filter(field == field_value)
-
-        # Execute query
-        return query.first(desc=True)
-
-    def update_object(self, object, **kwargs):
-        """ Update an existing object, specified by ``object``,
-        with the fields and values specified in ``**kwargs``.
-        """
-        # Convert name=value kwargs to object.name=value
-        super(DynamoDbAdapter, self).update_object(object, **kwargs)
-
+    def save_object(self, object, **kwargs):
+        """ Save object. Only for non-session centric Object-Database Mappers."""
+        pass
 
     def delete_object(self, object):
         """ Delete object specified by ``object``. """
@@ -147,34 +121,16 @@ class DynamoDbAdapter(DbAdapterInterface):
         # self.db.session.commit()
 
 
-    # Role management methods
-    # -----------------------
-
-    def add_user_role(self, user, role_name, RoleClass=None):
-        """ Add a ``role_name`` role to ``user``."""
-        # MongoEngine has a bug where
-        #    user.roles.append(role_name)
-        # appends role_name to Field.default (instead of user.roles)
-        # As a workaround, we need to create a new list
-        user.roles.append(role_name)
-        user.save()
-
-    def get_user_roles(self, user):
-        """ Retrieve a list of user role names.
-        """
-        return user.roles
-
-
     # Database management methods
     # ---------------------------
 
     def create_all_tables(self):
         """This method does nothing for DynamoDbAdapter."""
-        pass # TODO
+        self.db.engine.create_schema()
 
     def drop_all_tables(self):
         """Drop all document collections of the database.
 
         .. warning:: ALL DATA WILL BE LOST. Use only for automated testing.
         """
-        pass # TODO
+        self.db.engine.delete_schema()

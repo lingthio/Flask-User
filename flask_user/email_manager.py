@@ -65,7 +65,7 @@ class EmailManager(object):
         if not self.user_manager.USER_SEND_PASSWORD_CHANGED_EMAIL: return
 
         # Notification emails are sent to the user's primary email address
-        email = self.user_manager.get_primary_user_email(user)
+        email = self.user_manager.db_manager.get_primary_user_email(user)
 
         # Render email from templates and send it via the configured EmailMailer
         self._render_and_send_email(
@@ -111,7 +111,7 @@ class EmailManager(object):
         email = user_invitation.email
 
         # Create a dummy user object to an empty name for the invitee
-        user = self.user_manager.UserClass(email=email)
+        user = self.user_manager.db_manager.UserClass(email=email)
 
         # Generate a accept_invitation_link
         token = self.user_manager.generate_token(user_invitation.id)
@@ -160,7 +160,7 @@ class EmailManager(object):
         if not self.user_manager.USER_SEND_USERNAME_CHANGED_EMAIL: return
 
         # Notification emails are sent to the user's primary email address
-        email = self.user_manager.get_primary_user_email(user)
+        email = self.user_manager.db_manager.get_primary_user_email(user)
 
         # Render email from templates and send it via the configured EmailMailer
         self._render_and_send_email(

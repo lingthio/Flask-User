@@ -42,47 +42,12 @@ class UserManager__Utils(object):
         | Return False otherwise.
         """
 
-        user, user_email = self.find_user_by_email(new_email)
+        user, user_email = self.db_manager.get_user_and_user_email_by_email(new_email)
         return (user == None)
-
-    def find_user_by_username(self, username):
-        """Retrieve a User by username (case insensitively)."""
-        return self.db_adapter.ifind_first_object(self.UserClass, username=username)
-
-    def find_user_by_email(self, email):
-        """Retrieve a User by email."""
-        if self.UserEmailClass:
-            user_email = self.db_adapter.ifind_first_object(self.UserEmailClass, email=email)
-            user = user_email.user if user_email else None
-        else:
-            user_email = None
-            user = self.db_adapter.ifind_first_object(self.UserClass, email=email)
-
-        return (user, user_email)
 
     def generate_token(self, *args):
         """Convenience method that calls self.token_manager.generate_token(\*args)."""
         return self.token_manager.generate_token(*args)
-
-    def get_primary_user_email(self, user):
-        """Retrieve the email from User object or the primary UserEmail object (if multiple emails
-        per user are enabled)."""
-        db_adapter = self.db_adapter
-        if self.UserEmailClass:
-            user_email = db_adapter.find_first_object(self.UserEmailClass,
-                                                      user_id=user.id,
-                                                      is_primary=True)
-            return user_email
-        else:
-            return user
-
-    def get_user_by_id(self, user_id):
-        """Retrieve a User object by ID."""
-        return self.db_adapter.get_object(self.UserClass, user_id)
-
-    def get_user_email_by_id(self, user_email_id):
-        """Retrieve a UserEmail object by ID."""
-        return self.db_adapter.get_object(self.UserEmailClass, user_email_id)
 
     def hash_password(self, password):
         """Convenience method that calls self.password_manager.hash_password(password)."""
@@ -110,47 +75,6 @@ class UserManager__Utils(object):
         from .translation_utils import domain_translations
         if domain_translations:
             domain_translations.as_default()
-
-    # Return True if ENABLE_EMAIL and ENABLE_CONFIRM_EMAIL and email has been confirmed.
-    # Return False otherwise
-    def user_has_confirmed_email(self, user):
-        """| Return True if user has a confirmed email.
-        | Return False otherwise."""
-        if not self.USER_ENABLE_EMAIL: return True
-        if not self.USER_ENABLE_CONFIRM_EMAIL: return True
-
-        db_adapter = self.db_adapter
-
-        # Handle multiple emails per user: Find at least one confirmed email
-        if self.UserEmailClass:
-            has_confirmed_email = False
-            user_emails = db_adapter.find_objects(self.UserEmailClass, user_id=user.id)
-            for user_email in user_emails:
-                if user_email.email_confirmed_at:
-                    has_confirmed_email = True
-                    break
-
-        # Handle single email per user
-        else:
-            has_confirmed_email = True if user.email_confirmed_at else False
-
-        return has_confirmed_email
-
-    def username_is_available(self, new_username):
-        """Check if ``new_username`` is still available.
-
-        | Returns True if ``new_username`` does not exist or belongs to the current user.
-        | Return False otherwise.
-        """
-
-        # Return True if new_username equals current user's username
-        if self.call_or_get(current_user.is_authenticated):
-            if new_username == current_user.username:
-                return True
-
-        # Return True if new_username does not exist,
-        # Return False otherwise.
-        return self.find_user_by_username(new_username) == None
 
     def verify_password(self, password, password_hash):
         """Convenience method that calls self.password_manager.verify_password(password, password_hash).

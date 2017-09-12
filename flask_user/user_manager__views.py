@@ -30,7 +30,6 @@ class UserManager__Views(object):
     @login_required
     def change_password_view(self):
         """ Prompt for old password and new password and change the user's password."""
-        db_adapter = self.db_adapter
 
         # Initialize form
         form = self.change_password_form(request.form)
@@ -43,8 +42,9 @@ class UserManager__Views(object):
             password_hash = self.hash_password(form.new_password.data)
 
             # Update user.password
-            self.db_adapter.update_object(current_user, password=password_hash)
-            self.db_adapter.commit()
+            current_user.password = password_hash
+            self.db_manager.save_object(current_user)
+            self.db_manager.commit()
 
             # Send 'password_changed' email
             if self.USER_ENABLE_EMAIL and self.USER_SEND_PASSWORD_CHANGED_EMAIL:
@@ -68,7 +68,6 @@ class UserManager__Views(object):
     @login_required
     def change_username_view(self):
         """ Prompt for new username and old password and change the user's username."""
-        db_adapter = self.db_adapter
 
         # Initialize form
         form = self.change_username_form(request.form)
@@ -80,8 +79,9 @@ class UserManager__Views(object):
             new_username = form.new_username.data
 
             # Change username
-            db_adapter.update_object(current_user, username=new_username)
-            db_adapter.commit()
+            current_user.username=new_username
+            self.db_manager.save_object(current_user)
+            self.db_manager.commit()
 
             # Send 'username_changed' email
             if self.USER_ENABLE_EMAIL and self.USER_SEND_USERNAME_CHANGED_EMAIL:
@@ -105,38 +105,24 @@ class UserManager__Views(object):
     def confirm_email_view(self, token):
         """ Verify email confirmation token and activate the user account."""
         # Verify token
-        db_adapter = self.db_adapter
         data_items = self.token_manager.verify_token(
             token,
             self.USER_CONFIRM_EMAIL_EXPIRATION)
 
-        if not data_items:
-            flash(_('Invalid confirmation token.'), 'error')
-            return redirect(url_for('user.login'))
-
-        # Confirm email by setting User.email_confirmed_at=utcnow() or UserEmail.email_confirmed_at=utcnow()
-        object_id = data_items[0]
         user = None
-        if self.UserEmailClass:
-            user_email = self.get_user_email_by_id(object_id)
-            if user_email:
-                db_adapter.update_object(user_email, email_confirmed_at=datetime.utcnow())
-                user = user_email.user
-        else:
-            user_email = None
-            user = self.get_user_by_id(object_id)
-            if user:
-                db_adapter.update_object(user, email_confirmed_at=datetime.utcnow())
+        user_email = None
+        if data_items:
+            user, user_email = self.db_manager.get_user_and_user_email_by_id(data_items[0])
 
-        if user:
-            # If User.active exists: activate User
-            if hasattr(user, 'active'):
-                db_adapter.update_object(user, active=True)
-        else:  # pragma: no cover
+        if not user or not user_email:
             flash(_('Invalid confirmation token.'), 'error')
             return redirect(url_for('user.login'))
 
-        db_adapter.commit()
+        if hasattr(user, 'active'):
+            user.active=True
+        user_email.email_confirmed_at=datetime.utcnow()
+        self.db_manager.save_user_and_user_email(user, user_email)
+        self.db_manager.commit()
 
         # Send email_confirmed signal
         signals.user_confirmed_email.send(current_app._get_current_object(), user=user)
@@ -159,15 +145,12 @@ class UserManager__Views(object):
 
         # Process valid POST
         if request.method == 'POST' and form.validate():
-            # update_user_fields is a list of all user fields that has new form field data
-            update_user_fields = {}
-            for field_name, field_value in form.data.items():
-                if field_name in self.UserClass.__dict__:
-                    update_user_fields[field_name] = field_value
+            form.populate_obj(current_user)
 
-            # Use DbAdapter to update user fields
-            self.db_adapter.update_object(current_user, **update_user_fields)
-            self.db_adapter.commit()
+            # Save object
+            self.db_manager.save_object(current_user)
+            self.db_manager.commit()
+
             return redirect(self._endpoint_url(self.USER_AFTER_EDIT_USER_PROFILE_ENDPOINT))
 
         # Render form
@@ -178,10 +161,9 @@ class UserManager__Views(object):
     def email_action_view(self, id, action):
         """ Perform action 'action' on UserEmail object 'id'
         """
-        db_adapter = self.db_adapter
 
         # Retrieve UserEmail by id
-        user_email = db_adapter.find_first_object(self.UserEmailClass, id=id)
+        user_email = self.db_manager.get_user_email_by_id(id=id)
 
         # Users may only change their own UserEmails
         if not user_email or user_email.user_id != current_user.id:
@@ -192,18 +174,20 @@ class UserManager__Views(object):
             if user_email.is_primary:    # pragma: no cover
                 return self.unauthorized_view()
             # Delete UserEmail
-            db_adapter.delete_object(user_email)
-            db_adapter.commit()
+            self.db_manager.delete_object(user_email)
+            self.db_manager.commit()
 
         elif action == 'make-primary':
             # Disable previously primary emails
-            user_emails = db_adapter.find_objects(self.UserEmailClass, user_id=current_user.id)
+            user_emails = self.db_manager.find_user_emails(current_user)
             for other_user_email in user_emails:
                 if other_user_email.is_primary:
-                    db_adapter.update_object(other_user_email, is_primary=False)
+                    other_user_email.is_primary=False
+                    self.db_manager.save_object(other_user_email)
             # Enable current primary email
-            db_adapter.update_object(user_email, is_primary=True)
-            db_adapter.commit()
+            user_email.is_primary=True
+            self.db_manager.save_object(user_email)
+            self.db_manager.commit()
 
         elif action == 'confirm':
             self._send_confirm_email(user_email.user, user_email)
@@ -216,7 +200,6 @@ class UserManager__Views(object):
 
     def forgot_password_view(self):
         """Prompt for email and send reset password email."""
-        db_adapter = self.db_adapter
 
         # Initialize form
         form = self.forgot_password_form(request.form)
@@ -224,7 +207,7 @@ class UserManager__Views(object):
         # Process valid POST
         if request.method == 'POST' and form.validate():
             email = form.email.data
-            user, user_email = self.find_user_by_email(email)
+            user, user_email = self.db_manager.get_user_and_user_email_by_email(email)
 
             if user:
                 if user:
@@ -248,17 +231,15 @@ class UserManager__Views(object):
 
     @login_required
     def manage_emails_view(self):
-        db_adapter = self.db_adapter
 
-        user_emails = db_adapter.find_objects(self.UserEmailClass, user_id=current_user.id)
+        user_emails = self.db_manager.find_user_emails(user=current_user)
         form = self.add_email_form()
 
         # Process valid POST request
         if request.method == "POST" and form.validate():
-            user_emails = db_adapter.add_object(self.UserEmailClass,
-                                                user_id=current_user.id,
-                                                email=form.email.data)
-            db_adapter.commit()
+            user_email = self.db_manager.add_user_email(user=current_user, email=form.email.data)
+            self.db_manager.save_object(user_email)
+            self.db_manager.commit()
             return redirect(url_for('user.manage_emails'))
 
         # Process GET or invalid POST request
@@ -271,7 +252,6 @@ class UserManager__Views(object):
     @login_required
     def invite_user_view(self):
         """ Allows users to send invitations to register an account """
-        db_adapter = self.db_adapter
 
         invite_user_form = self.invite_user_form(request.form)
 
@@ -284,25 +264,23 @@ class UserManager__Views(object):
                 "email": email
             }
 
-            user, user_email = self.find_user_by_email(email)
+            user, user_email = self.db_manager.get_user_and_user_email_by_email(email)
             if user:
                 flash("User with that email has already registered", "error")
                 return redirect(url_for('user.invite_user'))
             else:
-                user_invitation = db_adapter \
-                    .add_object(self.UserInvitationClass, **{
-                    "email": email,
-                    "invited_by_user_id": current_user.id
-                })
-            db_adapter.commit()
+                user_invitation = self.db_manager.add_user_invitation(
+                    email=email,
+                    invited_by_user_id=current_user.id)
+            self.db_manager.commit()
 
             try:
                 # Send 'invite' email
                 self.send_invite_user_email(current_user, user_invitation)
             except Exception as e:
                 # delete new User object if send fails
-                db_adapter.delete_object(user_invitation)
-                db_adapter.commit()
+                self.db_manager.delete_object(user_invitation)
+                self.db_manager.commit()
                 raise
 
             signals \
@@ -322,7 +300,6 @@ class UserManager__Views(object):
         """Prepare and process the login form."""
 
         # Authenticate username/email and login authenticated users.
-        db_adapter = self.db_adapter
 
         safe_next = self._get_safe_next_param('next', self.USER_AFTER_LOGIN_ENDPOINT)
         safe_reg_next = self._get_safe_next_param('reg_next', self.USER_AFTER_REGISTER_ENDPOINT)
@@ -345,20 +322,17 @@ class UserManager__Views(object):
             user_email = None
             if self.USER_ENABLE_USERNAME:
                 # Find user record by username
-                user = self.find_user_by_username(login_form.username.data)
+                user = self.db_manager.find_user_by_username(login_form.username.data)
                 user_email = None
                 # Find primary user_email record
-                if user and self.UserEmailClass:
-                    user_email = db_adapter.find_first_object(self.UserEmailClass,
-                                                              user_id=user.id,
-                                                              is_primary=True,
-                                                              )
+                if user and self.db_manager.UserEmailClass:
+                    user_email = self.db_manager.get_primary_user_email(user)
                 # Find user record by email (with form.username)
                 if not user and self.USER_ENABLE_EMAIL:
-                    user, user_email = self.find_user_by_email(login_form.username.data)
+                    user, user_email = self.db_manager.get_user_and_user_email_by_email(login_form.username.data)
             else:
                 # Find user by email (with form.email)
-                user, user_email = self.find_user_by_email(login_form.email.data)
+                user, user_email = self.db_manager.get_user_and_user_email_by_email(login_form.email.data)
 
             if user:
                 # Log user in
@@ -391,7 +365,6 @@ class UserManager__Views(object):
 
     def register_view(self):
         """ Display registration form and create new User."""
-        db_adapter = self.db_adapter
 
         safe_next = self._get_safe_next_param('next', self.USER_AFTER_LOGIN_ENDPOINT)
         safe_reg_next = self._get_safe_next_param('reg_next', self.USER_AFTER_REGISTER_ENDPOINT)
@@ -410,12 +383,16 @@ class UserManager__Views(object):
 
         user_invitation = None
         if invite_token and self.UserInvitationClass:
-            user_invitation = db_adapter.find_first_object(self.UserInvitationClass, token=invite_token)
-            if user_invitation:
-                register_form.invite_token.data = invite_token
-            else:
+            data_items = self.token_manager.verify_token(invite_token, self.USER_INVITE_EXPIRATION)
+            if data_items:
+                user_invitation_id = data_items[0]
+                user_invitation = self.db_manager.get_user_invitation_by_id(user_invitation_id)
+
+            if not user_invitation:
                 flash("Invalid invitation token", "error")
                 return redirect(url_for('user.login'))
+
+            register_form.invite_token.data = invite_token
 
         if request.method != 'POST':
             login_form.next.data = register_form.next.data = safe_next
@@ -425,46 +402,13 @@ class UserManager__Views(object):
 
         # Process valid POST
         if request.method == 'POST' and register_form.validate():
-            # Create a User object using Form fields that have a corresponding User field
-            User = self.UserClass
-            user_class_fields = User.__dict__
-            user_fields = {}
+            user = self.db_manager.add_user()
+            register_form.populate_obj(user)
+            user_email = self.db_manager.add_user_email(user=user, is_primary=True)
+            register_form.populate_obj(user_email)
 
-            # Create a UserEmail object using Form fields that have a corresponding UserEmail field
-            if self.UserEmailClass:
-                UserEmail = self.UserEmailClass
-                user_email_class_fields = UserEmail.__dict__
-                user_email_fields = {}
-
-            # If User.active exists: activate User
-            if hasattr(self.UserClass, 'active'):
-                user_fields['active'] = True
-
-            # For all form fields
-            for field_name, field_value in register_form.data.items():
-                # Hash password field
-                if field_name == 'password':
-                    password_hash = self.hash_password(field_value)
-                    user_fields['password'] = password_hash
-                # Store corresponding Form fields into the User object and/or UserProfile object
-                else:
-                    if field_name in user_class_fields:
-                        user_fields[field_name] = field_value
-                    if self.UserEmailClass:
-                        if field_name in user_email_class_fields:
-                            user_email_fields[field_name] = field_value
-
-            # Add User record using named arguments 'user_fields'
-            user = db_adapter.add_object(User, **user_fields)
-
-            # Add UserEmail record using named arguments 'user_email_fields'
-            if self.UserEmailClass:
-                user_email = db_adapter.add_object(UserEmail,
-                                                   user=user,
-                                                   is_primary=True,
-                                                   **user_email_fields)
-            else:
-                user_email = None
+            # Store password hash instead of password
+            user.password = self.hash_password(user.password)
 
             # Email confirmation depends on the USER_ENABLE_CONFIRM_EMAIL setting
             request_email_confirmation = self.USER_ENABLE_CONFIRM_EMAIL
@@ -472,10 +416,11 @@ class UserManager__Views(object):
             # but only when they register with an email that matches their invitation.
             if user_invitation:
                 if user_invitation.email.lower() == register_form.email.data.lower():
-                    db_adapter.update_object(user, email_confirmed_at=datetime.utcnow())
+                    user_email.email_confirmed_at=datetime.utcnow()
                     request_email_confirmation = False
 
-            db_adapter.commit()
+            self.db_manager.save_user_and_user_email(user, user_email)
+            self.db_manager.commit()
 
             # Send 'registered' email and delete new User object if send fails
             if self.USER_SEND_REGISTERED_EMAIL:
@@ -484,8 +429,8 @@ class UserManager__Views(object):
                     self._send_registered_email(user, user_email, request_email_confirmation)
                 except Exception as e:
                     # delete new User object if send  fails
-                    db_adapter.delete_object(user)
-                    db_adapter.commit()
+                    self.db_manager.delete_object(user)
+                    self.db_manager.commit()
                     raise
 
             # Send user_registered signal
@@ -518,7 +463,6 @@ class UserManager__Views(object):
 
     def resend_email_confirmation_view(self):
         """Prompt for email and re-send email conformation email."""
-        db_adapter = self.db_adapter
 
         # Initialize form
         form = self.resend_email_confirmation_form(request.form)
@@ -528,7 +472,7 @@ class UserManager__Views(object):
             email = form.email.data
 
             # Find user by email
-            user, user_email = self.find_user_by_email(email)
+            user, user_email = self.db_manager.get_user_and_user_email_by_email(email)
             if user:
                 self._send_confirm_email(user, user_email)
 
@@ -543,7 +487,6 @@ class UserManager__Views(object):
     def reset_password_view(self, token):
         """ Verify the password reset token, Prompt for new password, and set the user's password."""
         # Verify token
-        db_adapter = self.db_adapter
 
         if self.call_or_get(current_user.is_authenticated):
             logout_user()
@@ -552,17 +495,22 @@ class UserManager__Views(object):
             token,
             self.USER_RESET_PASSWORD_EXPIRATION)
 
-        if not data_items:
+        user = None
+        if data_items:
+            # Get User by user ID
+            user_id = data_items[0]
+            user = self.db_manager.get_user_by_id(user_id)
+
+            # Mark email as confirmed
+            user_or_user_email = self.db_manager.get_primary_user_email(user)
+            user_or_user_email.email_confirmed_at = datetime.utcnow()
+            self.db_manager.save_object(user_or_user_email)
+            self.db_manager.commit()
+
+        if not user:
             flash(_('Your reset password token is invalid.'), 'error')
             return redirect(self._endpoint_url('user.login'))
 
-        # Get User by user ID
-        user_id = data_items[0]
-        user = self.get_user_by_id(user_id)
-
-        # Mark email as confirmed
-        user_email = self.get_primary_user_email(user)
-        user_email.email_confirmed_at = datetime.utcnow()
 
         # Initialize form
         form = self.reset_password_form(request.form)
@@ -571,8 +519,9 @@ class UserManager__Views(object):
         if request.method == 'POST' and form.validate():
             # Change password
             password_hash = self.hash_password(form.new_password.data)
-            db_adapter.update_object(user, password=password_hash)
-            db_adapter.commit()
+            user.password=password_hash
+            self.db_manager.save_object(user)
+            self.db_manager.commit()
 
             # Send 'password_changed' email
             if self.USER_ENABLE_EMAIL and self.USER_SEND_PASSWORD_CHANGED_EMAIL:
@@ -664,7 +613,7 @@ class UserManager__Views(object):
         if self.USER_ENABLE_EMAIL \
                 and self.USER_ENABLE_CONFIRM_EMAIL \
                 and not current_app.user_manager.USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL \
-                and not self.user_has_confirmed_email(user):
+                and not self.db_manager.user_has_confirmed_email(user):
             url = url_for('user.resend_email_confirmation')
             flash(_('Your email address has not yet been confirmed. Check your email Inbox and Spam folders for the confirmation email or <a href="%(url)s">Re-send confirmation email</a>.', url=url), 'error')
             return redirect(url_for('user.login'))

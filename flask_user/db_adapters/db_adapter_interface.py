@@ -69,38 +69,6 @@ class DbAdapterInterface(object):
         """
         raise NotImplementedError
 
-    def update_object(self, object, **kwargs):
-        """ Update an existing object, specified by ``object``,
-        with the fields and values specified in ``**kwargs``.
-
-        .. note::
-
-            Role management methods.
-        """
-        # Convert name=value kwargs to object.name=value
-        for key,value in kwargs.items():
-            if hasattr(object, key):
-                setattr(object, key, value)
-            else:
-                raise KeyError("Object '%s' has no field '%s'." % (type(object), key))
-
-
-    # Role management methods
-    # -----------------------
-
-    def add_user_role(self, user, role_name, RoleClass=None):
-        """ Add a ``role_name`` role to ``user``."""
-        raise NotImplementedError
-
-    def get_user_roles(self, user):
-        """Retrieve a list of user role names.
-
-        .. note::
-
-            Database management methods.
-        """
-        raise NotImplementedError
-
 
     # Database management methods
     # ---------------------------

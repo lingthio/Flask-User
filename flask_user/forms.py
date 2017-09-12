@@ -37,7 +37,7 @@ def username_validator(form, field):
 def unique_username_validator(form, field):
     """ Ensure that Username is unique. This validator may NOT be customized."""
     user_manager =  current_app.user_manager
-    if not user_manager.username_is_available(field.data):
+    if not user_manager.db_manager.username_is_available(field.data):
         raise ValidationError(_('This Username is already in use. Please try another one.'))
 
 
@@ -192,15 +192,15 @@ class LoginForm(FlaskForm):
         user_email = None
         if user_manager.USER_ENABLE_USERNAME:
             # Find user by username
-            user = user_manager.find_user_by_username(self.username.data)
+            user = user_manager.db_manager.find_user_by_username(self.username.data)
 
             # Find user by email address (username field)
             if not user and user_manager.USER_ENABLE_EMAIL:
-                user, user_email = user_manager.find_user_by_email(self.username.data)
+                user, user_email = user_manager.db_manager.get_user_and_user_email_by_email(self.username.data)
 
         else:
             # Find user by email address (email field)
-            user, user_email = user_manager.find_user_by_email(self.email.data)
+            user, user_email = user_manager.db_manager.get_user_and_user_email_by_email(self.email.data)
 
         # Handle successful authentication
         if user and user_manager.verify_password(self.password.data, user.password):
@@ -304,7 +304,7 @@ class ForgotPasswordForm(FlaskForm):
     def validate_email(form, field):
         user_manager =  current_app.user_manager
         if user_manager.USER_SHOW_EMAIL_DOES_NOT_EXIST:
-            user, user_email = user_manager.find_user_by_email(field.data)
+            user, user_email = user_manager.db_manager.get_user_and_user_email_by_email(field.data)
             if not user:
                 raise ValidationError(_('%(username_or_email)s does not exist', username_or_email=_('Email')))
 

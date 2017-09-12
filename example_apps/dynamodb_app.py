@@ -69,14 +69,14 @@ def create_app():
 
         id = Field(type=int)
 
+    # Setup Flask-User
+    user_manager = UserManager(app, db, User)
+
     # Create all database tables
     db.engine.register(User)
     print('create_schema()')
     db.engine.create_schema()
     print('created_schema()')
-
-    # Setup Flask-User
-    user_manager = UserManager(app, db, User)
 
     # The Home page is accessible to anyone
     @app.route('/')

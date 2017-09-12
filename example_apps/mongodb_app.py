@@ -57,12 +57,6 @@ def create_app():
         # roles = ListField(StringField(), required=False, default_empty=True)
         roles = db.ListField(db.StringField(), default=[])
 
-    # Customize Flask-User to use the provided MongoDbAdapter
-    class CustomUserManager(UserManager):
-        def customize(self, app):
-            from flask_user.db_adapters import MongoDbAdapter
-            self.db_adapter = MongoDbAdapter(app, db)
-
     # Setup Flask-User and specify the User data-model
     user_manager = UserManager(app, db, User)
 

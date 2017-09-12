@@ -42,6 +42,10 @@ class MongoDbAdapter(DbAdapterInterface):
         object.save()
         return object
 
+    def add_object2(self, object):
+        """Add object to db session. Only for session-centric object-database mappers."""
+        object.save()
+
     def get_object(self, ObjectClass, id):
         """ Retrieve object of type ``ObjectClass`` by ``id``.
 
@@ -73,27 +77,9 @@ class MongoDbAdapter(DbAdapterInterface):
         # Retrieve first object
         return ObjectClass.objects(**kwargs).first()
 
-    def ifind_first_object(self, ObjectClass, **kwargs):
-        """Retrieve the first object of type ``ObjectClass``,
-        matching the filters specified in ``**kwargs`` -- case insensitive.
-        """
-
-        # convert kwarg name=value to name__iexact=value
-        ikwargs = {}
-        for key,value in kwargs.items():
-            ikwargs[key+'__iexact']=value
-
-        # Retrieve first object
-        return ObjectClass.objects(**ikwargs).first()
-
-    def update_object(self, object, **kwargs):
-        """ Update an existing object, specified by ``object``,
-        with the fields and values specified in ``**kwargs``.
-        """
-        # Convert name=value kwargs to object.name=value
-        super(MongoDbAdapter, self).update_object(object, **kwargs)
+    def save_object(self, object, **kwargs):
+        """ Save object. Only for non-session centric Object-Database Mappers."""
         object.save()
-
 
     def delete_object(self, object):
         """ Delete object specified by ``object``. """
@@ -103,24 +89,6 @@ class MongoDbAdapter(DbAdapterInterface):
         """This method does nothing for MongoDbAdapter.
         """
         pass
-
-
-    # Role management methods
-    # -----------------------
-
-    def add_user_role(self, user, role_name, RoleClass=None):
-        """ Add a ``role_name`` role to ``user``."""
-        # MongoEngine has a bug where
-        #    user.roles.append(role_name)
-        # appends role_name to Field.default (instead of user.roles)
-        # As a workaround, we need to create a new list
-        user.roles.append(role_name)
-        user.save()
-
-    def get_user_roles(self, user):
-        """ Retrieve a list of user role names.
-        """
-        return user.roles
 
 
     # Database management methods

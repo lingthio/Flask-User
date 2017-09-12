@@ -99,7 +99,7 @@ class TokenManager(object):
             if data_items:
                 user_id = data_items[0]
                 password_ends_with = data_items[1]
-                user = db_adapter.get_user_by_id(user_id)
+                user = user_manager.db_manager.get_user_by_id(user_id)
                 token_is_valid = user and user.password[-8:]==password_ends_with
         """
 

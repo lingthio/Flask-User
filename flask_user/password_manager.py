@@ -70,7 +70,7 @@ class PasswordManager(object):
         """
 
         # Print deprecation warning if called with (password, user) instead of (password, user.password)
-        if isinstance(password_hash, self.user_manager.UserClass):
+        if isinstance(password_hash, self.user_manager.db_manager.UserClass):
             print(
                 'Deprecation warning: verify_password(password, user) has been changed'\
                 ' to: verify_password(password, password_hash). The user param will be deprecated.'\

@@ -21,7 +21,7 @@ def _is_logged_in_with_confirmed_email(user_manager):
         
         # unconfirmed_email_allowed must be True or
         # User must have at least one confirmed email address
-        if unconfirmed_email_allowed or user_manager.user_has_confirmed_email(current_user):
+        if unconfirmed_email_allowed or user_manager.db_manager.user_has_confirmed_email(current_user):
             return True
 
     return False

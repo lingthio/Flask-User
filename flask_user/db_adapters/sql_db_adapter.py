@@ -39,6 +39,11 @@ class SQLDbAdapter(DbAdapterInterface):
         self.db.session.add(object)
         return object
 
+    def add_object2(self, object):
+        """Add object to db session. Only for session-centric object-database mappers."""
+        self.db.session.add(object)
+        pass
+
     def get_object(self, ObjectClass, id):
         """ Retrieve object of type ``ObjectClass`` by ``id``.
 
@@ -114,38 +119,18 @@ class SQLDbAdapter(DbAdapterInterface):
         # Execute query
         return query.first()
 
-    def update_object(self, object, **kwargs):
-        """ Update an existing object, specified by ``object``,
-        with the fields and values specified in ``**kwargs``.
-        """
-        # Convert name=value kwargs to object.name=value
-        super(SQLDbAdapter, self).update_object(object, **kwargs)
+    def save_object(self, object):
+        """ Save object. Only for non-session centric Object-Database Mappers."""
+        pass
 
     def delete_object(self, object):
-        """ Delete object specified by ``object``."""
+        """ Delete object."""
         self.db.session.delete(object)
 
     def commit(self):
         """Save modified objects in the database session.
         """
         self.db.session.commit()
-
-
-    # Role management methods
-    # -----------------------
-
-    def add_user_role(self, user, role_name, RoleClass=None):
-        """ Add a ``role_name`` role to ``user``."""
-        # Get or add role
-        role = self.find_first_object(RoleClass, name=role_name)
-        if not role:
-            role = self.add_object(RoleClass, name=role_name)
-        user.roles.append(role)
-
-    def get_user_roles(self, user):
-        """ Retrieve a list of user role names.
-        """
-        return [role.name for role in user.roles]
 
 
     # Database management methods

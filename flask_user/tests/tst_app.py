@@ -174,9 +174,9 @@ def init_app(app, test_config=None):                # For automated tests
     assert user_manager.USER_EMAIL_SENDER_EMAIL=='noreply@example.com'
 
     # Reset database by dropping, then creating all tables
-    db_adapter = user_manager.db_adapter
-    db_adapter.drop_all_tables()
-    db_adapter.create_all_tables()
+    db_manager = user_manager.db_manager
+    db_manager.drop_all_tables()
+    db_manager.create_all_tables()
 
     # For debugging purposes
     token = user_manager.generate_token('abc', 123, 'xyz')
@@ -187,16 +187,16 @@ def init_app(app, test_config=None):                # For automated tests
     assert data_items[2] == 'xyz'
 
     # Create regular 'member' user
-    user = db_adapter.add_object(User, username='member', email='member@example.com',
+    user = db_manager.add_user(username='member', email='member@example.com',
             password=user_manager.hash_password('Password1'), email_confirmed_at=datetime.datetime.utcnow())
-    db_adapter.commit()
+    db_manager.commit()
 
     # Create 'user007' user with 'secret' and 'agent' roles
-    user = db_adapter.add_object(User, username='user007', email='admin@example.com',
+    user = db_manager.add_user(username='user007', email='admin@example.com',
             password=user_manager.hash_password('Password1'))
-    db_adapter.add_user_role(user, 'secret', RoleClass=RoleClass)
-    db_adapter.add_user_role(user, 'agent', RoleClass=RoleClass)
-    db_adapter.commit()
+    db_manager.add_user_role(user, 'secret')
+    db_manager.add_user_role(user, 'agent')
+    db_manager.commit()
 
     # The '/' page is accessible to anyone
     @app.route('/')

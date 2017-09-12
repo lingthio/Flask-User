@@ -72,27 +72,26 @@ def test_init(db):
     # Tests have not been written with auto_login in mind
     um.auto_login = False
 
+    db_manager = um.db_manager
     password_hash = um.hash_password('Password1')
-    User = um.UserClass
-    add_object = um.db_adapter.add_object
 
     # Create user1 with username and email
-    user1 = add_object(User, username='user1', email='user1@example.com', password=password_hash)
+    user1 = db_manager.add_user(username='user1', email='user1@example.com', password=password_hash)
     assert user1
 
     # Create user1 with email only
-    user2 = add_object(User, email='user2@example.com', password=password_hash)
+    user2 = db_manager.add_user(email='user2@example.com', password=password_hash)
     assert user2
 
     # Create user3 with username and email
-    user3 = add_object(User, username='user3', email='user3@example.com', password=password_hash)
+    user3 = db_manager.add_user(username='user3', email='user3@example.com', password=password_hash)
     assert user3
 
     # Create user4 with email only
-    user4 = add_object(User, email='user4@example.com', password=password_hash)
+    user4 = db_manager.add_user(email='user4@example.com', password=password_hash)
     assert user4
 
-    um.db_adapter.commit()
+    um.db_manager.commit()
 
 
 def test_invalid_register_with_username_form(client):
@@ -101,7 +100,7 @@ def test_invalid_register_with_username_form(client):
     # Choose config
     um =  current_app.user_manager
     um.USER_ENABLE_USERNAME = True
-    User = um.UserClass
+    User = um.db_manager.UserClass
 
     # Set default values
     url = url_for('user.register')
@@ -145,7 +144,7 @@ def test_invalid_register_with_email_form(client):
     # Choose config
     um =  current_app.user_manager
     um.USER_ENABLE_USERNAME = False
-    User = um.UserClass
+    User = um.db_manager.UserClass
 
     # Set default values
     url = url_for('user.register')
@@ -407,10 +406,10 @@ def test_invalid_reset_password(client):
 
 def test_valid_roles(client):
     um =  current_app.user_manager
-    User = um.UserClass
+    User = um.db_manager.UserClass
 
     # Perform only for roles_required_app
-    user007 = um.db_adapter.find_first_object(User, username='user007')
+    user007 = um.db_manager.find_user_by_username('user007')
     if not user007: return
 
     print("test_valid_roles")
@@ -424,10 +423,10 @@ def test_valid_roles(client):
 
 def test_invalid_roles(client):
     um =  current_app.user_manager
-    User = um.UserClass
+    User = um.db_manager.UserClass
 
     # Perform only for roles_required_app
-    user007 = um.db_adapter.find_first_object(User, username='user007')
+    user007 = um.db_manager.find_user_by_username('user007')
     if not user007: return
 
     print("test_invalid_roles")
@@ -463,7 +462,7 @@ def test_login_without_confirm_email(client):
 
     # TODO
     # # Confirm email manually, but disable account
-    # User = um.UserClass
+    # User = um.db_manager.UserClass
     # user = User.query.filter(User.email==email).first()
     # assert(user)
     # user.active = False
@@ -481,11 +480,11 @@ def test_cleanup(db):
     """
     global user1, user2, user3, user4
     um = current_app.user_manager
-    um.db_adapter.delete_object(user1)
-    um.db_adapter.delete_object(user2)
-    um.db_adapter.delete_object(user3)
-    um.db_adapter.delete_object(user4)
-    um.db_adapter.commit()
+    um.db_manager.delete_object(user1)
+    um.db_manager.delete_object(user2)
+    um.db_manager.delete_object(user3)
+    um.db_manager.delete_object(user4)
+    um.db_manager.commit()
     user1 = None
     user2 = None
     user3 = None

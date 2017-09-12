@@ -11,7 +11,6 @@ from flask import abort, Blueprint, current_app, Flask, request
 from flask_login import LoginManager, current_user
 
 from . import ConfigError
-from .db_adapters import select_db_adapter
 from .db_manager import DBManager
 from .email_manager import EmailManager
 from . import forms
@@ -76,10 +75,10 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Remember all data-models
         # ------------------------
         self.db = db
-        self.UserClass = UserClass
-        self.UserEmailClass = UserEmailClass
-        self.UserInvitationClass = UserInvitationClass
-        self.RoleClass=RoleClass
+        # self.db_manager.UserClass = UserClass
+        # self.db_manager.UserEmailClass = UserEmailClass
+        # self.UserInvitationClass = UserInvitationClass
+        # self.RoleClass=RoleClass
 
         # Load app config settings
         # ------------------------
@@ -118,7 +117,7 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Flask-Login calls this function to retrieve a User record by token.
         @self.login_manager.user_loader
         def load_user_by_user_token(user_token):
-            user = self.UserClass.get_user_by_token(user_token, self.USER_USER_SESSION_EXPIRATION)
+            user = self.db_manager.UserClass.get_user_by_token(user_token, self.USER_USER_SESSION_EXPIRATION)
             return user
 
         # Configure Flask-BabelEx
@@ -170,7 +169,7 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Set default managers
         # --------------------
         # Setup DBManager
-        self.db_manager = DBManager(app, db)
+        self.db_manager = DBManager(app, db, UserClass, UserEmailClass, UserInvitationClass, RoleClass)
 
         # Setup PasswordManager
         self.password_manager = PasswordManager(app)
@@ -186,9 +185,6 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
 
         # Setup TokenManager
         self.token_manager = TokenManager(app)
-
-        # Select the appropriate DbAdapter, based on the db parameter type
-        self.db_adapter = select_db_adapter(app, db)
 
         # Allow developers to customize UserManager
         self.customize(app)
@@ -267,12 +263,6 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
 
         # Check for invalid settings
         # --------------------------
-
-        # Check self.db_adapter
-        if self.db_adapter is None:
-            raise ConfigError(
-                'No DbAdapter specified. Install Flask-SQLAlchemy, install FlaskMongAlchemy,' \
-                ' or set self.db_adapter in UserManager.custom().')
 
         # Check self.UserInvitationClass and USER_ENABLE_INVITE_USER
         if self.USER_ENABLE_INVITE_USER and not self.UserInvitationClass:
@@ -382,7 +372,7 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
             return self.edit_user_profile_view()
 
         def email_action_stub(id, action):
-            if not self.USER_ENABLE_MULTIPLE_EMAILS or not self.UserEmailClass: abort(404)
+            if not self.USER_ENABLE_MULTIPLE_EMAILS or not self.db_manager.UserEmailClass: abort(404)
             return self.email_action_view(id, action)
 
         def forgot_password_stub():
@@ -390,7 +380,7 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
             return self.forgot_password_view()
 
         def manage_emails_stub():
-            if not self.USER_ENABLE_MULTIPLE_EMAILS or not self.UserEmailClass: abort(404)
+            if not self.USER_ENABLE_MULTIPLE_EMAILS or not self.db_manager.UserEmailClass: abort(404)
             return self.manage_emails_view()
 
         def invite_user_stub():
