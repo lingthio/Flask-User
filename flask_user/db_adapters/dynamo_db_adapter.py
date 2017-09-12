@@ -97,7 +97,7 @@ class DynamoDbAdapter(DbAdapterInterface):
 
     def save_object(self, object, **kwargs):
         """ Save object. Only for non-session centric Object-Database Mappers."""
-        pass
+        self.db.engine.sync(object)
 
     def delete_object(self, object):
         """ Delete object specified by ``object``. """

@@ -40,15 +40,6 @@ class DbAdapterInterface(object):
         """ Retrieve all objects of type ``ObjectClass``,
         matching the filters specified in ``**kwargs`` -- case sensitive.
         """
-
-        raise NotImplementedError
-
-    def get_object(self, ObjectClass, id):
-        """ Retrieve object of type ``ObjectClass`` by ``id``.
-
-        | Returns object on success.
-        | Returns None otherwise.
-        """
         raise NotImplementedError
 
     def find_first_object(self, ObjectClass, **kwargs):
@@ -60,13 +51,16 @@ class DbAdapterInterface(object):
         """
         raise NotImplementedError
 
-    def ifind_first_object(self, ObjectClass, **kwargs):
-        """ Retrieve the first object of type ``ObjectClass``,
-        matching the filters specified in ``**kwargs`` -- case insensitive.
+    def get_object(self, ObjectClass, id):
+        """ Retrieve object of type ``ObjectClass`` by ``id``.
 
-        ``ifind_first_object(User, email='myname@example.com')`` translates to
-        ``User.query.filter(User.email.ilike('myname@example.com')).first()``.
+        | Returns object on success.
+        | Returns None otherwise.
         """
+        raise NotImplementedError
+
+    def save_object(self, object, **kwargs):
+        """ Save object. Only for non-session centric Object-Database Mappers."""
         raise NotImplementedError
 
 
