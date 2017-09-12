@@ -11,6 +11,7 @@ from flask_user import login_required, UserManager, UserMixin
 from flywheel import Model, Field, GlobalIndex
 from flask_flywheel import Flywheel
 from datetime import datetime
+import uuid
 
 
 # Use a Class-based config to avoid needing a 2nd file
@@ -47,15 +48,20 @@ def create_app():
     class User(Model, UserMixin):
         __metadata__ = {
             "_name": "users",
+            'throughput': {
+                'read': 1,
+                'write': 1,
+            },
             'global_indexes': [
-                GlobalIndex.keys('email-index', 'email').throughput(read=2, write=2)
+                GlobalIndex.all('email-username', 'username').throughput(read=1, write=1),
+                GlobalIndex.all('email-index', 'email').throughput(read=1, write=1)
             ],
         }
 
         id = Field(hash_key=True)
 
         # User authentication information
-        username = Field(hash_key=True)
+        username = Field()
         password = Field()
 
         # User email information
@@ -66,6 +72,11 @@ def create_app():
         active = Field(data_type=bool)
         first_name = Field()
         last_name = Field()
+
+        def get_id(self):
+            if self.id is None:
+                self.id = str(uuid.uuid1())
+            return self.id
 
     # Setup Flask-User
     user_manager = UserManager(app, db, User)
@@ -107,6 +118,7 @@ def create_app():
 
 
 # Start development web server
+app = create_app()
 if __name__ == '__main__':
-    app = create_app()
     app.run(host='0.0.0.0', port=5000, debug=True)
+
