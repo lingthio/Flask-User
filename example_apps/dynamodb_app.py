@@ -53,6 +53,7 @@ def create_app():
         }
 
         id = Field(hash_key=True)
+        active = Field(data_type=bool)
 
         # User authentication information
         username = Field(hash_key=True)
@@ -63,7 +64,6 @@ def create_app():
         email_confirmed_at = Field(data_type=datetime)
 
         # User information
-        active = Field(data_type=bool)
         first_name = Field()
         last_name = Field()
 

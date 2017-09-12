@@ -65,6 +65,8 @@ class DBManager(object):
         if 'username' in kwargs:
             kwargs['username'] = kwargs['username'].lower()
         user = self.UserClass(**kwargs)
+        if hasattr(user, 'active'):
+            user.active = True
         self.db_adapter.add_object(user)
         return user
 
@@ -221,6 +223,8 @@ class DBManager(object):
 
     def add_user_role(self, user, role_name):
         """ Add a ``role_name`` role to ``user``."""
+
+        # For SQL: user.roles is list of pointers to Role objects
         if isinstance(self.db_adapter, SQLDbAdapter):
             # user.roles is a list of Role IDs
             # Get or add role
@@ -229,6 +233,8 @@ class DBManager(object):
                 role = self.RoleClass(name=role_name)
                 self.db_adapter.add_object(role)
             user.roles.append(role)
+
+        # For others: user.roles is a list of role names
         else:
             # user.roles is a list of role names
             user.roles.append(role_name)
@@ -240,9 +246,14 @@ class DBManager(object):
 
             Database management methods.
         """
+
+        # For SQL: user.roles is list of pointers to Role objects
         if isinstance(self.db_adapter, SQLDbAdapter):
             # user.roles is a list of Role IDs
-            return [role.name for role in user.roles]
+            user_roles = [role.name for role in user.roles]
+
+
+        # For others: user.roles is a list of role names
         else:
             # user.roles is a list of role names
             user_roles = user.roles

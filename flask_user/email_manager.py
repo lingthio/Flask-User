@@ -126,7 +126,7 @@ class EmailManager(object):
             invited_by_user=invited_by_user,
         )
 
-    def send_registered_email(self, user, user_email, request_email_confirmation):    # pragma: no cover
+    def send_registered_email(self, user, user_email, request_email_confirmation):
         """Send the 'user has registered' notification email."""
 
         # Verify config settings
@@ -152,7 +152,7 @@ class EmailManager(object):
             confirm_email_link=confirm_email_link,
         )
 
-    def send_username_changed_email(self, user):  # pragma: no cover
+    def send_username_changed_email(self, user):
         """Send the 'username has changed' notification email."""
 
         # Verify config settings

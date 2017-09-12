@@ -33,34 +33,33 @@ class UserManager__Views(object):
 
         # Initialize form
         form = self.change_password_form(request.form)
-        safe_next = self._get_safe_next_param('next', self.USER_AFTER_CHANGE_PASSWORD_ENDPOINT)
-        form.next.data = safe_next
 
         # Process valid POST
         if request.method == 'POST' and form.validate():
             # Hash password
-            password_hash = self.hash_password(form.new_password.data)
+            new_password = form.new_password.data
+            password_hash = self.hash_password(new_password)
 
             # Update user.password
             current_user.password = password_hash
             self.db_manager.save_object(current_user)
             self.db_manager.commit()
 
-            # Send 'password_changed' email
+            # Send password_changed email
             if self.USER_ENABLE_EMAIL and self.USER_SEND_PASSWORD_CHANGED_EMAIL:
                 self.email_manager.send_password_changed_email(current_user)
 
-            # Send password_changed signal
+            # Send changed_password signal
             signals.user_changed_password.send(current_app._get_current_object(), user=current_user)
 
-            # Prepare one-time system message
+            # Flash a system message
             flash(_('Your password has been changed successfully.'), 'success')
 
             # Redirect to 'next' URL
-            safe_next = self.make_safe_url(form.next.data)
-            return redirect(safe_next)
+            safe_next_url = self._get_safe_next_url('next', self.USER_AFTER_CHANGE_PASSWORD_ENDPOINT)
+            return redirect(safe_next_url)
 
-        # Process GET or invalid POST
+        # Render form
         self.prepare_domain_translations()
         return render_template(self.USER_CHANGE_PASSWORD_TEMPLATE, form=form)
 
@@ -71,33 +70,30 @@ class UserManager__Views(object):
 
         # Initialize form
         form = self.change_username_form(request.form)
-        safe_next = self._get_safe_next_param('next', self.USER_AFTER_CHANGE_USERNAME_ENDPOINT)
-        form.next.data = safe_next
 
         # Process valid POST
         if request.method == 'POST' and form.validate():
-            new_username = form.new_username.data
 
             # Change username
+            new_username = form.new_username.data
             current_user.username=new_username
             self.db_manager.save_object(current_user)
             self.db_manager.commit()
 
-            # Send 'username_changed' email
-            if self.USER_ENABLE_EMAIL and self.USER_SEND_USERNAME_CHANGED_EMAIL:
-                self.send_username_changed_email(current_user)
+            # Send username_changed email
+            self.email_manager.send_username_changed_email(current_user)
 
-            # Send username_changed signal
+            # Send changed_username signal
             signals.user_changed_username.send(current_app._get_current_object(), user=current_user)
 
-            # Prepare one-time system message
+            # Flash a system message
             flash(_("Your username has been changed to '%(username)s'.", username=new_username), 'success')
 
             # Redirect to 'next' URL
-            safe_next = self.make_safe_url(form.next.data)
-            return redirect(safe_next)
+            safe_next_url = self._get_safe_next_url('next', self.USER_AFTER_CHANGE_USERNAME_ENDPOINT)
+            return redirect(safe_next_url)
 
-        # Process GET or invalid POST
+        # Render form
         self.prepare_domain_translations()
         return render_template(self.USER_CHANGE_USERNAME_TEMPLATE, form=form)
 
@@ -109,6 +105,7 @@ class UserManager__Views(object):
             token,
             self.USER_CONFIRM_EMAIL_EXPIRATION)
 
+        # Retrieve user, user_email by ID
         user = None
         user_email = None
         if data_items:
@@ -118,24 +115,23 @@ class UserManager__Views(object):
             flash(_('Invalid confirmation token.'), 'error')
             return redirect(url_for('user.login'))
 
-        if hasattr(user, 'active'):
-            user.active=True
+        # Set UserEmail.email_confirmed_at
         user_email.email_confirmed_at=datetime.utcnow()
         self.db_manager.save_user_and_user_email(user, user_email)
         self.db_manager.commit()
 
-        # Send email_confirmed signal
+        # Send confirmed_email signal
         signals.user_confirmed_email.send(current_app._get_current_object(), user=user)
 
-        # Prepare one-time system message
+        # Flash a system message
         flash(_('Your email has been confirmed.'), 'success')
 
         # Auto-login after confirm or redirect to login page
-        safe_next = self._get_safe_next_param('next', self.USER_AFTER_CONFIRM_ENDPOINT)
+        safe_next_url = self._get_safe_next_url('next', self.USER_AFTER_CONFIRM_ENDPOINT)
         if self.USER_AUTO_LOGIN_AFTER_CONFIRM:
-            return self._do_login_user(user, safe_next)  # auto-login
+            return self._do_login_user(user, safe_next_url)  # auto-login
         else:
-            return redirect(url_for('user.login') + '?next=' + quote(safe_next))  # redirect to login page
+            return redirect(url_for('user.login') + '?next=' + quote(safe_next_url))  # redirect to login page
 
 
     @login_required
@@ -145,6 +141,7 @@ class UserManager__Views(object):
 
         # Process valid POST
         if request.method == 'POST' and form.validate():
+            # Update fields
             form.populate_obj(current_user)
 
             # Save object
@@ -169,6 +166,7 @@ class UserManager__Views(object):
         if not user_email or user_email.user_id != current_user.id:
             return self.unauthorized_view()
 
+        # Delete UserEmail
         if action == 'delete':
             # Primary UserEmail can not be deleted
             if user_email.is_primary:    # pragma: no cover
@@ -177,6 +175,7 @@ class UserManager__Views(object):
             self.db_manager.delete_object(user_email)
             self.db_manager.commit()
 
+        # Set UserEmail.is_primary
         elif action == 'make-primary':
             # Disable previously primary emails
             user_emails = self.db_manager.find_user_emails(current_user)
@@ -189,6 +188,7 @@ class UserManager__Views(object):
             self.db_manager.save_object(user_email)
             self.db_manager.commit()
 
+        # Send confirm email
         elif action == 'confirm':
             self._send_confirm_email(user_email.user, user_email)
 
@@ -206,18 +206,18 @@ class UserManager__Views(object):
 
         # Process valid POST
         if request.method == 'POST' and form.validate():
+            # Get User and UserEmail by email
             email = form.email.data
             user, user_email = self.db_manager.get_user_and_user_email_by_email(email)
 
-            if user:
-                if user:
-                    # Send forgot password email
-                    self.email_manager.send_reset_password_email(user, user_email)
+            if user and user_email:
+                # Send reset_password email
+                self.email_manager.send_reset_password_email(user, user_email)
 
-                    # Send forgot_password signal
-                    signals.user_forgot_password.send(current_app._get_current_object(), user=user)
+                # Send forgot_password signal
+                signals.user_forgot_password.send(current_app._get_current_object(), user=user)
 
-            # Prepare one-time system message
+            # Flash a system message
             flash(_(
                 "A reset password email has been sent to '%(email)s'. Open that email and follow the instructions to reset your password.",
                 email=email), 'success')
@@ -225,19 +225,23 @@ class UserManager__Views(object):
             # Redirect to the login page
             return redirect(self._endpoint_url(self.USER_AFTER_FORGOT_PASSWORD_ENDPOINT))
 
-        # Process GET or invalid POST
+        # Render form
         self.prepare_domain_translations()
         return render_template(self.USER_FORGOT_PASSWORD_TEMPLATE, form=form)
 
     @login_required
     def manage_emails_view(self):
 
+        # Retrieve a user's UserEmails
         user_emails = self.db_manager.find_user_emails(user=current_user)
         form = self.add_email_form()
 
         # Process valid POST request
         if request.method == "POST" and form.validate():
-            user_email = self.db_manager.add_user_email(user=current_user, email=form.email.data)
+            # Add a new UserEmail
+            new_email = form.email.data
+            user_email = self.db_manager.add_user_email(user=current_user, email=new_email)
+            # Save new UserEmail
             self.db_manager.save_object(user_email)
             self.db_manager.commit()
             return redirect(url_for('user.manage_emails'))
@@ -256,41 +260,40 @@ class UserManager__Views(object):
         invite_user_form = self.invite_user_form(request.form)
 
         if request.method == 'POST' and invite_user_form.validate():
+            # Find User and UserEmail by email
             email = invite_user_form.email.data
-
-            User = self.UserClass
-            user_class_fields = User.__dict__
-            user_fields = {
-                "email": email
-            }
-
             user, user_email = self.db_manager.get_user_and_user_email_by_email(email)
             if user:
                 flash("User with that email has already registered", "error")
                 return redirect(url_for('user.invite_user'))
-            else:
-                user_invitation = self.db_manager.add_user_invitation(
-                    email=email,
-                    invited_by_user_id=current_user.id)
+
+            # Add UserInvitation
+            user_invitation = self.db_manager.add_user_invitation(
+                email=email,
+                invited_by_user_id=current_user.id)
             self.db_manager.commit()
 
             try:
-                # Send 'invite' email
+                # Send invite_user email
                 self.send_invite_user_email(current_user, user_invitation)
             except Exception as e:
-                # delete new User object if send fails
+                # delete new UserInvitation object if send fails
                 self.db_manager.delete_object(user_invitation)
                 self.db_manager.commit()
                 raise
 
+            # Send sent_invitation signal
             signals \
                 .user_sent_invitation \
                 .send(current_app._get_current_object(), user_invitation=user_invitation,
                       form=invite_user_form)
 
+            # Flash a system message
             flash(_('Invitation has been sent.'), 'success')
-            safe_next = self._get_safe_next_param('next', self.USER_AFTER_INVITE_ENDPOINT)
-            return redirect(safe_next)
+
+            # Redirect
+            safe_next_url = self._get_safe_next_url('next', self.USER_AFTER_INVITE_ENDPOINT)
+            return redirect(safe_next_url)
 
         self.prepare_domain_translations()
         return render_template(self.USER_INVITE_USER_TEMPLATE, form=invite_user_form)
@@ -301,18 +304,18 @@ class UserManager__Views(object):
 
         # Authenticate username/email and login authenticated users.
 
-        safe_next = self._get_safe_next_param('next', self.USER_AFTER_LOGIN_ENDPOINT)
-        safe_reg_next = self._get_safe_next_param('reg_next', self.USER_AFTER_REGISTER_ENDPOINT)
+        safe_next_url = self._get_safe_next_url('next', self.USER_AFTER_LOGIN_ENDPOINT)
+        safe_reg_next = self._get_safe_next_url('reg_next', self.USER_AFTER_REGISTER_ENDPOINT)
 
         # Immediately redirect already logged in users
         if self.call_or_get(current_user.is_authenticated) and self.USER_AUTO_LOGIN_AT_LOGIN:
-            return redirect(safe_next)
+            return redirect(safe_next_url)
 
         # Initialize form
         login_form = self.login_form(request.form)  # for login.html
         register_form = self.register_form()  # for login_or_register.html
         if request.method != 'POST':
-            login_form.next.data = register_form.next.data = safe_next
+            login_form.next.data = register_form.next.data = safe_next_url
             login_form.reg_next.data = register_form.reg_next.data = safe_reg_next
 
         # Process valid POST
@@ -336,10 +339,10 @@ class UserManager__Views(object):
 
             if user:
                 # Log user in
-                safe_next = self.make_safe_url(login_form.next.data)
-                return self._do_login_user(user, safe_next, login_form.remember_me.data)
+                safe_next_url = self.make_safe_url(login_form.next.data)
+                return self._do_login_user(user, safe_next_url, login_form.remember_me.data)
 
-        # Process GET or invalid POST
+        # Render form
         self.prepare_domain_translations()
         return render_template(self.USER_LOGIN_TEMPLATE,
                       form=login_form,
@@ -356,18 +359,18 @@ class UserManager__Views(object):
         # Use Flask-Login to sign out user
         logout_user()
 
-        # Prepare one-time system message
+        # Flash a system message
         flash(_('You have signed out successfully.'), 'success')
 
         # Redirect to logout_next endpoint or '/'
-        safe_next = self._get_safe_next_param('next', self.USER_AFTER_LOGOUT_ENDPOINT)
-        return redirect(safe_next)
+        safe_next_url = self._get_safe_next_url('next', self.USER_AFTER_LOGOUT_ENDPOINT)
+        return redirect(safe_next_url)
 
     def register_view(self):
         """ Display registration form and create new User."""
 
-        safe_next = self._get_safe_next_param('next', self.USER_AFTER_LOGIN_ENDPOINT)
-        safe_reg_next = self._get_safe_next_param('reg_next', self.USER_AFTER_REGISTER_ENDPOINT)
+        safe_next_url = self._get_safe_next_url('next', self.USER_AFTER_LOGIN_ENDPOINT)
+        safe_reg_next_url = self._get_safe_next_url('reg_next', self.USER_AFTER_REGISTER_ENDPOINT)
 
         # Initialize form
         login_form = self.login_form()  # for login_or_register.html
@@ -395,8 +398,8 @@ class UserManager__Views(object):
             register_form.invite_token.data = invite_token
 
         if request.method != 'POST':
-            login_form.next.data = register_form.next.data = safe_next
-            login_form.reg_next.data = register_form.reg_next.data = safe_reg_next
+            login_form.next.data = register_form.next.data = safe_next_url
+            login_form.reg_next.data = register_form.reg_next.data = safe_reg_next_url
             if user_invitation:
                 register_form.email.data = user_invitation.email
 
@@ -440,20 +443,20 @@ class UserManager__Views(object):
 
             # Redirect if USER_ENABLE_CONFIRM_EMAIL is set
             if self.USER_ENABLE_CONFIRM_EMAIL and request_email_confirmation:
-                safe_reg_next = self.make_safe_url(register_form.reg_next.data)
-                return redirect(safe_reg_next)
+                safe_reg_next_url = self.make_safe_url(register_form.reg_next.data)
+                return redirect(safe_reg_next_url)
 
             # Auto-login after register or redirect to login page
             if 'reg_next' in request.args:
-                safe_reg_next = self.make_safe_url(register_form.reg_next.data)
+                safe_reg_next_url = self.make_safe_url(register_form.reg_next.data)
             else:
-                safe_reg_next = self._endpoint_url(self.USER_AFTER_CONFIRM_ENDPOINT)
+                safe_reg_next_url = self._endpoint_url(self.USER_AFTER_CONFIRM_ENDPOINT)
             if self.USER_AUTO_LOGIN_AFTER_REGISTER:
-                return self._do_login_user(user, safe_reg_next)  # auto-login
+                return self._do_login_user(user, safe_reg_next_url)  # auto-login
             else:
-                return redirect(url_for('user.login') + '?next=' + quote(safe_reg_next))  # redirect to login page
+                return redirect(url_for('user.login') + '?next=' + quote(safe_reg_next_url))  # redirect to login page
 
-        # Process GET or invalid POST
+        # Render form
         self.prepare_domain_translations()
         return render_template(self.USER_REGISTER_TEMPLATE,
                       form=register_form,
@@ -469,17 +472,19 @@ class UserManager__Views(object):
 
         # Process valid POST
         if request.method == 'POST' and form.validate():
-            email = form.email.data
 
             # Find user by email
+            email = form.email.data
             user, user_email = self.db_manager.get_user_and_user_email_by_email(email)
+
+            # Send confirm_email email
             if user:
                 self._send_confirm_email(user, user_email)
 
             # Redirect to the login page
             return redirect(self._endpoint_url(self.USER_AFTER_RESEND_EMAIL_CONFIRMATION_ENDPOINT))
 
-        # Process GET or invalid POST
+        # Render form
         self.prepare_domain_translations()
         return render_template(self.USER_RESENT_CONFIRM_EMAIL_TEMPLATE, form=form)
 
@@ -527,17 +532,20 @@ class UserManager__Views(object):
             if self.USER_ENABLE_EMAIL and self.USER_SEND_PASSWORD_CHANGED_EMAIL:
                 self.email_manager.send_password_changed_email(user)
 
-            # Prepare one-time system message
+            # Send changed_password signal
+            signals.user_changed_password.send(current_app._get_current_object(), user=user)
+
+            # Flash a system message
             flash(_("Your password has been reset successfully."), 'success')
 
             # Auto-login after reset password or redirect to login page
-            safe_next = self._get_safe_next_param('next', self.USER_AFTER_RESET_PASSWORD_ENDPOINT)
+            safe_next_url = self._get_safe_next_url('next', self.USER_AFTER_RESET_PASSWORD_ENDPOINT)
             if self.USER_AUTO_LOGIN_AFTER_RESET_PASSWORD:
-                return self._do_login_user(user, safe_next)  # auto-login
+                return self._do_login_user(user, safe_next_url)  # auto-login
             else:
-                return redirect(url_for('user.login') + '?next=' + quote(safe_next))  # redirect to login page
+                return redirect(url_for('user.login') + '?next=' + quote(safe_next_url))  # redirect to login page
 
-        # Process GET or invalid POST
+        # Render form
         self.prepare_domain_translations()
         return render_template(self.USER_RESET_PASSWORD_TEMPLATE, form=form)
 
@@ -548,8 +556,8 @@ class UserManager__Views(object):
         flash(_("You must be signed in to access '%(url)s'.", url=url), 'error')
 
         # Redirect to USER_UNAUTHENTICATED_ENDPOINT
-        safe_next = self.make_safe_url(url)
-        return redirect(self._endpoint_url(self.USER_UNAUTHENTICATED_ENDPOINT)+'?next='+quote(safe_next))
+        safe_next_url = self.make_safe_url(url)
+        return redirect(self._endpoint_url(self.USER_UNAUTHENTICATED_ENDPOINT)+'?next='+quote(safe_next_url))
 
 
     def unauthorized_view(self):
@@ -579,7 +587,7 @@ class UserManager__Views(object):
             # Send 'registered' email, with or without a confirmation request
             self.email_manager.send_registered_email(user, user_email, request_email_confirmation)
 
-            # Prepare one-time system message
+            # Flash a system message
             if request_email_confirmation:
                 email = user_email.email if user_email else user.email
                 flash(_('A confirmation email has been sent to %(email)s with instructions to complete your registration.', email=email), 'success')
@@ -595,12 +603,12 @@ class UserManager__Views(object):
             # Send email
             self.email_manager.send_confirm_email_email(user, user_email)
 
-            # Prepare one-time system message
+            # Flash a system message
             email = user_email.email if user_email else user.email
             flash(_('A confirmation email has been sent to %(email)s with instructions to complete your registration.', email=email), 'success')
 
 
-    def _do_login_user(self, user, safe_next, remember_me=False):
+    def _do_login_user(self, user, safe_next_url, remember_me=False):
         # User must have been authenticated
         if not user: return self.unauthenticated()
 
@@ -625,24 +633,26 @@ class UserManager__Views(object):
         # Send user_logged_in signal
         signals.user_logged_in.send(current_app._get_current_object(), user=user)
 
-        # Prepare one-time system message
+        # Flash a system message
         flash(_('You have signed in successfully.'), 'success')
 
         # Redirect to 'next' URL
-        return redirect(safe_next)
+        return redirect(safe_next_url)
 
 
-    # 'next' and 'reg_next' query parameters contain quoted (URL-encoded) URLs
-    # that may contain unsafe hostnames.
-    # Return the query parameter as a safe, unquoted URL
-    def _get_safe_next_param(self, param_name, default_endpoint):
+    # Returns safe URL from query param ``param_name`` if query param exists.
+    # Returns url_for(default_endpoint) otherwise.
+    def _get_safe_next_url(self, param_name, default_endpoint):
+
+        # Returns safe URL from query param ``param_name`` if query param exists.
         if param_name in request.args:
-            # return safe unquoted query parameter value
-            safe_next = current_app.user_manager.make_safe_url(unquote(request.args[param_name]))
+            safe_next_url = current_app.user_manager.make_safe_url(unquote(request.args[param_name]))
+
+        # Returns url_for(default_endpoint) otherwise.
         else:
-            # return URL of default endpoint
-            safe_next = self._endpoint_url(default_endpoint)
-        return safe_next
+            safe_next_url = self._endpoint_url(default_endpoint)
+
+        return safe_next_url
 
 
     def _endpoint_url(self, endpoint):

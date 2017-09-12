@@ -42,19 +42,17 @@ def create_app():
     # Define the User document.
     # NB: Make sure to add flask_user UserMixin !!!
     class User(db.Document, UserMixin):
+        active = db.BooleanField(default=True)
 
         # User authentication information
         username = db.StringField(default='')
-        email = db.StringField(default='')
         password = db.StringField()
-        email_confirmed_at = db.DateTimeField(default=None)
 
         # User information
         first_name = db.StringField(default='')
         last_name = db.StringField(default='')
 
         # Relationships
-        # roles = ListField(StringField(), required=False, default_empty=True)
         roles = db.ListField(db.StringField(), default=[])
 
     # Setup Flask-User and specify the User data-model

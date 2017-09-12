@@ -73,7 +73,6 @@ class ChangePasswordForm(FlaskForm):
     retype_password = PasswordField(_('Retype New Password'), validators=[
         validators.EqualTo('new_password', message=_('New Password and Retype Password did not match'))
         ])
-    next = HiddenField()
     submit = SubmitField(_('Change password'))
 
     def validate(self):
@@ -113,7 +112,6 @@ class ChangeUsernameForm(FlaskForm):
     old_password = PasswordField(_('Old Password'), validators=[
         validators.DataRequired(_('Old Password is required')),
     ])
-    next = HiddenField()
     submit = SubmitField(_('Change username'))
 
     def validate(self):
