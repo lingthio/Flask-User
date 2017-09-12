@@ -1,4 +1,4 @@
-"""This module defines the EmailMailer interface.
+"""This module defines the EmailAdapter interface.
 """
 
 # Author: Ling Thio <ling.thio@gmail.com>
@@ -9,18 +9,17 @@ from __future__ import print_function
 from flask_user import ConfigError
 
 
-class EmailMailerInterface(object):
-    """ Define the EmailMailer interface to send emails through specific email mailers."""
+class EmailAdapterInterface(object):
+    """ Define the EmailAdapter interface to send emails through various email services."""
 
     def __init__(self, app):
         """
         Args:
             app(Flask): The Flask application instance.
         """
-        self.sender_name = app.config.get('USER_EMAIL_SENDER_NAME', None)
-        self.sender_email = app.config.get('USER_EMAIL_SENDER_EMAIL', None)
+        pass
 
-    def send_email_message(self, recipient, subject, html_message, text_message):
+    def send_email_message(self, recipient, subject, html_message, text_message, sender_email, sender_name):
         """ Send email message via an email mailer.
 
         Args:

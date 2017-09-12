@@ -174,10 +174,10 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Setup PasswordManager
         self.password_manager = PasswordManager(app)
 
-        # Set default EmailMailer
+        # Set default EmailAdapter
         if self.USER_ENABLE_EMAIL:
-            from .email_mailers.smtp_email_mailer import SMTPEmailMailer
-            self.email_mailer = SMTPEmailMailer(app)
+            from .email_adapters.smtp_email_adapter import SMTPEmailAdapter
+            self.email_adapter = SMTPEmailAdapter(app)
 
         # Setup EmailManager
         if self.USER_ENABLE_EMAIL:
@@ -210,7 +210,7 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
                     self.email_manager = CustomEmailManager(app)
                     self.password_manager = CustomPasswordManager(app)
                     self.token_manager = CustomTokenManager(app)
-                    self.email_mailer = CustomEmailMailer(app)
+                    self.email_adapter = CustomEmailAdapter(app)
 
             # Setup Flask-User
             user_manager = CustomUserManager(app, db, User)

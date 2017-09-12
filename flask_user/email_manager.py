@@ -1,6 +1,6 @@
 """This module implements the EmailManager for Flask-User.
 It uses Jinja2 to render email subject and email message.
-It uses the EmailMailer interface to send emails.
+It uses the EmailAdapter interface to send emails.
 """
 
 # Author: Ling Thio <ling.thio@gmail.com>
@@ -13,7 +13,7 @@ from flask_user import ConfigError
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class.
 class EmailManager(object):
-    """ Send emails via the configured Email Mailer ``user_manager.email_mailer``. """
+    """ Send emails via the configured EmailAdapter ``user_manager.email_adapter``. """
 
     def __init__(self, app):
         """
@@ -49,7 +49,7 @@ class EmailManager(object):
         token = self.user_manager.generate_token(object_id)
         confirm_email_link = url_for('user.confirm_email', token=token, _external=True)
 
-        # Render email from templates and send it via the configured EmailMailer
+        # Render email from templates and send it via the configured EmailAdapter
         self._render_and_send_email(
             email,
             user,
@@ -67,7 +67,7 @@ class EmailManager(object):
         # Notification emails are sent to the user's primary email address
         email = self.user_manager.db_manager.get_primary_user_email(user)
 
-        # Render email from templates and send it via the configured EmailMailer
+        # Render email from templates and send it via the configured EmailAdapter
         self._render_and_send_email(
             email,
             user,
@@ -88,7 +88,7 @@ class EmailManager(object):
         token = self.user_manager.generate_token(user.id)
         reset_password_link = url_for('user.reset_password', token=token, _external=True)
 
-        # Render email from templates and send it via the configured EmailMailer
+        # Render email from templates and send it via the configured EmailAdapter
         self._render_and_send_email(
             email,
             user,
@@ -117,7 +117,7 @@ class EmailManager(object):
         token = self.user_manager.generate_token(user_invitation.id)
         accept_invitation_link = url_for('user.register', token=token, _external=True)
 
-        # Render email from templates and send it via the configured EmailMailer
+        # Render email from templates and send it via the configured EmailAdapter
         self._render_and_send_email(
             email,
             user,
@@ -144,7 +144,7 @@ class EmailManager(object):
         else:
             confirm_email_link = None
 
-        # Render email from templates and send it via the configured EmailMailer
+        # Render email from templates and send it via the configured EmailAdapter
         self._render_and_send_email(
             email,
             user,
@@ -162,7 +162,7 @@ class EmailManager(object):
         # Notification emails are sent to the user's primary email address
         email = self.user_manager.db_manager.get_primary_user_email(user)
 
-        # Render email from templates and send it via the configured EmailMailer
+        # Render email from templates and send it via the configured EmailAdapter
         self._render_and_send_email(
             email,
             user,
@@ -185,8 +185,9 @@ class EmailManager(object):
         # Render text message
         text_message = render_template(template_filename+'_message.txt', **kwargs)
 
-        # Send email via configured EmailMailer
-        self.user_manager.email_mailer.send_email_message(
-            email, subject, html_message, text_message)
+        # Send email via configured EmailAdapter
+        self.user_manager.email_adapter.send_email_message(
+            email, subject, html_message, text_message,
+            self.sender_email, self.sender_name)
 
 

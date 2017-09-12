@@ -143,13 +143,14 @@ if ORM_type == 'MongoEngine':
 # Define custom UserManager class
 class CustomUserManager(UserManager):
 
-    # Install the MockEmailMailer
+    # Install all EmailAdapters to cover their initialization code
     def customize(self, app):
-        # Test __init__() of all EmailMailers other than default SMTPEmailMailer
-        from flask_user.email_mailers import SendmailEmailMailer
-        from flask_user.email_mailers import SendgridEmailMailer
-        email_mailer = SendmailEmailMailer(app)
-        email_mailer = SendgridEmailMailer(app)
+        from flask_user.email_adapters import SendmailEmailAdapter
+        from flask_user.email_adapters import SendgridEmailAdapter
+        from flask_user.email_adapters import SMTPEmailAdapter
+        email_adapter = SendmailEmailAdapter(app)
+        email_adapter = SendgridEmailAdapter(app)
+        email_adapter = SMTPEmailAdapter(app)
 
 
 def init_app(app, test_config=None):                # For automated tests

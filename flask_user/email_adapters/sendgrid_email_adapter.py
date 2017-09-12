@@ -1,4 +1,4 @@
-"""This module implements the EmailMailer interface for SendGrid.
+"""This module implements the EmailAdapter interface for SendGrid.
 """
 
 # Author: Ling Thio <ling.thio@gmail.com>
@@ -9,10 +9,10 @@ from __future__ import print_function
 # Non-system imports are moved into the methods to make them an optional requirement
 
 from flask_user import current_app, ConfigError
-from flask_user.email_mailers import EmailMailerInterface
+from flask_user.email_adapters import EmailAdapterInterface
 
-class SendgridEmailMailer(EmailMailerInterface):
-    """ Implements the EmailMailer interface to send emails with SendGrid Web API v3 using sendgrid-python."""
+class SendgridEmailAdapter(EmailAdapterInterface):
+    """ Implements the EmailAdapter interface to send emails with SendGrid Web API v3 using sendgrid-python."""
     def __init__(self, app):
         """Check config settings and setup SendGrid Web API v3.
 
@@ -20,20 +20,19 @@ class SendgridEmailMailer(EmailMailerInterface):
             app(Flask): The Flask application instance.
         """
 
-        # Check config settings
-        super(SendgridEmailMailer, self).__init__(app)
+        super(SendgridEmailAdapter, self).__init__(app)
 
         # Setup sendgrid-python
         try:
             from sendgrid import SendGridAPIClient
         except ImportError:
             raise ConfigError(
-                "sendgrid-python has not been installed. Install sendgrid-python with 'pip install sendgrid' or use a different EmailMailer.")
+                "sendgrid-python has not been installed. Install sendgrid-python with 'pip install sendgrid' or use a different EmailAdapter.")
 
         pass    # TODO
 
 
-    def send_email_message(self, recipient, subject, html_message, text_message):
+    def send_email_message(self, recipient, subject, html_message, text_message, sender_email, sender_name):
         """ Send email message via sendgrid-python.
 
         Args:

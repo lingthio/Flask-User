@@ -75,12 +75,12 @@ class UserManager__Settings(object):
     #: Automatic sign-in at the login form (if the user session has not expired).
     USER_AUTO_LOGIN_AT_LOGIN = True
 
-    #: | Sender's email address, used by the EmailMailers.
+    #: | Sender's email address, used by the EmailAdapters.
     #: | Required for sending emails.
     #: | Derived from MAIL_DEFAULT_SENDER or DEFAULT_MAIL_SENDER when specified.
     USER_EMAIL_SENDER_EMAIL = ''
 
-    #: | Sender's name, user by the EmailMailers.
+    #: | Sender's name, user by the EmailAdapters.
     #: | Optional. Defaults to USER_APP_NAME setting.
     USER_EMAIL_SENDER_NAME = ''
 

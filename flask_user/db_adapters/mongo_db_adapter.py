@@ -30,7 +30,11 @@ class MongoDbAdapter(DbAdapterInterface):
         super(MongoDbAdapter, self).__init__(app, db)
 
     def add_object(self, object):
-        """Add object to db session. Only for session-centric object-database mappers."""
+        """ Add a new object to the database.
+
+        | Session-based ODMs would call something like ``db.session.add(object)``.
+        | Object-based ODMs would call something like ``object.save()``.
+        """
         object.save()
 
     def get_object(self, ObjectClass, id):
@@ -47,33 +51,36 @@ class MongoDbAdapter(DbAdapterInterface):
 
     def find_objects(self, ObjectClass, **kwargs):
         """ Retrieve all objects of type ``ObjectClass``,
-        matching the filters specified in ``**kwargs`` -- case sensitive.
+        matching the specified filters in ``**kwargs`` -- case sensitive.
         """
-
-        # Retrieve all matching objects
         return ObjectClass.objects(**kwargs).all()
 
     def find_first_object(self, ObjectClass, **kwargs):
         """ Retrieve the first object of type ``ObjectClass``,
-        matching the filters specified in ``**kwargs`` -- case sensitive.
-
-        ``find_first_object(User, username='myname')`` translates to
-        ``User.query.filter(User.username=='myname').first()``.
+        matching the specified filters in ``**kwargs`` -- case sensitive.
         """
 
         # Retrieve first object
         return ObjectClass.objects(**kwargs).first()
 
     def save_object(self, object, **kwargs):
-        """ Save object. Only for non-session centric Object-Database Mappers."""
+        """ Save object to database.
+
+        | Session-based ODMs would do nothing.
+        | Object-based ODMs would do something like object.save().
+        """
         object.save()
 
     def delete_object(self, object):
-        """ Delete object specified by ``object``. """
+        """ Delete object from database.
+        """
         object.delete()
 
     def commit(self):
-        """This method does nothing for MongoDbAdapter.
+        """Save all modified session objects to the database.
+
+        | Session-based ODMs would call something like ``db.session.commit()``.
+        | Object-based ODMs would do nothing.
         """
         pass
 

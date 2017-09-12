@@ -32,7 +32,11 @@ class SQLDbAdapter(DbAdapterInterface):
         super(SQLDbAdapter, self).__init__(app, db)
 
     def add_object(self, object):
-        """Add object to db session. Only for session-centric object-database mappers."""
+        """ Add a new object to the database.
+
+        | Session-based ODMs would call something like ``db.session.add(object)``.
+        | Object-based ODMs would call something like ``object.save()``.
+        """
         self.db.session.add(object)
 
     def get_object(self, ObjectClass, id):
@@ -66,10 +70,7 @@ class SQLDbAdapter(DbAdapterInterface):
 
     def find_first_object(self, ObjectClass, **kwargs):
         """ Retrieve the first object of type ``ObjectClass``,
-        matching the filters specified in ``**kwargs`` -- case sensitive.
-
-        ``find_first_object(User, username='myname')`` translates to
-        ``User.query.filter(User.username=='myname').first()``.
+        matching the specified filters in ``**kwargs`` -- case sensitive.
         """
 
         # Convert each name/value pair in 'kwargs' into a filter
@@ -111,15 +112,23 @@ class SQLDbAdapter(DbAdapterInterface):
         return query.first()
 
     def save_object(self, object):
-        """ Save object. Only for non-session centric Object-Database Mappers."""
+        """ Save object to database.
+
+        | Session-based ODMs would do nothing.
+        | Object-based ODMs would do something like object.save().
+        """
         pass
 
     def delete_object(self, object):
-        """ Delete object."""
+        """ Delete object from database.
+        """
         self.db.session.delete(object)
 
     def commit(self):
-        """Save modified objects in the database session.
+        """Save all modified session objects to the database.
+
+        | Session-based ODMs would call something like ``db.session.commit()``.
+        | Object-based ODMs would do nothing.
         """
         self.db.session.commit()
 

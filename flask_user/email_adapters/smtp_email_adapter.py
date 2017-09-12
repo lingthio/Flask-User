@@ -1,4 +1,4 @@
-"""This module implements the EmailMailer interface for SMTP.
+"""This module implements the EmailAdapter interface for SMTP.
 """
 
 # Author: Ling Thio <ling.thio@gmail.com>
@@ -13,11 +13,11 @@ from flask import current_app
 # Non-system imports are moved into the methods to make them an optional requirement
 
 from flask_user import ConfigError, EmailError
-from flask_user.email_mailers import EmailMailerInterface
+from flask_user.email_adapters import EmailAdapterInterface
 
 
-class SMTPEmailMailer(EmailMailerInterface):
-    """ Implements the EmailMailer interface to send emails with SMTP using Flask-Mail."""
+class SMTPEmailAdapter(EmailAdapterInterface):
+    """ Implements the EmailAdapter interface to send emails with SMTP using Flask-Mail."""
     def __init__(self, app):
         """Check config settings and setup Flask-Mail.
 
@@ -25,18 +25,17 @@ class SMTPEmailMailer(EmailMailerInterface):
             app(Flask): The Flask application instance.
         """
 
-        # Check config settings
-        super(SMTPEmailMailer, self).__init__(app)
+        super(SMTPEmailAdapter, self).__init__(app)
 
         # Setup Flask-Mail
         try:
             from flask_mail import Mail
         except ImportError:
             raise ConfigError(
-                "Flask-Mail has not been installed. Install Flask-Mail with 'pip install Flask-Mail' or use a different EmailMailer.")
+                "Flask-Mail has not been installed. Install Flask-Mail with 'pip install Flask-Mail' or use a different EmailAdapter.")
         self.mail = Mail(app)
 
-    def send_email_message(self, recipient, subject, html_message, text_message):
+    def send_email_message(self, recipient, subject, html_message, text_message, sender_email, sender_name):
         """ Send email message via Flask-Mail.
 
         Args:
@@ -46,6 +45,12 @@ class SMTPEmailMailer(EmailMailerInterface):
             text_message: The message body in plain text.
         """
 
+        # Construct sender from sender_name and sender_email
+        if sender_name:
+            sender = '"%s" <%s>' % (sender_name, sender_email)
+        else:
+            sender = sender_email
+
         # Send email via SMTP except when we're testing
         if not current_app.testing:  # pragma: no cover
             try:
@@ -53,6 +58,7 @@ class SMTPEmailMailer(EmailMailerInterface):
                 from flask_mail import Message
                 message = Message(
                     subject,
+                    sender=sender,
                     recipients=[recipient],
                     html=html_message,
                     body=text_message)

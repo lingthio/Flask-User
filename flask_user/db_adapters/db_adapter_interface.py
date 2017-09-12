@@ -7,8 +7,10 @@
 from __future__ import print_function
 
 class DbAdapterInterface(object):
-    """ Define the DbAdapter interface to find, add, update and delete
-    database objects using a specific object-database mapper.
+    """ Define the DbAdapter interface to manage objects in various databases.
+
+    This interface supports session-based ODMs (``db.session.add()/commit()``)
+    as well as object-based ODMs (``object.save()``).
     """
 
     def __init__(self, app, db):
@@ -21,33 +23,35 @@ class DbAdapterInterface(object):
         self.db = db
 
     def add_object(self, object):
-        """ Add a new object of type ``ObjectClass``,
-        with fields and values specified in ``**kwargs``.
+        """ Add a new object to the database.
+
+        | Session-based ODMs would call something like ``db.session.add(object)``.
+        | Object-based ODMs would call something like ``object.save()``.
         """
         raise NotImplementedError
 
     def commit(self):
-        """Save modified objects in the database session.
-        Only used by session-centric object-database mappers.
+        """Save all modified session objects to the database.
+
+        | Session-based ODMs would call something like ``db.session.commit()``.
+        | Object-based ODMs would do nothing.
         """
         raise NotImplementedError
 
     def delete_object(self, object):
-        """ Delete object specified by ``object``."""
+        """ Delete object from database.
+        """
         raise NotImplementedError
 
     def find_objects(self, ObjectClass, **kwargs):
         """ Retrieve all objects of type ``ObjectClass``,
-        matching the filters specified in ``**kwargs`` -- case sensitive.
+        matching the specified filters in ``**kwargs`` -- case sensitive.
         """
         raise NotImplementedError
 
     def find_first_object(self, ObjectClass, **kwargs):
         """ Retrieve the first object of type ``ObjectClass``,
-        matching the filters specified in ``**kwargs`` -- case sensitive.
-
-        ``find_first_object(User, username='myname')`` translates to
-        ``User.query.filter(User.username=='myname').first()``.
+        matching the specified filters in ``**kwargs`` -- case sensitive.
         """
         raise NotImplementedError
 
@@ -59,8 +63,12 @@ class DbAdapterInterface(object):
         """
         raise NotImplementedError
 
-    def save_object(self, object, **kwargs):
-        """ Save object. Only for non-session centric Object-Database Mappers."""
+    def save_object(self, object):
+        """ Save object to database.
+
+        | Session-based ODMs would do nothing.
+        | Object-based ODMs would do something like object.save().
+        """
         raise NotImplementedError
 
 
