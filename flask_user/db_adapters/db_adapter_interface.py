@@ -20,7 +20,7 @@ class DbAdapterInterface(object):
         self.app = app
         self.db = db
 
-    def add_object(self, ObjectClass, **kwargs):
+    def add_object(self, object):
         """ Add a new object of type ``ObjectClass``,
         with fields and values specified in ``**kwargs``.
         """

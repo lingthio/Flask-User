@@ -31,18 +31,9 @@ class SQLDbAdapter(DbAdapterInterface):
         # This no-op method is defined to show it in Sphinx docs in order 'bysource'
         super(SQLDbAdapter, self).__init__(app, db)
 
-    def add_object(self, ObjectClass, **kwargs):
-        """ Add a new object of type ``ObjectClass``,
-        with fields and values specified in ``**kwargs``.
-        """
-        object=ObjectClass(**kwargs)
-        self.db.session.add(object)
-        return object
-
-    def add_object2(self, object):
+    def add_object(self, object):
         """Add object to db session. Only for session-centric object-database mappers."""
         self.db.session.add(object)
-        pass
 
     def get_object(self, ObjectClass, id):
         """ Retrieve object of type ``ObjectClass`` by ``id``.

@@ -65,7 +65,7 @@ class DBManager(object):
         if 'username' in kwargs:
             kwargs['username'] = kwargs['username'].lower()
         user = self.UserClass(**kwargs)
-        self.db_adapter.add_object2(user)
+        self.db_adapter.add_object(user)
         return user
 
     def add_user_email(self, user, **kwargs):
@@ -74,7 +74,7 @@ class DBManager(object):
         # If User and UserEmail are separate classes
         if self.UserEmailClass:
             user_email = self.UserEmailClass(user=user, **kwargs)
-            self.db_adapter.add_object2(user_email)
+            self.db_adapter.add_object(user_email)
 
         # If there is only one User class
         else:
@@ -88,7 +88,7 @@ class DBManager(object):
         if 'email' in kwargs:
             kwargs['email'] = kwargs['email'].lower()
         user_invitation = self.UserInvitationClass(**kwargs)
-        self.db_adapter.add_object2(user_invitation)
+        self.db_adapter.add_object(user_invitation)
         return user_invitation
 
     def commit(self):
@@ -226,7 +226,8 @@ class DBManager(object):
             # Get or add role
             role = self.db_adapter.find_first_object(self.RoleClass, name=role_name)
             if not role:
-                role = self.db_adapter.add_object(self.RoleClass, name=role_name)
+                role = self.RoleClass(name=role_name)
+                self.db_adapter.add_object(role)
             user.roles.append(role)
         else:
             # user.roles is a list of role names
