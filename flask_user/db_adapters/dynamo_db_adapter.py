@@ -36,6 +36,8 @@ class DynamoDbAdapter(DbAdapterInterface):
 
     def add_object(self, object):
         """Add object to db session. Only for session-centric object-database mappers."""
+        if object.id is None:
+            object.get_id()
         self.db.engine.save(object)
 
     def get_object(self, ObjectClass, id):
@@ -45,17 +47,18 @@ class DynamoDbAdapter(DbAdapterInterface):
         | Returns None otherwise.
         """
         print('dynamo.get(%s, %s)' % (ObjectClass, str(id)))
-        pdb.set_trace()
-        out = self.db.engine.get(id)
-        return out
-        return ObjectClass.query.get(id)
+        resp = self.db.engine.get(ObjectClass, [id])
+        if resp:
+            return resp[0]
+        else:
+            return None
 
     def find_objects(self, ObjectClass, **kwargs):
         """ Retrieve all objects of type ``ObjectClass``,
         matching the filters specified in ``**kwargs`` -- case sensitive.
         """
 
-        print('dynamo.find_first_object(%s, %s)' % (ObjectClass, str(kwargs)))
+        print('dynamo.find_objects(%s, %s)' % (ObjectClass, str(kwargs)))
 
         query = self.db.engine.query(ObjectClass)
         for field_name, field_value in kwargs.items():
@@ -63,7 +66,7 @@ class DynamoDbAdapter(DbAdapterInterface):
             # Make sure that ObjectClass has a 'field_name' property
             field = getattr(ObjectClass, field_name, None)
             if field is None:
-                raise KeyError("DynamoDBAdapter.find_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
+                raise KeyError("DynamoDBAdapter.find_objects(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
 
             # Add a case sensitive filter to the query
             query = query.filter(field == field_value)
@@ -80,7 +83,6 @@ class DynamoDbAdapter(DbAdapterInterface):
         """
 
         print('dynamo.find_first_object(%s, %s)' % (ObjectClass, str(kwargs)))
-
         query = self.db.engine.query(ObjectClass)
         for field_name, field_value in kwargs.items():
 
@@ -93,7 +95,8 @@ class DynamoDbAdapter(DbAdapterInterface):
             query = query.filter(field == field_value)
 
         # Execute query
-        return query.first(desc=True)
+        out = query.first(desc=True)#, attributes=['password'])
+        return out
 
     def save_object(self, object, **kwargs):
         """ Save object. Only for non-session centric Object-Database Mappers."""
@@ -111,7 +114,7 @@ class DynamoDbAdapter(DbAdapterInterface):
         """
         # pdb.set_trace()
         print('dynamo.commit()')
-        self.db.engine.sync()
+        #self.db.engine.sync()
         # self.db.session.commit()
 
 
