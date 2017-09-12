@@ -43,7 +43,7 @@ class DBManager(object):
                 pass  # Ignore ImportErrors
 
         # Check if db is a Flywheel instance
-        if self.db_adapter is None:
+        if self.db_adapter is None: # pragma no cover
             try:
                 from flask_flywheel import Flywheel
 
@@ -260,11 +260,11 @@ class DBManager(object):
 
         return user_roles
 
-    def delete_role_name(self, role_name):
-        if isinstance(self.db_adapter, SQLDbAdapter):
-            role = self.db_adapter.find_first_object(self.user_manager.db_manager.RoleClass, name=role_name)
-            if role:
-                self.db_adapter.delete_object(role)
+    # def delete_role_name(self, role_name):
+    #     if isinstance(self.db_adapter, SQLDbAdapter):
+    #         role = self.db_adapter.find_first_object(self.user_manager.db_manager.RoleClass, name=role_name)
+    #         if role:
+    #             self.db_adapter.delete_object(role)
 
 
     # Database management methods

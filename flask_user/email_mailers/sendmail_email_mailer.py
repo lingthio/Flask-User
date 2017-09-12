@@ -8,7 +8,7 @@ from __future__ import print_function
 
 # Non-system imports are moved into the methods to make them an optional requirement
 
-from flask_user import ConfigError, EmailError
+from flask_user import current_app, ConfigError
 from flask_user.email_mailers import EmailMailerInterface
 
 
@@ -42,16 +42,17 @@ class SendmailEmailMailer(EmailMailerInterface):
             text_message: The message body in plain text.
         """
 
-        from flask_sendmail import Message
+        if not current_app.testing:  # pragma: no cover
 
-        # Prepare email message
-        message = Message(
-            subject,
-            recipients=[recipient],
-            html=html_message,
-            body=text_message)
+            # Prepare email message
+            from flask_sendmail import Message
+            message = Message(
+                subject,
+                recipients=[recipient],
+                html=html_message,
+                body=text_message)
 
-        # Send email message
-        self.mail.send(message)
+            # Send email message
+            self.mail.send(message)
 
 

@@ -8,7 +8,7 @@ from __future__ import print_function
 
 # Non-system imports are moved into the methods to make them an optional requirement
 
-from flask_user import ConfigError, EmailError
+from flask_user import current_app, ConfigError
 from flask_user.email_mailers import EmailMailerInterface
 
 class SendgridEmailMailer(EmailMailerInterface):
@@ -43,9 +43,10 @@ class SendgridEmailMailer(EmailMailerInterface):
             text_message: The message body in plain text.
         """
 
-        from sendgrid.helpers.mail import Email, Content, Substitution, Mail
-        try:
-            pass    # TODO
-        except ImportError:
-            pass    # TODO
+        if not current_app.testing:  # pragma: no cover
+            try:
+                from sendgrid.helpers.mail import Email, Content, Substitution, Mail
+                pass    # TODO
+            except ImportError:
+                pass    # TODO
 

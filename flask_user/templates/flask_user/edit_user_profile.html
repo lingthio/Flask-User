@@ -8,6 +8,7 @@
     {{ form.hidden_tag() }}
     {% for field in form.fields %}
         {{ render_field(field, tabindex=loop.index) }}
+    {% endfor %}
     {{ render_submit_field(form.submit, tabindex=90) }}
 </form>
 <br/>

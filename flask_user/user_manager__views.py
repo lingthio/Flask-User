@@ -191,8 +191,7 @@ class UserManager__Views(object):
         # Send confirm email
         elif action == 'confirm':
             self._send_confirm_email_email(user_email.user, user_email)
-
-        else:
+        else: # pragma no cover
             return self.unauthorized_view()
 
         return redirect(url_for('user.manage_emails'))
@@ -275,7 +274,7 @@ class UserManager__Views(object):
 
             try:
                 # Send invite_user email
-                self.send_invite_user_email(current_user, user_invitation)
+                self.email_manager.send_invite_user_email(current_user, user_invitation)
             except Exception as e:
                 # delete new UserInvitation object if send fails
                 self.db_manager.delete_object(user_invitation)
@@ -385,7 +384,7 @@ class UserManager__Views(object):
             return redirect(url_for('user.login'))
 
         user_invitation = None
-        if invite_token and self.UserInvitationClass:
+        if invite_token and self.db_manager.UserInvitationClass:
             data_items = self.token_manager.verify_token(invite_token, self.USER_INVITE_EXPIRATION)
             if data_items:
                 user_invitation_id = data_items[0]

@@ -46,6 +46,7 @@ def test_with_email(client):
     um.USER_ENABLE_FORGOT_PASSWORD = True
     um.USER_ENABLE_MULTIPLE_EMAILS = False
     um.USER_REQUIRE_RETYPE_PASSWORD = True
+    um.USER_ENABLE_INVITE_USER = True
 
     check_all_valid_forms(um, client)
 
@@ -64,6 +65,7 @@ def test_with_username(client):
     um.USER_ENABLE_FORGOT_PASSWORD = False
     um.USER_ENABLE_MULTIPLE_EMAILS = False
     um.USER_REQUIRE_RETYPE_PASSWORD = True
+    um.USER_ENABLE_INVITE_USER = True
 
     check_all_valid_forms(um, client)
 
@@ -110,13 +112,14 @@ def check_all_valid_forms(um, client):
     check_valid_register_form(um, client, client.db)
     check_valid_confirm_email_page(um, client)
     check_valid_login_form(um, client)
+    check_valid_edit_user_profile_form(um, client)
     check_valid_change_password_form(um, client)
     check_valid_change_username_form(um, client)
     check_valid_logout_link(um, client)
     check_valid_resend_email_confirmation_form(um, client)
     check_valid_forgot_password_form(um, client)
     check_valid_reset_password_page(um, client)
-    check_valid_invite_email(um, client)
+    check_valid_invite_user(um, client)
     #check_valid_invite_registration_different_email(um, client)
 
     delete_valid_user(client.db)
@@ -261,6 +264,28 @@ def check_valid_change_username_form(um, client):
     # Change username back to old password for subsequent tests
     valid_user.username = VALID_USERNAME
 
+def check_valid_edit_user_profile_form(um, client):
+    # Skip test for certain config combinations
+    pass
+
+    print("check_valid_edit_user_profile_form")
+    global valid_user
+
+    # Submit form and verify that response has no errors
+    client.get_valid_page(url_for('user.edit_user_profile'))
+
+    # Submit form and verify that response has no errors
+    client.post_valid_form(url_for('user.edit_user_profile'), first_name='Firstname', last_name='Lastname')
+
+    # Verify operations
+    valid_user = um.db_manager.db_adapter.get_object(um.db_manager.UserClass, valid_user.id)
+    assert valid_user.first_name == 'Firstname'
+    assert valid_user.last_name == 'Lastname'
+
+    # Change username back to old password for subsequent tests
+    valid_user.first_name == ''
+    valid_user.last_name == ''
+
 def check_valid_logout_link(um, client):
     print("test_valid_logout_link")
     # Retrieve page and verify that response has no errors
@@ -309,17 +334,21 @@ def check_valid_reset_password_page(um, client):
     # Change password back to old password for subsequent tests
     valid_user.password = old_password_hash
 
-def check_valid_invite_email(um, client):
+def check_valid_invite_user(um, client):
     """ If a valid email is submitted using the invite form,
     then it should generate the proper email and response """
     if not um.USER_ENABLE_INVITE_USER: return
     # Submit form and verify that response has no errors
     global valid_user_invitation
-    UserInvitation = um.UserInvitationClass
+    UserInvitation = um.db_manager.UserInvitationClass
     client.login(username='member', email='member@example.com', password='Password1')
+    client.get_valid_page(url_for('user.invite_user'))
     client.post_valid_form(url_for('user.invite_user'), email=INVITE_USER_EMAIL)
     valid_user_invitation = um.db_manager.db_adapter.find_first_object(UserInvitation, email=INVITE_USER_EMAIL)
     assert valid_user_invitation
+
+    token = um.generate_token(valid_user_invitation.id)
+    client.get_valid_page(url_for('user.register', token=token))
 
 def delete_valid_user(db):
     # Using global variable for speed

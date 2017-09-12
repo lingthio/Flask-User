@@ -47,15 +47,16 @@ class SMTPEmailMailer(EmailMailerInterface):
         """
 
         # Send email via SMTP except when we're testing
-        if not current_app.testing:
-            from flask_mail import Message
+        if not current_app.testing:  # pragma: no cover
             try:
                 # Prepare email message
+                from flask_mail import Message
                 message = Message(
                     subject,
                     recipients=[recipient],
                     html=html_message,
                     body=text_message)
+
                 # Send email message
                 self.mail.send(message)
 
