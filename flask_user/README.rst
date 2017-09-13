@@ -1,7 +1,7 @@
 Design overview
 ===============
 The Core Logic shields itself from non-core services through the use
-of Manager Interfaces (DB/Email/Password/Token Managers).
+of Manager Interfaces.
 
 - The DBManager manages objects in a database.
 - The EmailManager sends email messages
@@ -9,37 +9,47 @@ of Manager Interfaces (DB/Email/Password/Token Managers).
 - The TokenManager generates and verifies tokens.
 
 The DBManager shields itself from specific database services
-(DynamoDB/MongoDB/SQL) through the use of the DbAdapter interface.
+through the use of the DbAdapter interface.
+Flask-User ships with the following implementations::
+
+- DynamoDbAdapter
+- MongoDbAdapter
+- SQLDbAdapter
 
 The EmailManager shields itself from specific email services
-(SendGrid/Sendmail/SMTP) through the use of the EmailAdapter interface.
+through the use of the EmailAdapter interface.
+Flask-User ships with the following implementations::
+
+- SendgridEmailAdapter
+- SendmailEmailAdapter
+- SMTPEmailAdapter
 
 Because the core logic is relatively small, we decided to simply
 include the core logic with the DBManager.
 
 ::
 
-                     Views
+                                    Views
 
-    +-------- =================== -------------------------------------------+
-    |         DBManager interface                                            |
+    +----------------------- =================== ----------------------------+
+    |                        DBManager interface                             |
     |                                                                        |
-    |         DBManager and Core Logic                                       |
+    |                      DBManager and Core Logic                          |
     |                                                                        |
-    |                 +------------------------------------------------------+
-    |                 |
-    |                 |     ============    ===============    ============
-    |                 |     EmailManager    PasswordManager    TokenManager
-    |                 |     Interface       Interface          Interface
-    |                 |    +------------+  +---------------+  +------------+
-    |                 |    |EmailManager|  |PasswordManager|  |TokenManager|
-    +-----------------+    +------------+  +---------------+  +------------+
+    |               +--------------------------------------------------------+
+    |               |
+    |               |    ==============    =================    ==============
+    |               |    EmailManager      PasswordManager      TokenManager
+    |               |    Interface         Interface            Interface
+    |               |    +------------+    +---------------+    +------------+
+    |   DBManager   |    |EmailManager|    |PasswordManager|    |TokenManager|
+    +---------------+    +------------+    +---------------+    +------------+
 
-    ===================     =================
-    DbAdapter               EmailAdapter
-    Interface               Interface
+    =================    ==============
+    DbAdapter            EmailAdapter
+    Interface            Interface
 
-    - DynamoDbAdapter       - SendGridAdapter
-    - MongoDbAdapter        - SendmailAdapter
-    - SQLDbAdapter          - SMTPAdapter
+    - DynamoDbAdapter    - SendgridEmailAdapter
+    - MongoDbAdapter     - SendmailEmailAdapter
+    - SQLDbAdapter       - SMTPEmailAdapter
 
