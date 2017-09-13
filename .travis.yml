@@ -15,8 +15,8 @@ branches:
 
 # Install test dependencies
 before_install:
-    - pip install pytest pytest-cov
-    - pip install coveralls
+  - pip install pytest pytest-cov
+  - pip install codecov
 
 # Install project depencies
 install:
@@ -28,4 +28,4 @@ script:
 
 # Submit coverage report to coveralls
 after_success:
-  - coveralls
+  - codecov
