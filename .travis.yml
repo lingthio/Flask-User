@@ -28,6 +28,4 @@ script:
 
 # Submit coverage report to coveralls
 after_success:
-    - if [[ $ENV == python=3.6* ]]; then
-          coveralls;
-      fi
+  - coveralls
