@@ -5,7 +5,10 @@ from flask_user.db_manager import DBManager
 
 def test_mongoengine_db_adapter(app):
     # Skip mongoengine tests if no MongoDB server is available
-    from mongoengine.connection import MongoEngineConnectionError
+    try:
+        from mongoengine.connection import MongoEngineConnectionError   # 0.11.0+
+    except ImportError:
+        from mongoengine.connection import ConnectionError as MongoEngineConnectionError   # 0.10.9 and down
     try:
         db = MongoEngine(app)
         skip_mongoengine_tests = False

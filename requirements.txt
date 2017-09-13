@@ -14,10 +14,12 @@ Flask-WTF==0.14.2
 Flask-SQLAlchemy==2.2
 
 # Mongo DB testing
+MongoEngine<0.11    # 0.11.0 dropped support for python 2.6
 Flask-MongoEngine==0.9.3
 
-# For sendgrid testing
-# sendgrid==5.2.0
+# EmailAdapter testing
+sendgrid==5.2.0
+Flask-Sendmail==0.1
 
 # Development packages
 pytest==3.0.5
