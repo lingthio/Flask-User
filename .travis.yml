@@ -5,20 +5,29 @@ language:
   python
 
 python:
-  - "2.6"
-  - "2.7"
-  - "3.3"
-  - "3.4"
+  - "3.6"
 
 branches:
   only:
     - master
+    - v0.6
+    - v0.5
 
-# Install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+# Install test dependencies
+before_install:
+    - pip install pytest pytest-cov
+    - pip install coveralls
+
+# Install project depencies
 install:
   - pip install -r requirements.txt --quiet
-  - pip install pytest
 
 # Run automated tests
 script:
-  - py.test flask_user/tests/
+  - py.test
+
+# Submit coverage report to coveralls
+after_success:
+    - if [[ $ENV == python=3.6* ]]; then
+          coveralls;
+      fi
