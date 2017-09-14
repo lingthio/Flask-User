@@ -5,13 +5,25 @@ Flask-User API
 - :ref:`UserManager__Settings`
 - :ref:`UserManager__Utils`
 - :ref:`UserManager__Views`
-- :ref:`FlaskUserViewDecorators`
+- :ref:`ViewDecorators`
 - :ref:`FlaskUserForms`
+- :ref:`DBManager`
 - :ref:`EMailManager`
 - :ref:`PasswordManager`
 - :ref:`TokenManager`
 - :ref:`DbAdapterInterface`
 - :ref:`EmailAdapterInterface`
+
+--------
+
+.. _DBManager:
+
+DBManager class
+---------------
+
+This class manages database objects.
+
+.. autoclass:: flask_user.db_manager.DBManager
 
 --------
 

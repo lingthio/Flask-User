@@ -11,7 +11,16 @@ class DBManager(object):
     """Manage DB objects."""
 
     def __init__(self, app, db, UserClass, UserEmailClass=None, UserInvitationClass=None, RoleClass=None):
-        """Initialize the appropriate DbAdapter, based on the ``db`` parameter type."""
+        """Initialize the appropriate DbAdapter, based on the ``db`` parameter type.
+
+        Args:
+            app(Flask): The Flask application instance.
+            db: The Object-Database Mapper instance.
+            UserClass: The User class.
+            UserEmailClass: Optional UserEmail class for multiple-emails-per-user feature.
+            UserInvitationClass: Optional UserInvitation class for user-invitation feature.
+            RoleClass: For testing purposes only.
+        """
         self.app = app
         self.db = db
         self.UserClass = UserClass
@@ -65,7 +74,26 @@ class DBManager(object):
             else self.db_adapter.find_first_object
 
 
+    def add_user_role(self, user, role_name):
+        """Associate a role name with a user."""
+
+        # For SQL: user.roles is list of pointers to Role objects
+        if isinstance(self.db_adapter, SQLDbAdapter):
+            # user.roles is a list of Role IDs
+            # Get or add role
+            role = self.db_adapter.find_first_object(self.RoleClass, name=role_name)
+            if not role:
+                role = self.RoleClass(name=role_name)
+                self.db_adapter.add_object(role)
+            user.roles.append(role)
+
+        # For others: user.roles is a list of role names
+        else:
+            # user.roles is a list of role names
+            user.roles.append(role_name)
+
     def add_user(self, **kwargs):
+        """Add a User object, with properties specified in ``**kwargs``."""
         if 'email' in kwargs:
             kwargs['email'] = kwargs['email'].lower()
         if 'username' in kwargs:
@@ -77,6 +105,7 @@ class DBManager(object):
         return user
 
     def add_user_email(self, user, **kwargs):
+        """Add a UserEmail object, with properties specified in ``**kwargs``."""
         if 'email' in kwargs:
             kwargs['email'] = kwargs['email'].lower()
         # If User and UserEmail are separate classes
@@ -93,6 +122,7 @@ class DBManager(object):
         return user_email
 
     def add_user_invitation(self, **kwargs):
+        """Add a UserInvitation object, with properties specified in ``**kwargs``."""
         if 'email' in kwargs:
             kwargs['email'] = kwargs['email'].lower()
         user_invitation = self.UserInvitationClass(**kwargs)
@@ -100,38 +130,19 @@ class DBManager(object):
         return user_invitation
 
     def commit(self):
+        """Commit session-based objects to the database."""
         self.db_adapter.commit()
 
     def delete_object(self, object):
+        """Delete and object."""
         self.db_adapter.delete_object(object)
 
-    def get_user_and_user_email_by_id(self, user_or_user_email_id):
-        if self.UserEmailClass:
-            user_email = self.db_adapter.get_object(self.UserEmailClass, user_or_user_email_id)
-            user = user_email.user if user_email else None
-        else:
-            user = self.db_adapter.get_object(self.UserClass, user_or_user_email_id)
-            user_email = user
-        return (user, user_email)
-
-    def get_user_and_user_email_by_email(self, email):
-        if self.UserEmailClass:
-            user_email = self.find_function(self.UserEmailClass, email=email.lower())
-            user = user_email.user if user_email else None
-        else:
-            # Although with v0.9+ we store lowercase emails and usernames,
-            # To be backwards compatible with v0.6 data we still need to use ifind for SQLAlchemy data
-            if isinstance(self.db_adapter, SQLDbAdapter):
-                user = self.db_adapter.ifind_first_object(self.UserClass, email=email)
-            else:
-                user = self.db_adapter.find_first_object(self.UserClass, email=email.lower())
-            user_email = user
-        return (user, user_email)
-
     def find_user_by_username(self, username):
+        """Find a User object by username."""
         return self.find_function(self.UserClass, username=username.lower())
 
     def find_user_emails(self, user):
+        """Find all the UserEmail object belonging to a user."""
         user_emails = self.db_adapter.find_objects(self.UserEmailClass, user_id=user.id)
         return user_emails
 
@@ -147,7 +158,33 @@ class DBManager(object):
         else:
             return user
 
+    def get_user_and_user_email_by_id(self, user_or_user_email_id):
+        """Retrieve the User and UserEmail object by ID."""
+        if self.UserEmailClass:
+            user_email = self.db_adapter.get_object(self.UserEmailClass, user_or_user_email_id)
+            user = user_email.user if user_email else None
+        else:
+            user = self.db_adapter.get_object(self.UserClass, user_or_user_email_id)
+            user_email = user
+        return (user, user_email)
+
+    def get_user_and_user_email_by_email(self, email):
+        """Retrieve the User and UserEmail object by email address."""
+        if self.UserEmailClass:
+            user_email = self.find_function(self.UserEmailClass, email=email.lower())
+            user = user_email.user if user_email else None
+        else:
+            # Although with v0.9+ we store lowercase emails and usernames,
+            # To be backwards compatible with v0.6 data we still need to use ifind for SQLAlchemy data
+            if isinstance(self.db_adapter, SQLDbAdapter):
+                user = self.db_adapter.ifind_first_object(self.UserClass, email=email)
+            else:
+                user = self.db_adapter.find_first_object(self.UserClass, email=email.lower())
+            user_email = user
+        return (user, user_email)
+
     def get_user_by_id(self, id):
+        """Retrieve a User object by ID."""
         return self.db_adapter.get_object(self.UserClass, id=id)
 
     def get_user_email_by_id(self, id):
@@ -155,18 +192,40 @@ class DBManager(object):
         return self.db_adapter.get_object(self.UserEmailClass, id)
 
     def get_user_invitation_by_id(self, id):
+        """Retrieve a UserInvitation object by ID."""
         return self.db_adapter.get_object(self.UserInvitationClass, id=id)
 
+    def get_user_roles(self, user):
+        """Retrieve a list of user role names.
+
+        .. note::
+
+            Database management methods.
+        """
+
+        # For SQL: user.roles is list of pointers to Role objects
+        if isinstance(self.db_adapter, SQLDbAdapter):
+            # user.roles is a list of Role IDs
+            user_roles = [role.name for role in user.roles]
+
+
+        # For others: user.roles is a list of role names
+        else:
+            # user.roles is a list of role names
+            user_roles = user.roles
+
+        return user_roles
+
+    def save_object(self, object):
+        """Save an object to the database."""
+        self.db_adapter.save_object(object)
+
     def save_user_and_user_email(self, user, user_email):
+        """Save the User and UserEmail object."""
         if self.UserEmailClass:
             self.db_adapter.save_object(user_email)
         self.db_adapter.save_object(user)
 
-    def save_object(self, object):
-        self.db_adapter.save_object(object)
-
-    # Return True if ENABLE_EMAIL and ENABLE_CONFIRM_EMAIL and email has been confirmed.
-    # Return False otherwise
     def user_has_confirmed_email(self, user):
         """| Return True if user has a confirmed email.
         | Return False otherwise."""
@@ -206,49 +265,6 @@ class DBManager(object):
         # Return False otherwise.
         return self.find_user_by_username(new_username) == None
 
-
-
-    # Role management methods
-    # -----------------------
-
-    def add_user_role(self, user, role_name):
-        """ Add a ``role_name`` role to ``user``."""
-
-        # For SQL: user.roles is list of pointers to Role objects
-        if isinstance(self.db_adapter, SQLDbAdapter):
-            # user.roles is a list of Role IDs
-            # Get or add role
-            role = self.db_adapter.find_first_object(self.RoleClass, name=role_name)
-            if not role:
-                role = self.RoleClass(name=role_name)
-                self.db_adapter.add_object(role)
-            user.roles.append(role)
-
-        # For others: user.roles is a list of role names
-        else:
-            # user.roles is a list of role names
-            user.roles.append(role_name)
-
-    def get_user_roles(self, user):
-        """Retrieve a list of user role names.
-
-        .. note::
-
-            Database management methods.
-        """
-
-        # For SQL: user.roles is list of pointers to Role objects
-        if isinstance(self.db_adapter, SQLDbAdapter):
-            # user.roles is a list of Role IDs
-            user_roles = [role.name for role in user.roles]
-
-
-        # For others: user.roles is a list of role names
-        else:
-            # user.roles is a list of role names
-            user_roles = user.roles
-
-        return user_roles
 
     # def delete_role_name(self, role_name):
     #     if isinstance(self.db_adapter, SQLDbAdapter):

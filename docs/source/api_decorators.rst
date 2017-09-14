@@ -1,7 +1,7 @@
-.. _FlaskUserViewDecorators:
+.. _ViewDecorators:
 
-Flask-User View decorators
-===========================
+View decorators
+===============
 Flask-User view decorators serve as the gatekeepers to prevent
 unauthenticated or unauthorized users from accessing certain views.
 
