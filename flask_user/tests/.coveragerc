@@ -3,7 +3,6 @@
 [run]
 omit =
     flask_user/db_adapters/dynamo_db_adapter.py
-    flask_user/db_adapters/mongo_db_adapter.py
     flask_user/tests/*
 
 

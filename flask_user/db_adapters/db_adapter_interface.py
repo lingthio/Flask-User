@@ -77,10 +77,12 @@ class DbAdapterInterface(object):
 
     def create_all_tables(self):
         """Create database tables for all known database data-models."""
+        raise NotImplementedError
 
     def drop_all_tables(self):
         """Drop all tables.
 
         .. warning:: ALL DATA WILL BE LOST. Use only for automated testing.
         """
+        raise NotImplementedError
 

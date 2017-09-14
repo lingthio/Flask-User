@@ -172,6 +172,12 @@ def test_invalid_misc(app, client):
     client.post_invalid_form(url, 'Old Password is incorrect',
             old_password='XXX', new_password=password, retype_password=password)
 
+    # Test forgot password with non-existing email
+    url = url_for('user.forgot_password')
+    um.USER_SHOW_EMAIL_DOES_NOT_EXIST = True
+    client.post_invalid_form(url, 'Email does not exist',
+            email='nonexisting@nowhere.org')
+
     client.logout()
 
 

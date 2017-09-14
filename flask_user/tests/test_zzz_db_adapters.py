@@ -56,6 +56,9 @@ def test_mongoengine_db_adapter(app):
     user = db_manager.find_user_by_username(username)
     assert user==user1
 
+    # Test find_objects, directly through adapter
+    users = db_manager.db_adapter.find_objects(User)
+
     # Test save_object
     user.username='NewUsername'
     db_manager.save_object(user)

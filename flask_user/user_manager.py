@@ -408,9 +408,6 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # def unconfirmed_email_stub():
         #     return self.unconfirmed_email_view()
 
-        def unauthenticated_stub():
-            return self.unauthenticated_view()
-
         def unauthorized_stub():
             return self.unauthorized_view()
 
