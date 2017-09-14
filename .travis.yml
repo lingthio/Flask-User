@@ -1,8 +1,7 @@
 # Travis config file
 # ==================
 
-language:
-  python
+language: python
 
 python:
   - "3.6"
@@ -12,6 +11,8 @@ branches:
     - master
     - v0.6
     - v0.5
+
+services: mongodb
 
 # Install test dependencies
 before_install:
