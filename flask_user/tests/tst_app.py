@@ -62,13 +62,13 @@ if ORM_type=='SQLAlchemy':
     class User(db.Model, UserMixin):
         __tablename__ = 'users'
         id = db.Column(db.Integer, primary_key=True)
+        active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
 
         # User authentication information
         username = db.Column(db.String(50), nullable=True, unique=True)
         email = db.Column(db.String(255), nullable=True, unique=True)
         email_confirmed_at = db.Column(db.DateTime())
         password = db.Column(db.String(255), nullable=False, server_default='')
-        active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
 
         # User information
         first_name = db.Column(db.String(100), nullable=False, server_default='')
@@ -83,14 +83,12 @@ if ORM_type=='SQLAlchemy':
         __tablename__ = 'user_emails'
         id = db.Column(db.Integer, primary_key=True)
         user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+        user = db.relationship('User', uselist=False)
 
         # User email information
         email = db.Column(db.String(255), nullable=True, unique=True)
         email_confirmed_at = db.Column(db.DateTime())
         is_primary = db.Column(db.Boolean(), nullable=False, default=False)
-
-        # Relationship
-        user = db.relationship('User', uselist=False)
 
     class UserInvitation(db.Model):
         __tablename__ = 'user_invitations'
@@ -98,6 +96,7 @@ if ORM_type=='SQLAlchemy':
         email = db.Column(db.String(255), nullable=False)
         # save the user of the invitee
         invited_by_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+        invited_by_user = db.relationship('User', uselist=False)
         # token used for registration page to identify user registering
         token = db.Column(db.String(100), nullable=False, server_default='')
 

@@ -192,7 +192,7 @@ class UserManager__Settings(object):
     USER_LOGIN_TEMPLATE = 'flask_user/login.html' #:
     USER_MANAGE_EMAILS_TEMPLATE = 'flask_user/manage_emails.html' #:
     USER_REGISTER_TEMPLATE = 'flask_user/register.html' #:
-    USER_RESEND_EMAIL_CONFIRMATION_TEMPLATE = 'flask_user/request_email_confirmation.html' #:
+    USER_RESEND_CONFIRM_EMAIL_TEMPLATE = 'flask_user/resend_confirm_email.html' #:
 
     #: .. This hack shows a header above the _next_ section
     #: .. code-block:: none
@@ -225,4 +225,4 @@ class UserManager__Settings(object):
     USER_AFTER_INVITE_ENDPOINT = '' #:
     USER_UNAUTHENTICATED_ENDPOINT = 'user.login' #:
     USER_UNAUTHORIZED_ENDPOINT = '' #:
-    USER_UNCONFIRMED_EMAIL_ENDPOINT = '' #:
+    # USER_UNCONFIRMED_EMAIL_ENDPOINT = '' #:

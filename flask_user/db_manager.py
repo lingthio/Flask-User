@@ -43,7 +43,7 @@ class DBManager(object):
                 pass  # Ignore ImportErrors
 
         # Check if db is a Flywheel instance
-        if self.db_adapter is None: # pragma no cover
+        if self.db_adapter is None: # pragma: no cover
             try:
                 from flask_flywheel import Flywheel
 
@@ -57,6 +57,12 @@ class DBManager(object):
             raise ConfigError(
                 'No Flask-SQLAlchemy, Flask-MongoEngine or Flask-Flywheel installed.'\
                 ' You must install one of these Flask extensions.')
+
+        # Although with v0.9+ we store lowercase emails and usernames,
+        # To be backwards compatible with v0.6 data we still need to use ifind for SQLAlchemy data
+        self.find_function = self.db_adapter.ifind_first_object \
+            if hasattr(self.db_adapter, 'ifind_first_object') \
+            else self.db_adapter.find_first_object
 
 
     def add_user(self, **kwargs):
@@ -102,10 +108,7 @@ class DBManager(object):
     def get_user_and_user_email_by_id(self, user_or_user_email_id):
         if self.UserEmailClass:
             user_email = self.db_adapter.get_object(self.UserEmailClass, user_or_user_email_id)
-            if user_email:
-                user = user_email.user
-            else:
-                user = None
+            user = user_email.user if user_email else None
         else:
             user = self.db_adapter.get_object(self.UserClass, user_or_user_email_id)
             user_email = user
@@ -113,16 +116,8 @@ class DBManager(object):
 
     def get_user_and_user_email_by_email(self, email):
         if self.UserEmailClass:
-            # Although with v0.9+ we store lowercase emails and usernames,
-            # To be backwards compatible with v0.6 data we still need to use ifind for SQLAlchemy data
-            if isinstance(self.db_adapter, SQLDbAdapter):
-                user_email = self.db_adapter.ifind_first_object(self.UserEmailClass, email=email)
-            else:
-                user_email = self.db_adapter.find_first_object(self.UserEmailClass, email=email.lower())
-            if user_email:
-                user = user_email.user
-            else:
-                user = None
+            user_email = self.find_function(self.UserEmailClass, email=email.lower())
+            user = user_email.user if user_email else None
         else:
             # Although with v0.9+ we store lowercase emails and usernames,
             # To be backwards compatible with v0.6 data we still need to use ifind for SQLAlchemy data
@@ -134,12 +129,7 @@ class DBManager(object):
         return (user, user_email)
 
     def find_user_by_username(self, username):
-        # Although with v0.9+ we store lowercase emails and usernames,
-        # To be backwards compatible with v0.6 data we still need to use ifind for SQLAlchemy data
-        if isinstance(self.db_adapter, SQLDbAdapter):
-            return self.db_adapter.ifind_first_object(self.UserClass, username=username)
-        else:
-            return self.db_adapter.find_first_object(self.UserClass, username=username.lower())
+        return self.find_function(self.UserClass, username=username.lower())
 
     def find_user_emails(self, user):
         user_emails = self.db_adapter.find_objects(self.UserEmailClass, user_id=user.id)

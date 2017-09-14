@@ -5,20 +5,16 @@
 # Copyright (c) 2013 Ling Thio
 
 from datetime import datetime
+try:
+    from urllib.parse import quote, unquote    # Python 3
+except ImportError:
+    from urllib import quote, unquote          # Python 2
+
 from flask import current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_user, logout_user
+
 from .decorators import login_required
 from . import signals
-
-# Python version specific imports
-from sys import version_info as py_version
-is_py2 = (py_version[0] == 2)     #: Python 2.x?
-is_py3 = (py_version[0] == 3)     #: Python 3.x?
-if is_py2:    # pragma: no cover
-    from urllib import quote, unquote
-if is_py3:
-    from urllib.parse import quote, unquote
-
 from .translation_utils import gettext as _    # map _() to gettext()
 
 
@@ -169,7 +165,7 @@ class UserManager__Views(object):
         # Delete UserEmail
         if action == 'delete':
             # Primary UserEmail can not be deleted
-            if user_email.is_primary:    # pragma: no cover
+            if user_email.is_primary:
                 return self.unauthorized_view()
             # Delete UserEmail
             self.db_manager.delete_object(user_email)
@@ -191,7 +187,7 @@ class UserManager__Views(object):
         # Send confirm email
         elif action == 'confirm':
             self._send_confirm_email_email(user_email.user, user_email)
-        else: # pragma no cover
+        else:
             return self.unauthorized_view()
 
         return redirect(url_for('user.manage_emails'))
@@ -325,10 +321,7 @@ class UserManager__Views(object):
             if self.USER_ENABLE_USERNAME:
                 # Find user record by username
                 user = self.db_manager.find_user_by_username(login_form.username.data)
-                user_email = None
-                # Find primary user_email record
-                if user and self.db_manager.UserEmailClass:
-                    user_email = self.db_manager.get_primary_user_email(user)
+
                 # Find user record by email (with form.username)
                 if not user and self.USER_ENABLE_EMAIL:
                     user, user_email = self.db_manager.get_user_and_user_email_by_email(login_form.username.data)
@@ -485,7 +478,7 @@ class UserManager__Views(object):
 
         # Render form
         self.prepare_domain_translations()
-        return render_template(self.USER_RESENT_CONFIRM_EMAIL_TEMPLATE, form=form)
+        return render_template(self.USER_RESEND_CONFIRM_EMAIL_TEMPLATE, form=form)
 
 
     def reset_password_view(self, token):
@@ -568,14 +561,14 @@ class UserManager__Views(object):
         # Redirect to USER_UNAUTHORIZED_ENDPOINT
         return redirect(self._endpoint_url(self.USER_UNAUTHORIZED_ENDPOINT))
 
-    def unconfirmed_email_view(self):
-        """ Prepare a Flash message and redirect to USER_UNCONFIRMED_ENDPOINT"""
-        # Prepare Flash message
-        url = request.script_root + request.path
-        flash(_("You must confirm your email to access '%(url)s'.", url=url), 'error')
-
-        # Redirect to USER_UNCONFIRMED_EMAIL_ENDPOINT
-        return redirect(self._endpoint_url(self.USER_UNCONFIRMED_EMAIL_ENDPOINT))
+    # def unconfirmed_email_view(self):
+    #     """ Prepare a Flash message and redirect to USER_UNCONFIRMED_ENDPOINT"""
+    #     # Prepare Flash message
+    #     url = request.script_root + request.path
+    #     flash(_("You must confirm your email to access '%(url)s'.", url=url), 'error')
+    #
+    #     # Redirect to USER_UNCONFIRMED_EMAIL_ENDPOINT
+    #     return redirect(self._endpoint_url(self.USER_UNCONFIRMED_EMAIL_ENDPOINT))
 
 
     def _send_registered_email(self, user, user_email, request_email_confirmation):
@@ -611,7 +604,7 @@ class UserManager__Views(object):
         if not user: return self.unauthenticated()
 
         # Check if user account has been disabled
-        if not self.call_or_get(user.is_active):
+        if not user.active:
             flash(_('Your account has not been enabled.'), 'error')
             return redirect(url_for('user.login'))
 

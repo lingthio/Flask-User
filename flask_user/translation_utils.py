@@ -20,16 +20,10 @@ except ImportError:
     domain_translations = None
 
 def gettext(string, **variables):
-    if domain_translations:
-        return domain_translations.gettext(string, **variables)
-    else:    # pragma: no cover
-        return string % variables
+    return domain_translations.gettext(string, **variables) if domain_translations else string % variables
 
 def lazy_gettext(string, **variables):
-    if domain_translations:
-        return domain_translations.lazy_gettext(string, **variables)
-    else:    # pragma: no cover
-        return string % variables
+    return domain_translations.lazy_gettext(string, **variables) if domain_translations else string % variables
 
 def get_language_codes():
     language_codes = []

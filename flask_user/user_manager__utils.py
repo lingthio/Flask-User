@@ -4,13 +4,11 @@
 # Author: Ling Thio <ling.thio@gmail.com>
 # Copyright (c) 2013 Ling Thio
 
-# Python version specific imports
-from sys import version_info as py_version
-is_py2 = (py_version[0] == 2)     #: Python 2.x?
-if is_py2:    # pragma: no cover
-    from urlparse import urlsplit
-else:         # pragma: no cover
-    from urllib.parse import urlsplit
+try:
+    from urllib.parse import urlsplit   # Python 3
+except ImportError:
+    from urlparse import urlsplit       # Python 2
+
 
 from flask_login import current_user
 

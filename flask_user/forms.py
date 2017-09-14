@@ -90,8 +90,7 @@ class ChangePasswordForm(FlaskForm):
         #     self.new_password.validators.append(user_manager.password_validator)
 
         # Validate field-validators
-        if not super(ChangePasswordForm, self).validate():
-            return False
+        if not super(ChangePasswordForm, self).validate(): return False
 
         # Verify current_user and current_password
         if not current_user or not user_manager.verify_password(self.old_password.data, current_user.password):
@@ -126,8 +125,7 @@ class ChangeUsernameForm(FlaskForm):
         #     self.new_username.validators.append(user_manager.username_validator)
 
         # Validate field-validators
-        if not super(ChangeUsernameForm, self).validate():
-            return False
+        if not super(ChangeUsernameForm, self).validate(): return False
 
         # Verify current_user and current_password
         if not current_user or not user_manager.verify_password(self.old_password.data, current_user.password):
@@ -340,8 +338,7 @@ class ResetPasswordForm(FlaskForm):
         # if not has_been_added:
         #     self.new_password.validators.append(user_manager.password_validator)
         # Validate field-validators
-        if not super(ResetPasswordForm, self).validate():
-            return False
+        if not super(ResetPasswordForm, self).validate(): return False
         # All is well
         return True
 

@@ -405,8 +405,8 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
             if not self.USER_ENABLE_FORGOT_PASSWORD: abort(404)
             return self.reset_password_view(token)
 
-        def unconfirmed_email_stub():
-            return self.unconfirmed_email_view()
+        # def unconfirmed_email_stub():
+        #     return self.unconfirmed_email_view()
 
         def unauthenticated_stub():
             return self.unauthenticated_view()

@@ -22,7 +22,9 @@ exclude_lines =
     raise NotImplementedError
     raise KeyError
     raise TypeError
+    raise Exception\(LEGACY_ERROR\)
     if not ctx:
+    return self.unauthorized_view
 
     # Misc
     delattr\(self

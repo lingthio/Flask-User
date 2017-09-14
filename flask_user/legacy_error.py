@@ -39,7 +39,7 @@ class DbAdapter(object):
     against an incompatible v0.9+ Flask-User install.
     """
 
-    def __init__(self, db, UserClass, UserAuthClass=None, UserEmailClass=None, UserProfileClass=None, UserInvitationClass=None): # pragma: no cover
+    def __init__(self, db, UserClass, UserAuthClass=None, UserEmailClass=None, UserProfileClass=None, UserInvitationClass=None):
         raise Exception(LEGACY_ERROR)
 
 class SQLAlchemyAdapter(DbAdapter):
@@ -47,6 +47,6 @@ class SQLAlchemyAdapter(DbAdapter):
     to warn the developer that they are using v0.6 API calls
     against an incompatible v0.9+ Flask-User install.
     """
-    def __init__(self, db, UserClass, UserProfileClass=None, UserAuthClass=None, UserEmailClass=None, UserInvitationClass=None): # pragma: no cover
-        super(SQLAlchemyAdapter, self).__init__(db, UserClass, UserAuthClass, UserEmailClass, UserProfileClass, UserInvitationClass)
+    def __init__(self, db, UserClass, UserProfileClass=None, UserAuthClass=None, UserEmailClass=None, UserInvitationClass=None):
+        raise Exception(LEGACY_ERROR)
 

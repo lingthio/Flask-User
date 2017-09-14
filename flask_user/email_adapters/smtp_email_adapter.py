@@ -46,10 +46,7 @@ class SMTPEmailAdapter(EmailAdapterInterface):
         """
 
         # Construct sender from sender_name and sender_email
-        if sender_name:
-            sender = '"%s" <%s>' % (sender_name, sender_email)
-        else:
-            sender = sender_email
+        sender = '"%s" <%s>' % (sender_name, sender_email) if sender_name else sender_email
 
         # Send email via SMTP except when we're testing
         if not current_app.testing:  # pragma: no cover

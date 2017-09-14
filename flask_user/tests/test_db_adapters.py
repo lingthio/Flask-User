@@ -1,20 +1,26 @@
-from flask_mongoengine import MongoEngine
 from flask_user.db_adapters import MongoDbAdapter
 from flask_user.db_manager import DBManager
 
 
 def test_mongoengine_db_adapter(app):
-    # Skip mongoengine tests if no MongoDB server is available
+    # Make sure Flask-MongoEngine and MongoEngine are installed
+    try:
+        from flask_mongoengine import MongoEngine
+        from mongoengine import connect
+    except ImportError:
+        return
+
+    # Import ConnectionError or MongoEngineConnectionError, depending on version
     try:
         from mongoengine.connection import MongoEngineConnectionError   # 0.11.0+
     except ImportError:
         from mongoengine.connection import ConnectionError as MongoEngineConnectionError   # 0.10.9 and down
+
+    # Make sure that a MongoDB server is up and running on localhost:27017
     try:
         db = MongoEngine(app)
-        skip_mongoengine_tests = False
     except MongoEngineConnectionError:
-        skip_mongoengine_tests = True
-    if skip_mongoengine_tests: return
+        return
 
     class User(db.Document):
         username = db.StringField(default='')
