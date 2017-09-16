@@ -36,6 +36,9 @@ class ConfigClass(object):
     MAIL_PORT =           int(os.getenv('MAIL_PORT',            '465'))
     MAIL_USE_SSL =            os.getenv('MAIL_USE_SSL',         True)
 
+    # Sengrid settings
+    SENDGRID_API_KEY = 'some-bogus-value'
+
     # Flask-User settings
     USER_APP_NAME = 'TestApp'
     USER_ENABLE_EMAIL = True

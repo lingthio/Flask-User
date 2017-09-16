@@ -32,7 +32,7 @@ class SMTPEmailAdapter(EmailAdapterInterface):
             from flask_mail import Mail
         except ImportError:
             raise ConfigError(
-                "Flask-Mail has not been installed. Install Flask-Mail with 'pip install Flask-Mail' or use a different EmailAdapter.")
+                "The Flask-Mail package is missing. Install Flask-Mail with 'pip install Flask-Mail'.")
         self.mail = Mail(app)
 
     def send_email_message(self, recipient, subject, html_message, text_message, sender_email, sender_name):

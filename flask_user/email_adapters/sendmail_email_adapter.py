@@ -28,7 +28,7 @@ class SendmailEmailAdapter(EmailAdapterInterface):
             from flask_sendmail import Mail
         except ImportError:
             raise ConfigError(
-                "Flask-Sendmail has not been installed. Install Flask-Sendmail with 'pip install Flask-Sendmail' or use a different EmailAdapter.")
+                "The Flask-Sendmail package is missing. Install Flask-Sendmail with 'pip install Flask-Sendmail'.")
         self.mail = Mail(app)
 
     def send_email_message(self, recipient, subject, html_message, text_message, sender_email, sender_name):
