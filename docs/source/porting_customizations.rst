@@ -31,15 +31,15 @@ instantiation. For example::
 
 In v0.9, Flask-User is customized by:
 - Extending the ``CustomUserManager`` class
-- Setting a property in its ``customize()`` method
-- Overriding or extending a method
+- Setting properties in its ``customize()`` method
+- Overriding or extending methods
 
 ::
 
     # Customize Flask-User
     class CustomUserManager(UserManager):
 
-        def customize(app):
+        def customize(self, app):
             # Override properties
             register_form = CustomRegisterForm()
             token_manager = CustomTokenManager(app)

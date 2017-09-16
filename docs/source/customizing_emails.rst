@@ -6,6 +6,30 @@ Customizing Emails
 
 --------
 
+.. _CustomizingEmailAdapters:
+
+Customizing EmailAdapters
+-------------------------
+Flask-User ships with the following EmailAdapters:
+- SendgridEmailAdapter to send email messages via Sendgrid
+- SendmailEmailAdapter to send email messages via Sendmail
+- SMTPEmailAdapter to send email messages via SMTP
+
+Flask-User works with the SMTPEmailAdapter by default, but another EmailAdapter can be configured like so::
+
+    # Setup Flask-User
+    user_manager = UserManager(app, db, User)
+
+    # Customize Flask-User
+    from flask_user.email_adapters import SendgridEmailAdapter
+    user_manager.email_adapter = SendgridEmailAdapter(app)
+
+
+--------
+
+Customizing Email messages
+--------------------------
+
 Flask-User currently offers the following types of email messages::
 
     confirm_email     # Sent after a user submitted a registration form

@@ -21,20 +21,22 @@ while shielding the Flask-User code from the underlying implementation.
         def send_email_message(...):
             # use self.sender_name and self.sender_email here...
 
-Example implementation
-----------------------
-Here's the `SMTPEmailAdapter() implementation on github <https://github.com/lingthio/Flask-User/blob/master/flask_user/email_adapters/smtp_email_adapter.py>`_.
+.. _CustomEmailAdapters:
 
-Customizing Flask-User
-----------------------
-::
+Implementing a CustomEmailAdapter
+---------------------------------
+You can write you own EmailAdapter implementation by defining a CustomEmailAdapter class
+and configure Flask-User to use this class like so::
 
-    # Customize Flask-User
-    class CustomUserManager(UserManager):
-
-        def customize(self, app):
-            # Use the CustomEmailAdapter
-            self.email_adapter = CustomEmailAdapter(app)
+    # Define a CustomEmailAdapter
+    from flask_user.email_adapters import EmailAdapterInterface
+    class CustomEmailAdapter(EmailAdapterInterface):
+        ...
 
     # Setup Flask-User
-    user_manager = CustomUserManager(app, db, User)
+    user_manager = UserManager(app, db, User)
+
+    # Customize Flask-User
+    user_manager.email_adapter = CustomDbAdapter(app)
+
+For an example, see `the SMTPEmailAdapter() implementation <https://github.com/lingthio/Flask-User/blob/master/flask_user/email_adapters/smtp_email_adapter.py>`_.

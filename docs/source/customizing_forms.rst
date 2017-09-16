@@ -181,9 +181,9 @@ Flask user ships with default username and password form field validators that c
     # Setup Flask-User
     user_manager = CustomUserManager(app, db, User)
 
-The code for the default ``password_validator()`` can be found `on github near this line <https://github.com/lingthio/Flask-User/blob/master/flask_user/user_manager.py#L215>`_.
-
-The code for the default ``username_validator()`` can be found `on github near this line <https://github.com/lingthio/Flask-User/blob/master/flask_user/user_manager.py#L239>`_.
+| Examples:
+| `The default password_validator() <https://github.com/lingthio/Flask-User/blob/master/flask_user/user_manager.py#L219>`_.
+| `The default username_validator() <https://github.com/lingthio/Flask-User/blob/master/flask_user/user_manager.py#L243>`_.
 
 --------
 
@@ -202,7 +202,7 @@ Optionally, if you want to change the default behaviour, you can customize the v
 
         # Override or extend the default login view method
         def login_view(self):
-            pass
+            ...
 
     # Setup Flask-User
     user_manager = CustomUserManager(app, db, User)

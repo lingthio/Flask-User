@@ -7,29 +7,11 @@ Configuring settings
 
 --------
 
-Flask-User default features and settings can overridden in one of two ways:
-
-1) By changing the settings in the application config file::
+Flask-User default features and settings can overridden through the app config::
 
     # Customize Flask-User settings
     USER_ENABLE_EMAIL = True
     USER_ENABLE_USERNAME = False
-
-2) By changing the setting in the ``UserManager.customize()``::
-
-    # Customize Flask-User
-    class CustomUserManager(UserManager):
-
-        def customize(self, app):
-
-            # Customize Flask-User settings
-            self.USER_ENABLE_EMAIL = True
-            self.USER_ENABLE_USERNAME = False
-
-    # Setup Flask-User
-    user_manager = CustomUserManager(app, db, User)
-
-``UserManager.customize()`` settings take precedence over the application config file settings.
 
 Flask-User settings
 -------------------

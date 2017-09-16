@@ -10,21 +10,22 @@ while shielding the Flask-User code from the underlying implementation.
 .. autoclass:: flask_user.db_adapters.db_adapter_interface.DbAdapterInterface
     :special-members: __init__
 
-Example implementation
-----------------------
-Here's the `SQLDbAdapter() implementation on github <https://github.com/lingthio/Flask-User/blob/master/flask_user/db_adapters/sql_db_adapter.py>`_.
+.. _CustomDbAdapters:
 
-Customizing Flask-User
-----------------------
-::
+Implementing a CustomDbAdapter
+------------------------------
+You can write you own DbAdapter implementation by defining a CustomDbAdapter class
+and configure Flask-User to use this class like so::
 
-    # Customize Flask-User
-    class CustomUserManager(UserManager):
-
-        def customize(self, app):
-            # Use the CustomDbAdapter
-            self.db_adapter = CustomDbAdapter(app)
+    # Define a CustomDbAdapter
+    from flask_user.db_adapters import DbAdapterInterface
+    class CustomDbAdapter(DbAdapterInterface):
+        ...
 
     # Setup Flask-User
-    user_manager = CustomUserManager(app, db, User)
+    user_manager = UserManager(app, db, User)
 
+    # Customize Flask-User
+    user_manager.db_adapter = CustomDbAdapter(app)
+
+For an example, see `the SQLDbAdapter() implementation <https://github.com/lingthio/Flask-User/blob/master/flask_user/db_adapters/sql_db_adapter.py>`_.
