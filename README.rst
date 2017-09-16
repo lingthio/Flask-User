@@ -1,8 +1,9 @@
 Flask-User v0.6
 ===============
 
-| **Attention:**
-| The documentation has moved to http://flask-user.readthedocs.io/en/v0.6
+.. attention::
+
+    The documentation has moved to http://flask-user.readthedocs.io/en/v0.6
 
 
 User Authentication and Management

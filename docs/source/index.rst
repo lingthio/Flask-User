@@ -8,7 +8,7 @@ Flask-User v0.6
     backward compatibility with Flask-User v0.6.
 
     To avoid disruption, please take the time to pin your Flask-User version
-    in your ``requirements.txt``. For example: ``Flask-User==0.6.17``
+    in your ``requirements.txt``. For example: ``Flask-User==0.6.19``
 
 | So, you're writing a Flask web application and would like to authenticate your users.
 | You start with a simple **Login** page, but soon enough you'll need to handle:

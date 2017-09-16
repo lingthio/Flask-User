@@ -1,9 +1,7 @@
 from setuptools import setup
 import sys
 
-# Import version number from source code
-from flask_user import __version__ as flask_user_version
-
+__version__ = '0.6.19'
 
 # Load pytest and pytest-runner only when needed:
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
@@ -18,7 +16,7 @@ def load_readme():
 
 setup(
     name='Flask-User',
-    version=flask_user_version,
+    version=__version__,
     url='http://github.com/lingthio/Flask-User',
     license='BSD License',
     author='Ling Thio',
