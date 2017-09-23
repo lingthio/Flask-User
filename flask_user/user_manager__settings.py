@@ -86,11 +86,11 @@ class UserManager__Settings(object):
 
     #: | The way Flask-User handles case insensitive searches.
     #: | Valid options are:
-    #: | - 'collate_nocase' : Use regular find_object() so username and email fields must be configured
-    #: |     with an case insensitve collation (collation='NOCASE' in SQLAlchemy).
-    #: | - 'ifind' : Use case insensitive ifind_object()
-    #: | Defaults to 'collate_nocase'.
-    USER_IFIND_MODE = 'collate_nocase'
+    #: | - 'ifind' (default): Use the case insensitive ifind_first_object()
+    #: | - 'nocase_collation': username and email fields must be configured
+    #: |     with an case insensitve collation (collation='NOCASE' in SQLAlchemy)
+    #: |     so that a regular find_first_object() can be performed.
+    USER_IFIND_MODE = 'ifind'
 
     #: | Send notification email after a password change.
     #: | Depends on USER_ENABLE_EMAIL=True.

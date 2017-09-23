@@ -58,12 +58,12 @@ def create_app(test_config=None):                   # For automated tests
         id = db.Column(db.Integer, primary_key=True)
 
         # User authentication information. The collation='NOCASE' is required
-        # to search case insensitively when USER_IFIND_MODE is 'collate_nocase'.
+        # to search case insensitively when USER_IFIND_MODE is 'nocase_collation'.
         username = db.Column(db.String(50), nullable=True, unique=True)
         password = db.Column(db.String(255), nullable=False, server_default='')
 
         # User email information. The collation='NOCASE' is required
-        # to search case insensitively when USER_IFIND_MODE is 'collate_nocase'.
+        # to search case insensitively when USER_IFIND_MODE is 'nocase_collation'.
         email = db.Column(db.String(255, collation='NOCASE'), nullable=False, unique=True)
         email_confirmed_at = db.Column(db.DateTime(), nullable=True)
 
@@ -76,7 +76,7 @@ def create_app(test_config=None):                   # For automated tests
         __tablename__ = 'user_invitations'
         id = db.Column(db.Integer, primary_key=True)
         # UserInvitation email information. The collation='NOCASE' is required
-        # to search case insensitively when USER_IFIND_MODE is 'collate_nocase'.
+        # to search case insensitively when USER_IFIND_MODE is 'nocase_collation'.
         email = db.Column(db.String(255, collation='NOCASE'), nullable=False)
         # save the user of the invitee
         invited_by_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))

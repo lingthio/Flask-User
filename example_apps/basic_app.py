@@ -61,7 +61,7 @@ def create_app():
         active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
 
         # User authentication information. The collation='NOCASE' is required
-        # to search case insensitively when USER_IFIND_MODE is 'collate_nocase'.
+        # to search case insensitively when USER_IFIND_MODE is 'nocase_collation'.
         email = db.Column(db.String(255, collation='NOCASE'), nullable=False, unique=True)
         email_confirmed_at = db.Column(db.DateTime())
         password = db.Column(db.String(255), nullable=False, server_default='')

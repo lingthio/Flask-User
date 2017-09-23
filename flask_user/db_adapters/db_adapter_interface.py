@@ -60,7 +60,7 @@ class DbAdapterInterface(object):
         """ Retrieve the first object of type ``ObjectClass``,
         matching the specified filters in ``**kwargs`` -- case insensitive.
 
-        | If USER_IFIND_MODE is 'collate_nocase' this method maps to find_first_object().
+        | If USER_IFIND_MODE is 'nocase_collation' this method maps to find_first_object().
         | If USER_IFIND_MODE is 'ifind' this method performs a case insensitive find.
         """
         raise NotImplementedError

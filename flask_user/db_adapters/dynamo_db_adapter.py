@@ -98,11 +98,11 @@ class DynamoDbAdapter(DbAdapterInterface):
         """ Retrieve the first object of type ``ObjectClass``,
         matching the specified filters in ``**kwargs`` -- case insensitive.
 
-        | If USER_IFIND_MODE is 'collate_nocase' this method maps to find_first_object().
+        | If USER_IFIND_MODE is 'nocase_collation' this method maps to find_first_object().
         | If USER_IFIND_MODE is 'ifind' this method performs a case insensitive find.
         """
-        # Call regular find() if USER_IFIND_MODE is collate_nocase
-        if self.user_manager.USER_IFIND_MODE=='collate_nocase':
+        # Call regular find() if USER_IFIND_MODE is nocase_collation
+        if self.user_manager.USER_IFIND_MODE=='nocase_collation':
             return self.find_first_object(ObjectClass, **kwargs)
 
         raise NotImplementedError
