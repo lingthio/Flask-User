@@ -94,6 +94,19 @@ class DynamoDbAdapter(DbAdapterInterface):
         out = query.first(desc=True)#, attributes=['password'])
         return out
 
+    def ifind_first_object(self, ObjectClass, **kwargs):
+        """ Retrieve the first object of type ``ObjectClass``,
+        matching the specified filters in ``**kwargs`` -- case insensitive.
+
+        | If USER_IFIND_MODE is 'collate_nocase' this method maps to find_first_object().
+        | If USER_IFIND_MODE is 'ifind' this method performs a case insensitive find.
+        """
+        # Call regular find() if USER_IFIND_MODE is collate_nocase
+        if self.user_manager.USER_IFIND_MODE=='collate_nocase':
+            return self.find_first_object(ObjectClass, **kwargs)
+
+        raise NotImplementedError
+
     def save_object(self, object, **kwargs):
         """ Save object. Only for non-session centric Object-Database Mappers."""
         self.db.engine.sync(object)

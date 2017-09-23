@@ -60,8 +60,26 @@ class MongoDbAdapter(DbAdapterInterface):
         matching the specified filters in ``**kwargs`` -- case sensitive.
         """
 
-        # Retrieve first object
+        # Retrieve first object -- case sensitive
         return ObjectClass.objects(**kwargs).first()
+
+    def ifind_first_object(self, ObjectClass, **kwargs):
+        """ Retrieve the first object of type ``ObjectClass``,
+        matching the specified filters in ``**kwargs`` -- case insensitive.
+
+        | If USER_IFIND_MODE is 'collate_nocase' this method maps to find_first_object().
+        | If USER_IFIND_MODE is 'ifind' this method performs a case insensitive find.
+        """
+        # Call regular find() if USER_IFIND_MODE is collate_nocase
+        if self.user_manager.USER_IFIND_MODE=='collate_nocase':
+            return self.find_first_object(ObjectClass, **kwargs)
+
+        # Convert ...(email=value) to ...(email__iexact=value)
+        iexact_kwargs = {}
+        for key, value in kwargs.items():
+            iexact_kwargs[key+'__iexact'] = value
+        # Retrieve first object -- case insensitive
+        return ObjectClass.objects(**iexact_kwargs).first()
 
     def save_object(self, object, **kwargs):
         """ Save object to database.

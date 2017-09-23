@@ -90,6 +90,33 @@ class SQLDbAdapter(DbAdapterInterface):
 
     def ifind_first_object(self, ObjectClass, **kwargs):
         """ Retrieve the first object of type ``ObjectClass``,
+        matching the specified filters in ``**kwargs`` -- case insensitive.
+
+        | If USER_IFIND_MODE is 'collate_nocase' this method maps to find_first_object().
+        | If USER_IFIND_MODE is 'ifind' this method performs a case insensitive find.
+        """
+
+        # Call regular find() if USER_IFIND_MODE is collate_nocase
+        if self.user_manager.USER_IFIND_MODE=='collate_nocase':
+            return self.find_first_object(ObjectClass, **kwargs)
+
+        # Convert each name/value pair in 'kwargs' into a filter
+        query = ObjectClass.query
+        for field_name, field_value in kwargs.items():
+
+            # Make sure that ObjectClass has a 'field_name' property
+            field = getattr(ObjectClass, field_name, None)
+            if field is None:
+                raise KeyError("BaseAlchemyAdapter.find_first_object(): Class '%s' has no field '%s'." % (ObjectClass, field_name))
+
+            # Add a case sensitive filter to the query
+            query = query.filter(field.ifind(field_value))  # case insensitive!!
+
+        # Execute query
+        return query.first()
+
+    def ifind_first_object(self, ObjectClass, **kwargs):
+        """ Retrieve the first object of type ``ObjectClass``,
         matching the filters specified in ``**kwargs`` -- case insensitive.
 
         ``ifind_first_object(User, email='myname@example.com')`` translates to

@@ -69,13 +69,13 @@ if ORM_type=='SQLAlchemy':
 
         # User authentication information
         username = db.Column(db.String(50), nullable=True, unique=True)
-        email = db.Column(db.String(255), nullable=True, unique=True)
+        email = db.Column(db.String(255, collation='NOCASE'), nullable=True, unique=True)
         email_confirmed_at = db.Column(db.DateTime())
         password = db.Column(db.String(255), nullable=False, server_default='')
 
         # User information
-        first_name = db.Column(db.String(100), nullable=False, server_default='')
-        last_name = db.Column(db.String(100), nullable=False, server_default='')
+        first_name = db.Column(db.String(100, collation='NOCASE'), nullable=False, server_default='')
+        last_name = db.Column(db.String(100, collation='NOCASE'), nullable=False, server_default='')
 
         # Relationships
         roles = db.relationship('Role', secondary='user_roles',

@@ -21,6 +21,7 @@ class DbAdapterInterface(object):
         """
         self.app = app
         self.db = db
+        self.user_manager = self.app.user_manager
 
     def add_object(self, object):
         """ Add a new object to the database.
@@ -52,6 +53,15 @@ class DbAdapterInterface(object):
     def find_first_object(self, ObjectClass, **kwargs):
         """ Retrieve the first object of type ``ObjectClass``,
         matching the specified filters in ``**kwargs`` -- case sensitive.
+        """
+        raise NotImplementedError
+
+    def ifind_first_object(self, ObjectClass, **kwargs):
+        """ Retrieve the first object of type ``ObjectClass``,
+        matching the specified filters in ``**kwargs`` -- case insensitive.
+
+        | If USER_IFIND_MODE is 'collate_nocase' this method maps to find_first_object().
+        | If USER_IFIND_MODE is 'ifind' this method performs a case insensitive find.
         """
         raise NotImplementedError
 

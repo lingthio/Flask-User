@@ -84,6 +84,14 @@ class UserManager__Settings(object):
     #: | Optional. Defaults to USER_APP_NAME setting.
     USER_EMAIL_SENDER_NAME = ''
 
+    #: | The way Flask-User handles case insensitive searches.
+    #: | Valid options are:
+    #: | - 'collate_nocase' : Use regular find_object() so username and email fields must be configured
+    #: |     with an case insensitve collation (collation='NOCASE' in SQLAlchemy).
+    #: | - 'ifind' : Use case insensitive ifind_object()
+    #: | Defaults to 'collate_nocase'.
+    USER_IFIND_MODE = 'collate_nocase'
+
     #: | Send notification email after a password change.
     #: | Depends on USER_ENABLE_EMAIL=True.
     USER_SEND_PASSWORD_CHANGED_EMAIL = True
