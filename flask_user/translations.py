@@ -14,7 +14,7 @@ def get_translations():
     if not ctx:
         return None
 
-    # If context exists and contains a cashed value, return cached value
+    # If context exists and contains a cached value, return cached value
     if hasattr(ctx, 'flask_user_translations'):
         return ctx.flask_user_translations
 
@@ -67,7 +67,7 @@ def lazy_gettext(string, **variables):
         from speaklater import make_lazy_string
         return make_lazy_string(gettext, string, **variables)
     except ImportError:
-       return string % variables
+        return string % variables
 
 _ = lazy_gettext
 _home_page = _('Home Page')
