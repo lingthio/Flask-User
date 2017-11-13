@@ -27,7 +27,7 @@ def get_translations():
     # Prepare search properties
     import os
     import gettext as python_gettext
-    from flask_babel import get_locale, support
+    from flask_babel import get_locale, get_translations, support
     domain = 'flask_user'
     locales = [get_locale()]
     languages = [str(locale) for locale in locales]
@@ -43,8 +43,7 @@ def get_translations():
         flask_user_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'translations')
         ctx.flask_user_translations = support.Translations.load(flask_user_dir, locales, domain=domain)
 
-    from flask.ext import babel
-    return ctx.flask_user_translations.merge(babel.get_translations())
+    return ctx.flask_user_translations.merge(get_translations())
 
 def gettext(string, **variables):
     """ Translate specified string."""
