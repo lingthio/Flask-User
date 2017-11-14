@@ -1,98 +1,173 @@
-import os
-from flask import Flask, render_template_string
-from flask_mail import Mail
+# This file contains an example Flask-User application.
+# To keep the example simple, we are applying some unusual techniques:
+# - Placing everything in one file
+# - Using class-based configuration (instead of file-based configuration)
+# - Using string-based templates (instead of file-based templates)
+
+import datetime
+from flask import Flask, request, render_template_string
+from flask_babelex import Babel
 from flask_sqlalchemy import SQLAlchemy
-from flask_user import login_required, UserManager, UserMixin, SQLAlchemyAdapter
+from flask_user import current_user, login_required, roles_required, UserManager, UserMixin
 
 
-# Use a Class-based config to avoid needing a 2nd file
-# os.getenv() enables configuration through OS environment variables
+# Class-based application configuration
 class ConfigClass(object):
-    # Flask settings
-    SECRET_KEY =              os.getenv('SECRET_KEY',       'THIS IS AN INSECURE SECRET')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///basic_app.sqlite')
-    CSRF_ENABLED = True
+    """ Flask application config """
 
-    # Flask-Mail settings
-    MAIL_USERNAME =           os.getenv('MAIL_USERNAME',        'email@example.com')
-    MAIL_PASSWORD =           os.getenv('MAIL_PASSWORD',        'password')
-    MAIL_DEFAULT_SENDER =     os.getenv('MAIL_DEFAULT_SENDER',  '"MyApp" <noreply@example.com>')
-    MAIL_SERVER =             os.getenv('MAIL_SERVER',          'smtp.gmail.com')
-    MAIL_PORT =           int(os.getenv('MAIL_PORT',            '465'))
-    MAIL_USE_SSL =        int(os.getenv('MAIL_USE_SSL',         True))
+    # Flask settings
+    SECRET_KEY = 'This is an INSECURE secret!! DO NOT use this in production!!'
+
+    # Flask-SQLAlchemy settings
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///basic_app.sqlite'    # File-based SQL database
+    SQLALCHEMY_TRACK_MODIFICATIONS = False    # Avoids SQLAlchemy warning
+
+    # Flask-Mail SMTP server settings
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USE_TLS = False
+
+    # Flask-Mail SMTP account settings
+    MAIL_USERNAME = 'email@example.com'
+    MAIL_PASSWORD = 'password'
 
     # Flask-User settings
-    USER_APP_NAME        = "AppName"                # Used by email templates
+    USER_APP_NAME = "Flask-User Basic App"      # Shown in and email templates and page footers
+    USER_ENABLE_EMAIL = True        # Enable email authentication
+    USER_ENABLE_USERNAME = False    # Disable username authentication
+    USER_EMAIL_SENDER_NAME = USER_APP_NAME
+    USER_EMAIL_SENDER_EMAIL = "noreply@example.com"
 
 
 def create_app():
     """ Flask application factory """
     
-    # Setup Flask app and app.config
+    # Create Flask app load app.config
     app = Flask(__name__)
     app.config.from_object(__name__+'.ConfigClass')
 
-    # Initialize Flask extensions
-    db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
-    mail = Mail(app)                                # Initialize Flask-Mail
+    # Initialize Flask-BabelEx
+    babel = Babel(app)
 
-    # Define the User data model. Make sure to add flask.ext.user UserMixin !!!
+    # Initialize Flask-SQLAlchemy
+    db = SQLAlchemy(app)
+
+    # Define the User data-model.
+    # NB: Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
+        __tablename__ = 'users'
         id = db.Column(db.Integer, primary_key=True)
+        active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
 
-        # User authentication information
-        username = db.Column(db.String(50), nullable=False, unique=True)
+        # User authentication information. The collation='NOCASE' is required
+        # to search case insensitively when USER_IFIND_MODE is 'nocase_collation'.
+        email = db.Column(db.String(255, collation='NOCASE'), nullable=False, unique=True)
+        email_confirmed_at = db.Column(db.DateTime())
         password = db.Column(db.String(255), nullable=False, server_default='')
-        reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
-
-        # User email information
-        email = db.Column(db.String(255), nullable=False, unique=True)
-        confirmed_at = db.Column(db.DateTime())
 
         # User information
-        active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
-        first_name = db.Column(db.String(100), nullable=False, server_default='')
-        last_name = db.Column(db.String(100), nullable=False, server_default='')
+        first_name = db.Column(db.String(100, collation='NOCASE'), nullable=False, server_default='')
+        last_name = db.Column(db.String(100, collation='NOCASE'), nullable=False, server_default='')
+
+        # Define the relationship to Role via UserRoles
+        roles = db.relationship('Role', secondary='user_roles')
+
+    # Define the Role data-model
+    class Role(db.Model):
+        __tablename__ = 'roles'
+        id = db.Column(db.Integer(), primary_key=True)
+        name = db.Column(db.String(50), unique=True)
+
+    # Define the UserRoles association table
+    class UserRoles(db.Model):
+        __tablename__ = 'user_roles'
+        id = db.Column(db.Integer(), primary_key=True)
+        user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
+        role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
+
+    # Setup Flask-User and specify the User data-model
+    user_manager = UserManager(app, db, User)
 
     # Create all database tables
     db.create_all()
 
-    # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db, User)        # Register the User model
-    user_manager = UserManager(db_adapter, app)     # Initialize Flask-User
+    # Create 'member@example.com' user with no roles
+    if not User.query.filter(User.email == 'member@example.com').first():
+        user = User(
+            email='member@example.com',
+            email_confirmed_at=datetime.datetime.utcnow(),
+            password=user_manager.hash_password('Password1'),
+        )
+        db.session.add(user)
+        db.session.commit()
+
+    # Create 'admin@example.com' user with 'Admin' and 'Agent' roles
+    if not User.query.filter(User.email == 'admin@example.com').first():
+        user = User(
+            email='admin@example.com',
+            email_confirmed_at=datetime.datetime.utcnow(),
+            password=user_manager.hash_password('Password1'),
+        )
+        user.roles.append(Role(name='Admin'))
+        user.roles.append(Role(name='Agent'))
+        db.session.add(user)
+        db.session.commit()
 
     # The Home page is accessible to anyone
     @app.route('/')
     def home_page():
         return render_template_string("""
-            {% extends "base.html" %}
-            {% block content %}
-                <h2>Home page</h2>
-                <p>This page can be accessed by anyone.</p><br/>
-                <p><a href={{ url_for('home_page') }}>Home page</a> (anyone)</p>
-                <p><a href={{ url_for('members_page') }}>Members page</a> (login required)</p>
-            {% endblock %}
-            """)
+                {% extends "flask_user_layout.html" %}
+                {% block content %}
+                    <h2>{%trans%}Home page{%endtrans%}</h2>
+                    <p><a href={{ url_for('user.register') }}>{%trans%}Register{%endtrans%}</a></p>
+                    <p><a href={{ url_for('user.login') }}>{%trans%}Sign in{%endtrans%}</a></p>
+                    <p><a href={{ url_for('home_page') }}>{%trans%}Home Page{%endtrans%}</a> (accessible to anyone)</p>
+                    <p><a href={{ url_for('member_page') }}>{%trans%}Member Page{%endtrans%}</a> (login_required: member@example.com / Password1)</p>
+                    <p><a href={{ url_for('admin_page') }}>{%trans%}Admin Page{%endtrans%}</a> (role_required: admin@example.com / Password1')</p>
+                    <p><a href={{ url_for('user.logout') }}>{%trans%}Sign out{%endtrans%}</a></p>
+                {% endblock %}
+                """)
 
     # The Members page is only accessible to authenticated users
     @app.route('/members')
-    @login_required                                 # Use of @login_required decorator
-    def members_page():
+    @login_required    # Use of @login_required decorator
+    def member_page():
         return render_template_string("""
-            {% extends "base.html" %}
-            {% block content %}
-                <h2>Members page</h2>
-                <p>This page can only be accessed by authenticated users.</p><br/>
-                <p><a href={{ url_for('home_page') }}>Home page</a> (anyone)</p>
-                <p><a href={{ url_for('members_page') }}>Members page</a> (login required)</p>
-            {% endblock %}
-            """)
+                {% extends "flask_user_layout.html" %}
+                {% block content %}
+                    <h2>{%trans%}Members page{%endtrans%}</h2>
+                    <p><a href={{ url_for('user.register') }}>{%trans%}Register{%endtrans%}</a></p>
+                    <p><a href={{ url_for('user.login') }}>{%trans%}Sign in{%endtrans%}</a></p>
+                    <p><a href={{ url_for('home_page') }}>{%trans%}Home Page{%endtrans%}</a> (accessible to anyone)</p>
+                    <p><a href={{ url_for('member_page') }}>{%trans%}Member Page{%endtrans%}</a> (login_required: member@example.com / Password1)</p>
+                    <p><a href={{ url_for('admin_page') }}>{%trans%}Admin Page{%endtrans%}</a> (role_required: admin@example.com / Password1')</p>
+                    <p><a href={{ url_for('user.logout') }}>{%trans%}Sign out{%endtrans%}</a></p>
+                {% endblock %}
+                """)
+
+    # The Admin page requires an 'Admin' role.
+    @app.route('/admin')
+    @roles_required('Admin')    # Use of @roles_required decorator
+    def admin_page():
+        return render_template_string("""
+                {% extends "flask_user_layout.html" %}
+                {% block content %}
+                    <h2>{%trans%}Admin Page{%endtrans%}</h2>
+                    <p><a href={{ url_for('user.register') }}>{%trans%}Register{%endtrans%}</a></p>
+                    <p><a href={{ url_for('user.login') }}>{%trans%}Sign in{%endtrans%}</a></p>
+                    <p><a href={{ url_for('home_page') }}>{%trans%}Home Page{%endtrans%}</a> (accessible to anyone)</p>
+                    <p><a href={{ url_for('member_page') }}>{%trans%}Member Page{%endtrans%}</a> (login_required: member@example.com / Password1)</p>
+                    <p><a href={{ url_for('admin_page') }}>{%trans%}Admin Page{%endtrans%}</a> (role_required: admin@example.com / Password1')</p>
+                    <p><a href={{ url_for('user.logout') }}>{%trans%}Sign out{%endtrans%}</a></p>
+                {% endblock %}
+                """)
 
     return app
 
 
 # Start development web server
-if __name__=='__main__':
+if __name__ == '__main__':
     app = create_app()
     app.run(host='0.0.0.0', port=5000, debug=True)
-

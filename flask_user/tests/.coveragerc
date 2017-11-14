@@ -1,7 +1,10 @@
 # .coveragerc to control coverage.py
 
 [run]
-omit=flask_user/tests/*
+omit =
+    flask_user/db_adapters/dynamo_db_adapter.py
+    flask_user/tests/*
+
 
 [report]
 exclude_lines =
@@ -14,12 +17,13 @@ exclude_lines =
 
     # Don't complain if tests don't hit defensive assertion code:
     except .*\:
-    raise AssertionError
+    raise ConfigError
     raise NotImplementedError
-    raise SendEmailError
-    raise ConfigurationError
     raise KeyError
+    raise TypeError
+    raise Exception\(LEGACY_ERROR\)
     if not ctx:
+    return self.unauthorized_view
 
     # Misc
     delattr\(self

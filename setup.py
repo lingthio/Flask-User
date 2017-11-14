@@ -1,94 +1,30 @@
-"""
-Flask-User
-==========
-
-.. image:: https://img.shields.io/pypi/v/Flask-User.svg
-    :target: https://pypi.python.org/pypi/Flask-User
-
-.. image:: https://img.shields.io/travis/lingthio/Flask-User.svg
-    :target: https://travis-ci.org/lingthio/Flask-User
-
-.. image:: https://img.shields.io/pypi/dm/Flask-User.svg
-    :target: https://pypi.python.org/pypi/Flask-User
-
-.. image:: https://img.shields.io/pypi/l/Flask-User.svg
-    :target: https://pypi.python.org/pypi/Flask-User
-
-Customizable User Account Management for Flask
-----------------------------------------------
-
-| So you're writing a Flask web application and would like to authenticate your users.
-| You start with a simple **Login** page, but soon enough you need to handle:
-
-* **Registrations** and **Email Confirmations**
-* **Change Usernames**, **Change Passwords**, and **Forgotten Passwords**
-
-And wouldn't it be nice to also offer:
-
-* **Role-based Authorization**
-* **Remember-me cookies**
-* **Multiple emails per user**
-* **Internationalization**
-
-| Flask-User offers these user features (and more) out-of-the-box
-| while also honoring the following developer needs:
-
-* **Reliable** (Code coverage of over 95%)
-* **Secure** (Built on top of widely deployed Flask-Login)
-* **Ready to use** (Through sensible defaults)
-* **Largely configurable** (Through configuration settings)
-* **Fully customizable** (Through customizable functions and email templates)
-* **Well documented**
-* **Tested on Python 2.6, 2.7, 3.3 and 3.4**
-
-Status
-------
-
-| Flask-User v0.5 and v0.6 are quite stable and are used in production environments.
-| It is marked as a Beta release because the API is subject to small changes.
-| We appreciate it if you would enter issues and
-  enhancement requests into the `Flask-User Issue Tracker <https://github.com/lingthio/flask-user/issues>`_.
-
-
-Demo
-----
-The `Flask-User Demo <https://flask-user-demo.herokuapp.com/>`_ showcases Flask-User.
-To protect against spam mis-use, all email features have been disabled.
-(If you're the first visitor in the last hour, it may take a few seconds for Heroku to start this service)
-
-Documentation
--------------
-`Flask-User Documentation <https://pythonhosted.org/Flask-User/>`_
-
-Revision History
-----------------
-`Flask-User Revision History <http://pythonhosted.org//Flask-User/index.html#revision-history>`_
-
-Contact Information
--------------------
-Ling Thio - ling.thio [at] gmail.com
-
-Acknowledgements
-----------------
-This project would not be possible without the use of the following amazing offerings:
-
-* `Flask <http://flask.pocoo.org/>`_
-* `Flask-Babel <http://babel.pocoo.org/>`_
-* `Flask-Login <https://flask-login.readthedocs.org/en/latest/>`_
-* `Flask-Mail <http://pythonhosted.org/flask-mail/>`_
-* `SQLAlchemy <http://www.sqlalchemy.org/>`_ and `Flask-SQLAlchemy <http://pythonhosted.org/Flask-SQLAlchemy/>`_
-* `WTForms <http://wtforms.readthedocs.org/en/latest/>`_ and `Flask-WTF <https://flask-wtf.readthedocs.org/en/latest/>`_
-
-Alternative Flask extensions
-----------------------------
-* `Flask-Login <https://flask-login.readthedocs.org/en/latest/>`_
-* `Flask-Security <https://pythonhosted.org/Flask-Security/>`_
-"""
-
-from __future__ import print_function
+import sys
 from setuptools import setup
 
+__title__       = 'Flask-User'
+__description__ = 'Customizable User Authentication,User Management, and more.'
+__version__     = '0.9.0'
+__url__         = 'https://github.com/lingthio/Flask-User'
+__author__      = 'Ling Thio'
+__author_email__= 'ling.thio@gmail.com'
+__maintainer__  = 'Ling Thio'
+__license__     = 'MIT'
+__copyright__   = '(c) 2013 Ling Thio'
+
+
+# Load pytest and pytest-runner only when needed:
+needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
+pytest_runner = ['pytest-runner'] if needs_pytest else []
+
+
+# Read long description from README.rst file
+def load_readme():
+    with open('README.rst') as f:
+        return f.read()
+
+
 setup(
+<<<<<<< HEAD
     name='Flask-User',
     version='0.6.8.2',
     url='http://github.com/lingthio/Flask-User',
@@ -101,20 +37,21 @@ setup(
     packages=['flask_user'],
     zip_safe=False,
     include_package_data=True,
+=======
+    name=__title__,
+    version=__version__,
+    description=__description__,
+    long_description=load_readme(),
+    keywords='Flask User Authorization Account Management Registration Username Email Confirmation Forgot Reset Password Invitation',
+    url=__url__,
+    author=__author__,
+    author_email=__author_email__,
+    license=__license__,
+
+>>>>>>> upstream/master
     platforms='any',
-    install_requires=[
-        'passlib',
-        'bcrypt',
-        'pycrypto',
-        'Flask',
-        'Flask-Login',
-        'Flask-Mail',
-        'Flask-SQLAlchemy',
-        'Flask-WTF',
-    ],
-    test_suite="flask_user.tests.run_tests",
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
         'Framework :: Flask',
         'Intended Audience :: Developers',
@@ -122,15 +59,44 @@ setup(
         'Natural Language :: Chinese (Simplified)',
         'Natural Language :: Dutch',
         'Natural Language :: English',
+        'Natural Language :: German',
+        'Natural Language :: Spanish',
+        'Natural Language :: Finnish',
         'Natural Language :: French',
+        'Natural Language :: Italian',
+        'Natural Language :: Russian',
+        'Natural Language :: Swedish',
+        'Natural Language :: Turkish',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Security',
+        'Topic :: Software Development',
+        'Topic :: Software Development :: Libraries',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
+
+    packages=['flask_user'],
+    include_package_data=True,    # Tells setup to use MANIFEST.in
+    zip_safe=False,    # Do not zip as it will make debugging harder
+
+    python_requires='>=2.6, !=3.0.*, !=3.1.*, !=3.2.*',   # Python 2.6, 2.7, 3.3+
+    setup_requires=['Flask-Login',] + pytest_runner,
+    install_requires=[
+        'bcrypt>=2.0',
+        'cryptography>=1.6',
+        'Flask>=0.9',
+        'Flask-Login>=0.2',
+        'Flask-Mail>=0.9',
+        'Flask-SQLAlchemy>=1.0',
+        'Flask-WTF>=0.9',
+        'passlib>=1.6',
+    ],
+    tests_require=['pytest'],
 )

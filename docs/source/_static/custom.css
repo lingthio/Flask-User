@@ -1,0 +1,31 @@
+/* Switch off word hyphenation */
+div.body p,
+div.body dd,
+div.body li {
+    hyphens: None;
+}
+
+/* Reduce paragraph spacing */
+p {
+    -webkit-margin-before: 0.8em;
+    -webkit-margin-after: 0.8em;
+}
+
+/* Format code-blocks */
+div.highlight pre {
+    margin: 0.5em 0px;
+    padding: 0.7em 1em;
+    font-size: 0.8em;
+}
+
+/* Format line numbers (left of code-blocks) */
+td.linenos pre {
+    font-size: 0.8em;
+}
+
+/* Reduce margins for notes and warnings */
+div.admonition {
+    margin: 0.5em 0px;
+    padding: 0.5em 1em;
+    font-size: 1.0em;
+}

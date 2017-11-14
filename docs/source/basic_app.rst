@@ -1,74 +1,100 @@
 Basic App
 =========
+.. include:: includes/submenu_defs.rst
+.. include:: includes/quickstart_submenu.rst
 
-The sample code below illustrates the power of using Flask-User with sensible defaults:
-With just a dozen additional code statements,
-a basic Flask application can be transformed to offer the following features:
+--------
 
-* Register with username and email
-* Email confirmation
-* Login with username or email, Logout
-* Protect pages from unauthenticated access
-* Change username
-* Change password
-* Forgot password
+The Basic App builds on the QuickStart App by adding the following features:
 
-Single-file techniques
-----------------------
-| To keep the examples simple, we are using some unusual single-file techniques:
-| - Using class based configuration instead of file based configuration
-| - Using ``render_template_string()`` instead of ``render_template()``
-| - Placing everything in one file
+- Register and Login with an email
+- Confirm emails, Change passwords
+- Role-base authorization
+- Enable translations
 
-*None of these techniques are recommended outside of tutorial usage*.
+Unlike the QuickStart App, the Basic App requires proper SMTP settings
+and the installation of ``Flask-BabelEx``.
 
+Create a development environment
+--------------------------------
+We recommend making use of virtualenv and virtualenvwrapper::
 
-Setup a development environment
--------------------------------
-These tutorials assume that you are working with virtualenv and virtualenvwrapper
-and that the code resides in ~/dev/example::
+    # Create virtual env
+    mkvirtualenv my_app
+    workon my_app
 
-    # Create virtualenv 'example'
-    mkvirtualenv example
+    # Create working directory
+    mkdir -p ~dev/my_app           # or  mkdir C:\dev\my_app
+    cd ~/dev/my_app                # or  cd C:\dev\my_app
 
-    # Install required Python packages in the 'example' virtualenv
-    workon example
-    pip install flask-user
-    pip install flask-mail
+Install required Python packages
+--------------------------------
+::
 
-    # Change working directory
-    mkdir -p ~dev/example
-    cd ~/dev/example                # or C:\dev\example on Windows
+   # Uninstall Flask-Babel if needed
+   pip uninstall Flask-Babel
 
+   # Install Flask-BabelEx and Flask-User
+   pip install Flask-BabelEx
+   pip install Flask-User
 
 Create the basic_app.py file
 ----------------------------
 
-Create ~/dev/example/basic_app.py with the content below.
+- Open your favorite editor,
+- Copy the example below, and
+- Save it as ~/dev/my_app/basic_app.py
 
-| Make sure to replace the following settings:
-|     MAIL_USERNAME = 'email@example.com'
-|     MAIL_PASSWORD = 'password'
-|     MAIL_DEFAULT_SENDER = '"Sender" <noreply@example.com>'
-|     MAIL_SERVER   = 'smtp.gmail.com'
-|     MAIL_PORT     = 465
-|     MAIL_USE_SSL  = True
-|     MAIL_USE_TLS  = False
-| with settings that are appropriate for your SMTP server.
-
-Highlighted lines shows the lines added to a basic Flask application.
-
-.. literalinclude:: includes/basic_app.py
+.. literalinclude:: ../../example_apps/basic_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 5, 39-55, 60-62, 79
+   :emphasize-lines: 9, 11, 25-33, 50-51, 71-72, 74-78, 87-88, 80-85, 87-88, 93-101, 103-113, 133, 150
+
+- Lines 25-33 configure ``Flask-Mail``. Make sure to use the correct settings or emails
+   will not be sent.
+
+Configure Flask-Mail
+--------------------
+Make sure to properly configure Flask-Mail settings::
+
+   # Flask-Mail SMTP Server settings
+   MAIL_SERVER =
+   MAIL_PORT =
+   MAIL_USE_SSL =
+   MAIL_USE_TLS =
+
+   # Flask-Mail SMTP Account settings
+   MAIL_USERNAME =
+   MAIL_PASSWORD =
+
+.. note::
+
+   Gmail and Yahoo mail nowadays disable SMTP requests by default.
+   Search the web for 'Gmail less secure apps' or 'Yahoo less secure apps'
+   to learn how to change this default setting for your account.
+
+   See :doc:`quickstart_app` for an example without SMTP.
+
+
+Configure your browser
+----------------------
+If you want to see translation in action, you will need to change and prioritize
+a :ref:`supported language <SupportedLanguages>` (one that is other than 'English')
+in your browser language preferences.
+
+For Google Chrome:
+
+- Chrome > Preferences. Search for 'Language'.
+- Expand the 'Language' bar > Add languages.
+- Check the 'Dutch' checkbox > Add.
+- Make sure to move it to the top: Three dots > Move to top.
 
 
 Run the Basic App
------------------------
+-----------------
 Run the Basic App with the following command::
 
-    cd ~/dev/example
+    cd ~/dev/my_app
     python basic_app.py
 
 And point your browser to ``http://localhost:5000``.
@@ -77,18 +103,16 @@ And point your browser to ``http://localhost:5000``.
 Troubleshooting
 ---------------
 
-If you receive an SendEmailError message,
-or if the Registration form does not respond quickly
+If you receive an EmailError message, or if the Registration form does not respond quickly
 then you may have specified incorrect SMTP settings.
 
-If you receive a 'AssertionError: No sender address has been set' error, you may
-be using an old version of Flask-Mail which uses DEFAULT_MAIL_SENDER instead of MAIL_DEFAULT_SENDER.
+If you receive a SQLAlchemy error message, you may be using an old DB schema.
+Delete the quickstart_app.sqlite file and restart the app.
 
-If you receive a SQLAlchemy error message, delete the basic_app.sqlite file and restart the app.
-You may be using an old DB schema in that file.
+If you don't see any translations, you may not have installed ``Flask-BabelEx``,
+or you may not have prioritized a supported language in your browser settings.
 
+--------
 
-Up Next
--------
-:doc:`flask_user_starter_app`
-
+.. include:: includes/submenu_defs.rst
+.. include:: includes/quickstart_submenu.rst

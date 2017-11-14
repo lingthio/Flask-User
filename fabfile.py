@@ -1,10 +1,26 @@
+from fabric.api import task
 from fabric.operations import local
-from fabric.api import cd, env, task, prefix, run
-from contextlib import contextmanager
+
 
 @task
 def runserver():
     local('python runserver.py')
+
+@task
+def runapp(appname):
+    local('PYTHONPATH=. python example_apps/'+appname+'.py')
+
+@task
+def babel(command):
+    # Generate the .pot file from source code files
+    if command=='extract':
+        local('pybabel extract -F flask_user/translations/babel.cfg -k lazy_gettext -c NOTE -o flask_user/translations/flask_user.pot flask_user flask_user')
+
+    # Update .po files from the .pot file
+    elif command=='update':
+        local('pybabel update -i flask_user/translations/flask_user.pot --domain=flask_user --output-dir flask_user/translations')
+    elif command=='compile':
+        local('pybabel compile -f --domain=flask_user --directory flask_user/translations')
 
 @task
 def test():
@@ -12,35 +28,62 @@ def test():
     local('py.test flask_user/tests/')
 
 @task
-def coverage():
+def cov():
     # Requires "pip install pytest-coverage"
     local('py.test --cov flask_user --cov-report term-missing --cov-config flask_user/tests/.coveragerc flask_user/tests/')
 
 @task
-def babel():
-    local('pybabel extract -F flask_user/translations/babel.cfg -c NOTE -o flask_user/translations/flask_user.pot flask_user flask_user')
-    for code in ('en', 'fi', 'fr', 'nl', 'sv', 'zh'):
-        local('pybabel update -i flask_user/translations/flask_user.pot --domain=flask_user --output-dir flask_user/translations -l '+code)
-    local('pybabel compile -f --domain=flask_user --directory flask_user/translations')
+def cov2():
+    # Requires "pip install pytest-coverage"
+    local('py.test --cov flask_user --cov-report term-missing --cov-config flask_user/tests/.coveragerc flask_user/tests/test_views.py')
 
 @task
-def babel_init():
-    local('pybabel extract -F flask_user/translations/babel.cfg -c NOTE -o flask_user/translations/flask_user.pot flask_user flask_user')
-    for code in ('en', 'fi', 'fr', 'nl', 'sv', 'zh'):
-        local('pybabel init -i flask_user/translations/flask_user.pot --domain=flask_user --output-dir flask_user/translations -l '+code)
-    local('pybabel compile -f --domain=flask_user --directory flask_user/translations')
+def profiling():
+    # Requires "pip install pytest-profiling"
+    local('py.test --profile flask_user/tests/')
+
 
 @task
-def docs():
-    local('cp example_apps/*_app.py docs/source/includes/.')
-    local('sphinx-build -b html docs/source ../builds/flask_user/docs')
-    local('cd ../builds/flask_user/docs && zip -u -r flask_user_docs *')
+def docs(rebuild=False):
+    # local('cp example_apps/*_app.py docs/source/includes/.')
+    options=''
+    if rebuild:
+        options += ' -E'
+    local('sphinx-build -b html -a {options} docs/source ../builds/flask_user1/docs'.format(options=options))
+    local('cd ../builds/flask_user1/docs && zip -u -r flask_user1_docs *')
+
+# sphinx-apidoc -f -o docs/source flask_user flask_user/tests flask_user/db_adapters
+# rm docs/source/flask_user.rst docs/source/modules.rst
+
+# PyEnv: https://gist.github.com/Bouke/11261620
+# PyEnv and Tox: https://www.holger-peters.de/using-pyenv-and-tox.html
+# Available Python versions: pyenv install --list
+@task
+def setup_tox():
+    versions_str = '2.6.9 2.7.13 3.3.6 3.4.6 3.5.3 3.6.2'
+    versions = versions_str.split()
+    for version in versions:
+        local('pyenv install --skip-existing '+version)
+    local('pyenv global '+versions_str)
 
 @task
-def rebuild_docs():
-    local('rm -fr ../builds/flask_user/docs')
-    docs()
+def tox():
+    local('tox')
+
+@task
+def start_mongodb():
+    local('mongod -dbpath ~/mongodb/data/db')
+
+@task
+def build_dist():
+    # Compile translation files
+    babel('compile')
+    # Build distribution file
+    local('rm -f dist/*')
+    local('python setup.py sdist')
 
 @task
 def upload_to_pypi():
-    local('python setup.py sdist upload')
+    build_dist()
+    local('twine upload dist/*')
+

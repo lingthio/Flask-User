@@ -2,44 +2,27 @@
 Installation
 ============
 
-We recommend making use of virtualenv and virtualenvwrapper::
+We recommend making use of virtualenv, virtualenvwrapper and pip::
 
-    mkvirtualenv my_env
-    workon my_env
+    # Create virtual enviroment
+    mkvirtualenv my_app
 
-Installation Instructions
--------------------------
+    # Switch to virtual environment
+    workon my_app
 
-After setting up virtualenv, installation is as easy as::
+    # Install Flask-User
+    pip install Flask-User
 
-    workon my_env
-    pip install flask-user
+Optional uninstalls
+-------------------
+- FLask-User installs bcrypt for its default passlib hash of 'bcrypt'.
+- Flask-User installs Flask-Mail for its default SMTPEmailAdapter.
+- Flask-User installs Flask-SQLAlchemy for its default SQLDbAdapter.
 
-Requirements
-------------
-- Python 2.6, 2.7, 3.3 or 3.4
-- Flask 0.10+
-- Flask-Login 0.2+
-- Flask-Mail 0.9+ or Flask-Sendmail
-- Flask-WTF 0.9+
-- passlib 1.6+
-- pycrypto 2.6+
-- py-bcript 0.4+        # Recommended for speed, and only if bcrypt is used to hash passwords
+If you configure/customize Flask-User away from their defaults, certain packages may be uninstalled::
 
-When using the included SQLAlchemyAdapter, Flask-User requires:
-
-- Flask-SQLAlchemy 1.0+ (with a driver such as MySQL-Python or PyMySQL)
-
-Optional requirements for Event Notification:
-
-- blinker 1.3+
-
-Optional requirements for Internationalization:
-
-- Flask-Babel 0.9+
-- speaklater 1.3+
-
-Up Next
--------
-:doc:`basic_app`
+    # Optionally uninstall unused packages
+    pip uninstall bcrypt
+    pip uninstall Flask-Mail
+    pip uninstall Flask-SQLAlchemy
 

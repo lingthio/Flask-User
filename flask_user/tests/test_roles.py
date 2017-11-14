@@ -1,74 +1,129 @@
+import datetime
+
 from flask import current_app
-from .tst_app import Role
+from flask_login import login_user, logout_user
 
-def test_roles(db):
+from flask_user import login_required, roles_accepted, roles_required, allow_unconfirmed_email
+
+def test_decorators(app, request):
+
+    # Setup view functions with decorators
+    # ------------------------------------
+    
+    def standard_view():
+        return 'view'
+
+    @login_required
+    def login_required_view():
+        return 'view'
+
+    @roles_accepted('A', 'B')
+    def roles_accepted_view():
+        return 'view'
+
+    @roles_required('A', 'B')
+    def roles_required_view():
+        return 'view'
+
+    @allow_unconfirmed_email
+    def without_view():
+        return 'view'
+
+    @allow_unconfirmed_email
+    @login_required
+    def login_required_without():
+        return 'view'
+
+    @allow_unconfirmed_email
+    @roles_accepted('A', 'B')
+    def roles_accepted_without():
+        return 'view'
+
+    @allow_unconfirmed_email
+    @roles_required('A', 'B')
+    def roles_required_without():
+        return 'view'
+
     um =  current_app.user_manager
-    hashed_password = um.hash_password('Password1')
-    User = um.db_adapter.UserClass
+    User = um.db_manager.UserClass
 
-    # create users and roles
-    role1 = Role(name='Role 1')
-    role2 = Role(name='Role 2')
+    # Create Mock objects (They will NOT be persisted to DB. We can use dummy IDs here)
+    user = um.db_manager.UserClass(id=1, password='abcdefgh', email_confirmed_at=None)
+    role_a = um.db_manager.RoleClass(id=1, name='A')
+    role_b = um.db_manager.RoleClass(id=2, name='B')
 
-    # user0 has no roles
-    user0 = User(username='user0', email='user0@example.com', password=hashed_password, active=True)
-    db.session.add(user0)
-    
-    # user1 has only role1 
-    user1 = User(username='user1', email='user1@example.com', password=hashed_password, active=True)
-    user1.roles.append(role1)
-    db.session.add(user1)
-    
-    # user2 has role1 and role2
-    user2 = User(username='user2', email='user2@example.com', password=hashed_password, active=True)
-    user2.roles.append(role1)
-    user2.roles.append(role2)
-    db.session.add(user2)
-    db.session.commit()
+    with current_app.test_request_context():
+        # Test decorators with an unauthenticated user
+        assert standard_view() == 'view'
+        assert login_required_view() != 'view'
+        assert roles_accepted_view() != 'view'
+        assert roles_required_view() != 'view'
+        assert without_view() != 'view'
+        assert login_required_without() != 'view'
+        assert roles_accepted_without() != 'view'
+        assert roles_required_without() != 'view'
 
-    # test has_role()
-    assert user0.has_role('Role 1')==False
-    assert user0.has_role('Role 2')==False
-    assert user0.has_role('Role 3')==False
-    assert user0.has_role('Role 1', 'Role 2')==False
-    assert user0.has_role('Role 2', 'Role 1')==False
-    assert user0.has_role('Role 1', 'Role 2', 'Role 3')==False
+        # Test decorators with a logged in user without a confirmed email
+        login_user(user)
+        assert login_required_view() != 'view'
+        assert roles_accepted_view() != 'view'
+        assert roles_required_view() != 'view'
+        assert without_view() == 'view'
+        assert login_required_without() == 'view'
 
-    assert user1.has_role('Role 1')==True
-    assert user1.has_role('Role 2')==False
-    assert user1.has_role('Role 3')==False
-    assert user1.has_role('Role 1', 'Role 2')==True
-    assert user1.has_role('Role 2', 'Role 1')==True
-    assert user1.has_role('Role 1', 'Role 2', 'Role 3')==True
+        user.roles = []
+        assert roles_accepted_view() != 'view'
+        assert roles_required_view() != 'view'
+        assert roles_accepted_without() != 'view'
+        assert roles_required_without() != 'view'
 
-    assert user2.has_role('Role 1')==True
-    assert user2.has_role('Role 2')==True
-    assert user2.has_role('Role 3')==False
-    assert user2.has_role('Role 1', 'Role 2')==True
-    assert user2.has_role('Role 2', 'Role 1')==True
-    assert user2.has_role('Role 1', 'Role 2', 'Role 3')==True
+        user.roles = [role_a]
+        assert roles_accepted_view() != 'view'
+        assert roles_required_view() != 'view'
+        assert roles_accepted_without() == 'view'
+        assert roles_required_without() != 'view'
 
-    # test has_roles()
-    assert user0.has_roles('Role 1')==False
-    assert user0.has_roles('Role 2')==False
-    assert user0.has_roles('Role 3')==False
-    assert user0.has_roles('Role 1', 'Role 2')==False
-    assert user0.has_roles('Role 2', 'Role 1')==False
-    assert user0.has_roles('Role 1', 'Role 2', 'Role 3')==False
+        user.roles = [role_b]
+        assert roles_accepted_view() != 'view'
+        assert roles_required_view() != 'view'
+        assert roles_accepted_without() == 'view'
+        assert roles_required_without() != 'view'
 
-    assert user1.has_roles('Role 1')==True
-    assert user1.has_roles('Role 2')==False
-    assert user1.has_roles('Role 3')==False
-    assert user1.has_roles('Role 1', 'Role 2')==False
-    assert user1.has_roles('Role 2', 'Role 1')==False
-    assert user1.has_roles('Role 1', 'Role 2', 'Role 3')==False
+        user.roles = [role_a, role_b]
+        assert roles_accepted_view() != 'view'
+        assert roles_required_view() != 'view'
+        assert roles_accepted_without() == 'view'
+        assert roles_required_without() == 'view'
 
-    assert user2.has_roles('Role 1')==True
-    assert user2.has_roles('Role 2')==True
-    assert user2.has_roles('Role 3')==False
-    assert user2.has_roles('Role 1', 'Role 2')==True
-    assert user2.has_roles('Role 2', 'Role 1')==True
-    assert user2.has_roles('Role 1', 'Role 2', 'Role 3')==False
+        # Test decorators with a logged in user with a confirmed email
+        user.email_confirmed_at = datetime.datetime.utcnow()
+        assert login_required_view() == 'view'
+        assert without_view() == 'view'
+        assert login_required_without() == 'view'
 
-    # delete users and roles
+        user.roles = []
+        assert roles_accepted_view() != 'view'
+        assert roles_required_view() != 'view'
+        assert roles_accepted_without() != 'view'
+        assert roles_required_without() != 'view'
+
+        user.roles = [role_a]
+        assert roles_accepted_view() == 'view'
+        assert roles_required_view() != 'view'
+        assert roles_accepted_without() == 'view'
+        assert roles_required_without() != 'view'
+
+        user.roles = [role_b]
+        assert roles_accepted_view() == 'view'
+        assert roles_required_view() != 'view'
+        assert roles_accepted_without() == 'view'
+        assert roles_required_without() != 'view'
+
+        user.roles = [role_a, role_b]
+        assert roles_accepted_view() == 'view'
+        assert roles_required_view() == 'view'
+        assert roles_accepted_without() == 'view'
+        assert roles_required_without() == 'view'
+
+        logout_user()
 

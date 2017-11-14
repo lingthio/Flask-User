@@ -1,4 +1,4 @@
-{% extends 'flask_user/public_base.html' %}
+{% extends 'flask_user/_public_base.html' %}
 
 {% block content %}
 {% from "flask_user/_macros.html" import render_field, render_checkbox_field, render_submit_field %}
@@ -8,7 +8,7 @@
     {{ form.hidden_tag() }}
 
     {# Username or Email field #}
-    {% set field = form.username if user_manager.enable_username else form.email %}
+    {% set field = form.username if user_manager.USER_ENABLE_USERNAME else form.email %}
     <div class="form-group {% if field.errors %}has-error{% endif %}">
         {# Label on left, "New here? Register." on right #}
         <div class="row">
@@ -16,7 +16,7 @@
                 <label for="{{ field.id }}" class="control-label">{{ field.label.text }}</label>
             </div>
             <div class="col-xs-6 text-right">
-                {% if user_manager.enable_register and not user_manager.require_invitation %}
+                {% if user_manager.USER_ENABLE_REGISTER and not user_manager.USER_REQUIRE_INVITATION %}
                     <a href="{{ url_for('user.register') }}" tabindex='190'>
                         {%trans%}New here? Register.{%endtrans%}</a>
                 {% endif %}
@@ -39,7 +39,7 @@
                 <label for="{{ field.id }}" class="control-label">{{ field.label.text }}</label>
             </div>
             <div class="col-xs-6 text-right">
-                {% if user_manager.enable_forgot_password %}
+                {% if user_manager.USER_ENABLE_FORGOT_PASSWORD %}
                     <a href="{{ url_for('user.forgot_password') }}" tabindex='195'>
                         {%trans%}Forgot your Password?{%endtrans%}</a>
                 {% endif %}
@@ -54,7 +54,7 @@
     </div>
 
     {# Remember me #}
-    {% if user_manager.enable_remember_me %}
+    {% if user_manager.USER_ENABLE_REMEMBER_ME %}
     {{ render_checkbox_field(login_form.remember_me, tabindex=130) }}
     {% endif %}
 

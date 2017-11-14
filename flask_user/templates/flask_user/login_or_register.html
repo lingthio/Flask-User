@@ -1,4 +1,4 @@
-{% extends 'flask_user/public_base.html' %}
+{% extends 'flask_user/_public_base.html' %}
 
 {% block content %}
 {% from "flask_user/_macros.html" import render_field, render_checkbox_field, render_submit_field %}
@@ -13,21 +13,21 @@
     {{ login_form.hidden_tag() }}
 
     {# Username or Email #}
-    {% set field = login_form.username if user_manager.enable_username else login_form.email %}
+    {% set field = login_form.username if user_manager.USER_ENABLE_USERNAME else login_form.email %}
     {{ render_field(field, tabindex=110) }}
 
     {# Password #}
     {{ render_field(login_form.password, tabindex=120) }}
 
     {# Remember me #}
-    {% if user_manager.enable_remember_me %}
+    {% if user_manager.USER_ENABLE_REMEMBER_ME %}
     {{ render_checkbox_field(login_form.remember_me, tabindex=130) }}
     {% endif %}
 
     {# Submit button #}
     {{ render_submit_field(login_form.submit, tabindex=180) }}
 </form>
-    {% if user_manager.enable_forgot_password %}
+    {% if user_manager.USER_ENABLE_FORGOT_PASSWORD %}
         <p>
             <br/>
             <a href="{{ url_for('user.forgot_password') }}" tabindex='190'>
@@ -45,16 +45,16 @@
     {{ register_form.hidden_tag() }}
 
     {# Username or Email #}
-    {% set field = register_form.username if user_manager.enable_username else register_form.email %}
+    {% set field = register_form.username if user_manager.USER_ENABLE_USERNAME else register_form.email %}
     {{ render_field(field, tabindex=210) }}
 
-    {% if user_manager.enable_email and user_manager.enable_username %}
+    {% if user_manager.USER_ENABLE_EMAIL and user_manager.USER_ENABLE_USERNAME %}
         {{ render_field(register_form.email, tabindex=220) }}
     {% endif %}
 
     {{ render_field(register_form.password, tabindex=230) }}
 
-    {% if user_manager.enable_retype_password %}
+    {% if user_manager.USER_REQUIRE_RETYPE_PASSWORD %}
         {{ render_field(register_form.retype_password, tabindex=240) }}
     {% endif %}
 

@@ -3,7 +3,7 @@
 {% block message %}
 Thank you for registering with {{ app_name }}.
 
-{% if user_manager.enable_confirm_email -%}
+{% if confirm_email_link -%}
 You will need to confirm your email next.
 
 If you initiated this registration, please visit the link below:

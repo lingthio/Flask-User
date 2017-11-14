@@ -1,17 +1,19 @@
 import os
 from flask import Flask, render_template_string
-from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
-from flask_user import login_required, UserManager, UserMixin, SQLAlchemyAdapter
+from flask_user import login_required, UserManager, UserMixin
 
 
 # Use a Class-based config to avoid needing a 2nd file
 # os.getenv() enables configuration through OS environment variables
 class ConfigClass(object):
     # Flask settings
-    SECRET_KEY =              os.getenv('SECRET_KEY',       'THIS IS AN INSECURE SECRET')
+    SECRET_KEY = 'This is an INSECURE secret!! DO NOT use this in production!!'
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',     'sqlite:///multi_email_app.sqlite')
     CSRF_ENABLED = True
+
+    # Flask-SQLAlchemy settings
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Flask-Mail settings
     MAIL_USERNAME =           os.getenv('MAIL_USERNAME',        'email@example.com')
@@ -35,21 +37,20 @@ def create_app():
 
     # Initialize Flask extensions
     db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
-    mail = Mail(app)                                # Initialize Flask-Mail
 
-    # Define the User data model. Make sure to add flask.ext.user UserMixin !!!
+    # Define the User data-model. Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
+        __tablename__ = 'users'
         id = db.Column(db.Integer, primary_key=True)
 
         # User authentication information
-        username = db.Column(db.String(50), nullable=False, unique=True)
+        username = db.Column(db.String(50, collation='NOCASE'), nullable=False, unique=True)
         password = db.Column(db.String(255), nullable=False, server_default='')
-        reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
 
         # User information
         active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
-        first_name = db.Column(db.String(100), nullable=False, server_default='')
-        last_name = db.Column(db.String(100), nullable=False, server_default='')
+        first_name = db.Column(db.String(100, collation='NOCASE'), nullable=False, server_default='')
+        last_name = db.Column(db.String(100, collation='NOCASE'), nullable=False, server_default='')
 
         # Relationship
         user_emails = db.relationship('UserEmail')
@@ -57,12 +58,13 @@ def create_app():
 
     # Define UserEmail DataModel.
     class UserEmail(db.Model):
+        __tablename__ = 'user_emails'
         id = db.Column(db.Integer, primary_key=True)
-        user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+        user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
         # User email information
-        email = db.Column(db.String(255), nullable=False, unique=True)
-        confirmed_at = db.Column(db.DateTime())
+        email = db.Column(db.String(255, collation='NOCASE'), nullable=False, unique=True)
+        email_confirmed_at = db.Column(db.DateTime())
         is_primary = db.Column(db.Boolean(), nullable=False, default=False)
 
         # Relationship
@@ -73,33 +75,33 @@ def create_app():
     db.create_all()
 
     # Setup Flask-User
-    db_adapter = SQLAlchemyAdapter(db, User, UserEmailClass=UserEmail)        # Register the User model
+    db_adapter = SQLAlchemyAdapter(db, User, UserEmailClass=UserEmail)        # Register the User data-model
     user_manager = UserManager(db_adapter, app)     # Initialize Flask-User
 
     # The Home page is accessible to anyone
     @app.route('/')
     def home_page():
         return render_template_string("""
-            {% extends "base.html" %}
+            {% extends "flask_user_layout.html" %}
             {% block content %}
                 <h2>Home page</h2>
                 <p>This page can be accessed by anyone.</p><br/>
                 <p><a href={{ url_for('home_page') }}>Home page</a> (anyone)</p>
-                <p><a href={{ url_for('members_page') }}>Members page</a> (login required)</p>
+                <p><a href={{ url_for('member_page') }}>Members page</a> (login required)</p>
             {% endblock %}
             """)
 
     # The Members page is only accessible to authenticated users
     @app.route('/members')
     @login_required                                 # Use of @login_required decorator
-    def members_page():
+    def member_page():
         return render_template_string("""
-            {% extends "base.html" %}
+            {% extends "flask_user_layout.html" %}
             {% block content %}
                 <h2>Members page</h2>
                 <p>This page can only be accessed by authenticated users.</p><br/>
                 <p><a href={{ url_for('home_page') }}>Home page</a> (anyone)</p>
-                <p><a href={{ url_for('members_page') }}>Members page</a> (login required)</p>
+                <p><a href={{ url_for('member_page') }}>Members page</a> (login required)</p>
             {% endblock %}
             """)
 
