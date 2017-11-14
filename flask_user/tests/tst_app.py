@@ -242,16 +242,6 @@ def init_app(app, test_config=None):                # For automated tests
             {% endblock %}
             """)
 
-    # The '/no_agents' page requires a user that does NOT have the 'agent' role.
-    @app.route('/no_agents')
-    @roles_not_allowed('agent')   # Use of @roles_not_allowed decorator
-    def no_agents():
-        return render_template_string("""
-            {% extends "base.html" %}
-            {% block content %}
-            <h2>{%trans%}No Agents Page{%endtrans%}</h2>
-            {% endblock %}
-            """)
     # For testing only
     app.db = db
     if ORM_type == 'SQLAlchemy':

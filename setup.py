@@ -24,20 +24,6 @@ def load_readme():
 
 
 setup(
-<<<<<<< HEAD
-    name='Flask-User',
-    version='0.6.8.2',
-    url='http://github.com/lingthio/Flask-User',
-    license='BSD License',
-    author='Ling Thio',
-    author_email='ling.thio@gmail.com',
-    description='Customizable User Account Management for Flask: Register, Confirm email, Login, Change username, Change password, Forgot password and more.',
-    long_description=__doc__,
-    keywords='Flask User Registration Email Username Confirmation Password Reset',
-    packages=['flask_user'],
-    zip_safe=False,
-    include_package_data=True,
-=======
     name=__title__,
     version=__version__,
     description=__description__,
@@ -48,7 +34,6 @@ setup(
     author_email=__author_email__,
     license=__license__,
 
->>>>>>> upstream/master
     platforms='any',
     classifiers=[
         'Development Status :: 3 - Alpha',
