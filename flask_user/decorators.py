@@ -146,6 +146,8 @@ def roles_required(*role_names):
 
     return wrapper
 
+
+
 def allow_unconfirmed_email(view_function):
     """ This decorator ensures that the user is logged in,
     but allows users with or without a confirmed email addresses
