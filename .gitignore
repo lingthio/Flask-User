@@ -36,7 +36,6 @@ coverage.xml
 .idea
 
 # Temp files
-docs/source/includes/*_app.py
 *.sqlite
 example_apps/translations/
 
