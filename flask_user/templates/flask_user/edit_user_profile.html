@@ -6,18 +6,19 @@
 
 <form action="" method="POST" class="form" role="form">
     {{ form.hidden_tag() }}
-    {% for field in form.fields %}
-        {{ render_field(field, tabindex=loop.index) }}
-    {% endfor %}
+    {{ render_field(form.first_name, tabindex=10) }}
+    {{ render_field(form.last_name, tabindex=20) }}
     {{ render_submit_field(form.submit, tabindex=90) }}
 </form>
 <br/>
 
-{% if user_manager.USER_ENABLE_CHANGE_USERNAME %}
-<p><a href="{{ url_for('user.change_username') }}">{%trans%}Change username{%endtrans%}</a></p>
-{% endif %}
-{% if user_manager.USER_ENABLE_CHANGE_PASSWORD %}
-<p><a href="{{ url_for('user.change_password') }}">{%trans%}Change password{%endtrans%}</a></p>
+{% if not user_manager.USER_ENABLE_AUTH0 %}
+    {% if user_manager.USER_ENABLE_CHANGE_USERNAME %}
+        <p><a href="{{ url_for('user.change_username') }}">{%trans%}Change username{%endtrans%}</a></p>
+    {% endif %}
+    {% if user_manager.USER_ENABLE_CHANGE_PASSWORD %}
+        <p><a href="{{ url_for('user.change_password') }}">{%trans%}Change password{%endtrans%}</a></p>
+    {% endif %}
 {% endif %}
 
 {% endblock %}

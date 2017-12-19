@@ -50,7 +50,6 @@ def create_app():
         # User authentication information. The collation='NOCASE' is required
         # to search case insensitively when USER_IFIND_MODE is 'nocase_collation'.
         email = db.Column(db.String(255, collation='NOCASE'), nullable=False, unique=True)
-        password = db.Column(db.String(255), nullable=False, server_default='')
 
         # User information
         first_name = db.Column(db.String(100, collation='NOCASE'), nullable=False, server_default='')
