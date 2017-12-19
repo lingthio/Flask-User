@@ -6,9 +6,15 @@
 
 <form action="" method="POST" class="form" role="form">
     {{ form.hidden_tag() }}
-    {{ render_field(form.first_name, tabindex=10) }}
-    {{ render_field(form.last_name, tabindex=20) }}
-    {{ render_submit_field(form.submit, tabindex=90) }}
+    {% for field in form %}
+        {% if not field.flags.hidden %}
+            {% if field.type=='SubmitField' %}
+                {{ render_submit_field(field, tabindex=loop.index*10) }}
+            {% else %}
+                {{ render_field(field, tabindex=loop.index*10) }}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
 </form>
 <br/>
 
