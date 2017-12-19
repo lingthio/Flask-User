@@ -23,7 +23,6 @@ class TokenManager(object):
     BASE = len(ALPHABET)
     INTEGER_PREFIX = '~'
     SEPARATOR = '|'
-    UNSAFE_DEFAULT_SECRET = b'\x8b\xc32\xbe^z\x1f\x86\xc6`\x96\'\x98\xad\x9dx\xe9\xfb\xd8\x16C\xa4\x9aH]\x8a\xf7\xeb"\xe5\x9c\xc4'
 
     # *** Public methods ***
 

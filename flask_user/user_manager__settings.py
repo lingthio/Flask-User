@@ -55,6 +55,7 @@ class UserManager__Settings(object):
     #:     Generic settings and their defaults
     USER_ENABLE_REMEMBER_ME = True
 
+    USER_ENABLE_AUTH0 = False
 
 
     #: The application name displayed in email templates and page template footers.
@@ -198,6 +199,7 @@ class UserManager__Settings(object):
     USER_FORGOT_PASSWORD_TEMPLATE = 'flask_user/forgot_password.html' #:
     USER_INVITE_USER_TEMPLATE = 'flask_user/invite_user.html' #:
     USER_LOGIN_TEMPLATE = 'flask_user/login.html' #:
+    USER_LOGIN_AUTH0_TEMPLATE = 'flask_user/login_auth0.html' #:
     USER_MANAGE_EMAILS_TEMPLATE = 'flask_user/manage_emails.html' #:
     USER_REGISTER_TEMPLATE = 'flask_user/register.html' #:
     USER_RESEND_CONFIRM_EMAIL_TEMPLATE = 'flask_user/resend_confirm_email.html' #:

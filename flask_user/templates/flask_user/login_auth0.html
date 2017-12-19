@@ -1,0 +1,71 @@
+{% extends "flask_user_layout.html" %}
+
+{% block extra_css %}
+<style>
+    /* Create full height content */
+    html, body, #centered-block {
+        min-height: 100%;
+        height: 100%;
+    }
+    #main-div {
+        min-height: 75%;
+        height: 75%;
+    }
+    /* Center "Sign in" button */
+    #centered-block {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="centered-block">
+    <a class="btn btn-primary"
+        href="{{ url_for('user.login') }}">Sign in</a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{# Load Auth0 javascript library #}
+<script src="https://cdn.auth0.com/js/lock/10.18.0/lock.min.js"></script>
+
+<script>
+{# Create and show Auth0 login widget called Auth0Lock when the document has finished loading #}
+$(document).ready(function() {
+
+    {# Create the Auth0 Lock login widget #}
+    {# AUTH0_CLIENT_ID and AUTH0_DOMAIN are defined by the Auth0 website #}
+    var auth0_lock = new Auth0Lock('{{ config.get('AUTH0_CLIENT_ID') }}', '{{ config.get('AUTH0_DOMAIN') }}', {
+        auth: {
+            {# auth0_callback_url is something like "https://app.registersimply.com/callback" #}
+            {# and must be defined in the Auth0 website for it to work #}
+            redirectUrl: 'http://localhost:5000/callbacks/auth0',
+
+            responseType: 'code',       // Return as Auth0 Code
+
+            params: {
+                scope: 'openid email',   // Return user ID and email in the user_info
+                state: '{{ next_url }}',
+            }
+        },
+      initialScreen: 'login'	,
+      socialButtonStyle: 'small',
+	  languageDictionary: {
+	      emailInputPlaceholder: "you@example.com",
+	      title: ""
+	    },
+
+    });
+
+    {# Show AUTH0 Lock Widget when this page loads #}
+    auth0_lock.show({
+        authParams: {
+            prompt: 'switch_account'    // Allow selection of multiple google accounts
+        }
+    });
+});
+</script>
+{% endblock %}
+
