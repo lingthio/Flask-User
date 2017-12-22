@@ -5,9 +5,9 @@
 # Copyright (c) 2013 Ling Thio
 
 try:
-    from urllib.parse import urlsplit   # Python 3
+    from urllib.parse import urlsplit, urlunsplit   # Python 3
 except ImportError:
-    from urlparse import urlsplit       # Python 2
+    from urlparse import urlsplit, urlunsplit       # Python 2
 
 
 from flask_login import current_user
@@ -65,7 +65,7 @@ class UserManager__Utils(object):
         # Split the URL into scheme, hostname, port, path, query and fragment
         parts = urlsplit(url)
         # Rebuild a safe URL with only the path, query and fragment parts
-        safe_url = parts.path + parts.query + parts.fragment
+        safe_url = urlunsplit(('', '', parts.path, parts.query, parts.fragment))
         return safe_url
 
     def prepare_domain_translations(self):
