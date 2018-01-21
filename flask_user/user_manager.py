@@ -5,6 +5,7 @@
 # Copyright (c) 2013 Ling Thio'
 
 import os
+from re import compile
 from wtforms import ValidationError
 
 from flask import abort, Blueprint, current_app, Flask, request
@@ -21,7 +22,8 @@ from .user_manager__utils import UserManager__Utils
 from .user_manager__views import UserManager__Views
 from .translation_utils import lazy_gettext as _    # map _() to lazy_gettext()
 
-
+PASSWORD_REGEX = compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[\w\W]{6,}$')
+USERNAME_REGEX = compile(r'^[A-z0-9\-\.\_]{3,}$')
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class for ease of customization.
 class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views):
@@ -221,23 +223,11 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
 
         Override this method to customize the password validator.
         """
-
-        # Convert string to list of characters
-        password = list(field.data)
-        password_length = len(password)
-
-        # Count lowercase, uppercase and numbers
-        lowers = uppers = digits = 0
-        for ch in password:
-            if ch.islower(): lowers += 1
-            if ch.isupper(): uppers += 1
-            if ch.isdigit(): digits += 1
-
-        # Password must have one lowercase letter, one uppercase letter and one digit
-        is_valid = password_length >= 6 and lowers and uppers and digits
-        if not is_valid:
+        password = field.data
+        if not PASSWORD_REGEX.match(password):
             raise ValidationError(
-                _('Password must have at least 6 characters with one lowercase letter, one uppercase letter and one number'))
+                _('Password must have at least 6 characters with one lowercase'
+                  ' letter, one uppercase letter and one number'))
 
 
     def username_validator(self, form, field):
@@ -249,11 +239,8 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         if len(username) < 3:
             raise ValidationError(
                 _('Username must be at least 3 characters long'))
-        valid_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._'
-        chars = list(username)
-        for char in chars:
-            if char not in valid_chars:
-                raise ValidationError(
+        if USERNAME_REGEX.match(username) is None:
+            raise ValidationError(
                     _("Username may only contain letters, numbers, '-', '.' and '_'"))
 
     # ***** Private methods *****
