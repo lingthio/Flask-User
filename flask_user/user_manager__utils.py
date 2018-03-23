@@ -65,7 +65,7 @@ class UserManager__Utils(object):
         # Split the URL into scheme, hostname, port, path, query and fragment
         parts = urlsplit(url)
         # Rebuild a safe URL with only the path, query and fragment parts
-        safe_url = parts.path + '?' + parts.query + parts.fragment
+        safe_url = parts.path + '?' + parts.query + '#' + parts.fragment
         return safe_url
 
     def prepare_domain_translations(self):
