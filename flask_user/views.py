@@ -738,7 +738,7 @@ def _do_login_user(user, safe_next, remember_me=False):
 #          returns: '/path1/path2?q1=v1&q2=v2#fragment
 def make_safe_url(url):
     parts = urlsplit(url)
-    safe_url = parts.path+'?'+parts.query+parts.fragment
+    safe_url = parts.path + '?' + parts.query + '#' + parts.fragment
     return safe_url
 
 
