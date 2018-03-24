@@ -4,7 +4,7 @@ Flask-User v0.6
 
 .. topic:: Attention
 
-    IMPORTANT: Flask-User v0.9 is under development and breaks
+    IMPORTANT: Flask-User v1.0 is under development and breaks
     backward compatibility with Flask-User v0.6.
 
     To avoid disruption, please take the time to pin your Flask-User version
