@@ -3,7 +3,7 @@ from setuptools import setup
 
 __title__       = 'Flask-User'
 __description__ = 'Customizable User Authentication,User Management, and more.'
-__version__     = '0.9.0'
+__version__     = '1.0.0.1'
 __url__         = 'https://github.com/lingthio/Flask-User'
 __author__      = 'Ling Thio'
 __author_email__= 'ling.thio@gmail.com'
@@ -49,6 +49,7 @@ setup(
         'Natural Language :: Finnish',
         'Natural Language :: French',
         'Natural Language :: Italian',
+        'Natural Language :: Persian',
         'Natural Language :: Russian',
         'Natural Language :: Swedish',
         'Natural Language :: Turkish',
