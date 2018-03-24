@@ -2,7 +2,9 @@ Flask-User v1.0
 ===============
 
 | **Attention:**
-| The documentation has moved to `flask-user.readthedocs.io/en/v1.0 <https://flask-user.readthedocs.io/en/v1.0>`_
+| Flask-User v1.0 is in its Alpha phase.
+| The latest stable version is `Flask-User v0.6 <http://flask-user.readthedocs.io/en/v0.6/>`_.
+| Install with: ``pip install flask-user==0.6.20``
 
 
 User Authentication and Management

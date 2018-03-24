@@ -2,7 +2,7 @@ import sys
 from setuptools import setup
 
 __title__       = 'Flask-User'
-__description__ = 'Customizable User Authentication,User Management, and more.'
+__description__ = 'Customizable User Authentication, User Management, and more.'
 __version__     = '1.0.1.1'
 __url__         = 'https://github.com/lingthio/Flask-User'
 __author__      = 'Ling Thio'
