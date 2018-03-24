@@ -4,7 +4,7 @@
 # Author: Ling Thio <ling.thio@gmail.com>
 # Copyright (c) 2013 Ling Thio
 
-from .db_adapters import DynamoDbAdapter, MongoDbAdapter, SQLDbAdapter
+from .db_adapters import PynamoDbAdapter, DynamoDbAdapter, MongoDbAdapter, SQLDbAdapter
 from flask_user import current_user, ConfigError
 
 class DBManager(object):
@@ -61,10 +61,20 @@ class DBManager(object):
             except ImportError:
                 pass  # Ignore ImportErrors
 
+        # Check if the UserClass is a Pynamo Model
+        if self.db_adapter is None:
+            try:
+                from pynamodb.models import Model
+
+                if issubclass(UserClass, Model):
+                    self.db_adapter = PynamoDbAdapter(app)
+            except ImportError:
+                pass # Ignore ImportErrors
+
         # Check self.db_adapter
         if self.db_adapter is None:
             raise ConfigError(
-                'No Flask-SQLAlchemy, Flask-MongoEngine or Flask-Flywheel installed.'\
+                'No Flask-SQLAlchemy, Flask-MongoEngine or Flask-Flywheel installed and no Pynamo Model in use.'\
                 ' You must install one of these Flask extensions.')
 
 
