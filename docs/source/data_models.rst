@@ -180,6 +180,3 @@ and sharing the same password. In this configuration, a separate UserEmail data-
 The ``is_primary`` property defines which email receives account notification emails.
 
 
-Optional UserEmail data-model
------------------------------
-[TBD]

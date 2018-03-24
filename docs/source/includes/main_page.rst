@@ -4,8 +4,9 @@ Flask-User v1.0
 
 .. topic:: Attention
 
-    | Flask-User v1.0.1.x are Alpha builds.
+    | Flask-User v1.0 is in its Alpha phase.
     | The latest stable version is `Flask-User v0.6 <http://flask-user.readthedocs.io/en/v0.6/>`_.
+    | Install with: ``pip install flask-user==0.6.20``
 
 | So, you're writing a Flask web application and would like to authenticate your users.
 | You start with a simple **Login** page, but soon enough you'll need to handle:
