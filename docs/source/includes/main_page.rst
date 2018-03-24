@@ -1,10 +1,10 @@
-Flask-User v0.9
+Flask-User v1.0
 ===============
 **Customizable User Authentication, User Management, and more.**
 
 .. topic:: Attention
 
-    | Flask-User v0.9 is in its **Alpha** stage (under active development).
+    | Flask-User v1.0.1.x are Alpha builds.
     | The latest stable version is `Flask-User v0.6 <http://flask-user.readthedocs.io/en/v0.6/>`_.
 
 | So, you're writing a Flask web application and would like to authenticate your users.

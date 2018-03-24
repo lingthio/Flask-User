@@ -1,7 +1,7 @@
 Change history
 ==============
 
-With **v0.9 (alpha and beta)** and **v1.0 (stable)** we simplified customization
+With **v1.0** we simplified customization
 by allowing developers to override or extend ``UserManager`` properties and methods.
 
 We increased security by having the TokenManager accept parts of passwords,
@@ -20,8 +20,8 @@ but also via ``sendmail``, SendGrid, and custom EmailAdapters.
 
 For all of the above we finally had to break compatibility with **v0.6 (stable)**.
 For non-customized Flask-User apps, the porting is relatively straightforward.
-See the 'Porting from v0.6 to v0.9+' section in our docs.
+See the 'Porting from v0.6 to v1.0+' section in our docs.
 
-* v0.9.0 - First 1.0 alpha release
+* v1.0.1.1 - Alpha release
 
-* v0.6.* - No longer compatible
+* v0.6.* - Incompatible production version

@@ -1,8 +1,8 @@
-Flask-User v0.9
+Flask-User v1.0
 ===============
 
 | **Attention:**
-| The documentation has moved to `flask-user.readthedocs.io/en/v0.9 <https://flask-user.readthedocs.io/en/v0.9>`_
+| The documentation has moved to `flask-user.readthedocs.io/en/v1.0 <https://flask-user.readthedocs.io/en/v1.0>`_
 
 
 User Authentication and Management

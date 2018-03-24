@@ -1,6 +1,6 @@
 __title__       = 'Flask-User'
 __description__ = 'Customizable User Authentication,User Management, and more.'
-__version__     = '1.0.0.1'
+__version__     = '1.0.1.1'
 __url__         = 'https://github.com/lingthio/Flask-User'
 __author__      = 'Ling Thio'
 __author_email__= 'ling.thio@gmail.com'
@@ -20,7 +20,7 @@ class EmailError(Exception):
 from flask_login import current_user    # pass through Flask-Login's current_user
 
 # Export v0.6 legacy classes DbAdapter and SQLAlchemyAdapter
-# To display an Incompatibilty error message the v0.6 API is used on a v0.9+ install
+# To display an Incompatibilty error message the v0.6 API is used on a v1.0+ install
 from .legacy_error import DbAdapter, SQLAlchemyAdapter
 
 from .user_mixin import UserMixin

@@ -16,7 +16,7 @@ Package installs
 
     # Install new Python packages
     pip install Flask-BabelEx    # Only if you require internationalization
-    pip install Flask-User       # Install v0.9
+    pip install Flask-User       # Install v1.0
 
 Use: ``pip freeze | grep Flask-User`` to show the installed Flask-User version,
 and update your requirements.txt file accordingly::
@@ -36,7 +36,7 @@ From v0.6::
     db_adapter = SQLAlchemyAdaper(db, User)
     user_manager = UserManager(db_adapter, app)
 
-To v0.9+::
+To v1.0+::
 
     from flask_user import UserManager, UserMixin  # No SQLAlchemyAdapter here!!
         ...
@@ -48,8 +48,8 @@ classes as they will trigger legacy warning exceptions.
 
 USER\_... config settings
 -------------------------
-Some v0.6 ``USER_...`` settings have been renamed in v0.9 to better reflect
-what these settings means. v0.9 still honors the old v0.6 names, but
+Some v0.6 ``USER_...`` settings have been renamed in v1.0 to better reflect
+what these settings means. v1.0 still honors the old v0.6 names, but
 a deprecation warning message will be printed.
 
 We recommend resolving these warning messages by renaming the following settings:
@@ -82,7 +82,7 @@ Replace v0.6::
             ...
         confirmed_at = db.Column(db.DateTime())
 
-With v0.9+::
+With v1.0+::
 
     class User(db.Model, UserMixin)
         email_confirmed_at = db.Column('confirmed_at', db.DateTime())

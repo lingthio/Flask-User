@@ -24,7 +24,7 @@ TokenManager() changes
 ----------------------
 The v0.6 TokenManager could only encrypt a single integer ID with less than 16 digits.
 
-The v0.9+ TokenManager can now encrypt a list of items.
+The v1.0+ TokenManager can now encrypt a list of items.
 Each item can be an integer or a string.
 Integers can be of any size.
 
@@ -33,10 +33,10 @@ password, to invalidate tokens after their password changed.
 
 As a result, the generated tokens are different, which will affect these areas:
 
-- v0.6 user-session tokens, that were stored in a browser cookie, are no longer valid in v0.9+
+- v0.6 user-session tokens, that were stored in a browser cookie, are no longer valid in v1.0+
   and the user will be required to login again.
 
-- Unused v0.6 password-reset tokens and user-invitation tokens, are no longer valid in v0.9+
+- Unused v0.6 password-reset tokens and user-invitation tokens, are no longer valid in v1.0+
   and the affected users will have to issue new forgot-password emails and new
   user invitatin emails.
   This effect is mitigated by the fact that these tokens are meant to expire relatively quickly.
@@ -49,7 +49,7 @@ Python getters and setters
 If you are unable to change property names, you can use Python's
 getters and setters to form a bridge between required property names and actual ones.
 
-Here's an example of how to map the v0.9 required ``email_confirmed_at`` property
+Here's an example of how to map the v1.0 required ``email_confirmed_at`` property
 to your existing ``confirmed_at`` property::
 
     # If the actual property (confirmed_at) name
@@ -110,7 +110,7 @@ while specifying only the one ``User`` class::
             self.user_auth = UserAuth(user=self)
 
 
-        # Map required v0.9 properties in the User data-model
+        # Map required v1.0 properties in the User data-model
         # to existing properties in the UserAuth data-model.
         # ---------------------------------------------------
 
@@ -170,11 +170,11 @@ login regardless of whether their email addresses were confirmed or not. Sensiti
 views were protected with an ``@confirm_email_required`` view decorator.
 This left websites vulnerable to views that were unintentionally left unprotected.
 
-In v0.9 we renamed the ``USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL`` to
+In v1.0 we renamed the ``USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL`` to
 ``USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL`` to better reflect what this setting does.
 and we deprecated the ``@confirm_email_required`` view decorator.
 
-In v0.9, we reduced the opportunities for mistakes, by taking the **opposite**
+In v1.0, we reduced the opportunities for mistakes, by taking the **opposite**
 protection approach: Even with ``USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL=True``,
 views with ``@login_required``, ``@roles_accepted``, and ``@roles_required decorators``
 continue to be protected against users without confirmed email addresses.

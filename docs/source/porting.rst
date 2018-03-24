@@ -8,7 +8,7 @@ Porting v0.6 to v9.0+
 Ever since Flask-User v0.4, we had plans to improve Flask-User but were held back
 by our desire to maintain backwards compatibility for a while.
 
-With Flask-User v1.0 (and its v0.9 alpha/beta) we decided it was time to move forward,
+With Flask-User v1.0 (and its v1.0 alpha/beta) we decided it was time to move forward,
 breaking compatibility with v0.6.
 
 Porting slightly customized v0.6 applications

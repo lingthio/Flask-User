@@ -29,7 +29,7 @@ instantiation. For example::
         password_validator = custom_password_validator,
         token_manager = CustomTokenManager())
 
-In v0.9, Flask-User is customized by:
+In v1.0, Flask-User is customized by:
 - Extending the ``CustomUserManager`` class
 - Setting properties in its ``customize()`` method
 - Overriding or extending methods
@@ -53,7 +53,7 @@ In v0.9, Flask-User is customized by:
             super(CustomUserManager, self).password_validator()
                 ...
 
-In v0.9, almost all ``UserManager`` initiation parameters have been obsolted and
+In v1.0, almost all ``UserManager`` initiation parameters have been obsolted and
 now only accepts the following:
 
 - Required parameters ``app``, ``db`` and ``UserClass``.
@@ -67,13 +67,13 @@ Data-model changes
 | See :doc:`porting_basics` for porting steps and :doc:`porting_advanced` for an advanced option.
 
 | The **UserAuth class** has been deprecated.
-| Support for the optional v0.6 ``UserAuth`` class has been dropped in v0.9+ to simplify the Flask-User source code
+| Support for the optional v0.6 ``UserAuth`` class has been dropped in v1.0+ to simplify the Flask-User source code
     and make it more readable and easier to customize.
 
 See :doc:`porting_advanced` for a workaround if you can not merge the UserAuth and User classes.
 
 | The **UserInvitation class** has been renamed.
-| The v0.6 ``UserInvite`` class has been renamed to ``UserInvitation`` in v0.9+
+| The v0.6 ``UserInvite`` class has been renamed to ``UserInvitation`` in v1.0+
     to reflect that it's an object and not an action.
 
 Use the following approach to use the new class name while keeping the old table name::
@@ -86,7 +86,7 @@ Password method changes
 -----------------------
 | We changed the ``verify_password()`` API
 | from v0.6 ``verify_password(password, user)``
-| to v0.9+ ``verify_password(password, password_hash)``
+| to v1.0+ ``verify_password(password, password_hash)``
 | to keep data-model knowledge out of the PasswordManager.
 
 Please change::
@@ -106,7 +106,7 @@ In v0.6, the ``USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL`` setting removed
 confirmed email protection for all the views and required developers to re-protect
 the vulnerable views with ``@confirm_email_required``.
 
-In v0.9+ we adopt the opposite approach where the (renamed) ``USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL=True``
+In v1.0+ we adopt the opposite approach where the (renamed) ``USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL=True``
 setting continues to protect all the views, except those decorated with the
 new ``@allow_unconfirmed_email`` decorator.
 
