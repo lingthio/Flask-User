@@ -1,5 +1,6 @@
 Revision History
 ----------------
+* v0.6.20 Fixed make_url_safe() with queries and fragments
 * v0.6.19 Fixed install problem
 * v0.6.18 (Skipped)
 * v0.6.17 (Bad build)
