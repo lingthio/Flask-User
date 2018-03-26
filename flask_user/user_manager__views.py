@@ -586,8 +586,8 @@ class UserManager__Views(object):
             if self.USER_ENABLE_EMAIL and self.USER_SEND_PASSWORD_CHANGED_EMAIL:
                 self.email_manager.send_password_changed_email(user)
 
-            # Send changed_password signal
-            signals.user_changed_password.send(current_app._get_current_object(), user=user)
+            # Send reset_password signal
+            signals.user_reset_password.send(current_app._get_current_object(), user=user)
 
             # Flash a system message
             flash(_("Your password has been reset successfully."), 'success')
