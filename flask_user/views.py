@@ -605,6 +605,9 @@ def reset_password(token):
         if user_manager.enable_email and user_manager.send_password_changed_email:
             emails.send_password_changed_email(user)
 
+        # Send user_reset_password signal
+        signals.user_reset_password.send(current_app._get_current_object(), user=user)
+
         # Prepare one-time system message
         flash(_("Your password has been reset successfully."), 'success')
 
