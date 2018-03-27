@@ -79,6 +79,6 @@ class UserManager__Utils(object):
         """
         return self.password_manager.verify_password(password, password_hash)
 
-    def verify_token(self, token, expiration_in_seconds):
+    def verify_token(self, token, expiration_in_seconds=None):
         """Convenience method that calls self.token_manager.verify_token(token, expiration_in_seconds)."""
         return self.token_manager.verify_token(token, expiration_in_seconds)

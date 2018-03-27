@@ -4,10 +4,10 @@
 # Author: Ling Thio <ling.thio@gmail.com>
 # Copyright (c) 2013 Ling Thio'
 
-import os
+import datetime
 from wtforms import ValidationError
 
-from flask import abort, Blueprint, current_app, Flask, request
+from flask import abort, Blueprint, current_app, Flask, request, session
 from flask_login import LoginManager, current_user
 
 from . import ConfigError
@@ -117,8 +117,17 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Flask-Login calls this function to retrieve a User record by token.
         @self.login_manager.user_loader
         def load_user_by_user_token(user_token):
-            user = self.db_manager.UserClass.get_user_by_token(user_token, self.USER_USER_SESSION_EXPIRATION)
+            user = self.db_manager.UserClass.get_user_by_token(user_token)
             return user
+
+        # Make Flask session expire after USER_USER_SESSION_EXPIRATION seconds
+        @app.before_request
+        def modify_session():
+            # See https://www.jordanbonser.com/flask-session-timeout.html
+            if self.USER_USER_SESSION_EXPIRATION:
+                app.permanent_session_lifetime = datetime.timedelta(seconds=self.USER_USER_SESSION_EXPIRATION)
+                session.permanent = True
+                session.modified = True
 
         # Configure Flask-BabelEx
         # -----------------------

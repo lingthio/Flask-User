@@ -40,7 +40,7 @@ setup(
         'Environment :: Web Environment',
         'Framework :: Flask',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
+        'License :: OSI Approved :: MIT License',
         'Natural Language :: Chinese (Simplified)',
         'Natural Language :: Dutch',
         'Natural Language :: English',

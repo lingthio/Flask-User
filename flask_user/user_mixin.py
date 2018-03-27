@@ -32,7 +32,7 @@ class UserMixin(FlaskLoginUserMixin):
         return user_token
 
     @classmethod
-    def get_user_by_token(cls, token, expiration_in_seconds):
+    def get_user_by_token(cls, token, expiration_in_seconds=None):
         # This function works in tandem with UserMixin.get_id()
         # Token signatures and timestamps are verified.
         # user_id and password_ends_with are decrypted.

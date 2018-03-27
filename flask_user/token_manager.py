@@ -76,7 +76,7 @@ class TokenManager(object):
         token = self.encrypt_string(concatenated_str)
         return token
 
-    def verify_token(self, token, expiration_in_seconds):
+    def verify_token(self, token, expiration_in_seconds=None):
         """ Verify token signature, verify token expiration, and decrypt token.
 
         | Returns None if token is expired or invalid.
@@ -128,7 +128,7 @@ class TokenManager(object):
         token_str = encrypted_str.strip('=')
         return token_str
 
-    def decrypt_string(self, token_str, expiration_in_seconds):
+    def decrypt_string(self, token_str, expiration_in_seconds=None):
         """Verify signature, verify timestamp, and decrypt a token using ``cryptography.fernet.Fernet()``."""
 
         # Add '=' padding if needed
