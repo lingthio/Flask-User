@@ -6,7 +6,7 @@ Flask-User v1.0
 
     | Flask-User v1.0 is in its Alpha phase and is **incompatible** with v0.6.
     | Install v0.6 with: ``pip install flask-user==0.6.20``
-    | Here is the `v0.6 documentation <http://flask-user.readthedocs.io/en/v0.6/>`_.
+    | Here is the `Flask-User v0.6 documentation <http://flask-user.readthedocs.io/en/v0.6/>`_.
 
 | So, you're writing a Flask web application and would like to authenticate your users.
 | You start with a simple **Login** page, but soon enough you'll need to handle:
@@ -32,7 +32,7 @@ Customizable, yet Ready to use
 
 Well documented
 ---------------
-- `Latest documentation <https://flask-user.readthedocs.io/en/latest/>`_
+- `Flask-User v1.0 documentation <https://flask-user.readthedocs.io/en/latest/>`_
 - `Flask-User v0.6 documentation <https://flask-user.readthedocs.io/en/v0.6/>`_
 - `Flask-User v0.5 documentation <https://flask-user.readthedocs.io/en/v0.5/>`_
 

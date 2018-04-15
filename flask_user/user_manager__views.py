@@ -78,7 +78,7 @@ class UserManager__Views(object):
             self.db_manager.commit()
 
         # Retrieve next URL from 'state' query param
-        state = request.args.get('state')
+        state = request.args.get('state', '/')
         safe_next_url = self.make_safe_url(state)
 
         # Log user in

@@ -22,6 +22,7 @@ For all of the above we finally had to break compatibility with **v0.6 (stable)*
 For non-customized Flask-User apps, the porting is relatively straightforward.
 See the 'Porting from v0.6 to v1.0+' section in our docs.
 
+* v1.0.1.2 - Use app.permanent_session_lifetime to limit user session lifetime.
 * v1.0.1.1 - Alpha release
 
 * v0.6.* - Incompatible production version

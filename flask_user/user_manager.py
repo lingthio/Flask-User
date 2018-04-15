@@ -5,21 +5,21 @@
 # Copyright (c) 2013 Ling Thio'
 
 import datetime
+
+from flask import abort, Blueprint, current_app, Flask, session
+from flask_login import LoginManager
 from wtforms import ValidationError
 
-from flask import abort, Blueprint, current_app, Flask, request, session
-from flask_login import LoginManager, current_user
-
 from . import ConfigError
+from . import forms
 from .db_manager import DBManager
 from .email_manager import EmailManager
-from . import forms
 from .password_manager import PasswordManager
 from .token_manager import TokenManager
+from .translation_utils import lazy_gettext as _  # map _() to lazy_gettext()
 from .user_manager__settings import UserManager__Settings
 from .user_manager__utils import UserManager__Utils
 from .user_manager__views import UserManager__Views
-from .translation_utils import lazy_gettext as _    # map _() to lazy_gettext()
 
 
 # The UserManager is implemented across several source code files.
@@ -108,6 +108,16 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         if not self.USER_EMAIL_SENDER_NAME:
             self.USER_EMAIL_SENDER_NAME = self.USER_APP_NAME
 
+        # Configure Flask session behavior
+        # --------------------------------
+        if self.USER_USER_SESSION_EXPIRATION:
+            app.permanent_session_lifetime = datetime.timedelta(seconds=self.USER_USER_SESSION_EXPIRATION)
+
+            @app.before_request
+            def advance_session_timeout():
+                session.permanent = True    # Timeout after app.permanent_session_lifetime period
+                session.modified = True     # Advance session timeout each time a user visits a page
+
         # Configure Flask-Login
         # --------------------
         # Setup default LoginManager using Flask-Login
@@ -119,15 +129,6 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         def load_user_by_user_token(user_token):
             user = self.db_manager.UserClass.get_user_by_token(user_token)
             return user
-
-        # Make Flask session expire after USER_USER_SESSION_EXPIRATION seconds
-        @app.before_request
-        def modify_session():
-            # See https://www.jordanbonser.com/flask-session-timeout.html
-            if self.USER_USER_SESSION_EXPIRATION:
-                app.permanent_session_lifetime = datetime.timedelta(seconds=self.USER_USER_SESSION_EXPIRATION)
-                session.permanent = True
-                session.modified = True
 
         # Configure Flask-BabelEx
         # -----------------------
