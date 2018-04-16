@@ -132,8 +132,8 @@ Optionally, if you need to add form fields to a Flask-User form, you will need t
         def customize(self, app):
 
             # Configure customized forms
-            self.register_form = CustomRegisterForm
-            self.user_profile_form = CustomUserProfileForm
+            self.RegisterFormClass = CustomRegisterForm
+            self.UserProfileFormClass = CustomUserProfileForm
             # NB: assign:  xyz_form = XyzForm   -- the class!
             #   (and not:  xyz_form = XyzForm() -- the instance!)
 

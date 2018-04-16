@@ -89,7 +89,7 @@ class UserManager__Views(object):
         """ Prompt for old password and new password and change the user's password."""
 
         # Initialize form
-        form = self.change_password_form(request.form)
+        form = self.ChangePasswordFormClass(request.form)
 
         # Process valid POST
         if request.method == 'POST' and form.validate():
@@ -126,7 +126,7 @@ class UserManager__Views(object):
         """ Prompt for new username and old password and change the user's username."""
 
         # Initialize form
-        form = self.change_username_form(request.form)
+        form = self.ChangeUsernameFormClass(request.form)
 
         # Process valid POST
         if request.method == 'POST' and form.validate():
@@ -194,7 +194,7 @@ class UserManager__Views(object):
     @login_required
     def edit_user_profile_view(self):
         # Initialize form
-        form = self.edit_user_profile_form(request.form, obj=current_user)
+        form = self.EditUserProfileFormClass(request.form, obj=current_user)
 
         # Process valid POST
         if request.method == 'POST' and form.validate():
@@ -258,7 +258,7 @@ class UserManager__Views(object):
         """Prompt for email and send reset password email."""
 
         # Initialize form
-        form = self.forgot_password_form(request.form)
+        form = self.ForgotPasswordFormClass(request.form)
 
         # Process valid POST
         if request.method == 'POST' and form.validate():
@@ -290,7 +290,7 @@ class UserManager__Views(object):
 
         # Retrieve a user's UserEmails
         user_emails = self.db_manager.find_user_emails(user=current_user)
-        form = self.add_email_form()
+        form = self.AddEmailFormClass()
 
         # Process valid POST request
         if request.method == "POST" and form.validate():
@@ -313,7 +313,7 @@ class UserManager__Views(object):
     def invite_user_view(self):
         """ Allows users to send invitations to register an account """
 
-        invite_user_form = self.invite_user_form(request.form)
+        invite_user_form = self.InviteUserFormClass(request.form)
 
         if request.method == 'POST' and invite_user_form.validate():
             # Find User and UserEmail by email
@@ -368,8 +368,8 @@ class UserManager__Views(object):
             return redirect(safe_next_url)
 
         # Initialize form
-        login_form = self.login_form(request.form)  # for login.html
-        register_form = self.register_form()  # for login_or_register.html
+        login_form = self.LoginFormClass(request.form)  # for login.html
+        register_form = self.RegisterFormClass()  # for login_or_register.html
         if request.method != 'POST':
             login_form.next.data = register_form.next.data = safe_next_url
             login_form.reg_next.data = register_form.reg_next.data = safe_reg_next
@@ -427,8 +427,8 @@ class UserManager__Views(object):
         safe_reg_next_url = self._get_safe_next_url('reg_next', self.USER_AFTER_REGISTER_ENDPOINT)
 
         # Initialize form
-        login_form = self.login_form()  # for login_or_register.html
-        register_form = self.register_form(request.form)  # for register.html
+        login_form = self.LoginFormClass()  # for login_or_register.html
+        register_form = self.RegisterFormClass(request.form)  # for register.html
 
         # invite token used to determine validity of registeree
         invite_token = request.values.get("token")
@@ -522,7 +522,7 @@ class UserManager__Views(object):
         """Prompt for email and re-send email conformation email."""
 
         # Initialize form
-        form = self.resend_email_confirmation_form(request.form)
+        form = self.ResendEmailConfirmationFormClass(request.form)
 
         # Process valid POST
         if request.method == 'POST' and form.validate():
@@ -572,7 +572,7 @@ class UserManager__Views(object):
 
 
         # Initialize form
-        form = self.reset_password_form(request.form)
+        form = self.ResetPasswordFormClass(request.form)
 
         # Process valid POST
         if request.method == 'POST' and form.validate():

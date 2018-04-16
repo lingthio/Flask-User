@@ -163,18 +163,18 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         blueprint = Blueprint('flask_user', __name__, template_folder='templates')
         app.register_blueprint(blueprint)
 
-        # Set default forms
-        # -----------------
-        self.add_email_form = forms.AddEmailForm
-        self.change_password_form = forms.ChangePasswordForm
-        self.change_username_form = forms.ChangeUsernameForm
-        self.edit_user_profile_form = forms.EditUserProfileForm
-        self.forgot_password_form = forms.ForgotPasswordForm
-        self.invite_user_form = forms.InviteUserForm
-        self.login_form = forms.LoginForm
-        self.register_form = forms.RegisterForm
-        self.resend_email_confirmation_form = forms.ResendEmailConfirmationForm
-        self.reset_password_form = forms.ResetPasswordForm
+        # Set default form classes
+        # ------------------------
+        self.AddEmailFormClass = forms.AddEmailForm
+        self.ChangePasswordFormClass = forms.ChangePasswordForm
+        self.ChangeUsernameFormClass = forms.ChangeUsernameForm
+        self.EditUserProfileFormClass = forms.EditUserProfileForm
+        self.ForgotPasswordFormClass = forms.ForgotPasswordForm
+        self.InviteUserFormClass = forms.InviteUserForm
+        self.LoginFormClass = forms.LoginForm
+        self.RegisterFormClass = forms.RegisterForm
+        self.ResendEmailConfirmationFormClass = forms.ResendEmailConfirmationForm
+        self.ResetPasswordFormClass = forms.ResetPasswordForm
 
         # Set default managers
         # --------------------
