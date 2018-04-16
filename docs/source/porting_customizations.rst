@@ -41,8 +41,8 @@ In v1.0, Flask-User is customized by:
 
         def customize(self, app):
             # Override properties
-            register_form = CustomRegisterForm()
-            token_manager = CustomTokenManager(app)
+            self.register_form = CustomRegisterForm
+            self.token_manager = CustomTokenManager(app)
 
         # Override methods
         def register_view(self):
