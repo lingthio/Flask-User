@@ -1,28 +1,25 @@
 Revision History
 ----------------
-* v0.6.20 Fixed make_url_safe() with queries and fragments
-* v0.6.19 Fixed install problem
-* v0.6.18 (Skipped)
-* v0.6.17 (Bad build)
-* v0.6.16 (Bad build)
-* v0.6.15 (Bad build)
-* v0.6.14 (Bad build)
-* v0.6.13 Added make_safe_url() to prevent cross-domain redirections.
-* v0.6.12 Added Russian translation.
-* v0.6.11 (Skipped)
-* v0.6.10 Added Spanish translation.
-* v0.6.9 Added support for Flask-Login v0.4+.
+* v0.6.21 - Properly send ``user_reset_password`` signal
+* v0.6.20 - Fixed make_url_safe() with queries and fragments
+* v0.6.19 - Fixed install problem
+* v0.6.14-18 - (Skipped)
+* v0.6.13 - Added make_safe_url() to prevent cross-domain redirections.
+* v0.6.12 - Added Russian translation.
+* v0.6.11 - (Skipped)
+* v0.6.10 - Added Spanish translation.
+* v0.6.9 - Added support for Flask-Login v0.4+.
     Replaced pycrypto with pycryptodome.
     Added Farsi, Italian and Turkish translations.
-* v0.6.8 Added support for Flask-Login v0.3+
-* v0.6.7 Uses Python package bcrypt instead of py-bcrypt.
-* v0.6.6 Forgot password form now honors USER_SHOW_USERNAME_OR_EMAIL_DOES_NOT_EXIST setting.
-* v0.6.5 Added USER_SHOW_USERNAME_OR_EMAIL_DOES_NOT_EXIST setting.
-* v0.6.4 Moved custom params from __init__() to init_app(). Added send_reset_password_email().
-* v0.6.3 Fix for Python 3.4 and signals. Added UserMixin.has_role() and @roles_accepted().
-* v0.6.2 Added support for invitation-only registrations.
-* v0.6.1 Added Chinese (Simplified) and French translations`.
-* v0.6 Changed User/UserProfile DataModels into UserAuth/User DataModels.
+* v0.6.8 - Added support for Flask-Login v0.3+
+* v0.6.7 - Uses Python package bcrypt instead of py-bcrypt.
+* v0.6.6 - Forgot password form now honors USER_SHOW_USERNAME_OR_EMAIL_DOES_NOT_EXIST setting.
+* v0.6.5 - Added USER_SHOW_USERNAME_OR_EMAIL_DOES_NOT_EXIST setting.
+* v0.6.4 - Moved custom params from __init__() to init_app(). Added send_reset_password_email().
+* v0.6.3 - Fix for Python 3.4 and signals. Added UserMixin.has_role() and @roles_accepted().
+* v0.6.2 - Added support for invitation-only registrations.
+* v0.6.1 - Added Chinese (Simplified) and French translations`.
+* v0.6 - Changed User/UserProfile DataModels into UserAuth/User DataModels.
 
 ::
 

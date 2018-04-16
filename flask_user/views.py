@@ -736,12 +736,24 @@ def _do_login_user(user, safe_next, remember_me=False):
     return redirect(safe_next)
 
 
-# Turns an usafe absolute URL into a safe relative URL by removing the scheme and the hostname
-# Example: make_safe_url('http://hostname/path1/path2?q1=v1&q2=v2#fragment')
-#          returns: '/path1/path2?q1=v1&q2=v2#fragment
 def make_safe_url(url):
-    parts = urlsplit(url)
-    safe_url = parts.path + '?' + parts.query + '#' + parts.fragment
+    """Makes a URL safe by removing optional hostname and port.
+
+    Example:
+
+        | ``make_safe_url('https://hostname:80/path1/path2?q1=v1&q2=v2#fragment')``
+        | returns ``'/path1/path2?q1=v1&q2=v2#fragment'``
+
+    Override this method if you need to allow a list of safe hostnames.
+    """
+
+    # Split the URL into scheme, netloc, path, query and fragment
+    parts = list(urlsplit(url))
+
+    # Clear scheme and netloc and rebuild URL
+    parts[0] = ''  # Empty scheme
+    parts[1] = ''  # Empty netloc (hostname:port)
+    safe_url = urlunsplit(parts)
     return safe_url
 
 

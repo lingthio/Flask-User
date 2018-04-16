@@ -1,7 +1,7 @@
 from setuptools import setup
 import sys
 
-__version__ = '0.6.20'
+__version__ = '0.6.21'
 
 # Load pytest and pytest-runner only when needed:
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
