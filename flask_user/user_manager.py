@@ -227,7 +227,7 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         """
 
     def password_validator(self, form, field):
-        """Ensure that passwords have one lowercase letter, one uppercase letter and one digit.
+        """Ensure that passwords have at least 6 characters with one lowercase letter, one uppercase letter and one number.
 
         Override this method to customize the password validator.
         """
@@ -249,6 +249,11 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
             raise ValidationError(
                 _('Password must have at least 6 characters with one lowercase letter, one uppercase letter and one number'))
 
+    # If you prefer using Regex:
+    # from re import compile
+    # PASSWORD_REGEX = compile(r'\A(?=\S*?\d)(?=\S*?[A-Z])(?=\S*?[a-z])\S{6,}\Z')
+    # def password_is_valid(password):
+    #     return PASSWORD_REGEX.match(password) is not None
 
     def username_validator(self, form, field):
         """Ensure that Usernames contains at least 3 alphanumeric characters.
@@ -265,6 +270,12 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
             if char not in valid_chars:
                 raise ValidationError(
                     _("Username may only contain letters, numbers, '-', '.' and '_'"))
+
+    # If you prefer using Regex:
+    # from re import compile
+    # USERNAME_REGEX = compile(r'\A[\w\-\.]{3,}\Z')
+    # def username_is_valid(username):
+    #     return USERNAME_REGEX.match(username) is not None
 
     # ***** Private methods *****
 
