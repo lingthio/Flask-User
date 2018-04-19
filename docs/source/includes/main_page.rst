@@ -5,7 +5,8 @@ Flask-User v1.0
 .. topic:: Attention
 
     | This is `Flask-User v1.0 <http://flask-user.readthedocs.io/en/latest/>`_ which is **incompatible** with `Flask-User v0.6 <http://flask-user.readthedocs.io/en/v0.6/>`_.
-    | Flask-User v1.0 has a dependable code base. It is marked as an alpha release because its API may change.
+    | Flask-User v1.0 is basically Flask-User v0.6 with a more Pythonic API for customization.
+    | This package is production grade, but it is marked as an alpha release because its API may be subject to change.
 
 | So, you're writing a Flask web application and would like to authenticate your users.
 | You start with a simple **Login** page, but soon enough you'll need to handle:
