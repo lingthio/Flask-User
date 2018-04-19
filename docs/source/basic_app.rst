@@ -48,9 +48,9 @@ Create the basic_app.py file
 .. literalinclude:: ../../example_apps/basic_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 9, 11, 25-33, 50-51, 71-72, 74-78, 87-88, 80-85, 87-88, 93-101, 103-113, 133, 150
+   :emphasize-lines: 11, 25-32, 56-57, 88-89, 133, 151
 
-- Lines 25-33 configure ``Flask-Mail``. Make sure to use the correct settings or emails
+- Lines 25-32 configure ``Flask-Mail``. Make sure to use the correct settings or emails
    will not be sent.
 
 Configure Flask-Mail

@@ -45,7 +45,7 @@ Create the mongodb_app.py file
 .. literalinclude:: ../../example_apps/mongodb_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 9, 25-29, 43-44, 60-64, 66-67, 87
+   :emphasize-lines: 9, 25-29, 43-44, 58-59, 79
 
 Highlighted lines shows the few additional Flask-User code lines.
 
