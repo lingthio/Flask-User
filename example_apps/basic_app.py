@@ -1,5 +1,6 @@
 import os
 from flask import Flask, render_template_string
+from flask_babel import Babel
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import login_required, UserManager, UserMixin, SQLAlchemyAdapter
@@ -14,8 +15,8 @@ class ConfigClass(object):
     CSRF_ENABLED = True
 
     # Flask-Mail settings
-    MAIL_USERNAME =           os.getenv('MAIL_USERNAME',        'email@example.com')
-    MAIL_PASSWORD =           os.getenv('MAIL_PASSWORD',        'password')
+    MAIL_USERNAME =           os.getenv('MAIL_USERNAME',        'youremail@example.com')
+    MAIL_PASSWORD =           os.getenv('MAIL_PASSWORD',        'yourpassword')
     MAIL_DEFAULT_SENDER =     os.getenv('MAIL_DEFAULT_SENDER',  '"MyApp" <noreply@example.com>')
     MAIL_SERVER =             os.getenv('MAIL_SERVER',          'smtp.gmail.com')
     MAIL_PORT =           int(os.getenv('MAIL_PORT',            '465'))
@@ -32,11 +33,15 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(__name__+'.ConfigClass')
 
+    # Initialize Flask-BabelEx
+    babel = Babel(app)
+
     # Initialize Flask extensions
     db = SQLAlchemy(app)                            # Initialize Flask-SQLAlchemy
     mail = Mail(app)                                # Initialize Flask-Mail
 
-    # Define the User data model. Make sure to add flask_user UserMixin !!!
+    # Define the User data model.
+    # Make sure to add flask_user UserMixin !!!
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
 
