@@ -36,7 +36,7 @@ Create the quickstart_app.py file
 .. literalinclude:: ../../example_apps/quickstart_app.py
    :language: python
    :linenos:
-   :emphasize-lines: 9, 23-27, 34-39, 41-42, 60-61, 81
+   :emphasize-lines: 9, 23-27, 41-42, 60-61, 81
 
 Highlighted lines shows the few additional Flask-User code lines.
 
