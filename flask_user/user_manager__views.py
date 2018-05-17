@@ -561,9 +561,9 @@ class UserManager__Views(object):
             user = self.db_manager.get_user_by_id(user_id)
 
             # Mark email as confirmed
-            user_or_user_email = self.db_manager.get_primary_user_email(user)
-            user_or_user_email.email_confirmed_at = datetime.utcnow()
-            self.db_manager.save_object(user_or_user_email)
+            user_or_user_email_object = self.db_manager.get_primary_user_email_object(user)
+            user_or_user_email_object.email_confirmed_at = datetime.utcnow()
+            self.db_manager.save_object(user_or_user_email_object)
             self.db_manager.commit()
 
         if not user:

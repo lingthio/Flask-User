@@ -65,7 +65,8 @@ class EmailManager(object):
         if not self.user_manager.USER_SEND_PASSWORD_CHANGED_EMAIL: return
 
         # Notification emails are sent to the user's primary email address
-        email = self.user_manager.db_manager.get_primary_user_email(user)
+        user_or_user_email_object = self.user_manager.db_manager.get_primary_user_email_object(user)
+        email = user_or_user_email_object.email
 
         # Render email from templates and send it via the configured EmailAdapter
         self._render_and_send_email(
@@ -160,7 +161,8 @@ class EmailManager(object):
         if not self.user_manager.USER_SEND_USERNAME_CHANGED_EMAIL: return
 
         # Notification emails are sent to the user's primary email address
-        email = self.user_manager.db_manager.get_primary_user_email(user)
+        user_or_user_email_object = self.user_manager.db_manager.get_primary_user_email_object(user)
+        email = user_or_user_email_object.email
 
         # Render email from templates and send it via the configured EmailAdapter
         self._render_and_send_email(

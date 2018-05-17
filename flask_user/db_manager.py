@@ -142,7 +142,7 @@ class DBManager(object):
         user_emails = self.db_adapter.find_objects(self.UserEmailClass, user_id=user.id)
         return user_emails
 
-    def get_primary_user_email(self, user):
+    def get_primary_user_email_object(self, user):
         """Retrieve the email from User object or the primary UserEmail object (if multiple emails
         per user are enabled)."""
         if self.UserEmailClass:
