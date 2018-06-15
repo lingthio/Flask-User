@@ -377,9 +377,9 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Define the stubs
         # ----------------
 
-        def auth0_callback_stub():
-            if not self.USER_ENABLE_AUTH0: abort(404)
-            return self.auth0_callback_view()
+        # def auth0_callback_stub():
+        #     if not self.USER_ENABLE_AUTH0: abort(404)
+        #     return self.auth0_callback_view()
 
         def change_password_stub():
             if not self.USER_ENABLE_CHANGE_PASSWORD: abort(404)
@@ -440,7 +440,7 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Add the URL routes
         # ------------------
 
-        app.add_url_rule('/callbacks/auth0', 'user.auth0_callback', auth0_callback_stub)
+        # app.add_url_rule('/callbacks/auth0', 'user.auth0_callback', auth0_callback_stub)
         app.add_url_rule(self.USER_CHANGE_PASSWORD_URL, 'user.change_password', change_password_stub,
                          methods=['GET', 'POST'])
         app.add_url_rule(self.USER_CHANGE_USERNAME_URL, 'user.change_username', change_username_stub,

@@ -23,66 +23,66 @@ from .translation_utils import gettext as _    # map _() to gettext()
 class UserManager__Views(object):
     """Flask-User views."""
 
-    # This callback view is called by Auth0's Lock Widget after a user logs in successfully
-    def auth0_callback_view(self):  # pragma: no cover
-        """This callback is called after a successful Auth0 login.
-
-        Args:
-            code(str): Auth0's authentication code.
-        """
-
-        # Check for errors
-        error = request.args.get('error')
-        if error:
-            error_code = request.args.get('error_description')
-            return redirect(url_for('regular.unauthorized', error_code=error_code))
-
-        from auth0.v3.authentication import GetToken
-        from auth0.v3.authentication import Users
-        import json
-
-        # Retrieve AUTH0 settings from the local settings file
-        AUTH0_DOMAIN = current_app.config.get('AUTH0_DOMAIN', '')
-        AUTH0_CLIENT_ID = current_app.config.get('AUTH0_CLIENT_ID', '')
-        AUTH0_CLIENT_SECRET = current_app.config.get('AUTH0_CLIENT_SECRET', '')
-        AUTH0_CALLBACK_URL = url_for('user.auth0_callback', _external=True)
-
-        auth0_users = Users(AUTH0_DOMAIN)
-
-        # Retrieve Auth0 code from the URL query parameters
-        code = request.args.get('code')
-
-        # Decode Auth0 code and extract the Auth0 Token
-        get_token = GetToken(AUTH0_DOMAIN)
-        token = get_token.authorization_code(AUTH0_CLIENT_ID,
-                                             AUTH0_CLIENT_SECRET,
-                                             code,
-                                             AUTH0_CALLBACK_URL)
-
-        # Retrieve user_info from AUTH0 token
-        user_info_str = auth0_users.userinfo(token['access_token'])
-        user_info = json.loads(user_info_str)
-        email = user_info['email']
-        email_verified = user_info['email_verified']
-
-        # Retrieve User record by email
-        user, user_email = self.db_manager.get_user_and_user_email_by_email(email)
-        if not user:
-            # Create new user if needed
-            user = self.db_manager.add_user(
-                email=email,
-                active=True,
-                first_name=user_info.get('given_name', ''),
-                last_name=user_info.get('family_name', ''),
-            )
-            self.db_manager.commit()
-
-        # Retrieve next URL from 'state' query param
-        state = request.args.get('state', '/')
-        safe_next_url = self.make_safe_url(state)
-
-        # Log user in
-        return self._do_login_user(user, safe_next_url)
+    # # This callback view is called by Auth0's Lock Widget after a user logs in successfully
+    # def auth0_callback_view(self):  # pragma: no cover
+    #     """This callback is called after a successful Auth0 login.
+    #
+    #     Args:
+    #         code(str): Auth0's authentication code.
+    #     """
+    #
+    #     # Check for errors
+    #     error = request.args.get('error')
+    #     if error:
+    #         error_code = request.args.get('error_description')
+    #         return redirect(url_for('regular.unauthorized', error_code=error_code))
+    #
+    #     from auth0.v3.authentication import GetToken
+    #     from auth0.v3.authentication import Users
+    #     import json
+    #
+    #     # Retrieve AUTH0 settings from the local settings file
+    #     AUTH0_DOMAIN = current_app.config.get('AUTH0_DOMAIN', '')
+    #     AUTH0_CLIENT_ID = current_app.config.get('AUTH0_CLIENT_ID', '')
+    #     AUTH0_CLIENT_SECRET = current_app.config.get('AUTH0_CLIENT_SECRET', '')
+    #     AUTH0_CALLBACK_URL = url_for('user.auth0_callback', _external=True)
+    #
+    #     auth0_users = Users(AUTH0_DOMAIN)
+    #
+    #     # Retrieve Auth0 code from the URL query parameters
+    #     code = request.args.get('code')
+    #
+    #     # Decode Auth0 code and extract the Auth0 Token
+    #     get_token = GetToken(AUTH0_DOMAIN)
+    #     token = get_token.authorization_code(AUTH0_CLIENT_ID,
+    #                                          AUTH0_CLIENT_SECRET,
+    #                                          code,
+    #                                          AUTH0_CALLBACK_URL)
+    #
+    #     # Retrieve user_info from AUTH0 token
+    #     user_info_str = auth0_users.userinfo(token['access_token'])
+    #     user_info = json.loads(user_info_str)
+    #     email = user_info['email']
+    #     email_verified = user_info['email_verified']
+    #
+    #     # Retrieve User record by email
+    #     user, user_email = self.db_manager.get_user_and_user_email_by_email(email)
+    #     if not user:
+    #         # Create new user if needed
+    #         user = self.db_manager.add_user(
+    #             email=email,
+    #             active=True,
+    #             first_name=user_info.get('given_name', ''),
+    #             last_name=user_info.get('family_name', ''),
+    #         )
+    #         self.db_manager.commit()
+    #
+    #     # Retrieve next URL from 'state' query param
+    #     state = request.args.get('state', '/')
+    #     safe_next_url = self.make_safe_url(state)
+    #
+    #     # Log user in
+    #     return self._do_login_user(user, safe_next_url)
 
     @login_required
     def change_password_view(self):
