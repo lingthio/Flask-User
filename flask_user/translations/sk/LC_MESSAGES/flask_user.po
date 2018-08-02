@@ -261,7 +261,7 @@ msgstr "Pozvánka bola poslaná."
 
 #: flask_user/user_manager__views.py:417
 msgid "You have signed out successfully."
-msgstr "Boli ste úspešne prihlasený/á."
+msgstr "Boli ste úspešne odhlasený/á."
 
 #: flask_user/user_manager__views.py:570
 msgid "Your reset password token is invalid."
