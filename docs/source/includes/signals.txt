@@ -7,5 +7,6 @@
     user_forgot_password        # a user submitted a reset password request
     user_logged_in              # a user logged in
     user_logged_out             # a user logged out
+    user_password_failed        # a user attempted to login but password verification failed
     user_registered             # a user registered for a new account
     user_reset_password         # a user reset their password (forgot password)
