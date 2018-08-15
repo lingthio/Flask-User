@@ -7,6 +7,7 @@ It uses cryptography to generate and verify tokens.
 
 import base64
 import string
+import sys
 
 # Non-system imports are moved into the methods to make them an optional requirement
 
@@ -43,7 +44,10 @@ class TokenManager(object):
             raise ConfigError('Config setting SECRET_KEY is missing.')
 
         # Print a warning if SECRET_KEY is too short
-        key = flask_secret_key.encode()
+        if sys.version_info[0] < 3:
+            key = flask_secret_key.encode()
+        else:
+            key = flask_secret_key
         if len(key)<32:
             print('WARNING: Flask-User TokenManager: SECRET_KEY is shorter than 32 bytes.')
             key = key + b' '*32    # Make sure the key is at least 32 bytes long
