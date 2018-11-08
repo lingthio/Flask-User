@@ -92,7 +92,11 @@ class UserManager__Views(object):
         form = self.ChangePasswordFormClass(request.form)
 
         # Process valid POST
-        if request.method == 'POST' and form.validate():
+        if request.method == 'POST':
+            if not form.validate():
+                flash(_('There was an error changing your password.'), 'error')
+                return redirect(url_for('user.change_password'))
+
             # Hash password
             new_password = form.new_password.data
             password_hash = self.hash_password(new_password)
@@ -710,4 +714,3 @@ class UserManager__Views(object):
 
     def _endpoint_url(self, endpoint):
         return url_for(endpoint) if endpoint else '/'
-
