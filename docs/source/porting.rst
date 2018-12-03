@@ -1,4 +1,4 @@
-Porting v0.6 to v9.0+
+Porting v0.6 to v0.9+
 =====================
 .. include:: includes/submenu_defs.rst
 .. include:: includes/porting_submenu.rst
