@@ -1,0 +1,13 @@
+{% extends 'flask_user/_authorized_base.html' %}
+
+{% block content %}
+{% from "flask_user/_macros.html" import render_field, render_submit_field %}
+<h1>{%trans%}Enable TOTP{%endtrans%}</h1>
+<p><img id="qrcode" src="{{ url_for('user.get_totp_qrcode') }}"></p>
+<form action="" method="POST" class="form" role="form">
+    {{ form.hidden_tag() }}
+    {{ render_field(form.totp_token, tabindex=20) }}
+    {{ render_submit_field(form.submit, tabindex=90) }}
+</form>
+
+{% endblock %}

@@ -352,6 +352,16 @@ class InviteUserForm(FlaskForm):
     submit = SubmitField(_('Invite!'))
 
 
+class VerifyTOTPTokenForm(FlaskForm):
+    totp_token = StringField('TOTP Token', validators=[
+                        validators.DataRequired(), validators.Length(6, 6)])
+    submit = SubmitField('Verify')
+
+class DisableTOTPTokenForm(FlaskForm):
+    disable = BooleanField(_('Disable'))
+    submit = SubmitField(_('Confirm'))
+
+
 # Manually Add translation strings from QuickStart apps that use string templates
 _sign_in = _('Sign in')
 _sign_out = _('Sign out')

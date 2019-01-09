@@ -4,8 +4,10 @@
 # Author: Ling Thio <ling.thio@gmail.com>
 # Copyright (c) 2013 Ling Thio
 
+import base64
 from .db_adapters import PynamoDbAdapter, DynamoDbAdapter, MongoDbAdapter, SQLDbAdapter
 from flask_user import current_user, ConfigError
+import os
 
 class DBManager(object):
     """Manage DB objects."""

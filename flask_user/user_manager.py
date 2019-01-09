@@ -16,6 +16,7 @@ from .db_manager import DBManager
 from .email_manager import EmailManager
 from .password_manager import PasswordManager
 from .token_manager import TokenManager
+from .totp_manager import TOTPManager
 from .translation_utils import lazy_gettext as _  # map _() to lazy_gettext()
 from .user_manager__settings import UserManager__Settings
 from .user_manager__utils import UserManager__Utils
@@ -175,6 +176,8 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         self.RegisterFormClass = forms.RegisterForm
         self.ResendEmailConfirmationFormClass = forms.ResendEmailConfirmationForm
         self.ResetPasswordFormClass = forms.ResetPasswordForm
+        self.VerifyTOTPTokenFormClass = forms.VerifyTOTPTokenForm
+        self.DisableTOTPTokenFormClass = forms.DisableTOTPTokenForm
 
         # Set default managers
         # --------------------
@@ -192,6 +195,9 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Setup EmailManager
         if self.USER_ENABLE_EMAIL:
             self.email_manager = EmailManager(app)
+
+        # Setup TOTPManager
+        self.totp_manager = TOTPManager(app)
 
         # Setup TokenManager
         self.token_manager = TokenManager(app)
@@ -433,6 +439,17 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # def unconfirmed_email_stub():
         #     return self.unconfirmed_email_view()
 
+        def enable_totp_stub():
+            if not self.USER_ENABLE_TOTP:
+                abort(404)
+            return self.enable_totp_view()
+
+        def disable_totp_stub():
+            return self.disable_totp_view()
+
+        def get_totp_qrcode_stub():
+            return self.get_totp_qrcode()
+
         def unauthorized_stub():
             return self.unauthorized_view()
 
@@ -466,6 +483,12 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
                          methods=['GET', 'POST'])
         app.add_url_rule(self.USER_RESET_PASSWORD_URL, 'user.reset_password', reset_password_stub,
                          methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_ENABLE_TOTP_URL, 'user.enable_totp', enable_totp_stub,
+                         methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_DISABLE_TOTP_URL, 'user.disable_totp', disable_totp_stub,
+                         methods=['GET', 'POST'])
+        app.add_url_rule(self.USER_TOTP_QRCODE_URL, 'user.get_totp_qrcode', get_totp_qrcode_stub,
+                         methods=['GET'])
 
 
 

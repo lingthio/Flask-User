@@ -16,6 +16,8 @@ from flask_login import current_user, login_user, logout_user
 from .decorators import login_required
 from . import signals
 from .translation_utils import gettext as _    # map _() to gettext()
+import base64
+import os
 
 
 # This class mixes into the UserManager class.
@@ -390,10 +392,22 @@ class UserManager__Views(object):
                 # Find user by email (with form.email)
                 user, user_email = self.db_manager.get_user_and_user_email_by_email(login_form.email.data)
 
+            # Check if user has TOTP enabled
+            # if user.totp_secret:
+            #     #TODO Send user to TOTP verify view
+                
+
+            # else:
+            #     if user:
+            #         # Log user in
+            #         safe_next_url = self.make_safe_url(login_form.next.data)
+            #         return self._do_login_user(user, safe_next_url, login_form.remember_me.data)
+            
+            #TODO remove when TOTP verify is working
             if user:
-                # Log user in
-                safe_next_url = self.make_safe_url(login_form.next.data)
-                return self._do_login_user(user, safe_next_url, login_form.remember_me.data)
+                    # Log user in
+                    safe_next_url = self.make_safe_url(login_form.next.data)
+                    return self._do_login_user(user, safe_next_url, login_form.remember_me.data)
 
         # Render form
         self.prepare_domain_translations()
@@ -603,6 +617,58 @@ class UserManager__Views(object):
         self.prepare_domain_translations()
         return render_template(self.USER_RESET_PASSWORD_TEMPLATE, form=form)
 
+    @login_required
+    def enable_totp_view(self):
+        """ Display QR code and require validation."""
+
+        if current_user.totp_secret is None:
+            """ Generate Time-based One Time Password for user """
+            secret = base64.b32encode(os.urandom(10)).decode('utf-8')
+            current_user.totp_secret = secret
+            self.db_manager.save_object(current_user)
+            self.db_manager.commit()
+
+        # Initialize form
+        form = self.VerifyTOTPTokenFormClass(request.form)
+
+        # Process valid POST
+        if request.method == 'POST' and form.validate():
+
+            if not self.verify_totp_token(form.totp_token.data):
+                flash('Invalid token.')
+                #TODO add verified field to db
+                return render_template(self.USER_ENABLE_TOTP_TEMPLATE, form=form)
+            else:
+                flash('Token Valid.', 'success')
+
+                # Redirect to 'next' URL
+                safe_next_url = self._get_safe_next_url('next', self.USER_TOTP_ENDPOINT)
+                return redirect(safe_next_url)
+
+        # Render form
+        self.prepare_domain_translations()
+        return render_template(self.USER_ENABLE_TOTP_TEMPLATE, form=form)
+
+    @login_required
+    def disable_totp_view(self):
+        """ Disable Time-based One Time Password for user """
+
+        form = self.DisableTOTPTokenFormClass(request.form)
+
+        if request.method == 'POST' and form.validate():
+            if form.disable.data:
+                current_user.totp_secret = None
+                self.db_manager.save_object(current_user)
+                self.db_manager.commit()
+                flash('TOTP Disabled', 'success')
+                return redirect(url_for('user.edit_user_profile'))
+            else:
+                flash('TOTP was not disabled', 'error')
+
+            # Render form
+        self.prepare_domain_translations()
+        return render_template(self.USER_DISABLE_TOTP_TEMPLATE, form=form)
+
     def unauthenticated_view(self):
         """ Prepare a Flash message and redirect to USER_UNAUTHENTICATED_ENDPOINT"""
         # Prepare Flash message
@@ -710,4 +776,3 @@ class UserManager__Views(object):
 
     def _endpoint_url(self, endpoint):
         return url_for(endpoint) if endpoint else '/'
-
