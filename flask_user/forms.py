@@ -352,10 +352,17 @@ class InviteUserForm(FlaskForm):
     submit = SubmitField(_('Invite!'))
 
 
-class VerifyTOTPTokenForm(FlaskForm):
-    totp_token = StringField('TOTP Token', validators=[
+class EnableTOTPForm(FlaskForm):
+    totp_token = StringField(_('TOTP Token'), validators=[
                         validators.DataRequired(), validators.Length(6, 6)])
-    submit = SubmitField('Verify')
+    submit = SubmitField(_('Verify'))
+
+
+class VerifyTOTPTokenForm(FlaskForm):
+    next = HiddenField()
+    remember_me = HiddenField()
+    totp_token = StringField(_('TOTP Token'), validators=[validators.DataRequired(), validators.Length(6, 6)])
+    submit = SubmitField(_('Verify'))
 
 class DisableTOTPTokenForm(FlaskForm):
     disable = BooleanField(_('Disable'))

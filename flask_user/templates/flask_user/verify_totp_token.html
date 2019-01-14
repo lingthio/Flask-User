@@ -1,12 +1,11 @@
-{% extends 'flask_user/_authorized_base.html' %}
+{% extends 'flask_user/_public_base.html' %}
 
 {% block content %}
 {% from "flask_user/_macros.html" import render_field, render_submit_field %}
-<h1>{%trans%}Verify TOTP Token{%endtrans%}</h1>
-
+<h1>{%trans%}Verify TOTP{%endtrans%}</h1>
 <form action="" method="POST" class="form" role="form">
     {{ form.hidden_tag() }}
-    {{ render_field(form.token, tabindex=20) }}
+    {{ render_field(form.totp_token, tabindex=20) }}
     {{ render_submit_field(form.submit, tabindex=90) }}
 </form>
 

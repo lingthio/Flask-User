@@ -124,6 +124,7 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Setup default LoginManager using Flask-Login
         self.login_manager = LoginManager(app)
         self.login_manager.login_view = 'user.login'
+        self.login_manager.refresh_view = 'user.login'
 
         # Flask-Login calls this function to retrieve a User record by token.
         @self.login_manager.user_loader
@@ -176,6 +177,7 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         self.RegisterFormClass = forms.RegisterForm
         self.ResendEmailConfirmationFormClass = forms.ResendEmailConfirmationForm
         self.ResetPasswordFormClass = forms.ResetPasswordForm
+        self.EnableTOTPFormClass = forms.EnableTOTPForm
         self.VerifyTOTPTokenFormClass = forms.VerifyTOTPTokenForm
         self.DisableTOTPTokenFormClass = forms.DisableTOTPTokenForm
 
@@ -450,6 +452,9 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         def get_totp_qrcode_stub():
             return self.get_totp_qrcode()
 
+        def verify_totp_token_stub():
+            return self.verify_totp_token_view()
+
         def unauthorized_stub():
             return self.unauthorized_view()
 
@@ -489,6 +494,7 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
                          methods=['GET', 'POST'])
         app.add_url_rule(self.USER_TOTP_QRCODE_URL, 'user.get_totp_qrcode', get_totp_qrcode_stub,
                          methods=['GET'])
-
+        app.add_url_rule(self.USER_TOTP_VERIFICATION_URL, 'user.verify_totp_token', verify_totp_token_stub,
+                         methods=['GET', 'POST'])
 
 

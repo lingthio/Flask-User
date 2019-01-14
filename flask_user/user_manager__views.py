@@ -10,10 +10,10 @@ try:
 except ImportError:
     from urllib import quote, unquote          # Python 2
 
-from flask import current_app, flash, redirect, render_template, request, url_for
+from flask import current_app, flash, redirect, render_template, request, url_for, session
 from flask_login import current_user, login_user, logout_user
 
-from .decorators import login_required
+from .decorators import login_required, fresh_login_required
 from . import signals
 from .translation_utils import gettext as _    # map _() to gettext()
 import base64
@@ -392,23 +392,20 @@ class UserManager__Views(object):
                 # Find user by email (with form.email)
                 user, user_email = self.db_manager.get_user_and_user_email_by_email(login_form.email.data)
 
-            # Check if user has TOTP enabled
-            # if user.totp_secret:
-            #     #TODO Send user to TOTP verify view
-                
-
-            # else:
-            #     if user:
-            #         # Log user in
-            #         safe_next_url = self.make_safe_url(login_form.next.data)
-            #         return self._do_login_user(user, safe_next_url, login_form.remember_me.data)
             
-            #TODO remove when TOTP verify is working
             if user:
+                # Check if user has TOTP enabled for their account and verified it
+                if self.USER_ENABLE_TOTP and user.totp_secret and user.totp_verified:
+                    session['totp_user_id'] = user.id
+                    safe_next_url = self.make_safe_url(login_form.next.data)
+                    remember_me = login_form.remember_me.data
+                    return redirect(url_for('user.verify_totp_token') +'?next='+quote(safe_next_url) + '&remember_me=' + str(remember_me))
+                    #return self.verify_totp_token_view(safe_next_url, remember_me)
+                else:
                     # Log user in
                     safe_next_url = self.make_safe_url(login_form.next.data)
                     return self._do_login_user(user, safe_next_url, login_form.remember_me.data)
-
+                        
         # Render form
         self.prepare_domain_translations()
         template_filename = self.USER_LOGIN_AUTH0_TEMPLATE if self.USER_ENABLE_AUTH0 else self.USER_LOGIN_TEMPLATE
@@ -617,11 +614,14 @@ class UserManager__Views(object):
         self.prepare_domain_translations()
         return render_template(self.USER_RESET_PASSWORD_TEMPLATE, form=form)
 
-    @login_required
-    def enable_totp_view(self):
-        """ Display QR code and require validation."""
 
-        if current_user.totp_secret is None:
+
+    @fresh_login_required
+    def enable_totp_view(self):
+        """ Display QR code and require validation."""        
+
+        # Generate a new secret if it was never verified
+        if current_user.totp_secret is None and not current_user.totp_verified:
             """ Generate Time-based One Time Password for user """
             secret = base64.b32encode(os.urandom(10)).decode('utf-8')
             current_user.totp_secret = secret
@@ -629,27 +629,30 @@ class UserManager__Views(object):
             self.db_manager.commit()
 
         # Initialize form
-        form = self.VerifyTOTPTokenFormClass(request.form)
+        form = self.EnableTOTPFormClass(request.form)
 
         # Process valid POST
         if request.method == 'POST' and form.validate():
 
-            if not self.verify_totp_token(form.totp_token.data):
-                flash('Invalid token.')
-                #TODO add verified field to db
+            if not self.verify_totp_token(current_user, form.totp_token.data):
+                flash('Invalid token.', 'error')
                 return render_template(self.USER_ENABLE_TOTP_TEMPLATE, form=form)
             else:
+                current_user.totp_verified = True
+                self.db_manager.save_object(current_user)
+                self.db_manager.commit()
                 flash('Token Valid.', 'success')
 
-                # Redirect to 'next' URL
-                safe_next_url = self._get_safe_next_url('next', self.USER_TOTP_ENDPOINT)
-                return redirect(safe_next_url)
+                # Redirect to profile
+                return redirect(url_for('user.edit_user_profile'))
 
         # Render form
         self.prepare_domain_translations()
         return render_template(self.USER_ENABLE_TOTP_TEMPLATE, form=form)
 
-    @login_required
+
+
+    @fresh_login_required
     def disable_totp_view(self):
         """ Disable Time-based One Time Password for user """
 
@@ -658,6 +661,7 @@ class UserManager__Views(object):
         if request.method == 'POST' and form.validate():
             if form.disable.data:
                 current_user.totp_secret = None
+                current_user.totp_verified = False
                 self.db_manager.save_object(current_user)
                 self.db_manager.commit()
                 flash('TOTP Disabled', 'success')
@@ -668,6 +672,43 @@ class UserManager__Views(object):
             # Render form
         self.prepare_domain_translations()
         return render_template(self.USER_DISABLE_TOTP_TEMPLATE, form=form)
+
+
+    def verify_totp_token_view(self):
+        """ Verify TOTP Token """
+
+        # Get the user_id from the session and get user from the db
+        totp_user_id = session['totp_user_id']
+        user = self.db_manager.get_user_by_id(totp_user_id)
+
+        safe_next_url = self._get_safe_next_url('next', self.USER_AFTER_LOGIN_ENDPOINT)
+        remember_me = request.args.get('remember_me')
+
+
+        # Initialize form
+        form = self.VerifyTOTPTokenFormClass(request.form)
+        form.next.data = safe_next_url
+        form.remember_me.data = remember_me
+
+        if request.method == 'POST' and form.validate():
+            if not self.verify_totp_token(user, form.totp_token.data):
+                flash('Invalid token! You have been logged out.', 'error')
+                # Send user_logged_out signal
+                signals.user_logged_out.send(
+                    current_app._get_current_object(), user=user)
+                # Use Flask-Login to sign out user
+                logout_user()
+            else:
+                safe_next_url = form.next.data
+                remember_me = form.remember_me.data
+                return self._do_login_user(user, safe_next_url, remember_me)
+                flash('Token Valid')
+        
+        # Render form
+        self.prepare_domain_translations()
+        return render_template(self.USER_TOTP_VERIFICATION_TEMPLATE, form=form)
+
+
 
     def unauthenticated_view(self):
         """ Prepare a Flash message and redirect to USER_UNAUTHENTICATED_ENDPOINT"""

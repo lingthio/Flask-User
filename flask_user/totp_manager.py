@@ -19,13 +19,16 @@ class TOTPManager(object):
         
     def get_totp_uri(self):
         """Generate URI for User"""
-        #TODO check if username is enabled, otherwise use email instead
-        #TODO compensate for spaces in APP_NAME
-        app_name = self.user_manager.USER_APP_NAME
-        return 'otpauth://totp/{0}:{1}?secret={2}&issuer={0}'.format(app_name, current_user.username, current_user.totp_secret)
+        app_name = ''.join(self.user_manager.USER_APP_NAME.split())
+        if self.user_manager.USER_ENABLE_USERNAME:
+            user = current_user.username
+            if not user and self.user_manager.USER_ENABLE_EMAIL:
+                user = current_user.email
 
-    def verify_totp_token(self, totp_token):
-        return onetimepass.valid_totp(totp_token, current_user.totp_secret)
+            return 'otpauth://totp/{0}:{1}?secret={2}&issuer={0}'.format(app_name, user, current_user.totp_secret)
+
+    def verify_totp_token(self, user, totp_token):
+        return onetimepass.valid_totp(totp_token, user.totp_secret)
 
     def get_totp_qrcode(self):
         """ render TOTP qrcode """
