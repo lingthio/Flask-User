@@ -367,7 +367,6 @@ class UserManager__Views(object):
 
         # Immediately redirect already logged in users
         if self.call_or_get(current_user.is_authenticated) and self.USER_AUTO_LOGIN_AT_LOGIN:
-            print("redirect logged in user")
             return redirect(safe_next_url)
 
         # Initialize form
@@ -706,7 +705,6 @@ class UserManager__Views(object):
     @fresh_login_required
     def disable_totp_view(self):
         """ Disable Time-based One Time Password for user."""
-        print("Fresh Login: " + str(login_fresh()))
 
         form = self.DisableTOTPTokenFormClass(request.form)
 
@@ -839,7 +837,6 @@ class UserManager__Views(object):
             return redirect(url_for('user.login'))
 
         # Use Flask-Login to sign in user
-        # print('login_user: remember_me=', remember_me)
         login_user(user, remember=remember_me)
 
         # Send user_logged_in signal
