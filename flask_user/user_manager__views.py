@@ -11,9 +11,9 @@ except ImportError:
     from urllib import quote, unquote          # Python 2
 
 from flask import current_app, flash, redirect, render_template, request, url_for, session
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_fresh, fresh_login_required
 
-from .decorators import login_required, fresh_login_required
+from .decorators import login_required
 from . import signals
 from .translation_utils import gettext as _    # map _() to gettext()
 import base64
@@ -367,6 +367,7 @@ class UserManager__Views(object):
 
         # Immediately redirect already logged in users
         if self.call_or_get(current_user.is_authenticated) and self.USER_AUTO_LOGIN_AT_LOGIN:
+            print("redirect logged in user")
             return redirect(safe_next_url)
 
         # Initialize form
@@ -413,6 +414,58 @@ class UserManager__Views(object):
                       form=login_form,
                       login_form=login_form,
                       register_form=register_form)
+
+
+    def refresh_login_view(self):
+        """Prepare and process the refresh login form."""
+
+        # Authenticate username/email and login authenticated users.
+
+        safe_next_url = self._get_safe_next_url('next', self.USER_AFTER_LOGIN_ENDPOINT)
+
+
+        # Initialize form
+        login_form = self.LoginFormClass(request.form)  # for login.html
+        if request.method != 'POST':
+            login_form.next.data = safe_next_url
+
+        # Process valid POST
+        if request.method == 'POST' and login_form.validate():
+            # Retrieve User
+            user = None
+            user_email = None
+            if self.USER_ENABLE_USERNAME:
+                # Find user record by username
+                user = self.db_manager.find_user_by_username(login_form.username.data)
+
+                # Find user record by email (with form.username)
+                if not user and self.USER_ENABLE_EMAIL:
+                    user, user_email = self.db_manager.get_user_and_user_email_by_email(login_form.username.data)
+            else:
+                # Find user by email (with form.email)
+                user, user_email = self.db_manager.get_user_and_user_email_by_email(login_form.email.data)
+
+            
+            if user:
+                # Check if user has TOTP enabled for their account and verified it
+                if self.USER_ENABLE_TOTP and user.totp_secret and user.totp_verified:
+                    session['totp_user_id'] = user.id
+                    safe_next_url = self.make_safe_url(login_form.next.data)
+                    remember_me = login_form.remember_me.data
+                    return redirect(url_for('user.verify_totp_token') +'?next='+quote(safe_next_url) + '&remember_me=' + str(remember_me))
+                    #return self.verify_totp_token_view(safe_next_url, remember_me)
+                else:
+                    # Log user in
+                    safe_next_url = self.make_safe_url(login_form.next.data)
+                    return self._do_login_user(user, safe_next_url, login_form.remember_me.data)
+                        
+        # Render form
+        self.prepare_domain_translations()
+        template_filename = self.USER_REFRESH_LOGIN_TEMPLATE
+        return render_template(template_filename,
+                      form=login_form,
+                      login_form=login_form)
+
 
     def logout_view(self):
         """Process the logout link."""
@@ -655,6 +708,7 @@ class UserManager__Views(object):
     @fresh_login_required
     def disable_totp_view(self):
         """ Disable Time-based One Time Password for user """
+        print("Fresh Login: " + str(login_fresh()))
 
         form = self.DisableTOTPTokenFormClass(request.form)
 

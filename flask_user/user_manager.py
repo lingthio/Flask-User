@@ -124,7 +124,7 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Setup default LoginManager using Flask-Login
         self.login_manager = LoginManager(app)
         self.login_manager.login_view = 'user.login'
-        self.login_manager.refresh_view = 'user.login'
+        self.login_manager.refresh_view = 'user.refresh_login'
 
         # Flask-Login calls this function to retrieve a User record by token.
         @self.login_manager.user_loader
@@ -423,6 +423,9 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         def login_stub():
             return self.login_view()
 
+        def refresh_login_stub():
+            return self.refresh_login_view()
+
         def logout_stub():
             return self.logout_view()
 
@@ -476,6 +479,8 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         app.add_url_rule(self.USER_INVITE_USER_URL, 'user.invite_user', invite_user_stub,
                          methods=['GET', 'POST'])
         app.add_url_rule(self.USER_LOGIN_URL, 'user.login', login_stub,
+                         methods=['GET', 'POST'])
+        app.add_url_rule(self.REFRESH_USER_LOGIN_URL, 'user.refresh_login', refresh_login_stub,
                          methods=['GET', 'POST'])
         app.add_url_rule(self.USER_LOGOUT_URL, 'user.logout', logout_stub,
                          methods=['GET', 'POST'])

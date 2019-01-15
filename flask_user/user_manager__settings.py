@@ -184,7 +184,8 @@ class UserManager__Settings(object):
     USER_EMAIL_ACTION_URL = '/user/email/<id>/<action>' #:
     USER_FORGOT_PASSWORD_URL = '/user/forgot-password' #:
     USER_INVITE_USER_URL = '/user/invite' #:
-    USER_LOGIN_URL = '/user/sign-in' #:
+    USER_LOGIN_URL = '/user/sign-in'  #:
+    REFRESH_USER_LOGIN_URL = '/user/refesh-login' #:
     USER_LOGOUT_URL = '/user/sign-out' #:
     USER_MANAGE_EMAILS_URL = '/user/manage-emails' #:
     USER_REGISTER_URL = '/user/register' #:
@@ -205,7 +206,8 @@ class UserManager__Settings(object):
     USER_EDIT_USER_PROFILE_TEMPLATE = 'flask_user/edit_user_profile.html' #:
     USER_FORGOT_PASSWORD_TEMPLATE = 'flask_user/forgot_password.html' #:
     USER_INVITE_USER_TEMPLATE = 'flask_user/invite_user.html' #:
-    USER_LOGIN_TEMPLATE = 'flask_user/login.html' #:
+    USER_LOGIN_TEMPLATE = 'flask_user/login.html'  #:
+    USER_REFRESH_LOGIN_TEMPLATE = 'flask_user/login.html' #:
     USER_LOGIN_AUTH0_TEMPLATE = 'flask_user/login_auth0.html' #:
     USER_MANAGE_EMAILS_TEMPLATE = 'flask_user/manage_emails.html' #:
     USER_REGISTER_TEMPLATE = 'flask_user/register.html' #:
