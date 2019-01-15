@@ -1,5 +1,5 @@
 """This module implements the TOTPManager for Flask-User.
-It uses onetimepass to generate URI and verify OTP tokens.
+It generates the users URI and uses onetimepass to verify TOTP tokens.
 """
 
 # Adapted from https://blog.miguelgrinberg.com/post/two-factor-authentication-with-flask

@@ -71,3 +71,14 @@ These tokens are used in the following places:
     :no-undoc-members:
 
 .. seealso:: :ref:`Customizing the TokenManager <CustomizingManagers>`.
+
+--------
+
+.. _TOTPManager:
+
+TOTPManager class
+-----------------
+
+The TOTPManager generates and verifies Time-based One Time Passwords.
+
+.. autoclass:: flask_user.totp_manager.TOTPManager

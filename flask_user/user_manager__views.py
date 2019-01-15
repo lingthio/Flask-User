@@ -401,7 +401,6 @@ class UserManager__Views(object):
                     safe_next_url = self.make_safe_url(login_form.next.data)
                     remember_me = login_form.remember_me.data
                     return redirect(url_for('user.verify_totp_token') +'?next='+quote(safe_next_url) + '&remember_me=' + str(remember_me))
-                    #return self.verify_totp_token_view(safe_next_url, remember_me)
                 else:
                     # Log user in
                     safe_next_url = self.make_safe_url(login_form.next.data)
@@ -453,7 +452,6 @@ class UserManager__Views(object):
                     safe_next_url = self.make_safe_url(login_form.next.data)
                     remember_me = login_form.remember_me.data
                     return redirect(url_for('user.verify_totp_token') +'?next='+quote(safe_next_url) + '&remember_me=' + str(remember_me))
-                    #return self.verify_totp_token_view(safe_next_url, remember_me)
                 else:
                     # Log user in
                     safe_next_url = self.make_safe_url(login_form.next.data)
@@ -668,10 +666,10 @@ class UserManager__Views(object):
         return render_template(self.USER_RESET_PASSWORD_TEMPLATE, form=form)
 
 
-
+    # Require a fresh login to ensure that it is the user
     @fresh_login_required
     def enable_totp_view(self):
-        """ Display QR code and require validation."""        
+        """ Display QR code and require validation of TOTP token."""        
 
         # Generate a new secret if it was never verified
         if current_user.totp_secret is None and not current_user.totp_verified:
@@ -704,10 +702,10 @@ class UserManager__Views(object):
         return render_template(self.USER_ENABLE_TOTP_TEMPLATE, form=form)
 
 
-
+    # Require a fresh login to ensure that it is the user
     @fresh_login_required
     def disable_totp_view(self):
-        """ Disable Time-based One Time Password for user """
+        """ Disable Time-based One Time Password for user."""
         print("Fresh Login: " + str(login_fresh()))
 
         form = self.DisableTOTPTokenFormClass(request.form)
@@ -729,7 +727,7 @@ class UserManager__Views(object):
 
 
     def verify_totp_token_view(self):
-        """ Verify TOTP Token """
+        """ Verify TOTP Token."""
 
         # Get the user_id from the session and get user from the db
         totp_user_id = session['totp_user_id']
