@@ -179,7 +179,7 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         self.ResetPasswordFormClass = forms.ResetPasswordForm
         self.EnableTOTPFormClass = forms.EnableTOTPForm
         self.VerifyTOTPTokenFormClass = forms.VerifyTOTPTokenForm
-        self.DisableTOTPTokenFormClass = forms.DisableTOTPTokenForm
+        self.DisableTOTPTokenFormClass = forms.DisableTOTPForm
 
         # Set default managers
         # --------------------
