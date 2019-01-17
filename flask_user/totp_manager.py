@@ -24,6 +24,9 @@ class TOTPManager(object):
             user = current_user.username
             if not user and self.user_manager.USER_ENABLE_EMAIL:
                 user = current_user.email
+        else:
+            # Find user by email (with form.email)
+            user = current_user.email
 
             return 'otpauth://totp/{0}:{1}?secret={2}&issuer={0}'.format(app_name, user, current_user.totp_secret)
 
