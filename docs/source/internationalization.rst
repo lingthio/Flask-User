@@ -31,7 +31,7 @@ and will not translate with ``Flask-Babel``::
     pip uninstall Flask-Babel
 
     # Install Flask-BabelEx
-    pip intall Flask-BabelEx
+    pip install Flask-BabelEx
 
 REQUIRED: Initializing Flask-BabelEx
 ------------------------------------
