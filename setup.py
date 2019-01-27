@@ -83,6 +83,8 @@ setup(
         'Flask-SQLAlchemy>=1.0',
         'Flask-WTF>=0.9',
         'passlib>=1.6',
+        'onetimepass>=1.0.1',
+        'PyQRCode>=1.2.1',
     ],
     tests_require=['pytest'],
 )
