@@ -60,6 +60,7 @@ class UserManager__Settings(object):
 
     #: The application name displayed in email templates and page template footers.
     USER_APP_NAME = 'USER_APP_NAME'
+    USER_APP_VERSION = "v1.0"
     USER_CORPORATION_NAME = 'MyCorp'
     USER_COPYRIGHT_YEAR = 2019
 
