@@ -2,8 +2,8 @@ Flask-User v1.0
 ===============
 
 | **Attention:**
-| Flask-User v1.0 is in its Alpha phase.
-| The latest stable version is `Flask-User v0.6 <http://flask-user.readthedocs.io/en/v0.6/>`_.
+| Flask-User v1.0 is a Production/Stable version.
+| The previous version is `Flask-User v0.6 <http://flask-user.readthedocs.io/en/v0.6/>`_.
 
 
 User Authentication and Management
