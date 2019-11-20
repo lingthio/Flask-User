@@ -22,10 +22,13 @@ For all of the above we finally had to break compatibility with **v0.6 (stable)*
 For non-customized Flask-User apps, the porting is relatively straightforward.
 See the 'Porting from v0.6 to v1.0+' section in our docs.
 
+* v1.0.2.0 - Production/Stable release. Tested with Python 3.7 and 3.8.
 * v1.0.1.5 - Removed callbacks/auth0.
 * v1.0.1.4 - Fixed calls to get_primary_user_email_object().
 * v1.0.1.3 - Changed custom form class attribute namess from something like ``self.register_form`` to something like ``self.RegisterFormClass``
 * v1.0.1.2 - Use app.permanent_session_lifetime to limit user session lifetime.
-* v1.0.1.1 - Alpha release
+* v1.0.1.1 - Alpha release. Breaks backward compatibility with v0.6.
 
-* v0.6.* - Incompatible production version
+* v0.6.* - Previous version. No longer supported.
+* v0.5.* - Previous version. No longer supported.
+

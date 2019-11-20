@@ -3,7 +3,7 @@ from setuptools import setup
 
 __title__       = 'Flask-User'
 __description__ = 'Customizable User Authentication & User Management: Register, Confirm, Login, Change username/password, Forgot password and more.'
-__version__     = '1.0.1.5'
+__version__     = '1.0.2.0'
 __url__         = 'https://github.com/lingthio/Flask-User'
 __author__      = 'Ling Thio'
 __author_email__= 'ling.thio@gmail.com'
@@ -61,6 +61,8 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Security',
         'Topic :: Software Development',

@@ -60,7 +60,10 @@ Alternatives
 Authors
 -------
 | **Lead developer and Maintainer**
-| Ling Thio -- ling.thio AT gmail DOT com
+| Ling Thio -- https://github.com/lingthio
+|
+| **Collaborators and Maintainers**
+| Andrey Semakin -- https://https://github.com/and-semakin
 |
 | **Contributors**
 | `Many contributors <https://github.com/lingthio/Flask-User/graphs/contributors>`_
