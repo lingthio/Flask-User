@@ -56,6 +56,7 @@ The following data-model property names are fixed::
     Role.name               # optional
 
 The following property names are flexible::
+
     UserRoles.id            # optional
     UserRoles.user_id       # optional
     UserRoles.role_id       # optional

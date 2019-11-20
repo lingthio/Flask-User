@@ -33,7 +33,7 @@ From v0.6::
     from flask_user import UserManager, UserMixin, SQLAlchemyAdapter
         ...
     # Setup Flask-User
-    db_adapter = SQLAlchemyAdaper(db, User)
+    db_adapter = SQLAlchemyAdapter(db, User)
     user_manager = UserManager(db_adapter, app)
 
 To v1.0+::
