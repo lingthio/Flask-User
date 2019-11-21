@@ -2,12 +2,6 @@ Flask-User v1.0
 ===============
 **Customizable User Authentication, User Management, and more.**
 
-.. topic:: Attention
-
-    | This is `Flask-User v1.0 <http://flask-user.readthedocs.io/en/latest/>`_ which is **incompatible** with `Flask-User v0.6 <http://flask-user.readthedocs.io/en/v0.6/>`_.
-    | Flask-User v1.0 is basically Flask-User v0.6 with a more Pythonic API for customization.
-    | This package is production grade, but it is marked as an alpha release because its API may be subject to change.
-
 | So, you're writing a Flask web application and would like to authenticate your users.
 | You start with a simple **Login** page, but soon enough you'll need to handle:
 
@@ -22,6 +16,10 @@ And wouldn't it be nice to also offer:
 * **Increased Reliability**
 * **Role-based Authorization**
 * **Internationalization** (Chinese, Dutch, English, Farsi, Finnish, French, German, Italian, Russian, Spanish, Swedish, and Turkish)
+
+Stable
+------
+Version 1.0 is Production/Stable grade since 2018.
 
 Customizable, yet Ready to use
 ------------------------------
