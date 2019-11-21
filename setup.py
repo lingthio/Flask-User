@@ -55,9 +55,7 @@ setup(
         'Natural Language :: Turkish',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
@@ -74,7 +72,7 @@ setup(
     include_package_data=True,    # Tells setup to use MANIFEST.in
     zip_safe=False,    # Do not zip as it will make debugging harder
 
-    python_requires='>=2.6, !=3.0.*, !=3.1.*, !=3.2.*',   # Python 2.6, 2.7, 3.3+
+    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',   # Python 2.7 and 3.4+
     setup_requires=['Flask-Login',] + pytest_runner,
     install_requires=[
         'bcrypt>=2.0',

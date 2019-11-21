@@ -60,11 +60,11 @@ def docs(rebuild=False):
 # Available Python versions: pyenv install --list
 @task
 def setup_tox():
-    versions_str = '2.6.9 2.7.13 3.3.6 3.4.6 3.5.3 3.6.2'
+    versions_str = '2.7.17 3.4.10 3.5.9 3.6.9 3.7.5 3.8.0'
     versions = versions_str.split()
     for version in versions:
         local('pyenv install --skip-existing '+version)
-    local('pyenv global '+versions_str)
+    local('pyenv local '+versions_str)
 
 @task
 def tox():
