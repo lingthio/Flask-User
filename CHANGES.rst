@@ -22,7 +22,7 @@ For all of the above we finally had to break compatibility with **v0.6 (stable)*
 For non-customized Flask-User apps, the porting is relatively straightforward.
 See the 'Porting from v0.6 to v1.0+' section in our docs.
 
-* v1.0.2.1 - Add Slovak translation.
+* v1.0.2.1 - Add Slovak and Ukrainian translations.
 * v1.0.2.0 - Production/Stable release. Dropped support for Python 2.6 and 3.3.
 * v1.0.1.5 - Removed callbacks/auth0.
 * v1.0.1.4 - Fixed calls to get_primary_user_email_object().
