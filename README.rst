@@ -39,7 +39,7 @@ Well documented
 Additional features
 -------------------
 * **MIT License**
-* **Tested** on Python 2.7, 3.3, 3.4, 3.5, 3.6, 3.7 and 3.8. Coverage: Over 90%.
+* **Tested** on Python 2.7, 3.4, 3.5, 3.6, 3.7 and 3.8. Coverage: Over 90%.
 * **Event hooking** -- Through efficient signals.
 * **Support for multiple emails per user**
 
