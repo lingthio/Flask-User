@@ -5,7 +5,7 @@ F.A.Q.
 | **Q: Can I see a preview?**
 | A: Yes you can: `Flask-User Demo <https://flask-user-demo.herokuapp.com/>`_
 
-| **Q: What's the difference between Flask-User and Flask-Login?**
+| **Q: What's the relationship between Flask-User and Flask-Login?**
 | A: Flask-User manages **users** and uses Flask-Login to manage **user sessions**.
 | Flask-User is built on top of Flask-Login to provide the register/login/change forms and to manages the email verification, the user authentication and the user authorization.
 
