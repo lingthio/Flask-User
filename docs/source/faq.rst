@@ -14,12 +14,12 @@ F.A.Q.
   Flask-Security messages and functionality (in 2013) and because it didn't offer
   Username login, multiple emails per user, and Internationalization.
 
-Flask-Security has been around since at least March 2012
-and additionally offers Json/AJAX, MongoDB, Peewee, and Basic HTTP Authentication.
-
 Flask-User has been designed with :doc:`Full customization <customizing>` in mind
 and additionally offers Username login and Internationalization.
 It exists since December 2013 and contains 661 statements with a 98% test coverage.
+
+Flask-Security has been around since at least March 2012
+and additionally offers Json/AJAX, MongoDB, Peewee, and Basic HTTP Authentication.
 
 | **Q: Can users login with usernames and email addresses?**
 | A: Yes.
