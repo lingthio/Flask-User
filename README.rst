@@ -19,7 +19,7 @@ And wouldn't it be nice to also offer:
 * **Added Security**
 * **Increased Reliability**
 * **Role-based Authorization**
-* **Internationalization** (Chinese, Dutch, English, Farsi, Finnish, French, German, Italian, Russian, Spanish, Swedish, and Turkish)
+* **Internationalization** (Chinese, Dutch, English, Farsi, Finnish, French, German, Italian, Russian, Slovak, Spanish, Swedish, and Turkish)
 
 
 Customizable, yet Ready to use
