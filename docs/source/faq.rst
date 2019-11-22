@@ -6,9 +6,8 @@ F.A.Q.
 | A: Yes you can: `Flask-User Demo <https://flask-user-demo.herokuapp.com/>`_
 
 | **Q: What's the difference between Flask-User and Flask-Login?**
-| A: Flask-Login manages **user sessions**. Flask-User manages **users** and uses Flask-Login to manage their user sessions.
-| Oversimplified: Flask-Login tracks user sessions and whether a user is authenticated or not. There are no forms involved in Flask-Login.
-| Flask-User provides the register/login/change forms, manages the adding/updating/removal of users, manages user authentication and manages user authorization.
+| A: Flask-User manages **users** and uses Flask-Login to manage **user sessions**.
+| Flask-User is built on top of Flask-Login to provide the register/login/change forms and to manages the email verification, the user authentication and the user authorization.
 
 | **Q: What are the differences between Flask-User and Flask-Security?**
 | A: The main reason why I wrote Flask-User was because I found it difficult to customize
