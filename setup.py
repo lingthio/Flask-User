@@ -51,6 +51,7 @@ setup(
         'Natural Language :: Italian',
         'Natural Language :: Persian',
         'Natural Language :: Russian',
+        'Natural Language :: Slovak',
         'Natural Language :: Swedish',
         'Natural Language :: Turkish',
         'Operating System :: OS Independent',
