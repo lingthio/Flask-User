@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-09-07 12:43-0700\n"
+"POT-Creation-Date: 2019-11-22 22:36+0500\n"
 "PO-Revision-Date: 2017-09-05 19:39-0700\n"
 "Last-Translator: Simon Allendörfer <kontakt@simon.allendoerfer.info>\n"
 "Language: de\n"
@@ -16,198 +16,206 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.5.0\n"
+"Generated-By: Babel 2.7.0\n"
 
-#: flask_user/forms.py:40
+#: flask_user/forms.py:41
 msgid "This Username is already in use. Please try another one."
 msgstr "Dieser Nutzername ist bereits vergeben. Bitte versuchen Sie einen anderen."
 
-#: flask_user/forms.py:47
+#: flask_user/forms.py:48
 msgid "This Email is already in use. Please try another one."
 msgstr ""
 "Diese E-Mail-Adresse wird bereits genutzt. Bitte versuchen Sie eine "
 "andere."
 
-#: flask_user/forms.py:56 flask_user/forms.py:159 flask_user/forms.py:220
-#: flask_user/forms.py:251 flask_user/forms.py:308 flask_user/forms.py:352
+#: flask_user/forms.py:57 flask_user/forms.py:156 flask_user/forms.py:217
+#: flask_user/forms.py:248 flask_user/forms.py:305 flask_user/forms.py:348
 msgid "Email"
 msgstr "E-Mail-Adresse"
 
-#: flask_user/forms.py:57 flask_user/forms.py:160 flask_user/forms.py:252
-#: flask_user/forms.py:353
+#: flask_user/forms.py:58 flask_user/forms.py:157 flask_user/forms.py:249
+#: flask_user/forms.py:349
 msgid "Email is required"
 msgstr "E-Mail-Adresse wird benötigt"
 
-#: flask_user/forms.py:58 flask_user/forms.py:161 flask_user/forms.py:253
-#: flask_user/forms.py:354
+#: flask_user/forms.py:59 flask_user/forms.py:158 flask_user/forms.py:250
+#: flask_user/forms.py:350
 msgid "Invalid Email"
 msgstr "Ungültige E-Mail-Adresse"
 
-#: flask_user/forms.py:60
+#: flask_user/forms.py:61
 msgid "Add Email"
 msgstr "E-Mail-Adresse hinzufügen"
 
-#: flask_user/forms.py:65 flask_user/forms.py:112
+#: flask_user/forms.py:66 flask_user/forms.py:111
 msgid "Old Password"
 msgstr "Altes Passwort"
 
-#: flask_user/forms.py:66 flask_user/forms.py:113
+#: flask_user/forms.py:67 flask_user/forms.py:112
 msgid "Old Password is required"
 msgstr "Altes Passwort wird benötigt"
 
-#: flask_user/forms.py:68 flask_user/forms.py:322
+#: flask_user/forms.py:69 flask_user/forms.py:319
 msgid "New Password"
 msgstr "Neues Passwort"
 
-#: flask_user/forms.py:69 flask_user/forms.py:323
+#: flask_user/forms.py:70 flask_user/forms.py:320
 msgid "New Password is required"
 msgstr "Neues Passwort wird benötigt"
 
-#: flask_user/forms.py:72 flask_user/forms.py:326
+#: flask_user/forms.py:73 flask_user/forms.py:323
 msgid "Retype New Password"
 msgstr "Neues Passwort erneut eingeben"
 
-#: flask_user/forms.py:73 flask_user/forms.py:327
+#: flask_user/forms.py:74 flask_user/forms.py:324
 msgid "New Password and Retype Password did not match"
 msgstr "Neues Passwort und Wiederholung stimmen nicht überein"
 
-#: flask_user/forms.py:76 flask_user/forms.py:329
+#: flask_user/forms.py:76 flask_user/forms.py:326
 #: flask_user/templates/flask_user/change_password.html:5
-#: flask_user/templates/flask_user/edit_user_profile.html:11
+#: flask_user/templates/flask_user/edit_user_profile.html:26
 msgid "Change password"
 msgstr "Passwort ändern"
 
-#: flask_user/forms.py:98 flask_user/forms.py:135
+#: flask_user/forms.py:97 flask_user/forms.py:132
 msgid "Old Password is incorrect"
 msgstr "Altes Passwort ist falsch"
 
-#: flask_user/forms.py:107
+#: flask_user/forms.py:106
 msgid "New Username"
 msgstr "Neuer Nutzername"
 
-#: flask_user/forms.py:108 flask_user/forms.py:157 flask_user/forms.py:248
+#: flask_user/forms.py:107 flask_user/forms.py:154 flask_user/forms.py:245
 msgid "Username is required"
 msgstr "Nutzername wird benötigt"
 
-#: flask_user/forms.py:116
+#: flask_user/forms.py:114
 #: flask_user/templates/flask_user/change_username.html:5
-#: flask_user/templates/flask_user/edit_user_profile.html:8
+#: flask_user/templates/flask_user/edit_user_profile.html:23
 msgid "Change username"
 msgstr "Nutzername ändern"
 
-#: flask_user/forms.py:145 flask_user/forms.py:146 flask_user/forms.py:156
-#: flask_user/forms.py:216 flask_user/forms.py:247
-msgid "Username"
-msgstr "Nutzername"
+#: flask_user/forms.py:142
+msgid "First name"
+msgstr ""
 
-#: flask_user/forms.py:148
+#: flask_user/forms.py:143
+msgid "Last name"
+msgstr ""
+
+#: flask_user/forms.py:145
 msgid "Update"
 msgstr "Aktualisieren"
 
-#: flask_user/forms.py:163 flask_user/forms.py:255
+#: flask_user/forms.py:153 flask_user/forms.py:213 flask_user/forms.py:244
+msgid "Username"
+msgstr "Nutzername"
+
+#: flask_user/forms.py:160 flask_user/forms.py:252
 msgid "Password"
 msgstr "Passwort"
 
-#: flask_user/forms.py:164 flask_user/forms.py:256
+#: flask_user/forms.py:161 flask_user/forms.py:253
 msgid "Password is required"
 msgstr "Passwort wird benötigt"
 
-#: flask_user/forms.py:166
+#: flask_user/forms.py:163
 msgid "Remember me"
 msgstr "Angemeldet bleiben"
 
-#: flask_user/forms.py:168 flask_user/templates/flask_user/login.html:5
+#: flask_user/forms.py:165 flask_user/forms.py:356
+#: flask_user/templates/flask_user/login.html:5
 #: flask_user/templates/flask_user/login_or_register.html:9
-#: flask_user/templates/flask_user_layout.html:39 flask_user/translations.py:9
+#: flask_user/templates/flask_user_layout.html:42
 msgid "Sign in"
 msgstr "Anmelden"
 
-#: flask_user/forms.py:175
+#: flask_user/forms.py:172
 msgid "Username or Email"
 msgstr "Nutzername oder E-Mail-Adresse"
 
-#: flask_user/forms.py:212
+#: flask_user/forms.py:209
 msgid "Username/Email"
 msgstr "Nutzername/E-Mail-Adresse"
 
-#: flask_user/forms.py:226 flask_user/forms.py:308
+#: flask_user/forms.py:223 flask_user/forms.py:305
 #, python-format
 msgid "%(username_or_email)s does not exist"
 msgstr "%(username_or_email)s existiert nicht"
 
-#: flask_user/forms.py:229
+#: flask_user/forms.py:226
 msgid "Incorrect Password"
 msgstr "Passwort falsch"
 
-#: flask_user/forms.py:233
+#: flask_user/forms.py:230
 #, python-format
 msgid "Incorrect %(username_or_email)s and/or Password"
 msgstr "%(username_or_email)s und/oder Passwort falsch"
 
-#: flask_user/forms.py:258
+#: flask_user/forms.py:255
 msgid "Retype Password"
 msgstr "Passwort-Wiederholung"
 
-#: flask_user/forms.py:259
+#: flask_user/forms.py:256
 msgid "Password and Retype Password did not match"
 msgstr "Passwort und Passwort-Wiederholung stimmten nicht überein"
 
-#: flask_user/forms.py:260
+#: flask_user/forms.py:257
 msgid "Token"
 msgstr "Token"
 
-#: flask_user/forms.py:262
+#: flask_user/forms.py:259
 #: flask_user/templates/flask_user/login_or_register.html:41
 #: flask_user/templates/flask_user/register.html:5
 msgid "Register"
 msgstr "Registrieren"
 
-#: flask_user/forms.py:297 flask_user/forms.py:313
+#: flask_user/forms.py:294 flask_user/forms.py:310
 msgid "Your email address"
 msgstr "Ihre E-Mail-Adresse"
 
-#: flask_user/forms.py:298 flask_user/forms.py:314
+#: flask_user/forms.py:295 flask_user/forms.py:311
 msgid "Email address is required"
 msgstr "E-Mail-Adresse wird benötigt"
 
-#: flask_user/forms.py:299 flask_user/forms.py:315
+#: flask_user/forms.py:296 flask_user/forms.py:312
 msgid "Invalid Email address"
 msgstr "Ungültige E-Mail-Adresse"
 
-#: flask_user/forms.py:301
+#: flask_user/forms.py:298
 msgid "Send reset password email"
 msgstr "E-Mail zur Passwortzurücksetzung senden"
 
-#: flask_user/forms.py:317
+#: flask_user/forms.py:314
 msgid "Resend email confirmation email"
 msgstr "Bestätigungs-E-Mail erneut senden"
 
-#: flask_user/forms.py:356
+#: flask_user/forms.py:352
 msgid "Invite!"
 msgstr "Einladen!"
 
-#: flask_user/templates/flask_user_layout.html:37 flask_user/translations.py:10
+#: flask_user/forms.py:357 flask_user/templates/flask_user_layout.html:40
 msgid "Sign out"
 msgstr "Abmelden"
 
-#: flask_user/translations.py:11
+#: flask_user/forms.py:358
 msgid "Home Page"
 msgstr "Homepage"
 
+#: flask_user/forms.py:359
 #: flask_user/templates/flask_user/edit_user_profile.html:5
-#: flask_user/translations.py:12
 msgid "User profile"
 msgstr "Nutzerprofil"
 
-#: flask_user/translations.py:13
+#: flask_user/forms.py:360
 msgid "Member Page"
 msgstr "Mitgliedsseite"
 
-#: flask_user/translations.py:14
+#: flask_user/forms.py:361
 msgid "Admin Page"
 msgstr ""
 
-#: flask_user/user_manager.py:259
+#: flask_user/user_manager.py:250
 msgid ""
 "Password must have at least 6 characters with one lowercase letter, one "
 "uppercase letter and one number"
@@ -215,32 +223,32 @@ msgstr ""
 "Das Passwort muss mindestens 6 Zeichen enthalten, ein Kleinbuchstabe, ein"
 " Großbuchstabe und eine Zahl"
 
-#: flask_user/user_manager.py:270
+#: flask_user/user_manager.py:266
 msgid "Username must be at least 3 characters long"
 msgstr "Nutzername muss mindestens 3 Zeichen lang sein"
 
-#: flask_user/user_manager.py:276
+#: flask_user/user_manager.py:272
 msgid "Username may only contain letters, numbers, '-', '.' and '_'"
 msgstr "Nutzername darf nur Buchstaben, Zahlen, '-', '.' und '_' enthalten"
 
-#: flask_user/user_manager__views.py:63
+#: flask_user/user_manager__views.py:113
 msgid "Your password has been changed successfully."
 msgstr "Ihr Passwort wurde erfolgreich geändert."
 
-#: flask_user/user_manager__views.py:100
+#: flask_user/user_manager__views.py:147
 #, python-format
 msgid "Your username has been changed to '%(username)s'."
 msgstr "Ihr Nutzername wurde zu '%(username)s' geändert."
 
-#: flask_user/user_manager__views.py:120 flask_user/user_manager__views.py:142
+#: flask_user/user_manager__views.py:172
 msgid "Invalid confirmation token."
 msgstr "Ungültiger Bestätigungscode."
 
-#: flask_user/user_manager__views.py:151
+#: flask_user/user_manager__views.py:184
 msgid "Your email has been confirmed."
 msgstr "Ihre E-Mail-Adresse wurde bestätigt."
 
-#: flask_user/user_manager__views.py:230
+#: flask_user/user_manager__views.py:277
 #, python-format
 msgid ""
 "A reset password email has been sent to '%(email)s'. Open that email and "
@@ -250,38 +258,33 @@ msgstr ""
 "worden. Folgen Sie den Anweisungen in der E-Mail um Ihr Passwort "
 "zurückzusetzen."
 
-#: flask_user/user_manager__views.py:305
+#: flask_user/user_manager__views.py:348
 msgid "Invitation has been sent."
 msgstr "Einladung wurde versendet."
 
-#: flask_user/user_manager__views.py:379
+#: flask_user/user_manager__views.py:417
 msgid "You have signed out successfully."
 msgstr "Sie haben sich erfolgreich abgemeldet."
 
-#: flask_user/user_manager__views.py:548
+#: flask_user/user_manager__views.py:570
 msgid "Your reset password token is invalid."
 msgstr "Ihr Passwortzurücksetzungscode ist ungültig."
 
-#: flask_user/user_manager__views.py:574
+#: flask_user/user_manager__views.py:593
 msgid "Your password has been reset successfully."
 msgstr "Ihr Passwort wurde erfolgreich zurückgesetzt."
 
-#: flask_user/user_manager__views.py:591
+#: flask_user/user_manager__views.py:610
 #, python-format
 msgid "You must be signed in to access '%(url)s'."
 msgstr "Sie müssen angemeldet sein um '%(url)s' aufrufen zu können."
 
-#: flask_user/user_manager__views.py:602
+#: flask_user/user_manager__views.py:621
 #, python-format
 msgid "You do not have permission to access '%(url)s'."
 msgstr "Sie haben nicht die nötigen Berechtigungen um '%(url)s' aufzurufen."
 
-#: flask_user/user_manager__views.py:612
-#, python-format
-msgid "You must confirm your email to access '%(url)s'."
-msgstr "Sie müssen Ihre E-Mail-Adresse bestätigen um '%(url)s' aufrufen zu können."
-
-#: flask_user/user_manager__views.py:636 flask_user/user_manager__views.py:652
+#: flask_user/user_manager__views.py:647 flask_user/user_manager__views.py:661
 #, python-format
 msgid ""
 "A confirmation email has been sent to %(email)s with instructions to "
@@ -290,15 +293,15 @@ msgstr ""
 "Eine Bestätigungs-E-Mail mit Anweisungen zum Abschließen der "
 "Registrierung wurde an %(email)s gesendet."
 
-#: flask_user/user_manager__views.py:638
+#: flask_user/user_manager__views.py:649
 msgid "You have registered successfully."
 msgstr "Sie haben sich erfolgreich registriert."
 
-#: flask_user/user_manager__views.py:661
+#: flask_user/user_manager__views.py:670
 msgid "Your account has not been enabled."
 msgstr "Ihr Konto wurde nicht freigeschaltet."
 
-#: flask_user/user_manager__views.py:671
+#: flask_user/user_manager__views.py:679
 #, python-format
 msgid ""
 "Your email address has not yet been confirmed. Check your email Inbox and"
@@ -309,11 +312,11 @@ msgstr ""
 "Posteingang und Spam-Ordner nach der Bestätigungs-E-Mail oder <a "
 "href=\"%(url)s\">senden Sie die Bestätigung erneut</a>."
 
-#: flask_user/user_manager__views.py:682
+#: flask_user/user_manager__views.py:690
 msgid "You have signed in successfully."
 msgstr "Sie haben sich erfolgreich angemeldet."
 
-#: flask_user/templates/flask_user_layout.html:45
+#: flask_user/templates/flask_user_layout.html:48
 msgid "Home page"
 msgstr "Startseite"
 
@@ -361,4 +364,10 @@ msgstr "Passwort zurücksetzen"
 
 #~ msgid "Special Page"
 #~ msgstr "Spezialseite"
+
+#~ msgid "You must confirm your email to access '%(url)s'."
+#~ msgstr ""
+#~ "Sie müssen Ihre E-Mail-Adresse "
+#~ "bestätigen um '%(url)s' aufrufen zu "
+#~ "können."
 

@@ -5,17 +5,21 @@ F.A.Q.
 | **Q: Can I see a preview?**
 | A: Yes you can: `Flask-User Demo <https://flask-user-demo.herokuapp.com/>`_
 
+| **Q: What's the relationship between Flask-User and Flask-Login?**
+| A: Flask-User manages **users** and uses Flask-Login to manage **user sessions**.
+| Flask-User is built on top of Flask-Login to provide the register/login/change forms and to manages the email verification, the user authentication and the user authorization.
+
 | **Q: What are the differences between Flask-User and Flask-Security?**
 | A: The main reason why I wrote Flask-User was because I found it difficult to customize
   Flask-Security messages and functionality (in 2013) and because it didn't offer
   Username login, multiple emails per user, and Internationalization.
 
-Flask-Security has been around since at least March 2012
-and additionally offers Json/AJAX, MongoDB, Peewee, and Basic HTTP Authentication.
-
 Flask-User has been designed with :doc:`Full customization <customizing>` in mind
 and additionally offers Username login and Internationalization.
 It exists since December 2013 and contains 661 statements with a 98% test coverage.
+
+Flask-Security has been around since at least March 2012
+and additionally offers Json/AJAX, MongoDB, Peewee, and Basic HTTP Authentication.
 
 | **Q: Can users login with usernames and email addresses?**
 | A: Yes.

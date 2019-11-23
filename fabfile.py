@@ -14,7 +14,7 @@ def runapp(appname):
 def babel(command):
     # Generate the .pot file from source code files
     if command=='extract':
-        local('pybabel extract -F flask_user/translations/babel.cfg -k lazy_gettext -c NOTE -o flask_user/translations/flask_user.pot flask_user flask_user')
+        local('pybabel extract -F flask_user/translations/babel.cfg -k lazy_gettext -c NOTE -o flask_user/translations/flask_user.pot --project Flask-User --version v1.0.0.0 flask_user flask_user')
 
     # Update .po files from the .pot file
     elif command=='update':
