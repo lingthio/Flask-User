@@ -10,6 +10,7 @@ Flask-User ships with the following language translations:
 * Finnish (fi)
 * French (fr)
 * Italian (it)
+* Polish (pl)
 * Russian (ru)
 * Slovak (sk)
 * Spanish (es)

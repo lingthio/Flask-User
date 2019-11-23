@@ -50,6 +50,7 @@ setup(
         'Natural Language :: French',
         'Natural Language :: Italian',
         'Natural Language :: Persian',
+        'Natural Language :: Polish',
         'Natural Language :: Russian',
         'Natural Language :: Slovak',
         'Natural Language :: Swedish',
