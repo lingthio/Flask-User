@@ -285,8 +285,8 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Check for invalid settings
         # --------------------------
 
-        # Check self.UserInvitationClass and USER_ENABLE_INVITE_USER
-        if self.USER_ENABLE_INVITE_USER and not self.UserInvitationClass:
+        # Check UserInvitationClass and USER_ENABLE_INVITE_USER
+        if self.USER_ENABLE_INVITE_USER and not self.db_manager.UserInvitationClass:
             raise ConfigError(
                 'UserInvitationClass is missing while USER_ENABLE_INVITE_USER is True.' \
                 ' Specify UserInvitationClass with UserManager(app, db, User, UserInvitationClass=...' \

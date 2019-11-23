@@ -42,7 +42,7 @@ class ConfigClass(object):
     # Flask-User settings
     USER_APP_NAME = 'TestApp'
     USER_ENABLE_EMAIL = True
-    USER_ENABLE_INVITATION = True
+    USER_ENABLE_INVITE_USER = True
 
     # Deliberately test with deprecated v0.6 Flask-User settings
     USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL = False
