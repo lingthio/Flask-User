@@ -310,7 +310,7 @@ msgid ""
 msgstr ""
 "Twój adres email nie został jeszcze potwierdzony. Sprawdź swoją skrzynkę "
 "pocztową, wiadomości przychodzące, jak również folder Spam lub "
-"<a href=\"%(url)s\">Wyślij wiadomość potwierdzającą jeszcze raz."
+"<a href=\"%(url)s\">Wyślij wiadomość potwierdzającą jeszcze raz</a>."
 
 #: flask_user/user_manager__views.py:682
 msgid "You have signed in successfully."
