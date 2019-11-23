@@ -54,6 +54,7 @@ setup(
         'Natural Language :: Slovak',
         'Natural Language :: Swedish',
         'Natural Language :: Turkish',
+        'Natural Language :: Ukrainian',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',

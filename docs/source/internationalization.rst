@@ -15,6 +15,7 @@ Flask-User ships with the following language translations:
 * Spanish (es)
 * Swedish (sv)
 * Turkish (tr)
+* Ukrainian (uk)
 
 They can be found in the Flask-User installation directory, under the ``translations`` subdirectory.
 Each translation file is called ``flask_user.mo`` (called a domain translation)
