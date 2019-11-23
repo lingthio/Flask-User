@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flask-User 1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-11-22 22:48+0500\n"
+"POT-Creation-Date: 2019-11-22 22:36+0500\n"
 "PO-Revision-Date: 2019-11-21 22:55+0500\n"
 "Last-Translator: Andrey Semakin\n"
 "Language: uk\n"
@@ -219,8 +219,8 @@ msgid ""
 "Password must have at least 6 characters with one lowercase letter, one "
 "uppercase letter and one number"
 msgstr ""
-"Пароль повинен бути не менше 6 символів, з одного рядкової буквою, "
-"однією прописаний і однією цифрою"
+"Пароль повинен бути не менше 6 символів, з одного рядкової буквою, однією"
+" прописаний і однією цифрою"
 
 #: flask_user/user_manager.py:266
 msgid "Username must be at least 3 characters long"
@@ -349,3 +349,4 @@ msgstr "Повторно вислати лист з підтвердженням
 #: flask_user/templates/flask_user/reset_password.html:5
 msgid "Reset Password"
 msgstr "Скинути пароль"
+
