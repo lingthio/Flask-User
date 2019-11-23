@@ -23,7 +23,7 @@ For non-customized Flask-User apps, the porting is relatively straightforward.
 See the 'Porting from v0.6 to v1.0+' section in our docs.
 
 * v1.0.2.1:
-    * Added Slovak and Ukrainian translations.
+    * Added Slovak, Polish and Ukrainian translations.
     * Fixed bug in "Password Changed" email template.
 * v1.0.2.0 - Production/Stable release. Dropped support for Python 2.6 and 3.3.
 * v1.0.1.5 - Removed callbacks/auth0.
