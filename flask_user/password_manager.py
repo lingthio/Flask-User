@@ -47,7 +47,7 @@ class PasswordManager(object):
         """
 
         # Use passlib's CryptContext to hash a password
-        password_hash = self.password_crypt_context.encrypt(password)
+        password_hash = self.password_crypt_context.hash(password)
 
         return password_hash
 
