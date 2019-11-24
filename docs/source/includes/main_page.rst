@@ -48,7 +48,7 @@ Minimal Requirements
 - Flask 0.9+
 - Flask-Login 0.2+
 - Flask-WTF 0.9+
-- passlib 1.6+
+- passlib 1.7+
 
 Alternatives
 ------------
