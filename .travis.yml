@@ -3,6 +3,8 @@
 
 language: python
 
+# Supported Python versions.
+# Please keep this list in sync with `tox.ini`.
 python:
   - "2.7"
   - "3.4"
