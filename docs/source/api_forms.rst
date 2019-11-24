@@ -27,12 +27,34 @@ ChangeUsernameForm
 
 --------
 
+.. _DisableTOTPForm:
+
+DisableTOTPForm
+---------------
+
+.. autoclass:: flask_user.forms.DisableTOTPForm
+    :no-undoc-members:
+    :no-inherited-members:
+
+--------
+
 .. _EditUserProfileForm:
 
 EditUserProfileForm
 -------------------
 
 .. autoclass:: flask_user.forms.EditUserProfileForm
+    :no-undoc-members:
+    :no-inherited-members:
+
+--------
+
+.. _EnableTOTPForm:
+
+EnableTOTPForm
+--------------
+
+.. autoclass:: flask_user.forms.EnableTOTPForm
     :no-undoc-members:
     :no-inherited-members:
 
@@ -99,5 +121,16 @@ ResetPasswordForm
 -----------------
 
 .. autoclass:: flask_user.forms.ResetPasswordForm
+    :no-undoc-members:
+    :no-inherited-members:
+
+--------
+
+.. _VerifyTOTPTokenForm:
+
+VerifyTOTPTokenForm
+-------------------
+
+.. autoclass:: flask_user.forms.VerifyTOTPTokenForm
     :no-undoc-members:
     :no-inherited-members:

@@ -21,6 +21,10 @@ Flask-SQLAlchemy==2.2
 sendgrid==5.2.0
 Flask-Sendmail==0.1
 
+#TOTP
+onetimepass==1.0.1
+PyQRCode==1.2.1
+
 # Development packages
 pytest==3.0.5
 pytest-cov==2.5.1

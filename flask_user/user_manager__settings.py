@@ -55,6 +55,9 @@ class UserManager__Settings(object):
     #:     Generic settings and their defaults
     USER_ENABLE_REMEMBER_ME = True
 
+    #: | User Time-based One Time Passwords
+    USER_ENABLE_TOTP = False
+
     USER_ENABLE_AUTH0 = False
 
 
@@ -181,11 +184,16 @@ class UserManager__Settings(object):
     USER_EMAIL_ACTION_URL = '/user/email/<id>/<action>' #:
     USER_FORGOT_PASSWORD_URL = '/user/forgot-password' #:
     USER_INVITE_USER_URL = '/user/invite' #:
-    USER_LOGIN_URL = '/user/sign-in' #:
+    USER_LOGIN_URL = '/user/sign-in'  #:
+    REFRESH_USER_LOGIN_URL = '/user/refesh-login' #:
     USER_LOGOUT_URL = '/user/sign-out' #:
     USER_MANAGE_EMAILS_URL = '/user/manage-emails' #:
     USER_REGISTER_URL = '/user/register' #:
-    USER_RESEND_EMAIL_CONFIRMATION_URL = '/user/resend-email-confirmation' #:
+    USER_RESEND_EMAIL_CONFIRMATION_URL = '/user/resend-email-confirmation'  #:
+    USER_ENABLE_TOTP_URL = '/user/enable-totp'
+    USER_DISABLE_TOTP_URL = '/user/disable-totp'
+    USER_TOTP_QRCODE_URL = '/user/totp-qrcode'
+    USER_TOTP_VERIFICATION_URL = '/user/verify-totp-token'
 
     #: .. This hack shows a header above the _next_ section
     #: .. code-block:: none
@@ -198,11 +206,15 @@ class UserManager__Settings(object):
     USER_EDIT_USER_PROFILE_TEMPLATE = 'flask_user/edit_user_profile.html' #:
     USER_FORGOT_PASSWORD_TEMPLATE = 'flask_user/forgot_password.html' #:
     USER_INVITE_USER_TEMPLATE = 'flask_user/invite_user.html' #:
-    USER_LOGIN_TEMPLATE = 'flask_user/login.html' #:
+    USER_LOGIN_TEMPLATE = 'flask_user/login.html'  #:
+    USER_REFRESH_LOGIN_TEMPLATE = 'flask_user/login.html' #:
     USER_LOGIN_AUTH0_TEMPLATE = 'flask_user/login_auth0.html' #:
     USER_MANAGE_EMAILS_TEMPLATE = 'flask_user/manage_emails.html' #:
     USER_REGISTER_TEMPLATE = 'flask_user/register.html' #:
-    USER_RESEND_CONFIRM_EMAIL_TEMPLATE = 'flask_user/resend_confirm_email.html' #:
+    USER_RESEND_CONFIRM_EMAIL_TEMPLATE = 'flask_user/resend_confirm_email.html'
+    USER_ENABLE_TOTP_TEMPLATE = 'flask_user/enable_totp.html'  #:
+    USER_DISABLE_TOTP_TEMPLATE = 'flask_user/disable_totp.html'  #:
+    USER_TOTP_VERIFICATION_TEMPLATE = 'flask_user/verify_totp_token.html'
 
     #: .. This hack shows a header above the _next_ section
     #: .. code-block:: none
@@ -222,7 +234,7 @@ class UserManager__Settings(object):
     #:     FLask endpoint settings
     USER_USERNAME_CHANGED_EMAIL_TEMPLATE = 'flask_user/emails/username_changed'
 
-    USER_AFTER_CHANGE_PASSWORD_ENDPOINT = '' #:
+    USER_AFTER_CHANGE_PASSWORD_ENDPOINT = ''  #:
     USER_AFTER_CHANGE_USERNAME_ENDPOINT = '' #:
     USER_AFTER_CONFIRM_ENDPOINT = '' #:
     USER_AFTER_EDIT_USER_PROFILE_ENDPOINT = '' #:
@@ -234,5 +246,6 @@ class UserManager__Settings(object):
     USER_AFTER_RESET_PASSWORD_ENDPOINT = '' #:
     USER_AFTER_INVITE_ENDPOINT = '' #:
     USER_UNAUTHENTICATED_ENDPOINT = 'user.login' #:
-    USER_UNAUTHORIZED_ENDPOINT = '' #:
+    USER_UNAUTHORIZED_ENDPOINT = ''  #:
+    USER_TOTP_ENDPOINT = '' #:
     # USER_UNCONFIRMED_EMAIL_ENDPOINT = '' #:

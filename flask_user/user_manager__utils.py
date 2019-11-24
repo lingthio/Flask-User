@@ -84,4 +84,12 @@ class UserManager__Utils(object):
 
     def verify_token(self, token, expiration_in_seconds=None):
         """Convenience method that calls self.token_manager.verify_token(token, expiration_in_seconds)."""
-        return self.token_manager.verify_token(token, expiration_in_seconds)
+        return self.token_manager.verify_token(token, expiration_in_seconds)    
+
+    def verify_totp_token(self, user, totp_token):
+        """Convenience method that calls self.totp_manager.verify_totp_token(totp_token)."""
+        return self.totp_manager.verify_totp_token(user, totp_token)
+
+    def get_totp_qrcode(self):
+        """Convenience method that calls self.totp_manager.get_totp_qrcode()."""
+        return self.totp_manager.get_totp_qrcode()
