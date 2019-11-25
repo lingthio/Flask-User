@@ -6,7 +6,6 @@
 # License: Simplified BSD License, see LICENSE.txt for more details.
 
 
-import string
 from flask import current_app
 from flask_login import current_user
 
