@@ -32,3 +32,11 @@ script:
 # Submit coverage report to coveralls
 after_success:
   - codecov
+
+# Upload a package to PyPI when new tag appears
+deploy:
+  provider: pypi
+  skip_existing: true
+  on:
+    tags: true
+    repo: lingthio/Flask-User
