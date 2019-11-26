@@ -112,6 +112,7 @@ ENV/
 .project
 .pydevproject
 .idea
+.vscode
 
 # Profiles
 prof/
