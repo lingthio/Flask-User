@@ -1,6 +1,21 @@
 Flask-User v1.0
 ===============
 
+.. image:: https://travis-ci.org/lingthio/Flask-User.svg?branch=master
+    :target: https://travis-ci.org/lingthio/Flask-User
+
+.. image:: https://codecov.io/gh/lingthio/Flask-User/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/lingthio/Flask-User
+
+.. image:: https://img.shields.io/pypi/v/Flask-User.svg
+    :target: https://pypi.org/project/Flask-User
+
+.. image:: https://img.shields.io/pypi/pyversions/Flask-User.svg
+    :target: https://pypi.org/project/Flask-User
+
+.. image:: https://img.shields.io/pypi/l/Flask-User?style=flat
+    :target: https://pypi.org/project/Flask-User
+
 | **Attention:**
 | Flask-User v1.0 is a Production/Stable version.
 | The previous version is `Flask-User v0.6 <http://flask-user.readthedocs.io/en/v0.6/>`_.
