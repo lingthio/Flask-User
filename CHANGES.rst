@@ -22,6 +22,9 @@ For all of the above we finally had to break compatibility with **v0.6 (stable)*
 For non-customized Flask-User apps, the porting is relatively straightforward.
 See the 'Porting from v0.6 to v1.0+' section in our docs.
 
+* v1.0.2.3:
+    * Display "flash" message when change password fails
+      (see `#239 <https://github.com/lingthio/Flask-User/issues/239>`_).
 * v1.0.2.2:
     * Added new settings to ``UserManager`` which can be used to customize page
       footers: ``USER_APP_VERSION``, ``USER_CORPORATION_NAME``, and
