@@ -22,6 +22,12 @@ For all of the above we finally had to break compatibility with **v0.6 (stable)*
 For non-customized Flask-User apps, the porting is relatively straightforward.
 See the 'Porting from v0.6 to v1.0+' section in our docs.
 
+* v1.0.2.2:
+    * Added new settings to ``UserManager`` which can be used to customize page
+      footers: ``USER_APP_VERSION``, ``USER_CORPORATION_NAME``, and
+      ``USER_COPYRIGHT_YEAR`` (see `#280 <https://github.com/lingthio/Flask-User/issues/280>`_).
+    * Fixed crash when one tried to change username and ``USER_ENABLE_EMAIL``
+      was falsy (see `#267 <https://github.com/lingthio/Flask-User/issues/267>`_).
 * v1.0.2.1:
     * Added Slovak, Polish and Ukrainian translations.
     * Fixed bug in "Password Changed" email template (see `#250 <https://github.com/lingthio/Flask-User/issues/250>`_).
