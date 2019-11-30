@@ -138,7 +138,8 @@ class UserManager__Views(object):
             self.db_manager.commit()
 
             # Send username_changed email
-            self.email_manager.send_username_changed_email(current_user)
+            if self.USER_ENABLE_EMAIL and self.USER_SEND_USERNAME_CHANGED_EMAIL:
+                self.email_manager.send_username_changed_email(current_user)
 
             # Send changed_username signal
             signals.user_changed_username.send(current_app._get_current_object(), user=current_user)
