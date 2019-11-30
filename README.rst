@@ -88,8 +88,8 @@ Contact us
 .. image:: http://img.shields.io/static/v1?label=Issues&message=Flask-User&logo=github
     :target: https://github.com/lingthio/Flask-User/issues
 
-.. image:: http://img.shields.io/static/v1?label=gitter&message=Flask-User&logo=gitter&color=753a88
-    :target: https://gitter.im/Flask-User/community/
+.. image:: https://badges.gitter.im/Flask-User/community.svg
+    :target: https://gitter.im/Flask-User/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
 
 .. image:: http://img.shields.io/static/v1?label=Telegram&message=@flask_user&logo=telegram&color=blue
     :target: https://t.me/flask_user
