@@ -60,8 +60,14 @@ class UserManager__Settings(object):
 
     #: The application name displayed in email templates and page template footers.
     USER_APP_NAME = 'USER_APP_NAME'
+
+    #: The application version displayed in page template footers.
     USER_APP_VERSION = "v1.0"
+
+    #: Corporation name displayed in page template footers.
     USER_CORPORATION_NAME = 'MyCorp'
+
+    #: Copyright year displayed in page template footers.
     USER_COPYRIGHT_YEAR = 2019
 
     #: Automatic sign-in if the user session has not expired.
