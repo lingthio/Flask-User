@@ -1,6 +1,6 @@
 __title__       = 'Flask-User'
 __description__ = 'Customizable User Authentication, User Management, and more.'
-__version__     = '1.0.2.2'
+__version__     = '1.0.2.3'
 __url__         = 'https://github.com/lingthio/Flask-User'
 __author__      = 'Ling Thio'
 __author_email__= 'ling.thio@gmail.com'
