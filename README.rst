@@ -82,3 +82,14 @@ Authors
 |
 | **Contributors**
 | `Many contributors <https://github.com/lingthio/Flask-User/graphs/contributors>`_
+
+Contact us
+----------
+.. image:: http://img.shields.io/static/v1?label=Issues&message=Flask-User&logo=github
+    :target: https://github.com/lingthio/Flask-User/issues
+
+.. image:: http://img.shields.io/static/v1?label=gitter&message=Flask-User&logo=gitter&color=753a88
+    :target: https://gitter.im/Flask-User/community/
+
+.. image:: http://img.shields.io/static/v1?label=Telegram&message=@flask_user&logo=telegram&color=blue
+    :target: https://t.me/flask_user
