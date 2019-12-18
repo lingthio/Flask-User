@@ -502,14 +502,9 @@ class UserManager__Views(object):
 
             # Redirect if USER_ENABLE_CONFIRM_EMAIL is set
             if self.USER_ENABLE_CONFIRM_EMAIL and request_email_confirmation:
-                safe_reg_next_url = self.make_safe_url(register_form.reg_next.data)
                 return redirect(safe_reg_next_url)
 
             # Auto-login after register or redirect to login page
-            if 'reg_next' in request.args:
-                safe_reg_next_url = self.make_safe_url(register_form.reg_next.data)
-            else:
-                safe_reg_next_url = self._endpoint_url(self.USER_AFTER_CONFIRM_ENDPOINT)
             if self.USER_AUTO_LOGIN_AFTER_REGISTER:
                 return self._do_login_user(user, safe_reg_next_url)  # auto-login
             else:
