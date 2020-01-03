@@ -36,6 +36,9 @@ user_logged_in = _signals.signal('user.user_logged_in')
 # Sent when a user logged out
 user_logged_out = _signals.signal('user.user_logged_out')
 
+# Sent when a user attempted to login and password verification failed
+user_password_failed = _signals.signal('user.password_failed')
+
 # Sent when a user registered a new account
 user_registered = _signals.signal('user.user_registered')
 

@@ -80,3 +80,18 @@ Here's an example of tracking login_count and last_login_ip:
         user.last_login_ip = request.remote_addr
         db.session.commit()
 
+Here's an example of tracking an invalid password login attempt:
+
+::
+    # This code has not been tested
+
+    from datetime import datetime
+    from flask import request
+    from flask_user.signals import user_password_failed
+
+    @user_password_failed.connect_via(app)
+    def _track_invalid_password_login_attempts(sender, user, **extra):
+        user.failed_login_attempts += 1
+        if user.failed_login_attempts >= 5:
+            user.lockout = True
+        db.session.commit()

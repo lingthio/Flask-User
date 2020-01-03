@@ -18,6 +18,7 @@ except ImportError:
 from wtforms import BooleanField, HiddenField, PasswordField, SubmitField, StringField
 from wtforms import validators, ValidationError
 
+from . import signals
 from .translation_utils import lazy_gettext as _    # map _() to lazy_gettext()
 
 
@@ -197,9 +198,14 @@ class LoginForm(FlaskForm):
             # Find user by email address (email field)
             user, user_email = user_manager.db_manager.get_user_and_user_email_by_email(self.email.data)
 
-        # Handle successful authentication
-        if user and user_manager.verify_password(self.password.data, user.password):
-            return True                         # Successful authentication
+        if user:
+            # Handle successful authentication
+            if user_manager.verify_password(self.password.data, user.password):
+                return True                         # Successful authentication
+
+            # Send user_password_failed signal
+            else:
+                signals.user_password_failed.send(current_app._get_current_object(), user=user)
 
         # Handle unsuccessful authentication
         # Email, Username or Email/Username depending on settings
