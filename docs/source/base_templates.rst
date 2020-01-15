@@ -3,7 +3,7 @@ Base templates
 
 **templates/base.html**
 
-All Flask-User forms extend from the template file ``tempates/base.h`` and
+All Flask-User forms extend from the template file ``templates/base.html`` and
 Flask-User supplies a built-in version that uses Bootstrap 3.
 
 To make Flask-User use your page template, you will need to create a ``base.html`` template
