@@ -49,6 +49,8 @@ class UserMixin(FlaskLoginUserMixin):
             user_id = data_items[0]
             password_ends_with = data_items[1]
             user = user_manager.db_manager.get_user_by_id(user_id)
+            if not user:
+                return None
             user_password = '' if user_manager.USER_ENABLE_AUTH0 else user.password[-8:]
 
             # Make sure that last 8 characters of user password matches
@@ -100,4 +102,3 @@ class UserMixin(FlaskLoginUserMixin):
 
         # All requirements have been met: return True
         return True
-
