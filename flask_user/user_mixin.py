@@ -23,7 +23,7 @@ class UserMixin(FlaskLoginUserMixin):
         user_manager = current_app.user_manager
 
         user_id = self.id
-        password_ends_with = '' if user_manager.USER_ENABLE_AUTH0 else self.password[-8:]
+        password_ends_with = '' if user_manager.USER_ENABLE_AUTH0 or not self.password else self.password[-8:]
         user_token = user_manager.generate_token(
             user_id,               # User ID
             password_ends_with,    # Last 8 characters of user password
@@ -100,4 +100,3 @@ class UserMixin(FlaskLoginUserMixin):
 
         # All requirements have been met: return True
         return True
-
