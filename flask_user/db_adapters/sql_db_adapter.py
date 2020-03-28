@@ -20,7 +20,7 @@ class SQLDbAdapter(DbAdapterInterface):
 
     def __init__(self, app, db):
         """Args:
-            app(Flask): The Flask appliation instance.
+            app(Flask): The Flask application instance.
             db(SQLAlchemy): The SQLAlchemy object-database mapper instance.
 
         | Example:
