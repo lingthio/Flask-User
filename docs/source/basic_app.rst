@@ -74,7 +74,16 @@ Make sure to properly configure Flask-Mail settings::
    to learn how to change this default setting for your account.
 
    See :doc:`quickstart_app` for an example without SMTP.
-
+   
+.. note::
+ 
+   If you do not want to use the 'Gmail less secure apps' mode, you can follow 
+   these instructions to create an 'Application Password': 
+   
+   * `Sign in using App Passwords <https://support.google.com/accounts/answer/185833?hl=en>`_
+    
+   Then you can create an App Password and use it in your App. 
+   You must enable 2-Step Verification first.
 
 Configure your browser
 ----------------------
