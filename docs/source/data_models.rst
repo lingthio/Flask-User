@@ -96,7 +96,7 @@ Optional Role and UserRoles data-models
 ---------------------------------------
 
 The optional ``Role`` and ``UserRoles`` data-models are only required for role-based authentication.
-In this configuration, the ``User`` data-model must aslo define a ``roles`` relationship property.
+In this configuration, the ``User`` data-model must also define a ``roles`` relationship property.
 
 The Role data-model holds the name of each role. This name will be matched to the @roles_required
 function decorator in a **CASE SENSITIVE** manner.
