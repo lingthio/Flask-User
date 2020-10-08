@@ -97,15 +97,15 @@ msgstr "Kullanıcı adını değiştir"
 
 #: flask_user/forms.py:142
 msgid "First name"
-msgstr ""
+msgstr "Ad"
 
 #: flask_user/forms.py:143
 msgid "Last name"
-msgstr ""
+msgstr "Soyad"
 
 #: flask_user/forms.py:145
 msgid "Update"
-msgstr ""
+msgstr "Güncelle"
 
 #: flask_user/forms.py:153 flask_user/forms.py:213 flask_user/forms.py:244
 msgid "Username"
@@ -197,7 +197,7 @@ msgstr "Davet et!"
 
 #: flask_user/forms.py:357 flask_user/templates/flask_user_layout.html:40
 msgid "Sign out"
-msgstr ""
+msgstr "Çıkış"
 
 #: flask_user/forms.py:358
 msgid "Home Page"
@@ -210,11 +210,11 @@ msgstr "Kullanıcı profili"
 
 #: flask_user/forms.py:360
 msgid "Member Page"
-msgstr ""
+msgstr "Üye sayfası"
 
 #: flask_user/forms.py:361
 msgid "Admin Page"
-msgstr ""
+msgstr "Admin Sayfası"
 
 #: flask_user/user_manager.py:250
 msgid ""
@@ -317,7 +317,7 @@ msgstr "Başarı ile giriş yaptınız."
 
 #: flask_user/templates/flask_user_layout.html:48
 msgid "Home page"
-msgstr ""
+msgstr "Ana sayfa"
 
 #: flask_user/templates/flask_user/forgot_password.html:5
 msgid "Forgot Password"
