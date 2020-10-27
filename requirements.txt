@@ -1,6 +1,6 @@
 # Python packages
 bcrypt>=1.1
-cryptography==2.3
+cryptography==3.2
 passlib>=1.7.0
 
 # Flask & Flask Extensions
