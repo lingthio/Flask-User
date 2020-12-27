@@ -174,7 +174,7 @@ Flask user ships with default username and password form field validators that c
                 raise ValidationError('Some error message.')
 
         # Override the default username validator
-        def password_username(form, field):
+        def username_validator(form, field):
             if not some_condition:
                 raise ValidationError('Some error message.')
 
