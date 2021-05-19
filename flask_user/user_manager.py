@@ -60,7 +60,11 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         UserInvitationClass=None,
         UserEmailClass=None,
         RoleClass=None,    # Only used for testing
-        ):
+        token_manager=None,
+        email_manager=None,
+        password_manager=None,
+        db_manager=None,
+        login_manager=None):
 
         # See http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code
         # Perform Class type checking
@@ -121,8 +125,11 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Configure Flask-Login
         # --------------------
         # Setup default LoginManager using Flask-Login
-        self.login_manager = LoginManager(app)
-        self.login_manager.login_view = 'user.login'
+        if login_manager is None:
+            login_manager = LoginManager(app)
+            login_manager.login_view = 'user.login'
+
+        self.login_manager = login_manager
 
         # Flask-Login calls this function to retrieve a User record by token.
         @self.login_manager.user_loader
@@ -179,10 +186,16 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Set default managers
         # --------------------
         # Setup DBManager
-        self.db_manager = DBManager(app, db, UserClass, UserEmailClass, UserInvitationClass, RoleClass)
+        if db_manager is None:
+            db_manager = DBManager(app, db, UserClass, UserEmailClass, UserInvitationClass, RoleClass)
+
+        self.db_manager = db_manager
 
         # Setup PasswordManager
-        self.password_manager = PasswordManager(app)
+        if password_manager is None:
+            password_manager = PasswordManager(app)
+
+        self.password_manager = password_manager
 
         # Set default EmailAdapter
         if self.USER_ENABLE_EMAIL:
@@ -191,10 +204,16 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
 
         # Setup EmailManager
         if self.USER_ENABLE_EMAIL:
-            self.email_manager = EmailManager(app)
+            if email_manager is None:
+                email_manager = EmailManager(app)
+
+            self.email_manager = email_manager
 
         # Setup TokenManager
-        self.token_manager = TokenManager(app)
+        if token_manager is None:
+            token_manager = TokenManager(app)
+
+        self.token_manager = token_manager
 
         # Allow developers to customize UserManager
         self.customize(app)
