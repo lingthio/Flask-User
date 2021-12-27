@@ -5,14 +5,15 @@
 # Copyright (c) 2013 Ling Thio'
 
 import datetime
+import string
 
-from flask import abort, Blueprint, current_app, Flask, session
+from flask import Blueprint, Flask, abort, current_app, session
 from flask_login import LoginManager
 from wtforms import ValidationError
 
-from . import ConfigError
-from . import forms
+from . import ConfigError, forms
 from .db_manager import DBManager
+from .email_adapters.smtp_email_adapter import SMTPEmailAdapter
 from .email_manager import EmailManager
 from .password_manager import PasswordManager
 from .token_manager import TokenManager
@@ -25,10 +26,21 @@ from .user_manager__views import UserManager__Views
 # The UserManager is implemented across several source code files.
 # Mixins are used to aggregate all member functions into the one UserManager class for ease of customization.
 class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views):
-    """ Customizable User Authentication and Management.
-    """
+    """Customizable User Authentication and Management."""
 
-    def __init__(self, app, db, UserClass, **kwargs):
+    def __init__(
+        self,
+        app=None,
+        db=None,
+        UserClass=None,
+        login_manager=None,
+        token_manager=None,
+        email_manager=None,
+        email_adapter=None,
+        password_manager=None,
+        db_manager=None,
+        **kwargs
+    ):
         """
         Args:
             app(Flask): The Flask application instance.
@@ -50,17 +62,45 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
             Customizable UserManager methods
         """
 
-        #see http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code """
+        # see http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code """
+
         self.app = app
+        self.db = db
+        self.login_manager = login_manager
+        self.babel = None
+
+        # Required managers
+        self.token_manager = token_manager
+        self.email_manager = email_manager
+        self.email_adapter = email_adapter
+        self.password_manager = password_manager
+        self.db_manager = db_manager
+
+        # Set default form classes
+        # ------------------------
+        self.AddEmailFormClass = forms.AddEmailForm
+        self.ChangePasswordFormClass = forms.ChangePasswordForm
+        self.ChangeUsernameFormClass = forms.ChangeUsernameForm
+        self.EditUserProfileFormClass = forms.EditUserProfileForm
+        self.ForgotPasswordFormClass = forms.ForgotPasswordForm
+        self.InviteUserFormClass = forms.InviteUserForm
+        self.LoginFormClass = forms.LoginForm
+        self.RegisterFormClass = forms.RegisterForm
+        self.ResendEmailConfirmationFormClass = forms.ResendEmailConfirmationForm
+        self.ResetPasswordFormClass = forms.ResetPasswordForm
+
         if app:
             self.init_app(app, db, UserClass, **kwargs)
 
     def init_app(
-        self, app, db, UserClass,
+        self,
+        app,
+        db,
+        UserClass,
         UserInvitationClass=None,
         UserEmailClass=None,
-        RoleClass=None,    # Only used for testing
-        ):
+        RoleClass=None,  # Only used for testing
+    ):
 
         # See http://flask.pocoo.org/docs/0.12/extensiondev/#the-extension-code
         # Perform Class type checking
@@ -120,8 +160,12 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
 
         # Configure Flask-Login
         # --------------------
-        # Setup default LoginManager using Flask-Login
-        self.login_manager = LoginManager(app)
+        # Init login manager instance passed during init,
+        # or setup default LoginManager using Flask-Login
+        if self.login_manager:
+            self.login_manager.init_app(app)
+        else:
+            self.login_manager = LoginManager(app)
         self.login_manager.login_view = 'user.login'
 
         # Flask-Login calls this function to retrieve a User record by token.
@@ -132,8 +176,9 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
 
         # Configure Flask-BabelEx
         # -----------------------
-        self.babel = app.extensions.get('babel', None)
+        self.babel = app.extensions.get("babel", None)
         from .translation_utils import init_translations
+
         init_translations(self.babel)
 
         # Configure Jinja2
@@ -163,38 +208,33 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         blueprint = Blueprint('flask_user', __name__, template_folder='templates')
         app.register_blueprint(blueprint)
 
-        # Set default form classes
-        # ------------------------
-        self.AddEmailFormClass = forms.AddEmailForm
-        self.ChangePasswordFormClass = forms.ChangePasswordForm
-        self.ChangeUsernameFormClass = forms.ChangeUsernameForm
-        self.EditUserProfileFormClass = forms.EditUserProfileForm
-        self.ForgotPasswordFormClass = forms.ForgotPasswordForm
-        self.InviteUserFormClass = forms.InviteUserForm
-        self.LoginFormClass = forms.LoginForm
-        self.RegisterFormClass = forms.RegisterForm
-        self.ResendEmailConfirmationFormClass = forms.ResendEmailConfirmationForm
-        self.ResetPasswordFormClass = forms.ResetPasswordForm
-
-        # Set default managers
+        # Setup managers. Init app for managers passed during __init__,
+        # create default for nonexistent once
         # --------------------
         # Setup DBManager
-        self.db_manager = DBManager(app, db, UserClass, UserEmailClass, UserInvitationClass, RoleClass)
+        if self.db_manager:
+            self.db_manager.init_app(app)
+        else:
+            self.db_manager = DBManager(
+                app, db, UserClass, UserEmailClass, UserInvitationClass, RoleClass
+            )
 
         # Setup PasswordManager
-        self.password_manager = PasswordManager(app)
+        if self.password_manager:
+            self.password_manager.init_app(app)
+        else:
+            self.password_manager = PasswordManager(app)
 
         # Set default EmailAdapter
         if self.USER_ENABLE_EMAIL:
-            from .email_adapters.smtp_email_adapter import SMTPEmailAdapter
             self.email_adapter = SMTPEmailAdapter(app)
-
-        # Setup EmailManager
-        if self.USER_ENABLE_EMAIL:
             self.email_manager = EmailManager(app)
 
         # Setup TokenManager
-        self.token_manager = TokenManager(app)
+        if self.token_manager:
+            self.token_manager.init_app(app)
+        else:
+            self.token_manager = TokenManager(app)
 
         # Allow developers to customize UserManager
         self.customize(app)
@@ -205,9 +245,8 @@ class UserManager(UserManager__Settings, UserManager__Utils, UserManager__Views)
         # Configure a list of URLs to route to their corresponding view method.
         self._add_url_routes(app)
 
-
     def customize(self, app):
-        """ Override this method to customize properties.
+        """Override this method to customize properties.
 
         Example::
 

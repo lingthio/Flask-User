@@ -26,7 +26,7 @@ class TokenManager(object):
 
     # *** Public methods ***
 
-    def __init__(self, app):
+    def __init__(self, app=None):
         """Check config settings and initialize the Fernet encryption cypher.
 
         Fernet is basically AES128 in CBC mode, with a timestamp and a signature.
@@ -34,7 +34,11 @@ class TokenManager(object):
         Args:
             app(Flask): The Flask application instance.
         """
+        self.app = app
+        if app:
+            self.init_app(app)
 
+    def init_app(self, app):
         self.app = app
 
         # Use the applications's SECRET_KEY if flask_secret_key is not specified.

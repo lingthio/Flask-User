@@ -7,6 +7,7 @@
 from .db_adapters import PynamoDbAdapter, DynamoDbAdapter, MongoDbAdapter, SQLDbAdapter
 from flask_user import current_user, ConfigError
 
+
 class DBManager(object):
     """Manage DB objects."""
 
@@ -21,23 +22,31 @@ class DBManager(object):
             UserInvitationClass: Optional UserInvitation class for user-invitation feature.
             RoleClass: For testing purposes only.
         """
-        self.app = app
         self.db = db
         self.UserClass = UserClass
         self.UserEmailClass = UserEmailClass
         self.UserInvitationClass = UserInvitationClass
         self.RoleClass = RoleClass
 
-        self.user_manager = app.user_manager
+        self.app = app
+        self.user_manager = None
         self.db_adapter = None
+
+        if app:
+            self.init_app(app)
+
+    def init_app(self, app):
+
+        self.app = app
+        self.user_manager = app.user_manager
 
         # Check if db is a SQLAlchemy instance
         if self.db_adapter is None:
             try:
                 from flask_sqlalchemy import SQLAlchemy
 
-                if isinstance(db, SQLAlchemy):
-                    self.db_adapter = SQLDbAdapter(app, db)
+                if isinstance(self.db, SQLAlchemy):
+                    self.db_adapter = SQLDbAdapter(app, self.db)
             except ImportError:
                 pass  # Ignore ImportErrors
 
@@ -46,18 +55,18 @@ class DBManager(object):
             try:
                 from flask_mongoengine import MongoEngine
 
-                if isinstance(db, MongoEngine):
-                    self.db_adapter = MongoDbAdapter(app, db)
+                if isinstance(self.db, MongoEngine):
+                    self.db_adapter = MongoDbAdapter(app, self.db)
             except ImportError:
                 pass  # Ignore ImportErrors
 
         # Check if db is a Flywheel instance
-        if self.db_adapter is None: # pragma: no cover
+        if self.db_adapter is None:  # pragma: no cover
             try:
                 from flask_flywheel import Flywheel
 
-                if isinstance(db, Flywheel):
-                    self.db_adapter = DynamoDbAdapter(app, db)
+                if isinstance(self.db, Flywheel):
+                    self.db_adapter = DynamoDbAdapter(app, self.db)
             except ImportError:
                 pass  # Ignore ImportErrors
 
@@ -66,17 +75,16 @@ class DBManager(object):
             try:
                 from pynamodb.models import Model
 
-                if issubclass(UserClass, Model):
+                if issubclass(self.UserClass, Model):
                     self.db_adapter = PynamoDbAdapter(app)
             except ImportError:
-                pass # Ignore ImportErrors
+                pass  # Ignore ImportErrors
 
         # Check self.db_adapter
         if self.db_adapter is None:
             raise ConfigError(
-                'No Flask-SQLAlchemy, Flask-MongoEngine or Flask-Flywheel installed and no Pynamo Model in use.'\
+                'No Flask-SQLAlchemy, Flask-MongoEngine or Flask-Flywheel installed and no Pynamo Model in use.' \
                 ' You must install one of these Flask extensions.')
-
 
     def add_user_role(self, user, role_name):
         """Associate a role name with a user."""
@@ -256,13 +264,11 @@ class DBManager(object):
         # Return False otherwise.
         return self.find_user_by_username(new_username) == None
 
-
     # def delete_role_name(self, role_name):
     #     if isinstance(self.db_adapter, SQLDbAdapter):
     #         role = self.db_adapter.find_first_object(self.user_manager.db_manager.RoleClass, name=role_name)
     #         if role:
     #             self.db_adapter.delete_object(role)
-
 
     # Database management methods
     # ---------------------------
@@ -277,4 +283,3 @@ class DBManager(object):
         .. warning:: ALL DATA WILL BE LOST. Use only for automated testing.
         """
         return self.db_adapter.drop_all_tables()
-
