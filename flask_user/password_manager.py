@@ -26,14 +26,19 @@ class PasswordManager(object):
             ``password_manager = PasswordManager('bcrypt')``
         """
 
-        self.app = app
-        self.user_manager = app.user_manager
-
         # Create a passlib CryptContext
+        self.app = app
+        self.user_manager = None
+        if app:
+            self.init_app(app)
+
         self.password_crypt_context = CryptContext(
             schemes=self.user_manager.USER_PASSLIB_CRYPTCONTEXT_SCHEMES,
             **self.user_manager.USER_PASSLIB_CRYPTCONTEXT_KEYWORDS)
 
+    def init_app(self, app):
+        self.app = app
+        self.user_manager = app.user_manager
 
     def hash_password(self, password):
         """Hash plaintext ``password`` using the ``password_hash`` specified in the constructor.
