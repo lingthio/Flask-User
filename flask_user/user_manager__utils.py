@@ -9,7 +9,6 @@ try:
 except ImportError:
     from urlparse import urlsplit, urlunsplit       # Python 2
 
-
 from flask_login import current_user
 
 
@@ -68,6 +67,7 @@ class UserManager__Utils(object):
         # Clear scheme and netloc and rebuild URL
         parts[0] = ''   # Empty scheme
         parts[1] = ''   # Empty netloc (hostname:port)
+        parts[2] = '/'+parts[2].lstrip('/\\')
         safe_url = urlunsplit(parts)
         return safe_url
 
